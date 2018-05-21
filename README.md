@@ -4,9 +4,11 @@ I have developed an exome + neutral sequence capture array and sequenced over 14
 
 The scripts are broken down into data processing and analyses
 Directory Structure:
-|---scripts/
-|	|---data_processing/
+|---scripts/\n\n
+|\t|---data_processing/\n\n
+
 |	|	|---modern/
+
 |	|	|---ancient/
 |	|---analyses/
 |	|	|---modern/
