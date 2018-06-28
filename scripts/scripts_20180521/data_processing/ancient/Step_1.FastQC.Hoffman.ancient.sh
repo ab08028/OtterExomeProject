@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=12:00:00,h_data=21G,arch=intel*,highp
+#$ -l h_rt=5:00:00,h_data=12G,highp
 #$ -o /u/flashscratch/a/ab08028/captures/reports
 #$ -e /u/flashscratch/a/ab08028/captures/reports
 #$ -m bea
