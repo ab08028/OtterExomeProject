@@ -9,7 +9,7 @@
 #### $ -e /u/flashscratch/a/ab08028/captures/reports
 #### $ -M ab08028
 ########################################### 
-# Usage: qsub -e $errorLocation -o $errorLocation -M $user -N fq2sam${c} $SCRIPTDIR/$scriptname [fastq R1] [fastqR2] [output bam name] [RGID : header_1a] [RGSM: sample ID] [RGLB: Lib1] [platform unit] [RGPL: platform] [seqCenter]
+# Usage: qsub -e $errorLocation -o $errorLocation -M $user -N fq2sam${c} $SCRIPTDIR/$scriptname [fastqdir/fastq R1] [fastqdir/fastqR2] [bamdir/output bam name] [RGID : header_1a] [RGSM: sample ID] [RGLB: Lib1] [platform unit] [RGPL: platform] [seqCenter]
 
 ## This script will convert fastq file to uBAM file. You submit it to Hoffman using submit_run_step2
 
@@ -29,8 +29,8 @@ module load java/1.8.0_111 # need to be java 1.8
 # update picard:
 PICARD=/u/home/a/ab08028/klohmueldata/annabel_data/bin/Picard_2.8.1/picard.jar
 SCRATCH=/u/flashscratch/a/ab08028
-READ_DIR=$SCRATCH/captures/fastqs
-BAM_OUTDIR=$SCRATCH/captures/bams
+#READ_DIR=$SCRATCH/captures/fastqs # define this in command line
+#BAM_OUTDIR=$SCRATCH/captures/bams # define this in command line
 TEMP_DIR=$SCRATCH/temp
 # note that read group ID should be unique for each sequenced sample; so same individual could
 # be sequenced many times and have different read group IDs each time (e.g. CA_145_1a ; CA_145_1b)
@@ -38,9 +38,9 @@ TEMP_DIR=$SCRATCH/temp
 mkdir -p ${BAM_OUTDIR}
 java -Xmx16G -jar -Djava.io.tmpdir=$TEMP_DIR \
 $PICARD FastqToSam \
-FASTQ=$READ_DIR/$1 \
-FASTQ2=$READ_DIR/$2 \
-OUTPUT=$BAM_OUTDIR/$3 \
+FASTQ=$1 \
+FASTQ2=$2 \
+OUTPUT=$3 \
 READ_GROUP_NAME=$4 \
 SAMPLE_NAME=$5 \
 LIBRARY_NAME=$6 \
