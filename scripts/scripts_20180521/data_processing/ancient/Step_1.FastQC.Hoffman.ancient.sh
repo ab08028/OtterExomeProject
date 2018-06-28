@@ -40,3 +40,4 @@ $fastqc $fileR1 -o fastqc-output
 $fastqc $fileR2 -o fastqc-output
 
 
+sleep 10m
