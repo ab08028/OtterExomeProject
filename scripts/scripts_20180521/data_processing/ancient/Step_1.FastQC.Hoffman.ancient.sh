@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports
 #$ -m bea
 #$ -M ab08028
-#$ -t 1-9
+#$ -t 1-12
 
 ############################## ANCIENT MAPPING #######################################
 ###### Step 0.a : On Sirius Or Hoffman: fastQC
