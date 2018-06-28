@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=80:00:00,h_data=1G,highp
+#$ -l h_rt=50:00:00,h_data=500M,highp
 #$ -o /u/flashscratch/a/ab08028/captures/reports/submissions
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions
 #$ -m bea
