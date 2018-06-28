@@ -37,7 +37,7 @@ user=ab08028 # where emails are sent
 # starting prefix number
 START=1
 # ending prefix number 
-END=2
+END=12
 # ancient DNA is treated separately because start with A1... # 
 # go to fastqs:
 cd $fastqs
