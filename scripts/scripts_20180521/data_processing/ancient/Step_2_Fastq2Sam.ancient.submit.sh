@@ -1,6 +1,8 @@
 ######### This script will submit a series of jobs that convert fastq to sam and adds readgroup info
 
-SCRIPTDIR=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing
+# location of github:  which may be on remote server or local laptop
+gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
+scriptDir=$gitDir/scripts/scripts_20180521/data_processing/
 QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
 scriptname=Step_2_FastqToSam.sh
 seqCenter=Medgenome
