@@ -24,7 +24,7 @@ header=${fileR1%_S*_R*} # this is the header sample name
 # example of fastq header: @A00354:22:HFCWVDMXX:1:1101:5358:1031 2:N:0:NCACAACA+NCACAACA
 # want the HFCWVDMXX identifier (differs across fastqs; but is the same between R1 and R2)
 UNIT=`zcat $fileR1 | head -n1 | awk -F ":" '{print $3}'` # pull out platform flowcell unit info
-$QSUB -e $errorLocation -o $errorLocation -M $user -N fq2sam${c} $SCRIPTDIR/generic/$scriptname $fileR1 $fileR2 $header_FastqToSam.bam ${header}_1a ${header} Lib1 $UNIT $platform $seqCenter
+$QSUB -e $errorLocation -o $errorLocation -M $user -N fq2sam${c} $scriptDir/generic/$scriptname $fileR1 $fileR2 $header_FastqToSam.bam ${header}_1a ${header} Lib1 $UNIT $platform $seqCenter
 # clear variables just in case:
 fileR1=""
 fileR2=""
