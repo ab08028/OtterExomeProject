@@ -56,10 +56,6 @@ fileR1=""
 fileR2=""
 header=""
 UNIT=""
-<<<<<<< HEAD
-sleep 30m # sleep between job submissions
-done
-=======
 sleep 10m # sleep between job submissions
 done
->>>>>>> 3ccc35c985913b8b9fee38c255b67bfc7b37b644
+
