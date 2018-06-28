@@ -12,7 +12,7 @@ user=ab08028 # where emails are sent
 # starting prefix number
 START=1
 # ending prefix number 
-END=12
+END=2
 # ancient DNA is treated separately because start with A1... # 
 for (( c=$START; c<=$END; c++ ))
 do
