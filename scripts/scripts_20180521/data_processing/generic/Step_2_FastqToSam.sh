@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=12:00:00,h_data=21G,arch=intel*
+#$ -l h_rt=10:00:00,h_data=25G,arch=intel*
 #$ -m bea
 
 ######## commenting out some of these settings so can reset when I submit the job: ###########
