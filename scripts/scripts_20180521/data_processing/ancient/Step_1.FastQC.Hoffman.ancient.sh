@@ -1,8 +1,8 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=5:00:00,h_data=12G,highp
-#$ -o /u/flashscratch/a/ab08028/captures/reports/fastqc
-#$ -e /u/flashscratch/a/ab08028/captures/reports/fastqc
+#$ -o /u/flashscratch/a/ab08028/captures/reports/step_1_fastqc
+#$ -e /u/flashscratch/a/ab08028/captures/reports/step_1_fastqc
 #$ -m bea
 #$ -M ab08028
 #$ -t 1-12
