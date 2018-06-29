@@ -41,10 +41,11 @@ START=30
 # ending prefix number 
 END=35
 # ancient DNA is treated separately because start with A1... # 
+cd $fastqs
 for (( c=$START; c<=$END; c++ ))
 do
-fileR1=`ls $fastqs/${c}_Elut*R1*fastq.gz` # the R1 fastq file
-fileR2=`ls $fastqs/${c}_Elut*R2*fastq.gz` # the R2 fastq file
+fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file
+fileR2=`ls ${c}_Elut*R2*fastq.gz` # the R2 fastq file
 header=${fileR1%_S*_R*} # this is the header sample name
 # example of fastq header: @A00354:22:HFCWVDMXX:1:1101:5358:1031 2:N:0:NCACAACA+NCACAACA
 # want the HFCWVDMXX identifier (differs across fastqs; but is the same between R1 and R2)
