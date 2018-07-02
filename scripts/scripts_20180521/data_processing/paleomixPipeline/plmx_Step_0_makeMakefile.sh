@@ -10,4 +10,4 @@ plmxDir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/paleomixLinks
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/ancient/paleomixPipeline
 
-$plmxDir/bam_pipeline mkfile > $scriptDir/000_makefile_template.yaml
+$plmxDir/bam_pipeline mkfile > $scriptDir/plmx_makefiles/000_makefile_template.yaml
