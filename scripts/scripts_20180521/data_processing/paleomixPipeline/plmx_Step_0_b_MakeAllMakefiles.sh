@@ -14,7 +14,8 @@ fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
 ancientTemplate=$makefileDir/makefile_template.aDNA.yaml
-
+mkdir -p $makefileDir/ancientMakefiles
+mkdir -p $makefileDir/modernMakefiles
 ########### ancient makefiles ########
 START=1
 END=12
@@ -27,8 +28,8 @@ header=${fileR1%_S*_R*} # this is the header sample name
 # note the need for double quotation marks for sed
 # make a new version of the makefile
 ######## *** ALWAYS MAKE SURE SETTINGS ARE CORRECT *** ###########
-cp $makefileDir/$ancientTemplate $makefileDir/${header}.paleomix.makefile.yaml
-newMake=$makefileDir/${makefileHeader}.${header}.paleomix.makefile.yaml
+cp $ancientTemplate $makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
+newMake=$makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake
 sed -i'' "s/NAME_OF_SAMPLE:/$header:/g" $newMake
@@ -58,8 +59,8 @@ fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file
 header=${fileR1%_S*_R*} # this is the header sample name
 # note the need for double quotation marks for sed
 # make a new version of the makefile
-cp $makefileDir/$modernTemplate $makefileDir/${header}.paleomix.makefile.yaml
-newMake=$makefileDir/${makefileHeader}.${header}.paleomix.makefile.yaml
+cp $makefileDir/$modernTemplate $makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
+newMake=$makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake
 sed -i'' "s/NAME_OF_SAMPLE:/$header:/g" $newMake

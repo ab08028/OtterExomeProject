@@ -47,7 +47,7 @@ Options:
       Algorithm: backtrack
       # Filter aligned reads with a mapping quality (Phred) below this value
       # 20180702: AB changed MinQuality from 0 --> 2 ala Kircher
-      MinQuality: 2 
+      MinQuality: 30 
       # Filter reads that did not map to the reference sequence
       FilterUnmappedReads: yes
       # May be disabled ("no") for aDNA alignments with the 'aln' algorithm.
