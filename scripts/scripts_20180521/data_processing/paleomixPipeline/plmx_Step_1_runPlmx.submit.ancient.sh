@@ -30,16 +30,17 @@ mkdir -p $outdir
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix # report location
 user=ab08028 # where emails are sent
 
-# usage; qsub script [makefile, full path] [outdir]
-START=1
-END=12
-
 cd $fastqs
+
+# usage; qsub script [makefile, full path] [outdir]
+START=46
+END=167
+
 for (( c=$START; c<=$END; c++ ))
 do
-fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
+fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
 header=${fileR1%_S*_R*} # this is the header sample name
-$QSUB -e $errorLocation -o $errorLocation -M $user -N fq2sam${c} \
+$QSUB -e $errorLocation -o $errorLocation -M $user -N plmx${c} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yam $outdir
 sleep 10m
 done

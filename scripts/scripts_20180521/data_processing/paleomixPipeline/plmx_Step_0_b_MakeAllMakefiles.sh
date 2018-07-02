@@ -23,12 +23,15 @@ END=12
 cd $fastqs
 for (( c=$START; c<=$END; c++ ))
 do
-fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
+echo $c
+fileR1=`ls A${c}_*_R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA; don't use Elut
+# because also want to map the ancient blank A1_Blank
 header=${fileR1%_S*_R*} # this is the header sample name
 # note the need for double quotation marks for sed
 # make a new version of the makefile
 ######## *** ALWAYS MAKE SURE SETTINGS ARE CORRECT *** ###########
-cp $ancientTemplate $makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
+# calling /bin/cp because my cp is aliased to be interactive
+/bin/cp $ancientTemplate $makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
 newMake=$makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake
@@ -48,18 +51,19 @@ done
 
 ########### modern makefiles ########
 # modern dna
-START=30
+START=46 # eventually need to do 30-45 as well
 END=167
 
 # 
 cd $fastqs
 for (( c=$START; c<=$END; c++ ))
 do
+echo $c
 fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file
 header=${fileR1%_S*_R*} # this is the header sample name
 # note the need for double quotation marks for sed
 # make a new version of the makefile
-cp $makefileDir/$modernTemplate $makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
+/bin/cp $modernTemplate $makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
 newMake=$makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake

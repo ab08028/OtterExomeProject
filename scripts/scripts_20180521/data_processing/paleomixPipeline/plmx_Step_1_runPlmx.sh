@@ -1,3 +1,9 @@
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=300:00:00,h_data=25G,arch=intel*
+#$ -t 8
+#$ -m bea
+
 ####### run paleomix
 
 #### load modules: ####
@@ -22,3 +28,4 @@ $plmx bam_pipeline run $makefile \
 --temp-root=${TEMP_DIR} \
 --destination=${DESTINATION}
 
+# test: 

@@ -138,7 +138,7 @@ Options:
 Prefixes:
   # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
   # is used in summary statistics and as part of output filenames.
-  NAME_OF_PREFIX:Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
+  Mustela_putorius_furo.MusPutFur1.0.dna.toplevel:
     # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
     # references against which reads are to be mapped. Using the same name
     # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
