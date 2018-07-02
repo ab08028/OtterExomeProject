@@ -1,7 +1,7 @@
 ########### THIS SCRIPT (SHELL) WILL MAKE 1 makefile for every sample to be used in paleomix ########
-
+# note you have to run this with source not sh because it uses cd (or submit as a job)
 ############  directories ########
-gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
+gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing
 # script to run: 
@@ -11,9 +11,9 @@ scriptname=Step_2_FastqToSam.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-makefileDir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/paleomixPipeline/makefiles
-modernTemplate=$makefileDir/sandbox_makefile_template.modernDNA.yaml
-ancientTemplate=$makefileDir/sandbox_makefile_template.aDNA.yaml
+makefileDir=$scriptDir/paleomixPipeline/makefiles
+modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
+ancientTemplate=$makefileDir/makefile_template.aDNA.yaml
 
 ########### ancient makefiles ########
 START=1
@@ -26,7 +26,8 @@ fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with
 header=${fileR1%_S*_R*} # this is the header sample name
 # note the need for double quotation marks for sed
 # make a new version of the makefile
-cp $makefileDir/$modernTemplate $makefileDir/${header}.paleomix.makefile.yaml
+######## *** ALWAYS MAKE SURE SETTINGS ARE CORRECT *** ###########
+cp $makefileDir/$ancientTemplate $makefileDir/${header}.paleomix.makefile.yaml
 newMake=$makefileDir/${makefileHeader}.${header}.paleomix.makefile.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake
@@ -43,6 +44,7 @@ header=''
 makefileHeader=''
 newMake=''
 done
+
 ########### modern makefiles ########
 # modern dna
 START=30

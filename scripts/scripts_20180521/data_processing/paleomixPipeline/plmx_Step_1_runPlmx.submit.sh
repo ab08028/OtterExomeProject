@@ -20,8 +20,7 @@ scriptname=plmx_Step_1_runPlmx.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-makefileDir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/paleomixPipeline/makefiles
-
+makefileDir=$gitDir/paleomixPipeline/makefiles
 # makefile:
 
 # outdirectory:
