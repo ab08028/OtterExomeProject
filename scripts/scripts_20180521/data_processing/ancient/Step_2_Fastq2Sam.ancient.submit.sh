@@ -22,14 +22,14 @@ wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 bams=$wd/bams
 
+# job info: 
+errorLocation=/u/flashscratch/a/ab08028/captures/reports/step_2_fq2sam # report location
+user=ab08028 # where emails are sent
 
 # info to fill in: 
 seqCenter=Medgenome
 platform=illumina
 
-# job info: 
-errorLocation=/u/flashscratch/a/ab08028/captures/reports/step_2_fq2sam # report location
-user=ab08028 # where emails are sent
 
 # all of these are Lib1 for now (could change later if I need to but shouldn't have to 
 # because not trying to combine with my pilot data)
