@@ -36,4 +36,5 @@ $plmx bam_pipeline run $makefile \
 --destination=${DESTINATION} \
 --jar-root=${JAR_ROOT}
 
+# since I set everything here, I don't need to worry about the .ini file.
 # test: 
