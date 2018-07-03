@@ -20,7 +20,7 @@ scriptname=plmx_Step_1_runPlmx.test.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-makefileDir=$scriptDir/makefiles/ancientMakefiles
+makefileDir=$scriptDir/makefiles/modernMakefiles
 # makefile:
 
 # outdirectory:
@@ -33,11 +33,12 @@ user=ab08028 # where emails are sent
 cd $fastqs
 
 # usage; qsub script [makefile, full path] [outdir]
-START=1
-END=1
+START=46
+END=46
+
 for (( c=$START; c<=$END; c++ ))
 do
-fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
+fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
 header=${fileR1%_S*_R*} # this is the header sample name
 $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx${c} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir
