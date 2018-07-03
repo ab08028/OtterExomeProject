@@ -52,7 +52,7 @@ done
 ########### modern makefiles ########
 # modern dna
 START=46 # eventually need to do 30-45 as well
-END=46
+END=167
 
 # 
 cd $fastqs
@@ -75,6 +75,7 @@ sed -i'' "s/NAME_OF_LANE:/Lane_1:/g" $newMake
 sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|g' $newMake
 # need to say "{Pair}" to have it find both copies. See if this works.
 # clear variables
+# note that if sed is run on an empty file, it creates randomly named weird empty file. Not a big deal. e.g. sedVeLdud
 fileR1=''
 header=''
 makefileHeader=''
