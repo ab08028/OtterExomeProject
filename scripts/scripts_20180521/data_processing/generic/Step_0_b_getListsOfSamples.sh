@@ -20,7 +20,7 @@ ls $fastqs | grep -E ^[0-9]+_Elut_.*gz | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sor
 ls $fastqs | grep Cfam | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/dogSamples.txt
 
 # all sea otter, plus blank, but no dog:
-ls $fastqs | grep *fastq.gz | grep -v Cfam | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/allElutSamples.txt
+ls $fastqs | grep fastq.gz | grep -v Cfam | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/allElutSamples.txt
 
 # then when submitting jobs you can do
 # cat ancientSamples.txt | while read sample
