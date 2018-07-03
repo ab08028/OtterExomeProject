@@ -143,7 +143,7 @@ Prefixes:
     # references against which reads are to be mapped. Using the same name
     # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
     # should be named 'Human_g1k_v37').
-    Path: /u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fa
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
     # (Optional) Uncomment and replace 'PATH_TO_BEDFILE' with the path to a
     # .bed file listing extra regions for which coverage / depth statistics
