@@ -14,23 +14,19 @@ fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
 ancientTemplate=$makefileDir/makefile_template.aDNA.yaml
+ancHeaders=$wd/samples/ancientSamples.txt
+modHeaders=$wd/samples/modernSamples.txt
+
 mkdir -p $makefileDir/ancientMakefiles
 mkdir -p $makefileDir/modernMakefiles
 ########### ancient makefiles ########
 # instead of START/END, using while read list of samples
-START=1
-END=12
-
-cd $fastqs
-for (( c=$START; c<=$END; c++ ))
+cat $ancHeaders | while read header
 do
-echo $c
-fileR1=`ls A${c}_*_R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA; don't use Elut
-# because also want to map the ancient blank A1_Blank
-header=${fileR1%_S*_R*} # this is the header sample name
+echo $header
 # note the need for double quotation marks for sed
 # make a new version of the makefile
-######## *** ALWAYS MAKE SURE SETTINGS ARE CORRECT *** ###########
+######## *** ALWAYS MAKE SURE SETTINGS ARE APPROPRIATE *** ###########
 # calling /bin/cp because my cp is aliased to be interactive
 /bin/cp $ancientTemplate $makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
 newMake=$makefileDir/ancientMakefiles/${header}.paleomix.makefile.yaml
@@ -44,24 +40,14 @@ sed -i'' "s/NAME_OF_LANE:/Lane_1:/g" $newMake
 sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|g' $newMake
 
 # clear variables
-fileR1=''
-header=''
-makefileHeader=''
 newMake=''
 done
 
 ########### modern makefiles ########
 # modern dna
-START=46 # eventually need to do 30-45 as well
-END=167
-
-# 
-cd $fastqs
-for (( c=$START; c<=$END; c++ ))
+cat $modHeaders | while read header
 do
-echo $c
-fileR1=`ls ${c}_Elut*R1*fastq.gz` # the R1 fastq file
-header=${fileR1%_S*_R*} # this is the header sample name
+echo $header
 # note the need for double quotation marks for sed
 # make a new version of the makefile
 /bin/cp $modernTemplate $makefileDir/modernMakefiles/${header}.paleomix.makefile.yaml
@@ -77,8 +63,5 @@ sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|
 # need to say "{Pair}" to have it find both copies. See if this works.
 # clear variables
 # note that if sed is run on an empty file, it creates randomly named weird empty file. Not a big deal. e.g. sedVeLdud
-fileR1=''
-header=''
-makefileHeader=''
 newMake=''
 done

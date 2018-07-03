@@ -21,8 +21,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 makefileDir=$scriptDir/makefiles/ancientMakefiles
-samples=
-# makefile:
+headers=$wd/samples/ancientSamples.txt
 
 # outdirectory:
 outdir=$wd/paleomix
@@ -33,21 +32,15 @@ user=ab08028 # where emails are sent
 cd $fastqs
 
 # usage; qsub script [makefile, full path] [outdir]
-START=1
-END=12
 
-for (( c=$START; c<=$END; c++ ))
+cat $headers | while read header
 do
-fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
-header=${fileR1%_S*_R*} # this is the header sample name
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/${header} # report location
 mkdir -p $errorLocation
 # note you need -V to get your env. variables so mapDamage and AdapterRemoval are located by paleomix
-$QSUB -V -e $errorLocation -o $errorLocation -M $user -N plmx${c}.${header} \
+$QSUB -V -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir
 # clear variables:
-fileR1=""
-header=""
 errorLocation=""
 sleep 10m
 done

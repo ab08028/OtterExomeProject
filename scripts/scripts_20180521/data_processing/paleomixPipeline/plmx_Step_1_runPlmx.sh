@@ -27,8 +27,7 @@ makefile=$1
 DESTINATION=$2 # location where you want files to go 
 TEMP_DIR=$SCRATCH/temp
 JAR_ROOT=/u/home/a/ab08028/klohmueldata/annabel_data/bin/Picard_2.8.1/
-$plmx bam_pipeline run $makefile \
---jre-option -Xmx 21G \
+$plmx bam_pipeline run --jre-option -Xmx21G $makefile \
 --max-threads=${MAX_THREADS} \
 --adapterremoval-max-threads=${MAX_THREADS} \
 --bwa-max-threads=${MAX_THREADS} \

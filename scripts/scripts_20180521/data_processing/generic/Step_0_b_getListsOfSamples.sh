@@ -1,5 +1,6 @@
 #### Make list of files to process:
 
+######## this script assumes fastq name is [SAMPLE ID]_SXX_R[12]_001.fastq.gz 
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
