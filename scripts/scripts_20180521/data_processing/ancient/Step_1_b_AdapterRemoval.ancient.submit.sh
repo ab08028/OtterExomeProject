@@ -37,8 +37,8 @@ END=12
 cd $fastqs
 for (( c=$START; c<=$END; c++ ))
 do
-fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file
-fileR2=`ls A${c}_Elut*R2*fastq.gz` # the R2 fastq file
+fileR1=`ls A${c}_*R1*fastq.gz` # the R1 fastq file
+fileR2=`ls A${c}_*R2*fastq.gz` # the R2 fastq file
 header=${fileR1%_S*_R*} # this is the header sample name
 # usage: qsub -e $errorLocation -o $errorLocation -M $user -N adaptRemov${c} $scriptDir/generic/$scriptname $fastqs/[fastq input R1] $fastqs/[fastq input R2]  [basename header for output]
 $QSUB -e $errorLocation -o $errorLocation -M $user -N adaptRemov${c} $scriptDir/generic/$scriptname $fastqs/$fileR1 $fastqs/$fileR2 $wd/adapterRemoval/${header}
