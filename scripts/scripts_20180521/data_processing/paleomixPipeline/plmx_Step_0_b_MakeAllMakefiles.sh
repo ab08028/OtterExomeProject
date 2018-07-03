@@ -10,7 +10,6 @@ scriptname=Step_2_FastqToSam.sh
 ########### file locations: ########
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
 ancientTemplate=$makefileDir/makefile_template.aDNA.yaml

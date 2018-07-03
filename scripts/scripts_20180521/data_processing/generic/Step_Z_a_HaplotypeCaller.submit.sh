@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -m bea
 #$ -M ab08028
-#$ -N intervals_submit
+#$ -N hapCaller_submit
 user=ab08028 # where emails are sent
 
 QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
@@ -15,7 +15,7 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/generic
 # script to run: 
-scriptname=Step_X_FindCoveredIntervals.sh # change this to final script name!! 
+scriptname=Step_Z_a_HaplotypeCaller.sh # change this to final script name!! 
 # 
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028

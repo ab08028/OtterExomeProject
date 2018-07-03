@@ -18,7 +18,6 @@ module load samtools
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-fastqs=$wd/fastqs
 bams=$wd/bams
 outdir=$wd/coveredIntervals
 mkdir -p $outdir
@@ -26,10 +25,11 @@ mkdir -p $outdir
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 # ferret reference:
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-# min coverage: 10 (or 5?)
-# minimum map quality : 30 (JAR pipeline)
-# minimum base quality: 20 (JAR pipeline)
+
+
+# header:
 header=$1 # input header into file
+
 java -jar $GATK \
 	-T FindCoveredIntervals \
 	-R $REFERENCE \
@@ -39,5 +39,8 @@ java -jar $GATK \
 	-minMQ 30 \
 	-o $outdir/${header}.coveredIntervals.txt
 # you'll then use this as -L when you call variants.
+# min coverage: 10 (or 5?)
+# minimum map quality : 30 (JAR pipeline)
+# minimum base quality: 20 (JAR pipeline)
 
 sleep 10m

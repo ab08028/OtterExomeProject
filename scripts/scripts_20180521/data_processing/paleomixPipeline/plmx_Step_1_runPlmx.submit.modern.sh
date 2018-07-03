@@ -21,7 +21,6 @@ scriptname=plmx_Step_1_runPlmx.sh
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-fastqs=$wd/fastqs
 makefileDir=$scriptDir/makefiles/modernMakefiles
 headers=$wd/samples/modernSamples.txt
 
