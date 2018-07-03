@@ -7,6 +7,8 @@
 #$ -M ab08028
 #$ -N plmx_submit
 ######### This script run will submit a series of jobs that convert fastq to sam and adds readgroup info
+user=ab08028 # where emails are sent
+
 QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
 
 # location of github:  which may be on remote server or local laptop
@@ -27,7 +29,7 @@ headers=$wd/samples/modernSamples.txt
 outdir=$wd/paleomix
 mkdir -p $outdir
 # job info: 
-user=ab08028 # where emails are sent
+
 
 cd $fastqs
 

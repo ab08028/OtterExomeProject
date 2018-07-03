@@ -24,3 +24,4 @@ $qmap bamqc --java-mem-size=24G -nt 15 -bam $paleomixOutput/$header.bam -gff [in
 # take out -c 
 # add intervals file (need to convert from interval list --> bed?)
 
+sleep 10m

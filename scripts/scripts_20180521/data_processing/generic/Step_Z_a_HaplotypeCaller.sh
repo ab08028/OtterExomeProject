@@ -35,3 +35,4 @@ java -jar $GATK \
 # BP_RESOLUTION keeps all sites; do I want them in bands? how big is resulting gvcf?
 # this just calls across covered targets; much faster
 # I decided to remove --dontUseSoftClippedBases since Jacqueline isn't sure it's necessary
+sleep 10m

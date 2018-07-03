@@ -37,3 +37,4 @@ $plmx bam_pipeline run --jre-option -Xmx21G $makefile \
 
 # since I set everything here, I don't need to worry about the .ini file.
 # test: 
+sleep 10m

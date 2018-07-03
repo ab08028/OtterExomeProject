@@ -39,3 +39,5 @@ java -jar $GATK \
 	-minMQ 30 \
 	-o $outdir/${header}.coveredIntervals.txt
 # you'll then use this as -L when you call variants.
+
+sleep 10m

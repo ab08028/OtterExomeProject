@@ -20,4 +20,5 @@ mkdir -p $reports/step_1_fastqc
 mkdir -p $reports/step_2_fq2sam
 mkdir -p $reports/submissions 
 mkdir -p $reports/paleomix
+mkdir -p $reports/GATK
 ### .. more 

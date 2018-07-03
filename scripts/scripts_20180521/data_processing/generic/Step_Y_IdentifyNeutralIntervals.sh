@@ -30,3 +30,4 @@ blastn -query putative.neutral.seqs.Oct03.noSnapMask.WITH2ZEBRAFISHTESTSEQS.fast
 # then want to choose the regions that are far (>10kb) from exonic regions; should hopefully be ~10,000
 # May also want to exclude CpG islands, etc. from them (ask Tanya)
 # then you can make a vcf based on this bed file using bedtools intersect
+sleep 10m
