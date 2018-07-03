@@ -30,8 +30,8 @@ mkdir -p fastqc-output
 
 # example ancient filename: A1_Elut_CA_AN_396_SN1_S61_R1_001.fastq.gz
 # ancient samples start with A...
-fileR1=`ls A${i}_Elut_*R1*.fastq.gz` 
-fileR2=`ls A${i}_Elut_*R2*.fastq.gz`
+fileR1=`ls A${i}_*_*R1*.fastq.gz` 
+fileR2=`ls A${i}_*_*R2*.fastq.gz`
 
 # header=${fileR1%_S*_R*} # save this for later
 
