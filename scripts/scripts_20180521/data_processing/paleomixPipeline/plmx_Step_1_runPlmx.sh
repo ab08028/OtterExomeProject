@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=300:00:00,h_data=25G,arch=intel*
+#$ -l h_rt=300:00:00,h_data=25G,arch=intel*,highp
 #$ -t 8
 #$ -m bea
 

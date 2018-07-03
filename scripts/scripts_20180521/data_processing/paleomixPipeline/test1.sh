@@ -20,5 +20,5 @@ mkdir -p $outdir
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix # report location
 user=ab08028 # where emails are sent
 header=46_Elut_BER_29
-qsub -e $errorLocation -o $errorLocation -M $user -N plmx${c} \
+qsub -e $errorLocation -o $errorLocation -M $user -N plmx${c} -pe shared 8 \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yam $outdir
