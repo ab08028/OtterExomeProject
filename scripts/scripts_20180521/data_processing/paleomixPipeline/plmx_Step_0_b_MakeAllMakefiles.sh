@@ -40,7 +40,7 @@ sed -i'' "s/NAME_OF_LIBRARY:/${header}_1a:/g" $newMake
 # for now just naming Lane: Lane 1 because just one lane of novaseq
 sed -i'' "s/NAME_OF_LANE:/Lane_1:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
-sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}*fastq.gz'|g' $newMake
+sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|g' $newMake
 
 # clear variables
 fileR1=''
@@ -52,7 +52,7 @@ done
 ########### modern makefiles ########
 # modern dna
 START=46 # eventually need to do 30-45 as well
-END=167
+END=46
 
 # 
 cd $fastqs
@@ -72,8 +72,8 @@ sed -i'' "s/NAME_OF_LIBRARY:/${header}_1a:/g" $newMake
 # for now just naming Lane: Lane 1 because just one lane of novaseq
 sed -i'' "s/NAME_OF_LANE:/Lane_1:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
-sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}*fastq.gz'|g' $newMake
-
+sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|g' $newMake
+# need to say "{Pair}" to have it find both copies. See if this works.
 # clear variables
 fileR1=''
 header=''
