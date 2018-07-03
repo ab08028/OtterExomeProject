@@ -21,6 +21,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 makefileDir=$scriptDir/makefiles/ancientMakefiles
+samples=
 # makefile:
 
 # outdirectory:
@@ -50,3 +51,5 @@ header=""
 errorLocation=""
 sleep 10m
 done
+
+

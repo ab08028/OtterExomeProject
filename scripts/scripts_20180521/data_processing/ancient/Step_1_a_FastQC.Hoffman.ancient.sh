@@ -19,7 +19,6 @@ fastqc=/u/home/a/ab08028/klohmueldata/annabel_data/bin/FastQC/fastqc
 SCRATCH=/u/flashscratch/a/ab08028/
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-bams=$wd/bams
 
 # go to fastqs dir
 cd $fastqs

@@ -17,6 +17,7 @@ ancientTemplate=$makefileDir/makefile_template.aDNA.yaml
 mkdir -p $makefileDir/ancientMakefiles
 mkdir -p $makefileDir/modernMakefiles
 ########### ancient makefiles ########
+# instead of START/END, using while read list of samples
 START=1
 END=12
 

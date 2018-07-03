@@ -5,6 +5,8 @@ wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 bams=$wd/bams
 reports=$wd/reports
+paleomix=$wd/paleomix
+samples=$wd/samples
 
 # make dirs
 mkdir -p $wd
@@ -17,4 +19,5 @@ mkdir -p $reports
 mkdir -p $reports/step_1_fastqc
 mkdir -p $reports/step_2_fq2sam
 mkdir -p $reports/submissions 
+mkdir -p $reports/paleomix
 ### .. more 
