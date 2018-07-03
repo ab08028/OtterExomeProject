@@ -41,6 +41,6 @@ do
 fileR1=`ls A${c}_Elut*R1*fastq.gz` # the R1 fastq file; note that it starts with A for aDNA
 header=${fileR1%_S*_R*} # this is the header sample name
 $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx${c} \
-$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yam $outdir
+$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir
 sleep 10m
 done
