@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=1:00:00,h_data=3G,highp
+#$ -l h_rt=200:00:00,h_data=3G,highp
 #$ -pe shared 8
 #$ -m bea
 
@@ -27,8 +27,8 @@ makefile=$1
 DESTINATION=$2 # location where you want files to go 
 TEMP_DIR=$SCRATCH/temp
 JAR_ROOT=/u/home/a/ab08028/klohmueldata/annabel_data/bin/Picard_2.8.1/
-$plmx bam_pipeline run $makefile \
---jre-option -Xmx 21G --max-threads=${MAX_THREADS} \
+$plmx bam_pipeline run --jre-option -Xmx10G $makefile \
+--max-threads=${MAX_THREADS} \
 --adapterremoval-max-threads=${MAX_THREADS} \
 --bwa-max-threads=${MAX_THREADS} \
 --temp-root=${TEMP_DIR} \

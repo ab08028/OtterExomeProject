@@ -164,6 +164,6 @@ Prefixes:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/57_Elut_AK_AF24906*fastq.gz
+      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/57_Elut_AK_AF24906_S*_R{Pair}_*fastq.gz
 
 
