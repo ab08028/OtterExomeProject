@@ -28,8 +28,6 @@ mkdir -p $outdir
 # job info: 
 user=ab08028 # where emails are sent
 
-cd $fastqs
-
 # usage; qsub script [makefile, full path] [outdir]
 
 cat $headers | while read header
@@ -38,7 +36,7 @@ errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/${header} # re
 mkdir -p $errorLocation
 # note you need -V to get your env. variables so mapDamage and AdapterRemoval are located by paleomix
 $QSUB -V -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
-$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir
+$scriptDir/$scriptname $makefileDir/${header}_paleomix.makefile.yaml $outdir
 # clear variables:
 errorLocation=""
 sleep 10m

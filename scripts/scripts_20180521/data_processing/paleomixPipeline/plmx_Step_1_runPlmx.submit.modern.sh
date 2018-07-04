@@ -30,8 +30,6 @@ mkdir -p $outdir
 # job info: 
 
 
-cd $fastqs
-
 # usage; qsub script [makefile, full path] [outdir]
 
 cat $headers | while read header
