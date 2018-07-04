@@ -6,6 +6,7 @@
 #$ -m bea
 #$ -M ab08028
 #$ -N plmx_submit
+#***************** REMEMBER TO SUBMIT with qsub -V !!!! ***********
 ######### This script run will submit a series of jobs that convert fastq to sam and adds readgroup info
 QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
 # location of github:  which may be on remote server or local laptop

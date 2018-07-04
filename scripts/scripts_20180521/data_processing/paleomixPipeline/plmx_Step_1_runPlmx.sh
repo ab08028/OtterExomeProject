@@ -5,6 +5,8 @@
 #$ -m bea
 
 ####### run paleomix
+# add adapter removal and mapDamage to PATH; see if that works
+export PATH=$PATH:/u/home/a/ab08028/klohmueldata/annabel_data/bin/mapDamage/build/scripts-2.7:/u/home/a/ab08028/klohmueldata/annabel_data/bin
 
 #### load modules: ####
 source /u/local/Modules/default/init/modules.sh
@@ -14,8 +16,6 @@ module load samtools
 module load bwa
 module load R
 
-# add adapter removal and mapDamage to PATH; see if that works
-export PATH=/u/home/a/ab08028/klohmueldata/annabel_data/bin/mapDamage/build/scripts-2.7:/u/home/a/ab08028/klohmueldata/annabel_data/bin
 
 # need mapdamage in the path! 
 ######## directories #######
