@@ -13,6 +13,10 @@ module load java/1.8.0_111
 module load samtools
 module load bwa
 module load R
+
+# add adapter removal and mapDamage to PATH; see if that works
+export PATH=/u/home/a/ab08028/klohmueldata/annabel_data/bin/mapDamage/build/scripts-2.7:/u/home/a/ab08028/klohmueldata/annabel_data/bin
+
 # need mapdamage in the path! 
 ######## directories #######
 SCRATCH=/u/flashscratch/a/ab08028
