@@ -37,8 +37,7 @@ do
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/$header
 mkdir -p $errorLocation # report location; each header gets it own error dir. great plan.
 mkdir -p $outdir/${header} # output location
-# note you need -V to get your env. variables so mapDamage and AdapterRemoval are located by paleomix
-$QSUB -V -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
+$QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir/${header}
 # clear variables:
 errorLocation=""
