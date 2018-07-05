@@ -15,17 +15,19 @@ source /u/local/Modules/default/init/modules.sh
 module load java/1.8.0_111
 module load samtools
 
+# header:
+header=$1 # input header into file
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-bams=$wd/bams
+paleomixOutput=$wd/paleomix/${header} # specific to this header
 outdir=$wd/coveredIntervals
 mkdir -p $outdir
 # programs
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 # ferret reference:
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-
+REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 
 # header:
 header=$1 # input header into file
@@ -33,7 +35,7 @@ header=$1 # input header into file
 java -jar $GATK \
 	-T FindCoveredIntervals \
 	-R $REFERENCE \
-	-I ${header}.bam \
+	-I $paleomixOutput/${header}.${REFPREFIX}.bam \
 	-cov 10 \
 	-minBQ 20 \
 	-minMQ 30 \

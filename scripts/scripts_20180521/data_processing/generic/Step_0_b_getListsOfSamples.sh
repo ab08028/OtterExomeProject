@@ -7,11 +7,11 @@ fastqs=$wd/fastqs
 outdir=$wd/samples
 mkdir -p $outdir
 
-
+########## THIS DOESN"T DEAL WITH SN properly
 # pull out sample IDs:
 
 # ancient:
-ls $fastqs | grep -E ^A[0-9]+.*gz | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/ancientSamples.txt
+ls $fastqs | grep -E ^A[0-9]+.*gz | sed -e 's/_S[0-9]*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/ancientSamples.txt
 
 # modern:
 ls $fastqs | grep -E ^[0-9]+_Elut_.*gz | sed -e 's/_S.*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/modernSamples.txt

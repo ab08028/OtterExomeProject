@@ -15,7 +15,7 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/generic
 # script to run: 
-scriptname=Step_X_FindCoveredIntervals.sh # change this to final script name!! 
+scriptname=Step_2_a_FindCoveredIntervals.sh # change this to final script name!! 
 # 
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
