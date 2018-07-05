@@ -2,23 +2,23 @@ These scripts take you through:
 
 #### 0. initialSteps_setupQC/: Initial directory setup, fastq download and QC
 
-	##### **a.** Step_0_a_checkMD5SUM.sh: check MD5Sum on Fastq files to make sure they downloaded correctly (note: make sure to use "binary" setting in FTP)
+	a. Step_0_a_checkMD5SUM.sh: check MD5Sum on Fastq files to make sure they downloaded correctly (note: make sure to use "binary" setting in FTP)
 
-	##### **b.** Step_0_b_getListsOfSamples.sh: get lists of sample prefixes (referred to as headers) -- these will be what all other scripts iterate through
+	b. Step_0_b_getListsOfSamples.sh: get lists of sample prefixes (referred to as headers) -- these will be what all other scripts iterate through
 
-	##### **c.** Step_0_c_FastQC.Hoffman.sh: carry out fastqc (submit with Step_0_c_FastQC.Hoffman.submit.sh)
+	c. Step_0_c_FastQC.Hoffman.sh: carry out fastqc (submit with Step_0_c_FastQC.Hoffman.submit.sh)
 
-	##### **d.** (not a script) use multiqc to gather fastqc reports
+	d. (not a script) use multiqc to gather fastqc reports
 
 #### 1. paleomixPipeline: maps reads (ancient and modern)
 
-	##### **plmx.0.a** plmx_Step_0_a_makeDefaultMakefile.sh: Generate a default paleomix pipeline; modify by hand in text editor to have the settings you want (different for ancient and modern)
+	plmx.0.a plmx_Step_0_a_makeDefaultMakefile.sh: Generate a default paleomix pipeline; modify by hand in text editor to have the settings you want (different for ancient and modern)
 
-	##### **plmx.0.b** plmx_Step_0_b_MakeAllMakefiles.sh: Using the templates you made in (a) with you unique settings, make 1 makefile for every sample (diff. anc/mod)
+	plmx.0.b plmx_Step_0_b_MakeAllMakefiles.sh: Using the templates you made in (a) with you unique settings, make 1 makefile for every sample (diff. anc/mod)
 
-	##### **plmx.1** plmx_Step_1_runPlmx.sh: run paleomix! Submit ancient and modern jobs separately with plmx_Step_1_runPlmx.submit.[ancient/modern].sh (different memory requirements, etc.)
+	plmx.1 plmx_Step_1_runPlmx.sh: run paleomix! Submit ancient and modern jobs separately with plmx_Step_1_runPlmx.submit.[ancient/modern].sh (different memory requirements, etc.)
 
-	##### **plmx.2** plmx_Step_2_DownloadMapDamageReports.sh: gather mapDamage plots to transfer to home computer to go into SI materials
+	plmx.2 plmx_Step_2_DownloadMapDamageReports.sh: gather mapDamage plots to transfer to home computer to go into SI materials
 
 ##### **Paleomix Notes:** 
 		Paleomix Documentation: https://paleomix.readthedocs.io/en/latest/
@@ -31,11 +31,18 @@ These scripts take you through:
 		All samples have mapDamage plots produced, but the mapDamage is only rescaled for ancient samples.
 		Indel realignment is not carried out because GATK Haplotype Caller does it internally
 
-2. Variant Calling (GATK)
-  a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
-  b. XXX. sh: Run Qualimap on covered regions (use multiqc to gather reports)  
-  c. Step_2_b_HaplotypeCaller.sh: call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
-  d. XXX .sh: call genotypes
+#### 2. Variant Calling (GATK)
 
-3. Variant Filtering (GATK)
-[will filter on depth, quality, etc. May treat aDNA differently]
+		a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
+		
+		b. XXX. sh: Run Qualimap on covered regions (use multiqc to gather reports)  
+	
+		c. Step_2_b_HaplotypeCaller.sh: call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
+		
+		d. XXX .sh: call genotypes
+
+
+#### 3. Variant Filtering (GATK)
+
+		[will filter on depth, quality, etc. May treat aDNA differently]
+		
