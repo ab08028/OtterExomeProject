@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=1:00:00,h_data=20G,arch=intel*,highp
+#$ -l h_rt=5:00:00,h_data=20G,arch=intel*,highp
 #$ -m bea
 
 ########### gatk find covered regions
@@ -31,18 +31,19 @@ REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 
 # header:
 header=$1 # input header into file
-
+# going to be more lax on coverage requirements (10 --> 1) to account for ancient DNA.
+# can always filter out later.
 java -jar $GATK \
 	-T FindCoveredIntervals \
 	-R $REFERENCE \
 	-I $paleomixOutput/${header}.${REFPREFIX}.bam \
-	-cov 10 \
+	-cov 1 \
 	-minBQ 20 \
 	-minMQ 30 \
 	-o $outdir/${header}.coveredIntervals.txt
 # you'll then use this as -L when you call variants.
-# min coverage: 10 (or 5?)
+# min coverage: 10 (or 5?) -- going down to 1 for now. 
 # minimum map quality : 30 (JAR pipeline)
 # minimum base quality: 20 (JAR pipeline)
-
+# are these too stringent?
 sleep 10m
