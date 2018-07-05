@@ -97,11 +97,11 @@ Options:
   # possible read-types reflect the output of AdapterRemoval
   ExcludeReads:
     # Exclude single-end reads (yes / no)?
-    Single: no
+    Single: yes
     # Exclude non-collapsed paired-end reads (yes / no)?
-    Paired: no
+    Paired: yes
     # Exclude paired-end reads for which the mate was discarded (yes / no)?
-    Singleton: no
+    Singleton: yes
     # Exclude overlapping paired-ended reads collapsed into a single sequence
     # by AdapterRemoval (yes / no)?
     Collapsed: no
