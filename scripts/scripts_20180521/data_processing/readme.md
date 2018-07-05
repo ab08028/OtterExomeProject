@@ -1,6 +1,6 @@
 These scripts take you through:
 
-#### 0. initialSteps_setupQC/: Initial directory setup, fastq download and QC
+#### 0. initialSteps_setupQC: Initial directory setup, fastq download and QC
 
 	a. Step_0_a_checkMD5SUM.sh: check MD5Sum on Fastq files to make sure they downloaded correctly (note: make sure to use "binary" setting in FTP)
 
@@ -31,7 +31,7 @@ These scripts take you through:
 		All samples have mapDamage plots produced, but the mapDamage is only rescaled for ancient samples.
 		Indel realignment is not carried out because GATK Haplotype Caller does it internally
 
-#### 2. Variant Calling (GATK)
+#### 2. variant_calling: find covered variants and call genotypes (GATK)
 
 		a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
 		
@@ -42,7 +42,7 @@ These scripts take you through:
 		d. XXX .sh: call genotypes
 
 
-#### 3. Variant Filtering (GATK)
+#### 3.  variant_filtering: filter variants on depth and quality (GATK)
 
 		[will filter on depth, quality, etc. May treat aDNA differently]
 		
