@@ -22,28 +22,28 @@
 	plmx.2 plmx_Step_2_DownloadMapDamageReports.sh: gather mapDamage plots to transfer to home computer to go into SI materials
 
 ##### **Paleomix Notes:** 
-		Paleomix Documentation: https://paleomix.readthedocs.io/en/latest/
-		Paleomix carries out AdapterRemoval, read mapping, mapping DNA damage and correcting it, and validation.
-		It can be used with multiple reference genomes and multiple libraries per sample.
-		First, AdapterRemoval trims adapters and low quality bases at the ends of reads. It also collapses overlapping reads.
-		For ancient samples, I only use these collapsed reads downstream. Modern samples retain all reads.
-		For ancient samples, bwa backtrack with the seed disabled and settings from Kircher's protocol is used to map (-n = 0.01; -o=2; min qual 30)
-		For modern samples, bwa mem is used to map (min qual 30)
-		All samples have mapDamage plots produced, but the mapDamage is only rescaled for ancient samples.
-		Indel realignment is not carried out because GATK Haplotype Caller does it internally
+	Paleomix Documentation: https://paleomix.readthedocs.io/en/latest/
+	Paleomix carries out AdapterRemoval, read mapping, mapping DNA damage and correcting it, and validation.
+	It can be used with multiple reference genomes and multiple libraries per sample.
+	First, AdapterRemoval trims adapters and low quality bases at the ends of reads. It also collapses overlapping reads.
+	For ancient samples, I only use these collapsed reads downstream. Modern samples retain all reads.
+	For ancient samples, bwa backtrack with the seed disabled and settings from Kircher's protocol is used to map (-n = 0.01; -o=2; min qual 30)
+	For modern samples, bwa mem is used to map (min qual 30)
+	All samples have mapDamage plots produced, but the mapDamage is only rescaled for ancient samples.
+	Indel realignment is not carried out because GATK Haplotype Caller does it internally
 
 #### 2. variant_calling: find covered variants and call genotypes (GATK)
 
-		a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
-		
-		b. XXX. sh: Run Qualimap on covered regions (use multiqc to gather reports)  
+	a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
 	
-		c. Step_2_b_HaplotypeCaller.sh: call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
+	b. XXX. sh: Run Qualimap on covered regions (use multiqc to gather reports)  
+
+	c. Step_2_b_HaplotypeCaller.sh: call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
 		
-		d. XXX .sh: call genotypes
+	d. XXX .sh: call genotypes
 
 
 #### 3.  variant_filtering: filter variants on depth and quality (GATK)
 
-		[will filter on depth, quality, etc. May treat aDNA differently]
+	[will filter on depth, quality, etc. May treat aDNA differently]
 		
