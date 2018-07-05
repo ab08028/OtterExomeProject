@@ -1,0 +1,9 @@
+# https://help.hostedftp.com/knowledgebase/how-to-connect-to-your-remote-site-using-the-command-line/
+ftp ftp.hostedftp.com 
+
+#username is email
+#Hound pwd
+####### *** HAVE TO SAY "binary" *** ##### 
+# then you can cd into NOVASEQ_RUN16062018
+# type prompt to turn off interactive mode
+# and download using mget *
