@@ -13,7 +13,7 @@ QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
 # location of github:  which may be on remote server or local laptop
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
-scriptDir=$gitDir/scripts/scripts_20180521/data_processing/generic
+scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling
 # script to run: 
 scriptname=Step_2_a_FindCoveredIntervals.sh # change this to final script name!! 
 # 
