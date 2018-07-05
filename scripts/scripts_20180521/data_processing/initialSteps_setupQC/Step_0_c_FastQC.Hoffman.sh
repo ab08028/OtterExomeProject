@@ -1,15 +1,11 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=5:00:00,h_data=12G
-#$ -o /u/flashscratch/a/ab08028/captures/reports/step_1_fastqc
-#$ -e /u/flashscratch/a/ab08028/captures/reports/step_1_fastqc
 #$ -m bea
-#$ -M ab08028
-#$ -t 30-167
 
 ############################## ANCIENT MAPPING #######################################
 
-i=${SGE_TASK_ID}
+header=$1
 
 # program locations on Hoffman: need to use updated fastqc to deal with Novaseq
 # version 0.11.7 (updated from 0.11.5)
@@ -19,22 +15,18 @@ fastqc=/u/home/a/ab08028/klohmueldata/annabel_data/bin/FastQC/fastqc
 SCRATCH=/u/flashscratch/a/ab08028/
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-bams=$wd/bams
-
-# go to fastqs dir
-cd $fastqs
+headers=$wd/samples/allElutSamples.txt
 
 # make output directory
-mkdir -p fastqc-output
-
+mkdir -p $wd/fastqc
 
 # adjust if different format
-fileR1=`ls ${i}_Elut_*R1*.fastq.gz` 
-fileR2=`ls ${i}_Elut_*R2*.fastq.gz`
+fileR1=$fastqs/${header}_*_R1_*.fastq.gz
+fileR2=$fastqs/${header}_*_R2_*.fastq.gz
 
 # run fastqc
-$fastqc $fileR1 -o fastqc-output
-$fastqc $fileR2 -o fastqc-output
+$fastqc $fileR1 -o $wd/fastqc
+$fastqc $fileR2 -o $wd/fastqc
 
 # after it's done, run multiqc separately to aggregate.
 sleep 10m
