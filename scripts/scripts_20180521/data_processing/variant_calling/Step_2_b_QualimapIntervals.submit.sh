@@ -15,7 +15,7 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling
 # script to run: 
-scriptname=Step_2_b_QualimapIntervals.sh# change this to final script name!! 
+scriptname=Step_2_b_QualimapIntervals.sh # change this to final script name!! 
 # 
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
