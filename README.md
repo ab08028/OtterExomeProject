@@ -8,12 +8,7 @@ Directory Structure:
 ```
 |---scripts/
 |	|---data_processing/
-|	|	|---modern/
-|	|	|---ancient/
 |	|---analyses/
-|	|	|---modern/
-|	|	|---ancient/
-|	|	|---combined/
 |---results/
 |	|---datafiles/
 |	|---plots/
