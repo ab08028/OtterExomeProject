@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -m bea
 #$ -M ab08028
-#$ -N intervals_submit
+#$ -N qualimap_submit
 user=ab08028 # where emails are sent
 
 QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
