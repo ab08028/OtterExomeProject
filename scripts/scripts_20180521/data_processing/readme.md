@@ -1,8 +1,13 @@
 These scripts take you through:
+
 0. initialSteps_setupQC/: Initial directory setup, fastq download and QC
+
   a. Step_0_a_checkMD5SUM.sh: check MD5Sum on Fastq files to make sure they downloaded correctly (note: make sure to use "binary" setting in FTP)
+
   b. Step_0_b_getListsOfSamples.sh: get lists of sample prefixes (referred to as headers) -- these will be what all other scripts iterate through
+
   c. Step_0_c_FastQC.Hoffman.sh: carry out fastqc (submit with Step_0_c_FastQC.Hoffman.submit.sh)
+
   d. (not a script) use multiqc to gather fastqc reports
 
 1. paleomixPipeline: maps reads (ancient and modern)
