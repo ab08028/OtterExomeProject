@@ -10,11 +10,11 @@ These scripts take you through:
 
    #### d. (not a script) use multiqc to gather fastqc reports
 
-1. paleomixPipeline: maps reads (ancient and modern)
-  plmx.0.a. plmx_Step_0_a_makeDefaultMakefile.sh: Generate a default paleomix pipeline; modify by hand in text editor to have the settings you want (different for ancient and modern)
-  plmx.0.b. plmx_Step_0_b_MakeAllMakefiles.sh: Using the templates you made in (a) with you unique settings, make 1 makefile for every sample (diff. anc/mod)
-  plmx.1 plmx_Step_1_runPlmx.sh: run paleomix! Submit ancient and modern jobs separately with plmx_Step_1_runPlmx.submit.[ancient/modern].sh (different memory requirements, etc.)
-  plmx.2 plmx_Step_2_DownloadMapDamageReports.sh: gather mapDamage plots to transfer to home computer to go into SI materials
+## 1. paleomixPipeline: maps reads (ancient and modern)
+  # plmx.0.a. plmx_Step_0_a_makeDefaultMakefile.sh: Generate a default paleomix pipeline; modify by hand in text editor to have the settings you want (different for ancient and modern)
+  # plmx.0.b. plmx_Step_0_b_MakeAllMakefiles.sh: Using the templates you made in (a) with you unique settings, make 1 makefile for every sample (diff. anc/mod)
+  # plmx.1 plmx_Step_1_runPlmx.sh: run paleomix! Submit ancient and modern jobs separately with plmx_Step_1_runPlmx.submit.[ancient/modern].sh (different memory requirements, etc.)
+  # plmx.2 plmx_Step_2_DownloadMapDamageReports.sh: gather mapDamage plots to transfer to home computer to go into SI materials
 Paleomix Notes: 
 Paleomix Documentation: https://paleomix.readthedocs.io/en/latest/
 Paleomix carries out AdapterRemoval, read mapping, mapping DNA damage and correcting it, and validation.
