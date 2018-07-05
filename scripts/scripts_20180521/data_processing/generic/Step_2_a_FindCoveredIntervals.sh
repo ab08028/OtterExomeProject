@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=20:00:00,h_data=20G,arch=intel*,highp
+#$ -l h_rt=1:00:00,h_data=20G,arch=intel*,highp
 #$ -m bea
 
 ########### gatk find covered regions

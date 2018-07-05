@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=1G,highp
+#$ -l h_rt=5:00:00,h_data=1G,highp
 #$ -o /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -m bea
@@ -29,5 +29,5 @@ do
 errorLocation=${reports}/${header} # report location
 mkdir -p $errorLocation
 $QSUB -e $errorLocation -o $errorLocation -M $user -N intervals.${header} $scriptDir/$scriptname $header
-sleep 10m
+sleep 30s
 done
