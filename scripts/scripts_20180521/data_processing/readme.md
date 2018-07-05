@@ -1,4 +1,5 @@
-These scripts take you through:
+## Data Processing: Fastqs --> Genotypes
+### These scripts will take you through initial QC, the paleomix mapping pipeline, variant calling and filtering
 
 #### 0. initialSteps_setupQC: Initial directory setup, fastq download and QC
 
