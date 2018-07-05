@@ -15,7 +15,7 @@ fastqc=/u/home/a/ab08028/klohmueldata/annabel_data/bin/FastQC/fastqc
 SCRATCH=/u/flashscratch/a/ab08028/
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-headers=$wd/samples/allElutSamples.txt
+headers=$wd/samples/allElutSamples.txt # can change this to work on different samples
 
 # make output directory
 mkdir -p $wd/fastqc
