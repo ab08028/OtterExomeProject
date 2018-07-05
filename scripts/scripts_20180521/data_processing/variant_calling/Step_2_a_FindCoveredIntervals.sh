@@ -14,7 +14,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load java/1.8.0_111
 module load samtools
-
+module load bedtools
 # header:
 header=$1 # input header into file
 # file locations:
@@ -29,8 +29,6 @@ GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/Genome
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 
-# header:
-header=$1 # input header into file
 # going to be more lax on coverage requirements (10 --> 1) to account for ancient DNA.
 # can always filter out later.
 java -jar $GATK \
@@ -41,9 +39,23 @@ java -jar $GATK \
 	-minBQ 20 \
 	-minMQ 30 \
 	-o $outdir/${header}.coveredIntervals.txt
+
 # you'll then use this as -L when you call variants.
 # min coverage: 10 (or 5?) -- going down to 1 for now. 
 # minimum map quality : 30 (JAR pipeline)
 # minimum base quality: 20 (JAR pipeline)
 # are these too stringent?
+
+# Also want to make a bed file version
+# how to: the interval list has format: 
+# GL896898.1:37826-37995 (scaffold:start-stop) and is 1-based.
+# So for .bed file, I need to make it 0-based on the start coord and non-inclusive for end coord, so keep the same
+# so want scaffold\tstart-1\tstop for bed version (to use for other things)
+########## also make a bed version: 
+awk -F [:-] '{OFS="\t"; print $1,$2-1,$3}' $outdir/${header}.coveredIntervals.txt > $outdir/${header}.coveredIntervals.bed
+# want to check that nothing got made negative 1 (if it started at 0)
+sed -i'' 's/-1/0/g' $outdir/${header}.coveredIntervals.bed
+# also want to merge intervals
+bedtools merge -i $outdir/${header}.coveredIntervals.bed > $outdir/${header}.coveredIntervals.merged.bed
+
 sleep 10m

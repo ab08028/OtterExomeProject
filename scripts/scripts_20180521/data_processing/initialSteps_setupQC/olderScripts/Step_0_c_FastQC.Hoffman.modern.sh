@@ -5,7 +5,6 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/step_1_fastqc
 #$ -m bea
 #$ -M ab08028
-#$ -t 30-167
 
 ############################## ANCIENT MAPPING #######################################
 
@@ -19,8 +18,7 @@ fastqc=/u/home/a/ab08028/klohmueldata/annabel_data/bin/FastQC/fastqc
 SCRATCH=/u/flashscratch/a/ab08028/
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-bams=$wd/bams
-
+headers=$wd/samples/allElutSamples.txt
 # go to fastqs dir
 cd $fastqs
 
@@ -33,8 +31,8 @@ fileR1=`ls ${i}_Elut_*R1*.fastq.gz`
 fileR2=`ls ${i}_Elut_*R2*.fastq.gz`
 
 # run fastqc
-$fastqc $fileR1 -o fastqc-output
-$fastqc $fileR2 -o fastqc-output
+$fastqc $fastqs/$fileR1 -o fastqc-output
+$fastqc $fastqs/$fileR2 -o fastqc-output
 
 # after it's done, run multiqc separately to aggregate.
 sleep 10m
