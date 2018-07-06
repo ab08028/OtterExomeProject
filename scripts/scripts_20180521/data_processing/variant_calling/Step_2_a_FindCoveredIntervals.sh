@@ -38,7 +38,7 @@ java -jar $GATK \
 	-cov 1 \
 	-minBQ 20 \
 	-minMQ 30 \
-	-o $outdir/${header}.coveredIntervals.txt
+	-o $outdir/${header}.coveredIntervals.list
 
 # you'll then use this as -L when you call variants.
 # min coverage: 10 (or 5?) -- going down to 1 for now. 
@@ -52,7 +52,7 @@ java -jar $GATK \
 # So for .bed file, I need to make it 0-based on the start coord and non-inclusive for end coord, so keep the same
 # so want scaffold\tstart-1\tstop for bed version (to use for other things)
 ########## also make a bed version: 
-awk -F [:-] '{OFS="\t"; print $1,$2-1,$3}' $outdir/${header}.coveredIntervals.txt > $outdir/${header}.coveredIntervals.bed
+awk -F [:-] '{OFS="\t"; print $1,$2-1,$3}' $outdir/${header}.coveredIntervals.list > $outdir/${header}.coveredIntervals.bed
 # want to check that nothing got made negative 1 (if it started at 0)
 sed -i'' 's/-1/0/g' $outdir/${header}.coveredIntervals.bed
 # also want to merge intervals
