@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=20:00:00,h_data=21G,highp,arch=intel*
+#$ -l h_rt=50:00:00,h_data=21G,highp,arch=intel*
 #$ -m abe
 # use a submission script
 
