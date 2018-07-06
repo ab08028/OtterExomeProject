@@ -22,7 +22,7 @@ mkdir -p $outdir
 
 # these are covered intervals (result of previous step)
 intervals=$wd/coveredIntervals
-intervalFile=$intervals/${header}.coveredIntervals.txt
+intervalFile=$intervals/${header}.coveredIntervals.list
 
 java -jar $GATK \
 -T HaplotypeCaller \
