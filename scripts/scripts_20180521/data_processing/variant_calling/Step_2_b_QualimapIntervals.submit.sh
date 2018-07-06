@@ -21,13 +21,13 @@ scriptname=Step_2_b_QualimapIntervals.sh # change this to final script name!!
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 headers=$wd/samples/ancientSamples.txt # all Elut samples, modern, ancient and blank
-reports=/u/flashscratch/a/ab08028/captures/reports/Qualimap/
+reports=/u/flashscratch/a/ab08028/captures/reports/qualimap/
 mkdir -p $reports
 
 cat $headers | while read header
 do
 errorLocation=${reports}/${header} # report location
 mkdir -p $errorLocation
-$QSUB -e $errorLocation -o $errorLocation -M $user -N intervals.${header} $scriptDir/$scriptname $header
+$QSUB -e $errorLocation -o $errorLocation -M $user -N qualimap.${header} $scriptDir/$scriptname $header
 sleep 30s
 done

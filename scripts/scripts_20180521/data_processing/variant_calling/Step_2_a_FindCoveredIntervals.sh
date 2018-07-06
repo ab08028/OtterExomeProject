@@ -56,6 +56,8 @@ awk -F [:-] '{OFS="\t"; print $1,$2-1,$3}' $outdir/${header}.coveredIntervals.tx
 # want to check that nothing got made negative 1 (if it started at 0)
 sed -i'' 's/-1/0/g' $outdir/${header}.coveredIntervals.bed
 # also want to merge intervals
-bedtools merge -i $outdir/${header}.coveredIntervals.bed > $outdir/${header}.coveredIntervals.merged.bed
-
+bedtools merge -i $outdir/${header}.coveredIntervals.bed > $outdir/${header}.coveredIntervals.int.bed
+# and want to add dots for empty six fields 
+awk '{OFS="\t"; print $1,$2,$3,".",".","."}' $outdir/${header}.coveredIntervals.int.bed > $outdir/${header}.coveredIntervals.merged.bed
+rm $outdir/${header}.coveredIntervals.int.bed
 sleep 10m
