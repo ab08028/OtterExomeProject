@@ -6,7 +6,14 @@ makefileDir=$scriptDir/makefiles/ancientMakefiles
 headers=$SCRATCH/captures/samples/ancientSamples.txt
 REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 
+mkdir -p $SCRATCH/captures/flagstat
+> $SCRATCH/captures/flagstat/percentMapped.all.txt
+
 cat $headers | while read header
 do 
-samtools flagstat ${wd}/${header}/${header}.${REFPREFIX}.bam > ${wd}/${header}/${header}.${REFPREFIX}.flagstat
+samtools flagstat ${wd}/${header}/${header}.${REFPREFIX}.bam > $SCRATCH/captures/flagstat/${header}.${REFPREFIX}.flagstat
+# get mapped stats
+grep "mapped" $SCRATCH/captures/flagstat/${header}.${REFPREFIX}.flagstat >> $SCRATCH/captures/flagstat/percentMapped.all.txt
 done
+
+
