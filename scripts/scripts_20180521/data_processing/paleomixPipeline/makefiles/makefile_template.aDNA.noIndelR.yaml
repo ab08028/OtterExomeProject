@@ -111,10 +111,10 @@ Options:
 
   # Optional steps to perform during processing.
   Features:
-    # Generate BAM without realignment around indels (yes / no); 20180712: am changing to 'no' 
-    RawBAM: no
-    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no); 20180712: am changing to 'yes'
-    RealignedBAM: yes
+    # Generate BAM without realignment around indels (yes / no)
+    RawBAM: yes
+    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no)
+    RealignedBAM: no
     # To disable mapDamage, write 'no'; to generate basic mapDamage plots,
     # write 'plot'; to build post-mortem damage models, write 'model',
     # and to produce rescaled BAMs, write 'rescale'. The 'model' option
