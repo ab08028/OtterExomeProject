@@ -44,19 +44,22 @@ Options:
     BWA:
       # One of "backtrack", "bwasw", or "mem"; see the BWA documentation
       # for a description of each algorithm (defaults to 'backtrack')
-      Algorithm: mem
+      Algorithm: backtrack
       # Filter aligned reads with a mapping quality (Phred) below this value
-      # 20180702: AB changed MinQuality from 0 --> 30 (recommended by paleomix)
-      MinQuality: 30
+      # 20180702: AB changed MinQuality from 0 --> 2 ala Kircher
+      MinQuality: 30 
       # Filter reads that did not map to the reference sequence
       FilterUnmappedReads: yes
       # May be disabled ("no") for aDNA alignments with the 'aln' algorithm.
       # Post-mortem damage localizes to the seed region, which BWA expects to
       # have few errors (sets "-l"). See http://pmid.us/22574660
       # 20180702: AB changed UseSeed to 'no' for aDNA
-      UseSeed: yes
+      UseSeed: no
       # Additional command-line options may be specified for the "aln"
       # call(s), as described below for Bowtie2 below.
+      # these settings are for bwa aln from Kircher. (don't use for bwa mem)
+      -n: 0.01
+      -o: 2   
 
     # Settings for mappings performed using Bowtie2
     Bowtie2:
@@ -94,11 +97,11 @@ Options:
   # possible read-types reflect the output of AdapterRemoval
   ExcludeReads:
     # Exclude single-end reads (yes / no)?
-    Single: no
+    Single: yes
     # Exclude non-collapsed paired-end reads (yes / no)?
-    Paired: no
+    Paired: yes
     # Exclude paired-end reads for which the mate was discarded (yes / no)?
-    Singleton: no
+    Singleton: yes
     # Exclude overlapping paired-ended reads collapsed into a single sequence
     # by AdapterRemoval (yes / no)?
     Collapsed: no
@@ -108,16 +111,16 @@ Options:
 
   # Optional steps to perform during processing.
   Features:
-    # Generate BAM without realignment around indels (yes / no)
-    RawBAM: yes
-    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no)
-    RealignedBAM: no
+    # Generate BAM without realignment around indels (yes / no); 20180712: am changing to 'no' 
+    RawBAM: no
+    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no); 20180712: am changing to 'yes'
+    RealignedBAM: yes
     # To disable mapDamage, write 'no'; to generate basic mapDamage plots,
     # write 'plot'; to build post-mortem damage models, write 'model',
     # and to produce rescaled BAMs, write 'rescale'. The 'model' option
     # includes the 'plot' output, and the 'rescale' option includes both
     # 'plot' and 'model' results. All analyses are carried out per library.
-    mapDamage: plot
+    mapDamage: rescale
     # Generate coverage information for the raw BAM (wo/ indel realignment).
     # If one or more 'RegionsOfInterest' have been specified for a prefix,
     # additional coverage files are generated for each alignment (yes / no)
@@ -156,14 +159,14 @@ Prefixes:
 
 # Mapping targets are specified using the following structure. Uncomment and
 # replace 'NAME_OF_TARGET' with the desired prefix for filenames.
-101_Elut_KUR_3:
+A3_Elut_CA_AN_322_SN1:
    #  Uncomment and replace 'NAME_OF_SAMPLE' with the name of this sample.
-  101_Elut_KUR_3:
+  A3_Elut_CA_AN_322_SN1:
      #  Uncomment and replace 'NAME_OF_LIBRARY' with the name of this sample.
-    101_Elut_KUR_3_1a:
+    A3_Elut_CA_AN_322_SN1_1a:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: PATH_WITH_WILDCARDS
+      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A3_Elut_CA_AN_322_SN1_S*_R{Pair}_*fastq.gz
 
 
