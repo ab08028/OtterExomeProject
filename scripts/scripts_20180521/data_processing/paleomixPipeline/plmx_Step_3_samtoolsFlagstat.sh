@@ -13,7 +13,9 @@ cat $headers | while read header
 do 
 samtools flagstat ${wd}/${header}/${header}.${REFPREFIX}.bam > $SCRATCH/captures/flagstat/${header}.${REFPREFIX}.flagstat
 # get mapped stats
-grep "mapped (" $SCRATCH/captures/flagstat/${header}.${REFPREFIX}.flagstat >> $SCRATCH/captures/flagstat/percentMapped.all.txt
+stat=`grep "mapped (" $SCRATCH/captures/flagstat/${header}.${REFPREFIX}.flagstat`
+echo $header $stat >> $SCRATCH/captures/flagstat/percentMapped.all.txt
+
 done
 
 
