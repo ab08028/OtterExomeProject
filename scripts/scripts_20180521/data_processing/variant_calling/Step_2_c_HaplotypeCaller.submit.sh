@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=1G,highp
+#$ -l h_rt=50:00:00,h_data=3G,highp
 #$ -o /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -m bea
@@ -20,7 +20,7 @@ scriptname=Step_2_c_HaplotypeCaller.sh # change this to final script name!!
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-headers=$wd/samples/ancientSamples.txt # all Elut samples, modern, ancient and blank
+headers=$wd/samples/modernSamples.txt # all Elut samples, modern, ancient and blank
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
 
