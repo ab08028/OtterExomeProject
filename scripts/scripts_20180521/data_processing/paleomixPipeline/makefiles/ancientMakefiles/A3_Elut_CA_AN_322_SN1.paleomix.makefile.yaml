@@ -132,7 +132,7 @@ Options:
     # Generate summary table for each target (yes / no)
     Summary: yes
     # Generate histogram of PCR duplicates, for use with PreSeq (yes / no)
-    DuplicateHist: no
+    DuplicateHist: yes
 
 
 # Map of prefixes by name, each having a Path key, which specifies the
@@ -167,6 +167,6 @@ A3_Elut_CA_AN_322_SN1:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A3_Elut_CA_AN_322_SN1_S*_R{Pair}_*fastq.gz
+      Lane_1: /A3_Elut_CA_AN_322_SN1_S*_R{Pair}_*fastq.gz
 
 

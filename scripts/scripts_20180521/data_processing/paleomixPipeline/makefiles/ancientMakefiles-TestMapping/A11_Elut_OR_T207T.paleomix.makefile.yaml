@@ -97,11 +97,11 @@ Options:
   # possible read-types reflect the output of AdapterRemoval
   ExcludeReads:
     # Exclude single-end reads (yes / no)?
-    Single: yes
+    Single: no
     # Exclude non-collapsed paired-end reads (yes / no)?
-    Paired: yes
+    Paired: no
     # Exclude paired-end reads for which the mate was discarded (yes / no)?
-    Singleton: yes
+    Singleton: no
     # Exclude overlapping paired-ended reads collapsed into a single sequence
     # by AdapterRemoval (yes / no)?
     Collapsed: no
@@ -111,10 +111,10 @@ Options:
 
   # Optional steps to perform during processing.
   Features:
-    # Generate BAM without realignment around indels (yes / no); 20180712: am changing to 'no' 
-    RawBAM: no
-    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no); 20180712: am changing to 'yes'
-    RealignedBAM: yes
+    # Generate BAM without realignment around indels (yes / no)
+    RawBAM: yes
+    # Generate indel-realigned BAM using the GATK Indel realigner (yes / no)
+    RealignedBAM: no
     # To disable mapDamage, write 'no'; to generate basic mapDamage plots,
     # write 'plot'; to build post-mortem damage models, write 'model',
     # and to produce rescaled BAMs, write 'rescale'. The 'model' option
@@ -147,6 +147,30 @@ Prefixes:
     # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
     # should be named 'Human_g1k_v37').
     Path: /u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
+  # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
+  # is used in summary statistics and as part of output filenames.
+  sea_otter_23May2016_bS9RH.deduped.99:
+    # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
+    # references against which reads are to be mapped. Using the same name
+    # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
+    # should be named 'Human_g1k_v37').
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
+  # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
+  # is used in summary statistics and as part of output filenames.
+  hg38:
+    # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
+    # references against which reads are to be mapped. Using the same name
+    # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
+    # should be named 'Human_g1k_v37').
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/human_genome/hg38.fasta
+  # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
+  # is used in summary statistics and as part of output filenames.
+  canFam3:
+    # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
+    # references against which reads are to be mapped. Using the same name
+    # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
+    # should be named 'Human_g1k_v37').
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/dog_genome/canFam3.fasta
 
     # (Optional) Uncomment and replace 'PATH_TO_BEDFILE' with the path to a
     # .bed file listing extra regions for which coverage / depth statistics
