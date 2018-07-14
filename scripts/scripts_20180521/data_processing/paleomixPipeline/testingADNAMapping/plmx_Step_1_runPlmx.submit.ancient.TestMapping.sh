@@ -32,7 +32,7 @@ user=ab08028 # where emails are sent
 
 cat $headers | while read header
 do
-errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/${header} # report location
+errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/testMapping/${header} # report location
 mkdir -p $errorLocation
 mkdir -p $outdir/${header}
 $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
