@@ -23,7 +23,7 @@ makefileDir=$scriptDir/makefiles/ancientMakefiles-TestMapping
 headers=$wd/samples/ancientSamples.txt
 
 # outdirectory:
-outdir=$wd/paleomix
+outdir=$wd/paleomix/testMapping
 mkdir -p $outdir
 # job info: 
 user=ab08028 # where emails are sent
