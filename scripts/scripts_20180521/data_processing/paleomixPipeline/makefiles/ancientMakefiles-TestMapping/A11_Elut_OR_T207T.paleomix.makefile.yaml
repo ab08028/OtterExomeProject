@@ -157,12 +157,12 @@ Prefixes:
     Path: /u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
   # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
   # is used in summary statistics and as part of output filenames.
-  hg38:
+  ucsc.hg19:
     # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
     # references against which reads are to be mapped. Using the same name
     # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
     # should be named 'Human_g1k_v37').
-    Path: /u/home/a/ab08028/klohmueldata/annabel_data/human_genome/hg38.fasta
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/human_genome/ucsc.hg19.fasta
   # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
   # is used in summary statistics and as part of output filenames.
   canFam3:

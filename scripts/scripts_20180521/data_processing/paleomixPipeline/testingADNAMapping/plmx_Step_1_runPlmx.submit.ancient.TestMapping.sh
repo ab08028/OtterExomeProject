@@ -20,8 +20,8 @@ scriptname=plmx_Step_1_runPlmx.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 makefileDir=$scriptDir/makefiles/ancientMakefiles-TestMapping
-headers=$wd/samples/ancientSamples.txt
-
+#headers=$wd/samples/ancientSamples.txt
+headers=$wd/samples/ancientSamples.temp.remainder.txt
 # outdirectory:
 outdir=$wd/paleomix/testMapping
 mkdir -p $outdir
@@ -39,7 +39,7 @@ $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir/${header}
 # clear variables:
 errorLocation=""
-sleep 10m
+sleep 5m
 done
 
 
