@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=4G,arch=intel*,highp
-#$ -pe shared 16
+#$ -l h_rt=50:00:00,h_data=5G,arch=intel*,highp
+#$ -pe shared 8
 #$ -m bea
 # ran in 8 hours.
 ####### run paleomix
@@ -26,7 +26,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 # this will make sure everything you need is in place and will make indices for you
 # Do this once before you set the scripts in motion
 plmx=/u/home/a/ab08028/klohmueldata/annabel_data/bin/paleomixLinks/paleomix
-MAX_THREADS=16 # adjust as needed 
+MAX_THREADS=8 # adjust as needed 
 makefile=$1
 DESTINATION=$2 # location where you want files to go 
 TEMP_DIR=$SCRATCH/temp
