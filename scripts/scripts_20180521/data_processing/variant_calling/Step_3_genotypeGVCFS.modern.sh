@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=30:00:00,h_data=28G,arch=intel*,highp
+#$ -l h_rt=100:00:00,h_data=28G,arch=intel*,highp
 #$ -N jointGeno
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK/
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK/
@@ -31,7 +31,7 @@ bgzip=~/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 # get vcfRunningList:
 # manually exclude any low coverage samples you want 
 # this will joint call everything that's in the gVCFs directory (careful with that)
-> $wd/samples/vcfRunningList.list
+> $wd/samples/vcfRunningList.${rundate}.list
 samples=`ls $wd/gvcfs/*gz`
 for i in $samples
 do
