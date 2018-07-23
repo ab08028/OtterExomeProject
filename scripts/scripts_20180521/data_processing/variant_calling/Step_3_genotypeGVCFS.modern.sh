@@ -25,7 +25,7 @@ REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 outdir=$wd/vcfs/vcf_${rundate}
 
-mkdir -p $OUT_DIR
+mkdir -p $outdir
 bgzip=~/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 # get vcfRunningList:
