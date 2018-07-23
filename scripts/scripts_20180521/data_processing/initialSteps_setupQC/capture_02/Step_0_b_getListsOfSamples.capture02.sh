@@ -24,7 +24,7 @@ mkdir -p $outdir
 
 # Capture 2 (HiSeq 4000)
 # RWAB003_26_ELUT_KUR_15_S21_L002_R1_001.fastq.gz ; want to remove RWA part to make the header.
-ls $fastqs | grep -E ^RWA*+.*gz | sed -e 's/_S[0-9]*_R.*_.*fastq.gz//g' | sort | uniq > $outdir/capture_02.txt
+ls $fastqs | grep -E ^RWA*+.*gz | sed -e 's/_S[0-9]*_L.*_*R.*_.*fastq.gz//g' | sort | uniq > $outdir/capture_02.txt
 # then when submitting jobs you can do
 # cat ancientSamples.txt | while read sample
 # do
