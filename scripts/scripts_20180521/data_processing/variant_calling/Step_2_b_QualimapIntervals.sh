@@ -30,3 +30,6 @@ $qmap bamqc --java-mem-size=10G -nt 5 -bam $paleomixOutput/$header/${header}.${R
 # add intervals file (need to convert from interval list --> bed?)
 # must be html for mulqic to work 
 sleep 10m
+
+# maybe for aDNA want to take out intervals files? Or just know that resulting percentages
+# are relative to covered internvals not to whole genome (especially for the blank)
