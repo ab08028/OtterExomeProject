@@ -12,7 +12,7 @@ wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 #modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
-ancientTemplate=$makefileDir/mtGenomeMakefiles/makefile_template.aDNA.mtGenome.yaml
+ancientTemplate=$makefileDir/makefile_template.aDNA.mtGenome.yaml
 ancHeaders=$wd/samples/ancientSamples.txt
 #modHeaders=$wd/samples/modernSamples.txt
 
