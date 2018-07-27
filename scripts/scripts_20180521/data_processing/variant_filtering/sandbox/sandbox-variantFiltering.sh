@@ -1,26 +1,27 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=24:00:00,h_data=16G
-#$ -N filtering
+#$ -N vcf_filtering
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
 #$ -M ab08028
 ######## real script starts here:
-numInd=122 # diploids
-rundate=20180724 # date genotypes were called
-noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
-
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 
+#### parameters:
+rundate=20180724 # date genotypes were called
+noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
+
+
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
 mkdir -p $wd
-indir=$SCRATCH/captures/vcfs
+indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
