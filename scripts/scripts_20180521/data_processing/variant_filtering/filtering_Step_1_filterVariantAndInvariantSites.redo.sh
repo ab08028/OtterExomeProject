@@ -7,6 +7,8 @@
 #$ -m abe
 #$ -M ab08028
 ######## real script starts here:
+
+### skipping first two steps because they completed
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -41,14 +43,14 @@ mkdir -p $outdir
 ################################################################################# 
 # trim alternates 
 # and set maxNOCALL to 20% (have to do this again at the end, but doing it now to make file smaller)
-echo "step 1: trim alternates and max no call fraction 20%"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${indir}/${infile} \
--trimAlternates \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
+#echo "step 1: trim alternates and max no call fraction 20%"
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${indir}/${infile} \
+#-trimAlternates \
+#--maxNOCALLfraction $noCallFrac \
+#-o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
 
 
 
@@ -56,14 +58,14 @@ java -jar -Xmx4G ${GATK} \
 ############################ BIALLELIC SNPs ####################################
 #################################################################################
 # Select only variant sites: (note numbering scheme: 2snp indicates it's step 2 of the snps)
-echo "snp step 2: select biallelic snps"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
---restrictAllelesTo BIALLELIC \
---selectTypeToInclude SNP \
--o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
+#echo "snp step 2: select biallelic snps"
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+#--restrictAllelesTo BIALLELIC \
+#--selectTypeToInclude SNP \
+#-o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
 
 
 ## this:
