@@ -17,7 +17,7 @@ paleomixOutput=$wd/paleomix/
 outdir=$wd/qualimap/$header
 mkdir -p $outdir/
 
-bed=$wd/coveredIntervals/${header}.coveredIntervals.merged.bed
+bed=$wd/coveredIntervals/${header}.coveredIntervals.bed
 qmap=/u/home/a/ab08028/klohmueldata/annabel_data/bin/qualimap_v2.2.1/qualimap
 REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
 #modules
