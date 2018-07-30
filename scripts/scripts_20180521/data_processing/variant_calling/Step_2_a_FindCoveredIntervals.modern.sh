@@ -56,7 +56,7 @@ java -jar $GATK \
 ########## also make a bed version: 
 awk -F [:-] '{OFS="\t"; print $1,$2-1,$3}' $outdir/${header}.coveredIntervals.list > $outdir/${header}.coveredIntervals.int.bed
 # want to check that nothing got made negative 1 (if it started at 0)
-sed -i'' 's/-1/0/g' $outdir/${header}.coveredIntervals.bed
+sed -i'' 's/-1/0/g' $outdir/${header}.coveredIntervals.int.bed
 # update: 20180730: DO NOT MERGE. Nothing gets merged and it is just slow and sometimes errors out.
 #bedtools merge -i $outdir/${header}.coveredIntervals.bed > $outdir/${header}.coveredIntervals.int.bed
 # and want to add dots for empty six fields 
