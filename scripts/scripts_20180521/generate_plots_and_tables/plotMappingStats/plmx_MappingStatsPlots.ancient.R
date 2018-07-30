@@ -61,7 +61,8 @@ p0
 p0b <- ggplot(data=stats[stats$statistic %in% c("Mb >= 1x"),],aes(x=sample,y=value,fill=statistic))+
   geom_bar(stat="identity",position = "dodge")+
   ylab("Mb of sea otter genome with >= 1x coverage")+
-  theme_bw()
+  theme_bw()+
+  coord_flip()
 p0b
 ggsave(paste(plotoutDir,"MbSeaOtterGenome_1xCoverage.",date,".pdf",sep=""),p0b,device="pdf",width = 8,height=8)
 
@@ -98,7 +99,7 @@ p1 <- plotStatsFunc(statsToPlot)
 # put in a grid (one sample per row)
 p1_grid <- do.call(grid.arrange,p1) # # do call calls grid.arrange for everything in p https://stackoverflow.com/questions/9315611/grid-of-multiple-ggplot2-plots-which-have-been-made-in-a-for-loop
 # how do I save these?
-ggsave(paste(plotoutDir,"aDNAMappingStats",date,".pdf",sep=""),p1_grid,device="pdf",width = 8,height=8)
+ggsave(paste(plotoutDir,"aDNAMappingStats",date,".pdf",sep=""),p1_grid,device="pdf",width = 8,height=16)
 
 
 ## make plots for each statistic mapped to ferret

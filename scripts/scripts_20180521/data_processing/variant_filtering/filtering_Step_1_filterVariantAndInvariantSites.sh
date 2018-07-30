@@ -7,6 +7,12 @@
 #$ -m abe
 #$ -M ab08028
 ######## real script starts here:
+
+## Note: when filtering by genotype, the sites that are no call (./.) will get a PASS in the FT field of the genotype
+# because they essentially weren't evaluated. This is a really dumb GATK thing. You can fix it with Clare's bespoke script
+# But it's also okay, because we filter by the maximum fraction of NO CALL genotypes, NOT by the fraction of PASS genotypes
+# So it actually is okay, because the ./. won't contribute to anything
+
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -92,7 +98,7 @@ java -jar -Xmx4G ${GATK} \
 --clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
 -o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
-
+## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
 # note that if you want to do it, you'll need to make scaffold IDs consistent between the repeat mask (NCBI) and the ref genome
@@ -145,7 +151,7 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_DP_LOW" \
 -o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
-
+# note the rgq filter may be redundant: https://software.broadinstitute.org/gatk/blog?id=6495
 echo "done nv step 3: filter non variant sites"
 
 ### Second round of select variants
@@ -216,7 +222,7 @@ stat1=`zcat ${outdir}/all_1_TrimAlt80Perc_${infile} | grep -v -c "#"`
 echo "stat1 sites_afterTrimAlt" $stat1 >> ${outdir}/filteringStats.${rundate}.txt
 
 ########## biallelic snps: ##########
-stat2=`zcat 'snp_2_Filter_TrimAlt80Perc_'${infile} | grep -v -c "#"`
+stat2=`zcat ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} | grep -v -c "#"`
 echo "stat2 biSNPS_initial" $stat2 >> ${outdir}/filteringStats.${rundate}.txt
 
 # snps failing filters:
@@ -238,11 +244,11 @@ stat35=`zcat ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} | grep -v 
 echo "stat3.5 var_GTs_failingDP_LOW" $stat35 >> ${outdir}/filteringStats.${rundate}.txt
 
 # total passing snps
-stat4=`zcat 'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile} | grep -v -c "#"`
+stat4=`zcat ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile} | grep -v -c "#"`
 echo "stat4 totalPassingSNPsSites_80Perc_preMerge" $stat4 >> ${outdir}/filteringStats.${rundate}.txt
 
 ########## invariant sites: ###########
-stat5=`zcat 'nv_2_AllNonVariants_'${infile} | grep -v -c "#"` 
+stat5=`zcat ${outdir}/'nv_2_AllNonVariants_'${infile} | grep -v -c "#"` 
 echo "stat5 invarSites_initial" $stat5 >> ${outdir}/filteringStats.${rundate}.txt
 
 # filters of invariant sites:
@@ -259,18 +265,18 @@ stat65=`zcat ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} | grep -v "#" | grep
 echo "stat6.5 invar_GTs_failingRGQ" $stat65 >> ${outdir}/filteringStats.${rundate}.txt
 
 # total passing invariant sites 
-stat7=`zcat 'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile} | grep -v -c "#"`
+stat7=`zcat ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile} | grep -v -c "#"`
 echo "stat7 total_invarSites_passing_80Perc_preMerge" $stat7 >> ${outdir}/filteringStats.${rundate}.txt
 
 ################## merged sites ##############
 # total passing sites
-stat8=`zcat 'all_5_passingFilters_80percCall_'${infile} | grep -v -c "#"`
+stat8=`zcat ${outdir}/'all_5_passingFilters_80percCall_'${infile} | grep -v -c "#"`
 echo "stat8 totalPassingSites_all" $stat8 >> ${outdir}/filteringStats.${rundate}.txt
 # note that some snps may have become invariant after filtering.
-stat9=`zcat 'snp_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
+stat9=`zcat ${outdir}/'snp_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
 echo "stat9 totalPassingSNPsSites_80Perc_postMerge" $stat9 >> ${outdir}/filteringStats.${rundate}.txt
 
-stat10=`zcat 'nv_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
+stat10=`zcat ${outdir}/'nv_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
 echo "stat10 total_invarSites_passing_80Perc_postMerge" $stat10 >> ${outdir}/filteringStats.${rundate}.txt
 echo "done getting statistics"
 

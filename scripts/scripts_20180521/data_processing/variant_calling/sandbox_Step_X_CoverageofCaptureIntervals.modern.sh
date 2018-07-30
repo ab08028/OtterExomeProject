@@ -39,5 +39,5 @@ java -jar $GATK \
 	-L $wd/captureRegions/ferret.Exon.Coordinates.0based.bed
 	-o $outdir/${header}.coverage.exons
 # testing this out: I think I can also do all bams at once. 
-
+# *********** not sure if I want to do this yet ********** 
 sleep 10m
