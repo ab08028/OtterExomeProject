@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=5G
-#$ -pe shared 8
+#$ -l h_rt=4:00:00,h_data=5G
+#$ -pe shared 16
 #$ -m bea
 # ran in 8 hours.
 ####### run paleomix

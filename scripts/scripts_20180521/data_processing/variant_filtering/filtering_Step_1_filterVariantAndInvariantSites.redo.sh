@@ -77,23 +77,23 @@ mkdir -p $outdir
 # 5. Individual DP < 12 filtered out (FAIL_DP_LOW)
 # 6. clustered snps (3/10) (SnpCluster)
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
-echo "snp step 3: variant filtering"
+#echo "snp step 3: variant filtering"
 
-java -jar -Xmx4G ${GATK} \
--T VariantFiltration \
--R ${REFERENCE} \
--V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
---filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
---filterName "FAIL_GATKHF" \
---genotypeFilterExpression "GQ < 20" \
---genotypeFilterName "FAIL_GQ" \
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
---genotypeFilterName "FAIL_DP_LOW" \
---clusterWindowSize 10 --clusterSize 3 \
---setFilteredGtToNocall \
--o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+#java -jar -Xmx4G ${GATK} \
+#-T VariantFiltration \
+#-R ${REFERENCE} \
+#-V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
+#--filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
+#--filterName "FAIL_GATKHF" \
+#--genotypeFilterExpression "GQ < 20" \
+#--genotypeFilterName "FAIL_GQ" \
+#--genotypeFilterExpression "DP > 1000" \
+#--genotypeFilterName "FAIL_DP_HIGH" \
+#--genotypeFilterExpression "DP < 12" \
+#--genotypeFilterName "FAIL_DP_LOW" \
+#--clusterWindowSize 10 --clusterSize 3 \
+#--setFilteredGtToNocall \
+#-o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
 
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
@@ -104,65 +104,65 @@ java -jar -Xmx4G ${GATK} \
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # and only select sites where max 20% of genotypes are not called
-echo "snp step 4: select passing variants"
+#echo "snp step 4: select passing variants"
 
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
---excludeFiltered \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+#--excludeFiltered \
+#--maxNOCALLfraction $noCallFrac \
+#-o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
 
 ### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
 ### Also want to eliminate any that are all hets. How to find those?
 #################################################################################
 ############################ INVARIANT SITES ####################################
 #################################################################################
-echo "starting: nv step 2: select non variant sites"
+#echo "starting: nv step 2: select non variant sites"
 
 ## Select the invariants:
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
---selectTypeToInclude NO_VARIATION \
--o ${outdir}/'nv_2_AllNonVariants_'${infile}
-echo "done: nv step 2: select non variant sites"
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+#--selectTypeToInclude NO_VARIATION \
+#-o ${outdir}/'nv_2_AllNonVariants_'${infile}
+#echo "done: nv step 2: select non variant sites"
 
 
-echo "starting nv step 3: filter non variant sites"
+#echo "starting nv step 3: filter non variant sites"
 
-java -jar -Xmx4G ${GATK} \
--T VariantFiltration \
--R ${REFERENCE} \
--V ${outdir}/'nv_2_AllNonVariants_'${infile} \
---filterExpression "QUAL < 30 " \
---filterName "FAIL_QUAL30" \
---genotypeFilterExpression "RGQ < 1" \
---genotypeFilterName "FAIL_RGQ" \
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
---genotypeFilterName "FAIL_DP_LOW" \
--o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
+#java -jar -Xmx4G ${GATK} \
+#-T VariantFiltration \
+#-R ${REFERENCE} \
+#-V ${outdir}/'nv_2_AllNonVariants_'${infile} \
+#--filterExpression "QUAL < 30 " \
+#--filterName "FAIL_QUAL30" \
+#--genotypeFilterExpression "RGQ < 1" \
+#--genotypeFilterName "FAIL_RGQ" \
+#--genotypeFilterExpression "DP > 1000" \
+#--genotypeFilterName "FAIL_DP_HIGH" \
+#--genotypeFilterExpression "DP < 12" \
+#--genotypeFilterName "FAIL_DP_LOW" \
+#-o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 
-echo "done nv step 3: filter non variant sites"
+#echo "done nv step 3: filter non variant sites"
 
 ### Second round of select variants
 
-echo "starting nv step 4: select only passing non variant sites"
+#echo "starting nv step 4: select only passing non variant sites"
 
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
---excludeFiltered \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile}
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
+#--excludeFiltered \
+#--maxNOCALLfraction $noCallFrac \
+#-o ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile}
 ## merge back together the variant and invariant files - hopefully we can do that.
-echo "done nv step 4: select only passing non variant sites"
+#echo "done nv step 4: select only passing non variant sites"
 
 #################################################################################
 ############################ MERGE ALL PASSING SITES ###########################

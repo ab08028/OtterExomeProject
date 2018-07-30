@@ -20,7 +20,7 @@ scriptname=plmx_Step_1_runPlmx.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 makefileDir=$scriptDir/makefiles/ancientMakefiles
-headers=$wd/samples/ancientSamples.temp.remainder.txt
+headers=$wd/samples/ancientSamples.txt
 
 # outdirectory:
 outdir=$wd/paleomix

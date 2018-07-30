@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=100:00:00,h_data=28G,arch=intel*,highp
+#$ -l h_rt=124:00:00,h_data=28G,highp
 #$ -N jointGeno
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK/
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK/
