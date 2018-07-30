@@ -27,8 +27,8 @@ echo $header
 # make a new version of the makefile
 ######## *** ALWAYS MAKE SURE SETTINGS ARE APPROPRIATE *** ###########
 # calling /bin/cp because my cp is aliased to be interactive
-/bin/cp $ancientTemplate $makefileDir/ancientMakefiles/${header}.paleomix.makefile.mtGenome.yaml
-newMake=$makefileDir/ancientMakefiles/${header}.paleomix.makefile.mtGenome.yaml
+/bin/cp $ancientTemplate $makefileDir/ancientMakefiles-mtGenome/${header}.paleomix.makefile.mtGenome.yaml
+newMake=$makefileDir/ancientMakefiles-mtGenome/${header}.paleomix.makefile.mtGenome.yaml
 # for now NAME OF TARGET and SAMPLE are going to be the same
 sed -i'' "s/NAME_OF_TARGET:/$header:/g" $newMake
 sed -i'' "s/NAME_OF_SAMPLE:/$header:/g" $newMake

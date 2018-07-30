@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=1G,highp
+#$ -l h_rt=5:00:00,h_data=1G
 #$ -o /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -e /u/flashscratch/a/ab08028/captures/reports/submissions/
 #$ -m bea
@@ -14,16 +14,16 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # scripts:
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/paleomixPipeline
 # script to run: 
-scriptname=plmx_Step_1_runPlmx.sh
+scriptname=plmx_Step_1_runPlmx.mtGenome.sh
 
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-makefileDir=$scriptDir/makefiles/ancientMakefiles
-headers=$wd/samples/ancientSamples.temp.remainder.txt
+makefileDir=$scriptDir/makefiles/ancientMakefiles-mtGenome
+headers=$wd/samples/ancientSamples.txt
 
 # outdirectory:
-outdir=$wd/paleomix
+outdir=$wd/paleomix/mtGenome
 mkdir -p $outdir
 # job info: 
 user=ab08028 # where emails are sent
@@ -35,11 +35,11 @@ do
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/${header} # report location
 mkdir -p $errorLocation
 mkdir -p $outdir/${header}
-$QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
-$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir/${header}
+$QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.mt.${header} \
+$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.mtGenome.yaml $outdir/${header}
 # clear variables:
 errorLocation=""
-sleep 10m
+sleep 2m
 done
 
 
