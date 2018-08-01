@@ -25,12 +25,12 @@ dir.create(outdir,showWarnings = F)
 vcf.fn = paste(indir,infilePREFIX,".vcf.gz",sep="")
 
 # took ~ 5 mins (only need to do once -- in future can just open the gds file)
-snpgdsVCF2GDS(vcf.fn, paste(indir,infilePREFIX,".gds",sep=""), method="biallelic.only")
+snpgdsVCF2GDS(vcf.fn, paste(outdir,infilePREFIX,".gds",sep=""), method="biallelic.only")
 
 #summary -- write it out
 # Open an output file
-sink(file=paste(indir,infilePREFIX,".gds.summary.txt",sep=""))
-snpgdsSummary(paste(indir,infilePREFIX,".gds",sep=""))
+sink(file=paste(outdir,infilePREFIX,".gds.summary.txt",sep=""))
+snpgdsSummary(paste(outdir,infilePREFIX,".gds",sep=""))
 # close summary file
 sink()
 
