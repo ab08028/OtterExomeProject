@@ -116,15 +116,16 @@ java -jar -Xmx4G ${GATK} \
 -V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
 --excludeFiltered \
 --maxNOCALLfraction $noCallFrac \
+-trimAlternates \
 -o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
-
+# also adding trimAlternates again in case some got through [luckily none got through]
 ### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
 ### Also want to eliminate any that are all hets. How to find those?
 #################################################################################
 ############################ INVARIANT SITES ####################################
 #################################################################################
 echo "starting: nv step 2: select non variant sites"
-
+# need to redo invariants
 ## Select the invariants:
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
@@ -149,7 +150,9 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_DP_HIGH" \
 --genotypeFilterExpression "DP < 12" \
 --genotypeFilterName "FAIL_DP_LOW" \
+--setFilteredGtToNocall \
 -o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
+# 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # note the rgq filter may be redundant: https://software.broadinstitute.org/gatk/blog?id=6495
 echo "done nv step 3: filter non variant sites"
@@ -164,8 +167,10 @@ java -jar -Xmx4G ${GATK} \
 -V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
 --excludeFiltered \
 --maxNOCALLfraction $noCallFrac \
+-trimAlternates \
 -o ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile}
 ## merge back together the variant and invariant files - hopefully we can do that.
+#20180731: tyring to add -trimAlternates again at this stage. not sure why it keeps getting through 
 echo "done nv step 4: select only passing non variant sites"
 
 #################################################################################
@@ -198,7 +203,7 @@ java -jar -Xmx4G ${GATK} \
 -o ${outdir}/'snp_5_passingAllFilters_postMerge_'${infile}
 echo "done step 5b: select final passing snps from merged file"
 
-## Select the invariants:
+## Select the invariants (exclude indels):
 echo "starting step 5c: select final passing nonvariant sites from merged file"
 
 java -jar -Xmx4G ${GATK} \
@@ -206,9 +211,10 @@ java -jar -Xmx4G ${GATK} \
 -R ${REFERENCE} \
 -V ${outdir}/'all_5_passingFilters_80percCall_'${infile} \
 --selectTypeToInclude NO_VARIATION \
+--selectTypeToExclude INDEL \
 -o ${outdir}/'nv_5_passingAllFilters_postMerge_'${infile}
 echo "done step 5c: select final passing nonvariant sites from merged file"
-
+# 20180731: explicitly de-selecting indels; see if that helps 
 ##################################################################
 ############################ GET STATS ###########################
 ##################################################################
