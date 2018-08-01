@@ -8,17 +8,18 @@
 # usage:
 # module load R
 # Rscript filtering_Step_4_ConvertToGDS.Hoffman.R [set the calldate and indir and infile manually, or can adjust script to make it a command line option.]
+# can be run in the shell (will take ~ 10 min)
 #load R packages
-library(gdsfmt)
-library(SNPRelate)
+require(gdsfmt)
+require(SNPRelate)
 
 calldate=20180724 # date gt's were called in format YYYYMMDD (set this manually)
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 SCRATCH="/u/flashscratch/a/ab08028"
 indir=paste(SCRATCH,"/captures/vcf_filtering/",calldate,"_filtered/",sep="") # this is where your snp vcf file is and where you will save your gds file
 infilePREFIX="snp_5_passingAllFilters_postMerge_raw_variants" # exclude the .vcf.gz suffix
-
-
+outdir=paste(indir,"/gdsFormat",sep="")
+dir.create(outdir,showWarnings = F)
 #read vcf, and reformat to gds (this works with gzipped vcf file)
 
 vcf.fn = paste(indir,infilePREFIX,".vcf.gz",sep="")
