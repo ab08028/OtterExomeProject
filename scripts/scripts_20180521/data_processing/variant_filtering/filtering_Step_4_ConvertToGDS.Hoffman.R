@@ -6,6 +6,7 @@
 #biocLite("gdsfmt")
 #biocLite("SNPRelate")
 # usage:
+# module load R
 # Rscript filtering_Step_4_ConvertToGDS.Hoffman.R [set the calldate and indir and infile manually, or can adjust script to make it a command line option.]
 #load R packages
 library(gdsfmt)
@@ -16,8 +17,7 @@ todaysdate=format(Sys.Date(),format="%Y%m%d")
 SCRATCH="/u/flashscratch/a/ab08028"
 indir=paste(SCRATCH,"/captures/vcf_filtered/",calldate,"/",sep="") # this is where your snp vcf file is and where you will save your gds file
 infilePREFIX="snp_5_passingAllFilters_postMerge_raw_variants" # exclude the .vcf.gz suffix
-dir.create(plotoutdir)
-dir.create(fileoutdir)
+
 
 #read vcf, and reformat to gds (this works with gzipped vcf file)
 
