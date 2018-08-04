@@ -47,14 +47,14 @@ mkdir -p $outdir
 ################################################################################# 
 # trim alternates 
 # and set maxNOCALL to 20% (have to do this again at the end, but doing it now to make file smaller)
-echo "step 1: trim alternates and max no call fraction 20%"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${indir}/${infile} \
--trimAlternates \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
+# echo "step 1: trim alternates and max no call fraction 20%"
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${indir}/${infile} \
+# -trimAlternates \
+# --maxNOCALLfraction $noCallFrac \
+# -o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
 
 
 
@@ -62,14 +62,14 @@ java -jar -Xmx4G ${GATK} \
 ############################ BIALLELIC SNPs ####################################
 #################################################################################
 # Select only variant sites: (note numbering scheme: 2snp indicates it's step 2 of the snps)
-echo "snp step 2: select biallelic snps"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
---restrictAllelesTo BIALLELIC \
---selectTypeToInclude SNP \
--o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
+# echo "snp step 2: select biallelic snps"
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+# --restrictAllelesTo BIALLELIC \
+# --selectTypeToInclude SNP \
+# -o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
 
 
 ## this:
@@ -81,23 +81,23 @@ java -jar -Xmx4G ${GATK} \
 # 5. Individual DP < 12 filtered out (FAIL_DP_LOW)
 # 6. clustered snps (3/10) (SnpCluster)
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
-echo "snp step 3: variant filtering"
-
-java -jar -Xmx4G ${GATK} \
--T VariantFiltration \
--R ${REFERENCE} \
--V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
---filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
---filterName "FAIL_GATKHF" \
---genotypeFilterExpression "GQ < 20" \
---genotypeFilterName "FAIL_GQ" \
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
---genotypeFilterName "FAIL_DP_LOW" \
---clusterWindowSize 10 --clusterSize 3 \
---setFilteredGtToNocall \
--o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+# echo "snp step 3: variant filtering"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T VariantFiltration \
+# -R ${REFERENCE} \
+# -V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
+# --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
+# --filterName "FAIL_GATKHF" \
+# --genotypeFilterExpression "GQ < 20" \
+# --genotypeFilterName "FAIL_GQ" \
+# --genotypeFilterExpression "DP > 1000" \
+# --genotypeFilterName "FAIL_DP_HIGH" \
+# --genotypeFilterExpression "DP < 12" \
+# --genotypeFilterName "FAIL_DP_LOW" \
+# --clusterWindowSize 10 --clusterSize 3 \
+# --setFilteredGtToNocall \
+# -o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
 ## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
@@ -108,30 +108,31 @@ java -jar -Xmx4G ${GATK} \
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # and only select sites where max 20% of genotypes are not called
-echo "snp step 4: select passing variants"
-
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
---excludeFiltered \
---maxNOCALLfraction $noCallFrac \
--trimAlternates \
--o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
+# echo "snp step 4: select passing variants"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+# --excludeFiltered \
+# --maxNOCALLfraction $noCallFrac \
+# -trimAlternates \
+# -o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
 # also adding trimAlternates again in case some got through [luckily none got through]
 ### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
 ### Also want to eliminate any that are all hets. How to find those?
 #################################################################################
 ############################ INVARIANT SITES ####################################
 #################################################################################
-echo "starting: nv step 2: select non variant sites"
-# need to redo invariants
-## Select the invariants:
+# echo "starting: nv step 2: select non variant sites"
+# # need to redo invariants
+# ## Select the invariants:
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
 --selectTypeToInclude NO_VARIATION \
+--selectTypeToExclude INDEL \
 -o ${outdir}/'nv_2_AllNonVariants_'${infile}
 echo "done: nv step 2: select non variant sites"
 
