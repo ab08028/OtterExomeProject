@@ -109,8 +109,13 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         		errorVCF.write('# site info has no DP or AN\n')
         		errorVCF.write(line0)
         		counter_nop+=1	
-        elif 'GT' not in myformat or 'AD' not in myformat or 'DP' not in myformat or 'GQ' not in myformat:
-        		errorVCF.write('# GT, AD, DP or GQ (which also does RGQ) not in FORMAT field\n')
+        elif 'GT' not in myformat or 'DP' not in myformat or 'GQ' not in myformat:
+        		errorVCF.write('# GT, DP or GQ (which also does RGQ) not in FORMAT field\n')
+        		errorVCF.write(line0)
+        		counter_nop+=1
+        # changed AD filter; only care if a SNP is missing AD, not if non var are missing it
+        elif 'AD' not in myformat and myAC!=0:
+        		errorVCF.write('# AD Missing from FORMAT field\n')
         		errorVCF.write(line0)
         		counter_nop+=1
         #check for missing fields in called genotypes: (if find that length of format field is not hte same as genotype info field, and that hte genotype is not ./. then there's a problem)
