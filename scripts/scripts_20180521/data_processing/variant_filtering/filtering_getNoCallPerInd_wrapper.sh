@@ -1,11 +1,19 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=24:00:00,h_data=16G
+<<<<<<< HEAD
 #$ -N bespoke_vcf_filtering
+=======
+#$ -N countNoCall_perInd
+>>>>>>> 8fa0029804ee0f1f6d26b1d31106eed5eb5dac33
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
 #$ -M ab08028
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8fa0029804ee0f1f6d26b1d31106eed5eb5dac33
 ######### wrapper for the get no call count per individual python script
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
