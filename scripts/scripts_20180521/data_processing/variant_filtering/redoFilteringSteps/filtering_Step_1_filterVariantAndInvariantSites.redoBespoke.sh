@@ -17,6 +17,8 @@
 source /u/local/Modules/default/init/modules.sh
 module load java
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
+tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
+bespokeFilterScript=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/filtering_bespokeFiltersAndChecks.py
 
 #### parameters:
 rundate=20180724 # date genotypes were called
@@ -30,8 +32,6 @@ mkdir -p $wd
 indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
-bespokeFilterScript=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/filtering_bespokeFiltersAndChecks.py
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 
@@ -207,6 +207,7 @@ echo "starting step 6a: carrying out bespoke filtering"
 python $bespokeFilterScript ${outdir}/'all_5_passingFilters_80percCall_'${infile} ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile%.gz} ${outdir}/'fail_all_6_FAILINGBespoke_passingFilters_80percCall_'${infile%.vcf.gz}.txt
 # gzip the result:
 gzip  ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile%.gz}
+$tabix -p ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile} # index the vcf
 
 echo "done with step 6a: carrying out bespoke filtering"
 
@@ -306,7 +307,7 @@ stat82=`zcat ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile
 echo "stat8.2 totalPassingSites_all_postBespoke" $stat82 >> ${outdir}/filteringStats.${rundate}.txt
 
 stat83=`grep -v -c "#" ${outdir}/'fail_all_6_FAILINGBespoke_passingFilters_80percCall_'${infile%.vcf.gz}.txt`
-echo "stat8.3 sites_failing_bespoke" $stat83 >> ${outdir}/filteringStats.${rundate}.txt
+echo "stat8.3 total_sites_failing_bespoke" $stat83 >> ${outdir}/filteringStats.${rundate}.txt
 
 # note that some snps may have become invariant after filtering.
 stat9=`zcat ${outdir}/'snp_6_passingBespoke_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
