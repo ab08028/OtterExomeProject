@@ -41,7 +41,8 @@ outdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $outdir
 
 
-######################## Remove bad individuals ###############
+######################## Remove bad individuals (relatives, low coverage, PCA outliers, admixed, etc.) ###############
+# which means that you'll rerun Step1b multiple times most likely (but hopefully DON'T have to rerun step 1a)
 echo "starting step 6: remove bad individuals"
 java -jar $GATK \
 -R $REFERENCE \
