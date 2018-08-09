@@ -8,7 +8,11 @@ script=filtering_getNoCallPerInd.py
 rundate=20180724 # date genotypes were called
 
 vcfdir=$wd/${rundate}_filtered
-outdir=$vcfdir/filterStats
+outdir=$vcfdir/filteringStats
 mkdir -p $outdir
+# this could be any vcf you want. maybe all of them? 
+python $scriptdir/$script $vcfdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.vcf.gz $outdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.NoCall.PerInd.txt
+
+
 # this could be any vcf you want. maybe all of them? 
 python $scriptdir/$script $vcfdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.vcf.gz $outdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.NoCall.PerInd.txt
