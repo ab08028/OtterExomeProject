@@ -27,6 +27,8 @@ import gzip
 filepath = sys.argv[1] #input file
 outname= sys.argv[2] # output file
 errorname= sys.argv[3] # error file
+maxNoCallFrac=sys.argv[4] # this is fraction of no-call genotypes you'll permit per site (anything greater than that will be excluded)
+# example: 118 samples, 118*.2 = 23.6 so any site with > 24 no-call sites will be excluded. A site with 23 no-call will be kept.
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
 #outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/6_allSites_bespokeFilters_passingFilters_80percCall_elut.raw_variants.20170914.vcf"
 #errorname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/sitesFailing_bespokeFilters.vcf"
@@ -44,17 +46,17 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
     inVCF = gzip.open(inputvcfilename, 'r')
     outVCF = open(outfilename, 'w')
     errorVCF = open(errorfilename, 'w')
-    # set up your possible ref and alt bases 
+    # set up your possible ref and alt bases
     refbases=set(['A', 'C', 'G', 'T'])
     altbases=set(['A', 'C', 'G', 'T', '.'])
     # set up your expected genotypes (change if phased!!!!)
     expected_genos=set(['0/0', '0/1', '1/1', './.']) # this doesn't expect phase
-    # set up a counter of no-pass (nop) or pass (p) sites 
+    # set up a counter of no-pass (nop) or pass (p) sites
     counter_nop=0 # count no pass
     counter_p=0 # count pass
     # set up the header of the new vcf:
     for line0 in inVCF:
-        if line0.startswith('#'): 
+        if line0.startswith('#'):
             outVCF.write(line0)
             continue
         ### For all other non-header lines:
@@ -103,12 +105,12 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         elif myfilter != 'PASS':
         		errorVCF.write('# FILTER is not PASS\n')
         		errorVCF.write(line0)
-        		counter_nop+=1	
+        		counter_nop+=1
         # Make sure not missing DP, AN, GT, AD, DP or GQ/RGQ
         elif 'DP' not in myinfo or 'AN' not in myinfo:
         		errorVCF.write('# site info has no DP or AN\n')
         		errorVCF.write(line0)
-        		counter_nop+=1	
+        		counter_nop+=1
         elif 'GT' not in myformat or 'DP' not in myformat or 'GQ' not in myformat:
         		errorVCF.write('# GT, DP or GQ (which also does RGQ) not in FORMAT field\n')
         		errorVCF.write(line0)
@@ -128,7 +130,12 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
             errorVCF.write('# Something is wrong with genotype counts!\n')
             errorVCF.write(line0)
             counter_nop+=1
-        # check if AC score is correct; note that if there are no hets it will be a . not a 0    
+        # check if there are more than 20% no-called genotypes
+        elif float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
+            errorVCF.write('# More than ' + str(maxNoCallFrac) + ' fraction of genotypes are  no-call at this site\n')
+            errorVCF.write(line0)
+            counter_nop+=1
+        # check if AC score is correct; note that if there are no hets it will be a . not a 0
         # Note that AC is sum of 2*HomAlt + Het ; if there is no variation AC = . or is missing
         # check if all calls are heterozygous
         elif myHet==myCalled:
@@ -140,7 +147,7 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         #    errorVCF.write('# Something is wrong with AC field-1!\n')
         #    errorVCF.write(line0)
         #    counter_nop+=1
-        # if there are hets and/or HomAlt, and AC is in the infoField, then it should equal 
+        # if there are hets and/or HomAlt, and AC is in the infoField, then it should equal
         #elif (myHet != 0 or myHomAlt!=0) and infoFields['AC']!=myHet+2*myHomAlt:
         #    errorVCF.write('# Something is wrong with AC field-2!\n')
         #    errorVCF.write(line0)
@@ -150,8 +157,8 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         #    errorVCF.write('# Something is wrong with AN field!\n')
         #    errorVCF.write(line0)
         #    counter_nop+=1
-        else: 
-            # want to update AN/AC for every line 
+        else:
+            # want to update AN/AC for every line
             # lines that have no hets and no homs
             # note that I've made no changes to genotypes (unlike Clare's script)
             # if I had done that, then I'd need to recalculate myAN and myAC at the end here
@@ -162,26 +169,26 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
                 infoFields['AF']="."
                 infoFields['AN']=myCalled * 2
                 mynewline += '\t'.join(line[:7]) # note: non-inclusive
-                mynewline += '\t'                
+                mynewline += '\t'
                 mynewline += ';'.join('{0}={1}'.format(key, val) for key, val in sorted(infoFields.items()))
                 mynewline += '\t'
                 mynewline += '\t'.join(line[8:])
                 mynewline += '\n'
-                outVCF.write(mynewline)                
+                outVCF.write(mynewline)
                 counter_p+=1
             # lines with variation:
             else:
                 mynewline=''
-                infoFields['AC']=myAC              
+                infoFields['AC']=myAC
                 infoFields['AN']=myAN
                 infoFields['AF']=round(float(myAC))/(float(myAN))
                 mynewline += '\t'.join(line[:7])
-                mynewline += '\t'                
+                mynewline += '\t'
                 mynewline += ';'.join('{0}={1}'.format(key, val) for key, val in sorted(infoFields.items()))
                 mynewline += '\t'
                 mynewline += '\t'.join(line[8:])
                 mynewline += '\n'
-                outVCF.write(mynewline)                
+                outVCF.write(mynewline)
                 counter_p+=1
     # write out final information
     errorVCF.write('## This many lines failed a filter and werent printed' + '\t' + str(counter_nop) + '\n')
@@ -197,4 +204,5 @@ main_vcf_check(filepath,outname,errorname)
 # skipping a few things from clare's script
 # not bothering to update PASS flag for no call genotypes
 # not bothering to update alt allele for sites that become invariant to "." -- leaving as is
-# but making sure the AC= . 
+# but making sure the AC= .
+sys.exit()

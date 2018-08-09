@@ -46,7 +46,7 @@ def getNoCallPerInd(inputvcfilename,outfilename):
         noCallDict[sample]=0
     # skip the header lines
     for line0 in inVCF:
-        if line0.startswith('#'): 
+        if line0.startswith('#'):
             continue
         ### For all other non-header lines:
         line=line0.strip().split('\t') # this splits line by tabs
@@ -54,7 +54,7 @@ def getNoCallPerInd(inputvcfilename,outfilename):
         mygenoinfo=line[9:]
         # zip it together with samples
         # get genotype info
-        ####### This is really useful: makes queriable dictionary 
+        ####### This is really useful: makes queriable dictionary
         # of sample names and their genotypes
         allCalls=[i.split(":")[0] for i in mygenoinfo] # get genotype calls
         callDict = dict(zip(samples,allCalls))
@@ -75,3 +75,4 @@ def getNoCallPerInd(inputvcfilename,outfilename):
 #### run the function ##########
 getNoCallPerInd(filepath,outname)
 
+sys.exit()

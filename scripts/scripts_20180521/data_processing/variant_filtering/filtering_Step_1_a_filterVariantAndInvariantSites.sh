@@ -16,6 +16,7 @@
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
+module load python/2.7
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
