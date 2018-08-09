@@ -27,6 +27,8 @@ import gzip
 filepath = sys.argv[1] #input file
 outname= sys.argv[2] # output file
 errorname= sys.argv[3] # error file
+maxNoCallFrac=sys.argv[4] # this is fraction of no-call genotypes you'll permit per site (anything greater than that will be excluded)
+# example: 118 samples, 118*.2 = 23.6 so any site with > 24 no-call sites will be excluded. A site with 23 no-call will be kept.
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
 #outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/6_allSites_bespokeFilters_passingFilters_80percCall_elut.raw_variants.20170914.vcf"
 #errorname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/sitesFailing_bespokeFilters.vcf"
@@ -126,6 +128,11 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         # make sure that the way you calculated genotype counts checks out
         elif myCalled + myNoCalled != len(allCalls):
             errorVCF.write('# Something is wrong with genotype counts!\n')
+            errorVCF.write(line0)
+            counter_nop+=1
+        # check if there are more than 20% no-called genotypes
+        elif float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
+            errorVCF.write('# More than ' + str(maxNoCallFrac) + ' fraction of genotypes are  no-call at this site\n')
             errorVCF.write(line0)
             counter_nop+=1
         # check if AC score is correct; note that if there are no hets it will be a . not a 0    

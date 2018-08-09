@@ -54,6 +54,7 @@ echo "done with step 6: remove bad individuals"
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
 #################################################################################
 # These filters will check for:
+# usage: python [script] [full path to invcf] [full path to out vcf] [full path to error file] [max no call fraction]
 # 1. ref or alt alleles that aren't a single letter (AGCT) or . (alt)
 # 2. genotypes that aren't in 0/0, 0/1, 1/1 or ./. (maybe it's phased, etc)
 # 3. must have qual score
@@ -62,14 +63,17 @@ echo "done with step 6: remove bad individuals"
 # 6. make sure no called genotype is missing any info from the genotype info field
 # 7. gets rid of sites where all calls are 0/1 (all hets)
 # 8. updates AN and AC based on final sets of calls (these aren't updated when GATK does genotype filtering)
-
+# 9. filters sites that exceed the maximum no-call fraction (supplied by user)
 # this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)
-echo "starting step 7a: carrying out bespoke filtering"
+echo "starting step 7a: carrying out bespoke filtering (includes filtering out sites exceeding max no-call frac: $noCallFrac)"
 
-python $bespokeFilterScript ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} ${outdir}/'all_7_passingBespoke_rmBadIndividuals_passingFilters_'${infile%.gz} ${outdir}/'fail_all_7_FAILINGBespoke_passingFilters_'${infile%.vcf.gz}.txt
+python $bespokeFilterScript ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
+${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
+${outdir}/'fail_all_7_FAILINGBespoke_passingFilters_'${infile%.vcf.gz}.txt \
+$noCallFrac
 # gzip the result:
-gzip  ${outdir}/'all_7_passingBespoke_rmBadIndividuals_passingFilters_'${infile%.gz}
-$tabix -p ${outdir}/'all_7_passingBespoke_rmBadIndividuals_passingFilters_'${infile} # index the vcf
+gzip  ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz}
+$tabix -p ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} # index the vcf
 
 echo "done with step 7a: carrying out bespoke filtering"
 
@@ -83,11 +87,10 @@ echo "starting step 7b: select final passing snps from merged file"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'snp_7_80perc_passingBespoke_passingAllFilters_postMerge_'${infile}
+-o ${outdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
 echo "done step 7b: select final passing snps from merged file"
 
 ## Select the invariants:
@@ -96,11 +99,11 @@ echo "starting step 6c: select final passing nonvariant sites from merged file"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
 --maxNOCALLfraction $noCallFrac \
--o ${outdir}/'nv_7_80perc_passingBespoke_passingAllFilters_postMerge_'${infile}
+-o ${outdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
 echo "done step 7c: select final passing nonvariant sites from merged file"
 
 
