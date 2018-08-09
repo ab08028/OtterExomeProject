@@ -31,7 +31,7 @@ indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
-bespokeFilterScript=$wd/filtering_bespokeFiltersAndChecks.py
+bespokeFilterScript=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/filtering_bespokeFiltersAndChecks.py
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 
@@ -48,32 +48,32 @@ mkdir -p $outdir
 ################################################################################# 
 # trim alternates 
 # and set maxNOCALL to 20% (have to do this again at the end, but doing it now to make file smaller)
-echo "step 1: trim alternates and max no call fraction 20%"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${indir}/${infile} \
--trimAlternates \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
-
-
-
-#################################################################################
-############################ BIALLELIC SNPs ####################################
-#################################################################################
+# echo "step 1: trim alternates and max no call fraction 20%"
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${indir}/${infile} \
+# -trimAlternates \
+# --maxNOCALLfraction $noCallFrac \
+# -o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
+# 
+# 
+# 
+# ################################################################################
+# ########################### BIALLELIC SNPs ####################################
+# ################################################################################
 # Select only variant sites: (note numbering scheme: 2snp indicates it's step 2 of the snps)
-echo "snp step 2: select biallelic snps"
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
---restrictAllelesTo BIALLELIC \
---selectTypeToInclude SNP \
--o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
-
-
-## this:
+# echo "snp step 2: select biallelic snps"
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+# --restrictAllelesTo BIALLELIC \
+# --selectTypeToInclude SNP \
+# -o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
+# 
+# 
+# # this:
 # 1. masks out the UCSCRepeats (FAIL_RepMask)
 # 2. applies gatk hard filters (FAIL_GATKHF)
 # use genotypeFilterExpression to filter individual genotypes  and **** --setFilteredGtToNocall to change filtered genotype to "no call" (./.) ****
@@ -82,112 +82,112 @@ java -jar -Xmx4G ${GATK} \
 # 5. Individual DP < 12 filtered out (FAIL_DP_LOW)
 # 6. clustered snps (3/10) (SnpCluster)
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
-echo "snp step 3: variant filtering"
-
-java -jar -Xmx4G ${GATK} \
--T VariantFiltration \
--R ${REFERENCE} \
--V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
---filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
---filterName "FAIL_GATKHF" \
---genotypeFilterExpression "GQ < 20" \
---genotypeFilterName "FAIL_GQ" \
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
---genotypeFilterName "FAIL_DP_LOW" \
---clusterWindowSize 10 --clusterSize 3 \
---setFilteredGtToNocall \
--o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
-## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
+# echo "snp step 3: variant filtering"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T VariantFiltration \
+# -R ${REFERENCE} \
+# -V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
+# --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
+# --filterName "FAIL_GATKHF" \
+# --genotypeFilterExpression "GQ < 20" \
+# --genotypeFilterName "FAIL_GQ" \
+# --genotypeFilterExpression "DP > 1000" \
+# --genotypeFilterName "FAIL_DP_HIGH" \
+# --genotypeFilterExpression "DP < 12" \
+# --genotypeFilterName "FAIL_DP_LOW" \
+# --clusterWindowSize 10 --clusterSize 3 \
+# --setFilteredGtToNocall \
+# -o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+# # note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
 # note that if you want to do it, you'll need to make scaffold IDs consistent between the repeat mask (NCBI) and the ref genome
 # there's a 1:1 map on the FTP scaffold name document. 
-
-####### PAY ATTENTION TO WARNINGS! IF IT WARNS THAT AN ANNOTATION IS MISSING, YOU'LL HAVE WAY TOO MANY FAILING THAT SHOULDN'T ##########
-
-### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
+# 
+# ###### PAY ATTENTION TO WARNINGS! IF IT WARNS THAT AN ANNOTATION IS MISSING, YOU'LL HAVE WAY TOO MANY FAILING THAT SHOULDN'T ##########
+# 
+# ## Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # and only select sites where max 20% of genotypes are not called
-echo "snp step 4: select passing variants"
-
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
---excludeFiltered \
---maxNOCALLfraction $noCallFrac \
--trimAlternates \
--o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
+# echo "snp step 4: select passing variants"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+# --excludeFiltered \
+# --maxNOCALLfraction $noCallFrac \
+# -trimAlternates \
+# -o ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile}
 # also adding trimAlternates again in case some got through [luckily none got through]
-### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
-### Also want to eliminate any that are all hets. How to find those?
-#################################################################################
-############################ INVARIANT SITES ####################################
-#################################################################################
-echo "starting: nv step 2: select non variant sites"
+# ## Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
+# ## Also want to eliminate any that are all hets. How to find those?
+# ################################################################################
+# ########################### INVARIANT SITES ####################################
+# ################################################################################
+# echo "starting: nv step 2: select non variant sites"
 # need to redo invariants
-## Select the invariants:
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
---selectTypeToInclude NO_VARIATION \
---selectTypeToExclude INDEL \
--o ${outdir}/'nv_2_AllNonVariants_'${infile}
-echo "done: nv step 2: select non variant sites"
-
-
-echo "starting nv step 3: filter non variant sites"
-
-java -jar -Xmx4G ${GATK} \
--T VariantFiltration \
--R ${REFERENCE} \
--V ${outdir}/'nv_2_AllNonVariants_'${infile} \
---filterExpression "QUAL < 30 " \
---filterName "FAIL_QUAL30" \
---genotypeFilterExpression "RGQ < 1" \
---genotypeFilterName "FAIL_RGQ" \
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
---genotypeFilterName "FAIL_DP_LOW" \
---setFilteredGtToNocall \
--o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
+# # Select the invariants:
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+# --selectTypeToInclude NO_VARIATION \
+# --selectTypeToExclude INDEL \
+# -o ${outdir}/'nv_2_AllNonVariants_'${infile}
+# echo "done: nv step 2: select non variant sites"
+# 
+# 
+# echo "starting nv step 3: filter non variant sites"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T VariantFiltration \
+# -R ${REFERENCE} \
+# -V ${outdir}/'nv_2_AllNonVariants_'${infile} \
+# --filterExpression "QUAL < 30 " \
+# --filterName "FAIL_QUAL30" \
+# --genotypeFilterExpression "RGQ < 1" \
+# --genotypeFilterName "FAIL_RGQ" \
+# --genotypeFilterExpression "DP > 1000" \
+# --genotypeFilterName "FAIL_DP_HIGH" \
+# --genotypeFilterExpression "DP < 12" \
+# --genotypeFilterName "FAIL_DP_LOW" \
+# --setFilteredGtToNocall \
+# -o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
 # 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # note the rgq filter may be redundant: https://software.broadinstitute.org/gatk/blog?id=6495
-echo "done nv step 3: filter non variant sites"
-
-### Second round of select variants
-
-echo "starting nv step 4: select only passing non variant sites"
-
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
---excludeFiltered \
---maxNOCALLfraction $noCallFrac \
--trimAlternates \
--o ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile}
-## merge back together the variant and invariant files - hopefully we can do that.
-#20180731: tyring to add -trimAlternates again at this stage. not sure why it keeps getting through 
-echo "done nv step 4: select only passing non variant sites"
-
-#################################################################################
-############################ MERGE ALL PASSING SITES ###########################
-#################################################################################
-echo "starting step 5a: merge passing sites"
-java -jar -Xmx4G ${GATK} \
--T CombineVariants \
--R ${REFERENCE} \
--V ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile} \
--V ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile} \
---assumeIdenticalSamples \
--o ${outdir}/'all_5_passingFilters_80percCall_'${infile}
-echo "done step 5a: merge passing sites"
-
+# echo "done nv step 3: filter non variant sites"
+# 
+# ## Second round of select variants
+# 
+# echo "starting nv step 4: select only passing non variant sites"
+# 
+# java -jar -Xmx4G ${GATK} \
+# -T SelectVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
+# --excludeFiltered \
+# --maxNOCALLfraction $noCallFrac \
+# -trimAlternates \
+# -o ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile}
+# # merge back together the variant and invariant files - hopefully we can do that.
+# 20180731: tyring to add -trimAlternates again at this stage. not sure why it keeps getting through 
+# echo "done nv step 4: select only passing non variant sites"
+# 
+# ################################################################################
+# ########################### MERGE ALL PASSING SITES ###########################
+# ################################################################################
+# echo "starting step 5a: merge passing sites"
+# java -jar -Xmx4G ${GATK} \
+# -T CombineVariants \
+# -R ${REFERENCE} \
+# -V ${outdir}/'snp_4_Filtered_80percCall_GQ_DP_GaTKHF_cluster_'${infile} \
+# -V ${outdir}/'nv_4_Filtered_80percCall_DP_RGQ_QUAL_'${infile} \
+# --assumeIdenticalSamples \
+# -o ${outdir}/'all_5_passingFilters_80percCall_'${infile}
+# echo "done step 5a: merge passing sites"
+# 
 #################################################################################
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
 #################################################################################
