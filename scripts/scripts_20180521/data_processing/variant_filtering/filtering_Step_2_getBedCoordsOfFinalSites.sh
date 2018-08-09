@@ -14,3 +14,6 @@ mkdir -p $outdir/bedCoords
 
 # want to get bed coords of all passing sites:
 zcat $sitesPassingAllFilters | grep -v "#" | awk '{OFS="\t";print $1,$2-1,$2}' | bedtools sort -i stdin | bedtools merge -i stdin > ${outdir}/bedCoords/all_7_passingBespoke.sorted.merged.coords.bed
+
+# get total sum of covered sites:
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' ${outdir}/bedCoords/all_7_passingBespoke.sorted.merged.coords.bed > ${outdir}/filteringStats/all_7_passingBespoke.TOTALSITES.txt
