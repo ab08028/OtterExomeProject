@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=24:00:00,h_data=16G
-#$ -N 1c_vcf_filtering
+#$ -N vcf1c_filtering
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
