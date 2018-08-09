@@ -31,7 +31,7 @@ indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
-
+bespokeFilterScript= # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 
 # if you don't include this; but trying to be extra thorough.
@@ -187,34 +187,55 @@ java -jar -Xmx4G ${GATK} \
 -o ${outdir}/'all_5_passingFilters_80percCall_'${infile}
 echo "done step 5a: merge passing sites"
 
+#################################################################################
+############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
+#################################################################################
+# These filters will check for:
+# 1. ref or alt alleles that aren't a single letter (AGCT) or . (alt)
+# 2. genotypes that aren't in 0/0, 0/1, 1/1 or ./. (maybe it's phased, etc)
+# 3. must have qual score
+# 4. must be PASS for site
+# 5. make sure not missing DP, AN, GT, AD, DP or GQ/RGQ
+# 6. make sure no called genotype is missing any info from the genotype info field
+# 7. gets rid of sites where all calls are 0/1 (all hets)
+# 8. updates AN and AC based on final sets of calls (these aren't updated when GATK does genotype filtering)
+
+# this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)
+echo "starting step 6a: carrying out bespoke filtering"
+
+python $bespokeFilterScript ${outdir}/'all_5_passingFilters_80percCall_'${infile} ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile%.gz} ${outdir}/'fail_all_6_FAILINGBespoke_passingFilters_80percCall_'${infile%.vcf.gz}.txt
+# gzip the result:
+gzip  ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile%.gz}
+
+echo "done with step 6a: carrying out bespoke filtering"
 
 #################################################################################
 ############################ Get final sets of variant / invariant###############
 #################################################################################
-echo "starting step 5b: select final passing snps from merged file"
+echo "starting step 6b: select final passing snps from merged file"
 # Some sites that may have started as variant may have become INVARIANT by the end.
 # Want these to end up in the INVARIANT category. 
 # select the biallelic snps: 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_5_passingFilters_80percCall_'${infile} \
+-V ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${outdir}/'snp_5_passingAllFilters_postMerge_'${infile}
-echo "done step 5b: select final passing snps from merged file"
+-o ${outdir}/'snp_6_passingBespoke_passingAllFilters_postMerge_'${infile}
+echo "done step 6b: select final passing snps from merged file"
 
 ## Select the invariants:
-echo "starting step 5c: select final passing nonvariant sites from merged file"
+echo "starting step 6c: select final passing nonvariant sites from merged file"
 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_5_passingFilters_80percCall_'${infile} \
+-V ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
--o ${outdir}/'nv_5_passingAllFilters_postMerge_'${infile}
-echo "done step 5c: select final passing nonvariant sites from merged file"
+-o ${outdir}/'nv_6_passingBespoke_passingAllFilters_postMerge_'${infile}
+echo "done step 6c: select final passing nonvariant sites from merged file"
 
 ##################################################################
 ############################ GET STATS ###########################
@@ -277,14 +298,21 @@ echo "stat7 total_invarSites_passing_80Perc_preMerge" $stat7 >> ${outdir}/filter
 
 ################## merged sites ##############
 # total passing sites
-stat8=`zcat ${outdir}/'all_5_passingFilters_80percCall_'${infile} | grep -v -c "#"`
-echo "stat8 totalPassingSites_all" $stat8 >> ${outdir}/filteringStats.${rundate}.txt
-# note that some snps may have become invariant after filtering.
-stat9=`zcat ${outdir}/'snp_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
-echo "stat9 totalPassingSNPsSites_80Perc_postMerge" $stat9 >> ${outdir}/filteringStats.${rundate}.txt
+stat81=`zcat ${outdir}/'all_5_passingFilters_80percCall_'${infile} | grep -v -c "#"`
+echo "stat8.1 totalPassingSites_all_preBespoke" $stat81 >> ${outdir}/filteringStats.${rundate}.txt
 
-stat10=`zcat ${outdir}/'nv_5_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
-echo "stat10 total_invarSites_passing_80Perc_postMerge" $stat10 >> ${outdir}/filteringStats.${rundate}.txt
+stat82=`zcat ${outdir}/'all_6_passingBespoke_passingFilters_80percCall_'${infile} | grep -v -c "#"`
+echo "stat8.2 totalPassingSites_all_postBespoke" $stat82 >> ${outdir}/filteringStats.${rundate}.txt
+
+stat83=`grep -v -c "#" ${outdir}/'fail_all_6_FAILINGBespoke_passingFilters_80percCall_'${infile%.vcf.gz}.txt`
+echo "stat8.3 sites_failing_bespoke" $stat83 >> ${outdir}/filteringStats.${rundate}.txt
+
+# note that some snps may have become invariant after filtering.
+stat9=`zcat ${outdir}/'snp_6_passingBespoke_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
+echo "stat9 totalPassingSNPsSites_80Perc_postMerge_postBespoke" $stat9 >> ${outdir}/filteringStats.${rundate}.txt
+
+stat10=`zcat ${outdir}/'nv_6_passingBespoke_passingAllFilters_postMerge_'${infile} | grep -v -c "#"` 
+echo "stat10 total_invarSites_passing_80Perc_postMerge_postBespoke" $stat10 >> ${outdir}/filteringStats.${rundate}.txt
 echo "done getting statistics"
 
 ## optional : clean up
