@@ -21,7 +21,7 @@ bespokeFilterScript=$wd/filtering_bespokeFiltersAndChecks.py
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
 #### parameters:
-rundate=20180724 # date genotypes were called
+rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
 noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
 
 
@@ -48,15 +48,14 @@ mkdir -p $outdir
 ############################ Prepare File ####################################
 ################################################################################# 
 # trim alternates 
-# and set maxNOCALL to 20% (have to do this again at the end, but doing it now to make file smaller)
-echo "step 1: trim alternates and max no call fraction 20%"
+# update: 20180809: stopped filtering by 80% call rate here; want to get rid of bad individuals before I do that.
+echo "step 1: trim alternates"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${indir}/${infile} \
 -trimAlternates \
---maxNOCALLfraction $noCallFrac \
--o ${outdir}/'all_1_TrimAlt80Perc_'${infile}
+-o ${outdir}/'all_1_TrimAlt_'${infile}
 
 
 
@@ -68,10 +67,10 @@ echo "snp step 2: select biallelic snps"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+-V ${outdir}/'all_1_TrimAlt_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile}
+-o ${outdir}/'snp_2_Filter_TrimAlt_'${infile}
 
 
 ## this:
@@ -88,7 +87,7 @@ echo "snp step 3: variant filtering"
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
--V ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} \
+-V ${outdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
 --genotypeFilterExpression "GQ < 20" \
@@ -132,7 +131,7 @@ echo "starting: nv step 2: select non variant sites"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt80Perc_'${infile} \
+-V ${outdir}/'all_1_TrimAlt_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
 -o ${outdir}/'nv_2_AllNonVariants_'${infile}
@@ -250,11 +249,11 @@ echo "# Filtering Statistics for SNPs and invariant sites" > ${outdir}/filtering
 stat0=`zcat ${indir}/${infile} | grep -v -c "#"` 
 echo "stat0 starting_sites" $stat0 >> ${outdir}/filteringStats/filteringStats.${rundate}.txt
 # sites after trim Altnernates and removing sites with >20% no call
-stat1=`zcat ${outdir}/all_1_TrimAlt80Perc_${infile} | grep -v -c "#"`
+stat1=`zcat ${outdir}/all_1_TrimAlt_${infile} | grep -v -c "#"`
 echo "stat1 sites_afterTrimAlt" $stat1 >> ${outdir}/filteringStats/filteringStats.${rundate}.txt
 
 ########## biallelic snps: ##########
-stat2=`zcat ${outdir}/'snp_2_Filter_TrimAlt80Perc_'${infile} | grep -v -c "#"`
+stat2=`zcat ${outdir}/'snp_2_Filter_TrimAlt_'${infile} | grep -v -c "#"`
 echo "stat2 biSNPS_initial" $stat2 >> ${outdir}/filteringStats/filteringStats.${rundate}.txt
 
 # snps failing filters:

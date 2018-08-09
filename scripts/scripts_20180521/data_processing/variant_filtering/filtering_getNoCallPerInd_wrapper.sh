@@ -1,3 +1,12 @@
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=24:00:00,h_data=16G
+#$ -N countNoCall_perInd
+#$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
+#$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
+#$ -m abe
+#$ -M ab08028
+
 ######### wrapper for the get no call count per individual python script
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
