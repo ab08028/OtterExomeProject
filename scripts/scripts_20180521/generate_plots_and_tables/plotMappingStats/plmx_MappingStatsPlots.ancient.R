@@ -7,16 +7,17 @@ require(scales)
 ############################## aDNA Assessment Plots ####################
 #### This script explores the summary stats output by paleomix and preseq, etc.
 #### where to save results:
+date=20180730 # date of stats
+todaysdate=format(Sys.Date(),format="%Y%m%d")
 resultsDir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/"
-plotoutDir=paste(resultsDir,"plots/mappingStats/aDNA/",sep="") # where you want plots to do
-tableoutDir=paste(resultsDir,"tables/mappingStats/aDNA/",sep="")
+plotoutDir=paste(resultsDir,"plots/mappingStats/aDNA/",date,"/",sep="") # where you want plots to do
+tableoutDir=paste(resultsDir,"tables/mappingStats/aDNA/",date,"/",sep="")
 dir.create(plotoutDir,showWarnings = F,recursive = T)
 dir.create(tableoutDir,showWarnings = F,recursive = T)
 ########################### 1. Paleomix Summary ###############################
 # in bash, I selected the stats I wanted using sandbox--gatherstats.sh script
 # These were then downloaded and can be input into R.
 
-date=20180722 # date of stats
 stats <- read.table(paste(resultsDir,"QC_Reports/plmx_mappingStats/",date,"/plmx.aDNA.summary.stats.txt",sep=""),header=T,stringsAsFactors = F)
 ########## genome lengths for calculating 1x bases:
 #mfur=2410758013
@@ -46,27 +47,64 @@ intMD[intMD$statistic=="MD_003",]$statistic <- "Mb >= 3x"
 stats <- rbind(stats,intMD)
 tail(stats)
 ######### 0. Plot number of retained reads for each sample #######
-
+statsToPlot1 <- stats[stats$statistic!="hits_raw" & stats$statistic!="hits_raw_frac"  & !(stats$statistic %in% c("MD_001","MD_002","MD_003")) & !(stats$statistic %in% c("Mb >= 3x")),]
+statsToPlot1$statistic <- factor(statsToPlot1$statistic)
+levels(statsToPlot1$statistic) <- c("PCR Duplicate (frac)","Mapped Read Length\n(bp)", "Unique Mapped Reads\n(read count)","Unique Mapped Reads\n(frac)","Mb >= 1x","Mb >= 2x","Sequencing Reads")
+statsToPlot1$plotOrder <- 2 # some lower number
+statsToPlot1[statsToPlot1$sample %in% c("A12_Blank_Mycroarray_T19"),]$plotOrder <- 1
+statsToPlot1[statsToPlot1$sample %in% c("A9_Elut_CA_AN_388_SN1","A10_Elut_CA_NIC_1_SN1"),]$plotOrder <- 3
+### make this work for headers for Beth report ** YOU ARE HERE ** 
 # just plot seq retained reads:
-p0 <- ggplot(data=stats[stats$statistic=="seq_retained_reads",],aes(x=reorder(sample,value),y=value))+
+p0 <- ggplot(data=statsToPlot1[statsToPlot1$statistic=="Sequencing Reads",],aes(x=reorder(sample,plotOrder),y=value))+
   geom_bar(stat="identity")+
   coord_flip()+
   theme_bw()+
   ylab("Reads Passing Filters")+
   xlab("Sample")+
-  facet_wrap(~statistic,scales="free_x")
+  theme(axis.text=element_text(size=14),axis.title=element_text(size=14))
 p0
+ggsave(paste(plotoutDir,"/retainedReads.",todaysdate,".pdf",sep=""),p0,device="pdf",width = 8,height=5)
 
 ######### 0b Plot the Mb of genome coverage at 1/2x per sample #########
-p0b <- ggplot(data=stats[stats$statistic %in% c("Mb >= 1x"),],aes(x=sample,y=value,fill=statistic))+
+p0b <- ggplot(data=statsToPlot1[statsToPlot1$statistic %in% c("Mb >= 1x","Mb >= 2x"),],aes(x=reorder(sample,plotOrder),y=value,fill=statistic))+
   geom_bar(stat="identity",position = "dodge")+
-  ylab("Mb of sea otter genome with >= 1x coverage")+
+  ylab("Mb of sea otter genome")+
   theme_bw()+
-  coord_flip()
+  coord_flip()+
+  xlab("Sample")+
+  theme(axis.text=element_text(size=14),axis.title=element_text(size=14))
 p0b
-ggsave(paste(plotoutDir,"MbSeaOtterGenome_1xCoverage.",date,".pdf",sep=""),p0b,device="pdf",width = 8,height=8)
+ggsave(paste(plotoutDir,"/MbSeaOtterGenome_1xCoverage.",todaysdate,".pdf",sep=""),p0b,device="pdf",width = 8,height=5)
 
+######### 0c Plot the Mapping Read count and frac #########
 
+p0c <- ggplot(data=statsToPlot1[statsToPlot1$statistic %in% c( "Unique Mapped Reads\n(read count)","Unique Mapped Reads\n(frac)"),],aes(x=reorder(sample,plotOrder),y=value,fill=simpleRef))+
+  geom_bar(stat="identity",position = "dodge")+
+  ylab("")+
+  theme_bw()+
+  coord_flip()+
+  theme(axis.text=element_text(size=14),axis.title=element_text(size=14),legend.text = element_text(size=14),legend.title = element_blank(),strip.text.x = element_text(size=14))+
+  facet_wrap(~statistic,scales="free_x")+
+  xlab("")+
+  ggtitle("")
+  
+p0c
+ggsave(paste(plotoutDir,"/MappedReads",todaysdate,".pdf",sep=""),p0c,device="pdf",width = 11,height=8)
+
+######### 0d Plot the PCR Duplicate Rate and  #########
+
+p0d <- ggplot(data=statsToPlot1[statsToPlot1$statistic %in% c("PCR Duplicate (frac)","Mapped Read Length\n(bp)"),],aes(x=reorder(sample,plotOrder),y=value,fill=simpleRef))+
+  geom_bar(stat="identity",position = "dodge")+
+  ylab("")+
+  theme_bw()+
+  coord_flip()+
+  theme(axis.text=element_text(size=14),axis.title=element_text(size=14),legend.text = element_text(size=14),legend.title = element_blank(),strip.text.x = element_text(size=14))+
+  facet_wrap(~statistic,scales="free_x")+
+  xlab("")+
+  ggtitle("")
+
+p0d
+ggsave(paste(plotoutDir,"/DuplicateRate_and_Length",todaysdate,".pdf",sep=""),p0d,device="pdf",width = 11,height=8)
 
 ######### Function: Plot stats by sample/reference ############
 ############ *** CAUTION **** If there are any duplicated entries in the dataframe, they will stack on top of each other ; added border (color=i) to check for this *be careful in all plots* #####
@@ -99,7 +137,7 @@ p1 <- plotStatsFunc(statsToPlot)
 # put in a grid (one sample per row)
 p1_grid <- do.call(grid.arrange,p1) # # do call calls grid.arrange for everything in p https://stackoverflow.com/questions/9315611/grid-of-multiple-ggplot2-plots-which-have-been-made-in-a-for-loop
 # how do I save these?
-ggsave(paste(plotoutDir,"aDNAMappingStats",date,".pdf",sep=""),p1_grid,device="pdf",width = 8,height=16)
+ggsave(paste(plotoutDir,"aDNAMappingStats",todaysdate,".pdf",sep=""),p1_grid,device="pdf",width = 8,height=16)
 
 
 ## make plots for each statistic mapped to ferret
@@ -113,8 +151,9 @@ p1b <- ggplot(data=statsToPlot[statsToPlot$simpleRef=="sea otter",],aes(x=reorde
   ggtitle("aDNA Mapping Stats")+
   theme_bw()
 p1b
-ggsave(paste(plotoutDir,"aDNA.AllSamples.Stats.MfurRef.",date,".pdf",sep=""),p1b,device="pdf",width = 8,height=8)
+ggsave(paste(plotoutDir,"aDNA.AllSamples.Stats.MfurRef.",todaysdate,".pdf",sep=""),p1b,device="pdf",width = 8,height=8)
 
+############################# Further exploration ################
 ########### 2. Plot # of reads vs perc mapped #######
 dfx <- stats[stats$statistic=="seq_retained_reads",c("sample","value")]
 colnames(dfx) <- c("sample","Total_Reads")
@@ -126,7 +165,7 @@ p2 <- ggplot(df,aes(x=Total_Reads,y=Frac_Mapped,group=interaction(simpleRef,samp
   geom_point()+
   facet_wrap(~simpleRef)
 p2
-ggsave(paste(plotoutDir,"aDNA_ReadCount-vs-PercMapped.",date,".pdf",sep=""),p2,device="pdf",width = 8,height=8)
+ggsave(paste(plotoutDir,"aDNA_ReadCount-vs-PercMapped.",todaysdate,".pdf",sep=""),p2,device="pdf",width = 8,height=8)
 
 ########### 3. Compare my results to Avila-Arcos study #######
 arcos <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/ComparisonToArcos_aDNA/Arcos_Table1_Table2_aDNACaptureStats.txt",header=T)
@@ -157,8 +196,4 @@ p3 <- ggplot(compElutArcos[compElutArcos$technique!="1_WISC",],aes(x=sample,y=va
   coord_flip()+
   ggtitle("Comparing to Avila-Arcos et al.")
 p3
-ggsave(paste(plotoutDir,"aDNA_compareToAvilaArcosStudy.",date,".pdf",sep=""),p3,device="pdf",width = 8,height=8)
-
-########################### X. Preseq Library Complexity ###############################
-# run preseq on the histograms output by paleomix (have to specify that you want them)
-# put samples together? differs by reference
+ggsave(paste(plotoutDir,"aDNA_compareToAvilaArcosStudy.",todaysdate,".pdf",sep=""),p3,device="pdf",width = 8,height=8)

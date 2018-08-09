@@ -4,6 +4,8 @@ Created on Mon Aug  6 15:45:50 2018
 
 @author: annabelbeichman
 
+usage:
+python filtering_getNoCallPerInd.py [infile full path] [outfile full path]
 """
 import sys
 import gzip
@@ -13,7 +15,7 @@ outname= sys.argv[2] # output file
 #errorname= sys.argv[3] # error file
 # these are filepaths for dummy testing:
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
-outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/noCallPerInd.getFromFilteredVCF.txt"
+#outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/noCallPerInd.getFromFilteredVCF.txt"
 # do i want that from filtered vcf? then I have to refilter a bunch.
 # What about also getting DP dist at same time
 # outfile
@@ -73,7 +75,3 @@ def getNoCallPerInd(inputvcfilename,outfilename):
 #### run the function ##########
 getNoCallPerInd(filepath,outname)
 
-# skipping a few things from clare's script
-# not bothering to update PASS flag for no call genotypes
-# not bothering to update alt allele for sites that become invariant to "." -- leaving as is
-# but making sure the AC= . 
