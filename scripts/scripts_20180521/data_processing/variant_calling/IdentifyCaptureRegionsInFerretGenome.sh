@@ -90,8 +90,13 @@ rsync bedtoolsClosest/closestExonToNeutral.ferret.bed ab08028@hoffman2.idre.ucla
 # to work with
 # talk to tanya about sorting neutral regions by distnace
 # put onto Hoffman
+######## store it in data:
+cp -r findFerretCaptureRegions_20180717 /data3/abeichman/round5ExomeCaptureDesign_Oct2016/round5_AED1.0_newnames/
 
 #### Want to get coverage for: (note that I genotype everything with cov = 5 or greater)
 # 1. ferretCoords.Exons.0based.bed # exons
 # 2. ferret.NeutralRegions.gt10kbfromExon.minLen500bp.bed
 # (promoters can wait)
+######### Also want to find closest intervals that are covered
+# note that from bedtools 2.22 on you need to sort bed file
+sort -k1,1 -k2,2n ferret.Exon.Coordinates.0based.bed > ferret.Exon.Coordinates.0based.sorted.bed

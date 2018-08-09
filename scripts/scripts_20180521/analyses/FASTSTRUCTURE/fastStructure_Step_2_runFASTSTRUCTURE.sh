@@ -1,11 +1,6 @@
-############ Run faststructure for multiple values of K
-# how many?
-# kuril, commander, aleutian, alaska, california = 5
-# kuril, bering, medny, aleutian, alaska, california = 6
-# kuril, bering, medny, attu, adak, amchitka, alaska, california = 8
-# kuril+commander, aleutian, alaska, california = 4
-# kuril + commander, aleut+alaska, cali = 3
-# so for at least 3,4,5,6,7,8
+### This can be run in the shell on an interactive node:
+# 
+
 ################# installing fastStructure: #############
 
 # git clone https://github.com/rajanil/fastStructure
@@ -21,16 +16,22 @@
 # !!!! these must be added PRIOR to setting: import matplotlib.pyplot as plot
 
 ################# running fastStructure: #############
-
+calldate=20180724 # date you called genotypes
 # program dir: (downloaded 20180726)
 fastDir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/fastStructure
 #kvals="1 2 3 4 5 6 7 8 9 10"
-kvals="1 2 3" # set this to whatever numbers you want 
-pops= # file list of population assignments (single column) in same order as your sample input *careful here* get order from .fam or .nosex files
-# and then manually make list of population assignments in order (is there a better way?)
-indir=/u/flashscratch/a/ab08028/sandbox/vcf_filtering # eventually going to be filtered SNP vcf (no monomorphic sites)
-infilePREFIX=XX.test # the prefix of the .bed file
-outdir=/u/flashscratch/a/ab08028/sandbox/faststructure # eventually going to be FASTSTRUCTURE dir
+kvals="1 2 3 4 5 6 7 8 9 10" # set this to whatever numbers you want 
+
+indir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat # eventually going to be filtered SNP vcf (no monomorphic sites)
+infilePREFIX=snp_5_passingAllFilters_postMerge_raw_variants # the prefix of the .bed file
+outdir=$SCRATCH/captures/analyses/FASTSTRUCTURE/${calldate}_filtered
+
+# manually added pop levels (step 1b); they should be a column in exact order of samples (gotten order from .fam file) 
+pops=$indir/${infilePREFIX}.pops # file list of population assignments (single column) in same order as your sample input *careful here* get order from .fam or .nosex files
+# if this is empty, you forgot to do manual assignment 
+
+
+ # eventually going to be FASTSTRUCTURE dir
 plotdir=$outdir/plots
 mkdir -p $outdir
 mkdir -p $plotdir
@@ -48,13 +49,40 @@ python $fastDir/structure.py -K $k --input=$indir/$infilePREFIX --output=$outdir
 # to choose the correct K:
 
 # want to plot each one:
+if [ -s $pops ]
+then
 python $fastDir/distruct.py \
 -K $k \
 --input=$outdir/$infilePREFIX.faststructure_output \
 --output=$plotdir/${infilePREFIX}.faststructure_plot.${k}.svg \
 --title="fastStructure Results, K=$k" \
 --popfile=$pops
-# this fails due to lack of X11 forwarding. How to deal with?
+
+else
+echo "you didn't do manual assignment of populations? go back and do that."
+python $fastDir/distruct.py \
+-K $k \
+--input=$outdir/$infilePREFIX.faststructure_output \
+--output=$plotdir/${infilePREFIX}.faststructure_plot.${k}.svg \
+--title="fastStructure Results, K=$k" 
+fi
 done
 # choose amongst the K values:
-python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output
+python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output > chooseK.output
+
+# Based on what I see, I want to know the individual names for K=5
+k=5
+python $fastDir/distruct.py \
+-K $k \
+--input=$outdir/$infilePREFIX.faststructure_output \
+--output=$plotdir/${infilePREFIX}.faststructure_plot.${k}.indNames.svg \
+--title="fastStructure Results, K=$k" \
+--popfile=$indir/${infilePREFIX}.samples
+############ planning to run faststructure for multiple values of K
+# how many?
+# kuril, commander, aleutian, alaska, california = 5
+# kuril, bering, medny, aleutian, alaska, california = 6
+# kuril, bering, medny, attu, adak, amchitka, alaska, california = 8
+# kuril+commander, aleutian, alaska, california = 4
+# kuril + commander, aleut+alaska, cali = 3
+# so for at least 3,4,5,6,7,8
