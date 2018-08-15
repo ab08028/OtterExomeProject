@@ -32,9 +32,10 @@ mkdir -p $wd
 indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-bespokeFilterScript=$wd/filtering_bespokeFiltersAndChecks.py
+
 scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering
 noCallScript=$scriptdir/filtering_getNoCallPerInd.py
+
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 

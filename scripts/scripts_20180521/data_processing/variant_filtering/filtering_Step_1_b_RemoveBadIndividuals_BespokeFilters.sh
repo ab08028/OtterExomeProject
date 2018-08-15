@@ -25,9 +25,11 @@ mkdir -p $wd
 indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-bespokeFilterScript=$wd/filtering_bespokeFiltersAndChecks.py
-noCallScript=$wd/filtering_getNoCallPerInd.py
-badIndFile=$wd/bad.individuals.toRemove.txt # IDs of individuals to remove (get from step 1a)
+scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering
+
+bespokeFilterScript=$scriptdir/filtering_bespokeFiltersAndChecks.py
+
+badIndFile=$SCRATCH/samples/bad.individuals.toRemove.DuringFiltering.txt # IDs of individuals to remove (get from step 1a)
 
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
