@@ -15,7 +15,7 @@ Created on Mon Aug  6 15:45:50 2018
 
 # this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)
 
-usage:
+usage: use python 2.7
 python filtering_bespokeFiltersAndChecks.py [infile full path] [outfile full path] [error file full path]
 """
 import sys

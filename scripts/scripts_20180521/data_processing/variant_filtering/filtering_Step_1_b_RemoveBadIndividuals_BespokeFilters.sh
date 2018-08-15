@@ -43,13 +43,41 @@ mkdir -p $outdir
 
 ######################## Remove bad individuals (relatives, low coverage, PCA outliers, admixed, etc.) ###############
 # which means that you'll rerun Step1b multiple times most likely (but hopefully DON'T have to rerun step 1a)
+# bad individuals: add/remove as needed based on how many missing genotypes there are per individual (>15 million, cut)
+ind1=
+ind2=
+ind3=
+ind4=
+ind5=
+ind6=
+ind7=
+ind8=
+ind9=
+ind10=
+ind11=
+
 echo "starting step 6: remove bad individuals"
+echo "These are the bad (high dup %, high missing GTs, low coverage) individuals that are getting removed: $ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11"
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_5_passingFilters_'${infile} \
 -o ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
--excludeIDs $badIndFile
+-xl_sn ${ind1} \
+-xl_sn $ind2 \
+-xl_sn $ind3 \ 
+-xl_sn $ind4 \
+-xl_sn $ind5 \
+-xl_sn $ind6 \
+-xl_sn $ind7 \
+-xl_sn $ind8 \ 
+-xl_sn $ind9 \
+-xl_sn ${ind10} \
+-xl_sn ${ind11}
+
+ 
+# note that 4 extremely low samples were already excluded prior to genotype calling from the medgenome captures
+# note I need to add the other bad individuals from 
 echo "done with step 6: remove bad individuals"
 #################################################################################
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################

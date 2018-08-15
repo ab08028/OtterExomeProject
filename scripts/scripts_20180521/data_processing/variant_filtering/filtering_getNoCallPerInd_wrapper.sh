@@ -23,7 +23,7 @@ vcfdir=$wd/${rundate}_filtered
 outdir=$vcfdir/filteringStats
 mkdir -p $outdir
 # this could be any vcf you want. maybe all of them? 
-#python $scriptdir/$script $vcfdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.vcf.gz $outdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.NoCall.PerInd.txt
+python $scriptdir/$script $vcfdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.vcf.gz $outdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.NoCall.PerInd.txt
 
 
 # this could be any vcf you want. maybe all of them? 

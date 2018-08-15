@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp,arch=intel*
+#$ -l h_rt=100:00:00,h_data=16G,highp,arch=intel*
 #$ -N vcf1a_filtering
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -33,7 +33,8 @@ indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 bespokeFilterScript=$wd/filtering_bespokeFiltersAndChecks.py
-noCallScript=$wd/filtering_getNoCallPerInd.py
+scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering
+noCallScript=$scriptdir/filtering_getNoCallPerInd.py
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 
@@ -44,6 +45,7 @@ noCallScript=$wd/filtering_getNoCallPerInd.py
 
 outdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $outdir
+mkdir -p $outdir/filteringStats
 
 #################################################################################
 ############################ Prepare File ####################################
@@ -191,9 +193,7 @@ echo "done step 5a: merge passing sites"
 
 
 ########################## At this stage, calculate the no-call per individual (~10hours) #######################
-# then make list of bad individuals and exclude them ?
-# then pull final sites from that file
-# how long does this take?
+# takes ~2hrs
 echo "starting step 5b: calculate missing calls per individual"
 python $noCallScript ${outdir}/'all_5_passingFilters_'${infile} ${outdir}/filteringStats/'noCall_per_Ind_all_5_passingFilters_'${infile%.vcf.gz}.txt
 # then want to remove bad individuals and then run bespoke filters as a final check of AN/AC etc.

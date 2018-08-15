@@ -4,7 +4,7 @@ Created on Mon Aug  6 15:45:50 2018
 
 @author: annabelbeichman
 
-usage:
+usage: python 2.7
 python filtering_getNoCallPerInd.py [infile full path] [outfile full path]
 """
 import sys
