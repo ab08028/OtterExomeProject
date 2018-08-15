@@ -20,7 +20,7 @@ scriptname=Step_2_a_FindCoveredIntervals.modern.sh # change this to final script
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-headers=$wd/samples/capture_02.txt # all Elut samples, modern, ancient and blank
+headers=$wd/samples/modernSamples.txt # all Elut samples, modern, ancient and blank
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
 
