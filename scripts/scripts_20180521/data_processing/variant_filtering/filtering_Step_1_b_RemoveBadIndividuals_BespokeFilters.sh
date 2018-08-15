@@ -10,6 +10,7 @@
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
+module load python/2.7
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
@@ -29,8 +30,6 @@ scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/
 
 bespokeFilterScript=$scriptdir/filtering_bespokeFiltersAndChecks.py
 
-badIndFile=$SCRATCH/samples/bad.individuals.toRemove.DuringFiltering.txt # IDs of individuals to remove (get from step 1a)
-
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
 # repeat masking is optional: my target captrue was designed away from repeat regions, so not a huge deal 
@@ -44,43 +43,68 @@ mkdir -p $outdir
 
 
 ######################## Remove bad individuals (relatives, low coverage, PCA outliers, admixed, etc.) ###############
-# which means that you'll rerun Step1b multiple times most likely (but hopefully DON'T have to rerun step 1a)
-# bad individuals: add/remove as needed based on how many missing genotypes there are per individual (>15 million, cut)
-ind1=
-ind2=
-ind3=
-ind4=
-ind5=
-ind6=
-ind7=
-ind8=
-ind9=
-ind10=
-ind11=
+# These individuals have missingness that is 1SD above the mean value (/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/QC_Reports/missingnessPerInd/20180806/noCall_per_Ind_all_5_passingFilters_raw_variants.txt)
+# calculated using this script: /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/generate_plots_and_tables/plotMissingGTsPerIndividual/plotMissingGenotypeCountsPerIndividual.R
+# 
+ind1=112_Elut_AL_AM_AM92022
+ind2=128_Elut_AK_AF3630
+ind3=131_Elut_BER_34
+ind4=143_Elut_KUR_5original
+ind5=144_Elut_KUR_1
+ind6=145_Elut_KUR_18
+ind7=150_Elut_AK_AF3631
+ind8=151_Elut_AK_AF3714
+ind9=152_Elut_AK_AF3720
+ind10=153_Elut_AK_AF3181
+ind11=154_Elut_KUR_11
+ind12=155_Elut_KUR_9
+ind13=161_Elut_MED_19
+ind14=76_Elut_BER_31
+ind15=86_Elut_MED_25
+ind16=RWAB003_15_ELUT_CA_159
+ind17=RWAB003_22_ELUT_CA_410
+
+
+badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17"
 
 echo "starting step 6: remove bad individuals"
-echo "These are the bad (high dup %, high missing GTs, low coverage) individuals that are getting removed: $ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11"
+echo "These are the bad individuals that are getting removed: $badInds because they have > mean + 1sd missing genotypes"
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_5_passingFilters_'${infile} \
 -o ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
 -xl_sn ${ind1} \
--xl_sn $ind2 \
--xl_sn $ind3 \ 
--xl_sn $ind4 \
--xl_sn $ind5 \
--xl_sn $ind6 \
--xl_sn $ind7 \
--xl_sn $ind8 \ 
--xl_sn $ind9 \
+-xl_sn ${ind2} \
+-xl_sn ${ind3} \
+-xl_sn ${ind4} \
+-xl_sn ${ind5} \
+-xl_sn ${ind6} \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
 -xl_sn ${ind10} \
--xl_sn ${ind11}
+-xl_sn ${ind11} \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17}
 
- 
+### make sure there are no spaces after the \ ! ###
+# there must be more efficient way; doing it this way now.
+
 # note that 4 extremely low samples were already excluded prior to genotype calling from the medgenome captures
 # note I need to add the other bad individuals from 
 echo "done with step 6: remove bad individuals"
+# double check that it worked:
+echo "checking that bad individuals are gone"
+> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
+for i in $badInds
+do
+zcat ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} | grep $i >> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
+done
 #################################################################################
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
 #################################################################################
@@ -125,7 +149,7 @@ java -jar -Xmx4G ${GATK} \
 echo "done step 7b: select final passing snps from merged file"
 
 ## Select the invariants:
-echo "starting step 6c: select final passing nonvariant sites from merged file"
+echo "starting step 7c: select final passing nonvariant sites from merged file"
 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
