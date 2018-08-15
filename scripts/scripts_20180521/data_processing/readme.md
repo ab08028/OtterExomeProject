@@ -34,16 +34,17 @@
 
 #### 2. variant_calling: find covered variants and call genotypes (GATK)
 
-	a. Step_2_a_FindCoveredIntervals.sh: Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
+	a. Step_2_a_FindCoveredIntervals.sh (submit with wrapper Step_2_a_FindCoveredIntervals.[modern/ancient].submit.sh): Detect covered intervals using GATK's FindCoveredIntervals to use downstream (min cov. = 1 read; MAPQ min. 30; min base qual. 20)
 	
-	b. XXX. sh: Run Qualimap on covered regions (use multiqc to gather reports)  
+	b. Step_2_b_QualimapIntervals.sh (submit with wrapper Step_2_b_QualimapIntervals.submit.sh): Run Qualimap on covered regions (use multiqc to gather reports)  
 
-	c. Step_2_b_HaplotypeCaller.sh: call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
+	c. [modern samples only] Step_2_c_HaplotypeCaller.sh (submit with Step_2_c_HaplotypeCaller.submit.sh): call individual variants using GATK's HaplotypeCaller to generate one g.vcf file per sample
+	c-alt. [aDNA samples only] -- still determining best way to call genotypes; will likely use pileupcaller --
 		
-	d. XXX .sh: call genotypes
+	d. [modern samples only] Step_3_genotypeGVCFS.modern.sh: call genotypes jointly for all populations together (exclude some extremely low coverage individuals)
 
 
 #### 3.  variant_filtering: filter variants on depth and quality (GATK)
 
-	[will filter on depth, quality, etc. May treat aDNA differently]
+	a. filtering_Step_1_a_filterVariantAndInvariantSites.sh: trim alternate alleles, select biallelic SNPs, filter using GATK HF (QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0), GQ < 20, individual genotype DP > 1000, individual genotype DP < 12, clustered SNPs (3/10)
 		
