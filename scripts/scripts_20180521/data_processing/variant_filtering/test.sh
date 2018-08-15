@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=00:10:00,h_data=16G
-#$ -N countNoCall_perInd
+#$ -l h_rt=24:00:00,h_data=16G
+#$ -N test-countNoCall_perInd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
@@ -17,5 +17,5 @@ rundate=20180724 # date genotypes were called
 vcfdir=$wd/${rundate}_filtered
 outdir=$vcfdir/filteringStats
 mkdir -p $outdir
-python $scriptdir/$script $vcfdir/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz $outdir/dummy.filtering.test.PerInd.txt
+python $scriptdir/$script $vcfdir/all_6_passingBespoke_passingFilters_80percCall_raw_variants.vcf.gz $outdir/tests-all_6_passingBespoke_passingFilters_80percCall_raw_variants.NoCallPerInd.txt
 

@@ -1,12 +1,13 @@
 ###### Gather up summary stats
 # I want the fraction of aligned (hits) reads out of total retained reads
-wd=/u/flashscratch/a/ab08028/captures/paleomix/testMapping
+wd=/u/flashscratch/a/ab08028/captures/paleomix/mtGenome
 headers=$SCRATCH/captures/samples/ancientSamples.txt
 
 outdir=$SCRATCH/captures/paleomix/summaryStats/mtGenome
 mkdir $outdir
 outfile=$outdir/plmx.aDNA.summary.stats.mtGenome.txt
-REF=sea_otter_23May2016_bS9RH.deduped.99
+#REF=sea_otter_23May2016_bS9RH.deduped.99
+REF=elut_kenyoni_ref_ASM228890v2_chrMT
 echo "sample statistic reference value" > $outfile
 cat $headers | while read header
 do
