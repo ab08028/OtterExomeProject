@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp,arch=intel*
+#$ -l h_rt=100:00:00,h_data=16G,highp,arch=intel*
 #$ -N vcf1b_filtering
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
