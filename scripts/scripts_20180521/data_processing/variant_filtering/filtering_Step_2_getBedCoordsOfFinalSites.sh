@@ -1,7 +1,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load bedtools
 #### parameters:
-rundate=20180724 # date genotypes were called
+rundate=20180806 # date genotypes were called
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering/
