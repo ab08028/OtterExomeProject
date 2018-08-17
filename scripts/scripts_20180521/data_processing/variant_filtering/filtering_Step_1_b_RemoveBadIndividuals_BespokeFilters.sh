@@ -13,6 +13,7 @@ module load java
 module load python/2.7
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
+bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 #### parameters:
 rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
@@ -105,6 +106,7 @@ for i in $badInds
 do
 zcat ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} | grep $i >> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
 done
+
 #################################################################################
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
 #################################################################################
@@ -126,12 +128,12 @@ python $bespokeFilterScript ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${
 ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
 ${outdir}/'fail_all_7_FAILINGBespoke_passingFilters_'${infile%.vcf.gz}.txt \
 $noCallFrac
-# gzip the result:
-gzip  ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz}
-$tabix -p ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} # index the vcf
+# bgzip the result: (note: must use bgzip not gzip)
+$bgzip  ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz}
+$tabix -p vcf ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} # index the vcf
 
 echo "done with step 7a: carrying out bespoke filtering"
-
+# you should gzip your bad sites eventually.
 #################################################################################
 ############################ Get final sets of variant / invariant###############
 #################################################################################
@@ -142,7 +144,7 @@ echo "starting step 7b: select final passing snps from merged file"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
+-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${outdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
@@ -154,7 +156,7 @@ echo "starting step 7c: select final passing nonvariant sites from merged file"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
+-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
 --maxNOCALLfraction $noCallFrac \
