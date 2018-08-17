@@ -60,7 +60,10 @@ java -jar -Xmx4G ${GATK} \
 -V ${indir}/${infile} \
 -trimAlternates \
 -o ${outdir}/'all_1_TrimAlt_'${infile}
-
+# next time I do this: there are sites with only 1-2 calls that inflate file sizes and slow stuff down
+# I wanted to not filter on missingness yet, because I am going to be removing bad individuals that drag down everybody's missingness %%
+# but I think there's a middle ground perhaps. At this stage I could filter sites that have >80% missing. (Whereas later I filter more stringently with those 
+# that have >20% missing)
 
 
 #################################################################################
