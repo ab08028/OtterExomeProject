@@ -8,6 +8,7 @@
 #$ -M ab08028
 
 rundate=20180806
+noCallFrac=0.2
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
@@ -29,60 +30,28 @@ populations="CA AL KUR AK"
 # note: I'm making it so that every individual in the population has to be called at the site,
 # but across all the populations only 80% have to be called at the site. I think this makes sense
 
-# do snps: [fast ~5-10 min]
+# want to do it for combined nv/snp files:
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${outdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${outdir}/populationVCFs/COM_'snp_7_allIndCalled_passingBespoke_passingAllFilters_postMerge_'${infile} \
--se '.+_Elut_BER_.+' \
--se '.+_Elut_MED_.+' \
---maxNOCALLfraction 0
-# project down SFS? or not? <--- question to ask people. 
-
-# do nv:
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${outdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${outdir}/populationVCFs/COM_'nv_7_allIndCalled_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${outdir}/populationVCFs/COM_'all_7_passingAllFilters_allCalled'${infile} \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
 --maxNOCALLfraction 0
 
-# go through rest of populations: (this assumes you've already removed any bad individuals during filtering)
 for pop in $populations
 do
 echo $pop
 
-# do snps: [fast ~5-10 min]
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${outdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${outdir}/populationVCFs/${pop}_'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--se '.+_Elut_${pop}_.+'
-
-
-# do nv:
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${outdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${outdir}/populationVCFs/${pop}_'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--se '.+_Elut_${pop}_.+'
+--variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${outdir}/populationVCFs/${pop}_'all_7_passingAllFilters_allCalled'${infile} \
+-se '.+_Elut_${pop}_.+' \
+--maxNOCALLfraction 0
 
 done
-########### test:
 
-# does this update AN fields? check:
-pop=alaska
-popHeaderDir=/u/flashscratch/a/ab08028/captures/samples/popHeaderFiles/popHeaders_allInd/
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant /u/flashscratch/a/ab08028/captures/vcf_filtering/20180724_filtered/snp_5_passingAllFilters_postMerge_raw_variants.vcf.gz \
--o /u/flashscratch/a/ab08028/captures/vcf_filtering/20180724_filtered/CA_snp_5_passingAllFilters_postMerge_raw_variants.vcf.gz \
--sn *Elut_CA_* \
---maxNOCALLfraction 0
-# currently doesn't output any snps...?
+

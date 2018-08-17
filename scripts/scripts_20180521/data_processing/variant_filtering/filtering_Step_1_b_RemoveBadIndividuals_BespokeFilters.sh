@@ -159,8 +159,8 @@ java -jar -Xmx4G ${GATK} \
 -V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
---maxNOCALLfraction $noCallFrac \
 -o ${outdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
 echo "done step 7c: select final passing nonvariant sites from merged file"
 
 
+# 20180806: ran with this setting --maxNOCALLfraction $noCallFrac on the last step. shouldn't make a difference beacuse all the sites were already filtered with the bespoke filters. 
