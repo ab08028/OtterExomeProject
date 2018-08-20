@@ -13,11 +13,11 @@
 require(gdsfmt)
 require(SNPRelate)
 
-calldate=20180724 # date gt's were called in format YYYYMMDD (set this manually)
+calldate=20180806 # date gt's were called in format YYYYMMDD (set this manually)
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 SCRATCH="/u/flashscratch/a/ab08028"
 indir=paste(SCRATCH,"/captures/vcf_filtering/",calldate,"_filtered/",sep="") # this is where your snp vcf file is and where you will save your gds file
-infilePREFIX="snp_5_passingAllFilters_postMerge_raw_variants" # exclude the .vcf.gz suffix
+infilePREFIX="snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants" # exclude the .vcf.gz suffix # updated filename 20180820
 outdir=paste(indir,"/gdsFormat/",sep="")
 dir.create(outdir,showWarnings = F)
 #read vcf, and reformat to gds (this works with gzipped vcf file)
