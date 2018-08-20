@@ -1,0 +1,30 @@
+source /u/local/Modules/default/init/modules.sh
+module load python/2.7
+
+rundate=20180806
+### wrapper for Tanya's script
+SCRATCH=/u/flashscratch/a/ab08028
+vcfDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/populationVCFs
+SFSdir=$SCRATCH/captures/analyses/SFS
+mkdir -p $SFSdir
+
+# location of tanya's scripts
+tanyaDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/tanya_scripts/
+
+# location of per-population input VCFs (with NO no-call genotypes)
+vcfDir=
+
+# neutral sites that have been called (min 10kb from genes)
+neutralBed=
+
+# generate folded SFS:
+populations="CA AK AL COM KUR"
+
+for pop in $populations
+do
+inVCF=
+python $tanyaDir/popgen_tools/popgen_tools.py \
+--vcf_file $inVCF \
+--target_bed $neutralBed \
+--total_SNPs $wd/ \
+--no_pi

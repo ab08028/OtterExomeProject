@@ -57,7 +57,7 @@ awk '{if($4>=500) print}' $wd/blastResults/blast.seaOtterNeutralPromoterCaptureR
 grep neutral $wd/blastResults/blast.seaOtterNeutralPromoterCaptureRegions_vs_ferretGenome.min500bp.out | awk '{OFS="\t"; if($10>$9) print $2,$9-1,$10,$1; else print $2,$10-1,$9,$1}' > $wd/blastResults/blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.bed
 
 # seeing how far neutral regions are from exons: must be at least 10kb
-#bedtools closest -d -a ferret.Exon.Coordinates.0based.bed -b blastResults/blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.bed > neutralRegions.DistanceFromExons.ferret.bed
+# bedtools closest -d -a ferret.Exon.Coordinates.0based.bed -b blastResults/blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.bed > neutralRegions.DistanceFromExons.ferret.bed
 #sort -k9n neutralRegions.DistanceFromExons.ferret.bed | awk '{if($7!=-1)print $0;}' | head 
 
 bedtools closest -d -b ferret.Exon.Coordinates.0based.bed -a blastResults/blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.bed > closestExonToNeutral.ferret.bed
@@ -69,15 +69,16 @@ awk '{OFS="\t";if($9>=10000)print $1,$2,$3,$4}' closestExonToNeutral.ferret.bed 
 # get ferret gff file:
 wget ftp://ftp.ensembl.org/pub/release-93/gff3/mustela_putorius_furo/Mustela_putorius_furo.MusPutFur1.0.93.gff3.gz
 gunzip ftp://ftp.ensembl.org/pub/release-93/gff3/mustela_putorius_furo/Mustela_putorius_furo.MusPutFur1.0.93.gff3.gz
-gff=$wd/Mustela_putorius_furo.MusPutFur1.0.93.gff3
+gff=$wd/Mustela_putorius_furo.MusPutFur1.0.93.gff3 ### USE .91 instead!! that's what I mapped to!
 # get exon coordinates to add to bed file (doing exon, rather than CDS, because I want UTRs)
 # using Info column (9) as bed name 
 grep exon $gff | awk '{OFS="\t";print $1,$4-1,$5,$9}' > ferretCoords.Exons.0based.bed
-# make sure nothing got made -1
-sed -i'' 's/\t-1\t/\t0\t/g' ferretCoords.Exons.0based.bed
+# make sure nothing got made -1 (not necessary)
+# sed -i'' 's/\t-1\t/\t0\t/g' ferretCoords.Exons.0based.bed
 
 # manually organized stuff and deleted ref files from work dir.
-########## Transfer to Hoffman ###########
+########## Transfer to Hoffman ########### (20180617: caught that something went wrong here; only some of exon bed file got transferred)
+# redoing the above steps on Hoffman instead of on Sirius.
 # neutral bed:
 rsync ferret.NeutralRegions.gt10kbfromExon.minLen500bp.bed ab08028@hoffman2.idre.ucla.edu:/u/flashscratch/a/ab08028/captures/captureRegions
 # exon bed:
