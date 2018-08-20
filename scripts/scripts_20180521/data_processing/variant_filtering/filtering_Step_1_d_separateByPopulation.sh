@@ -45,14 +45,15 @@ populations="CA AL KUR AK"
 #-se '.+_Elut_BER_.+' \
 #-se '.+_Elut_MED_.+' \
 #--maxNOCALLfraction 0
-# worked
-# California --> CA
+
+# California --> CA (include the RWAB hiseq4000 samples)
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${outdir}/populationVCFs/CA_'all_7_passingAllFilters_allCalled'${infile} \
 -se '.+_Elut_CA_.+' \
+-se 'RWAB003_.+_ELUT_CA_.+' \
 --maxNOCALLfraction 0
 
 # Alaska --> AK
