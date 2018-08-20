@@ -37,14 +37,14 @@ populations="CA AL KUR AK"
 # but across all the populations only 80% have to be called at the site. I think this makes sense
 
 # Bering/Medny --> Commanders (COM)
-#java -jar $GATK \
-#-R $REFERENCE \
-#-T SelectVariants \
-#--variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
-#-o ${outdir}/populationVCFs/COM_'all_7_passingAllFilters_allCalled'${infile} \
-#-se '.+_Elut_BER_.+' \
-#-se '.+_Elut_MED_.+' \
-#--maxNOCALLfraction 0
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${outdir}/populationVCFs/COM_'all_7_passingAllFilters_allCalled'${infile} \
+-se '.+_Elut_BER_.+' \
+-se '.+_Elut_MED_.+' \
+--maxNOCALLfraction 0
 
 # California --> CA (include the RWAB hiseq4000 samples)
 java -jar $GATK \
