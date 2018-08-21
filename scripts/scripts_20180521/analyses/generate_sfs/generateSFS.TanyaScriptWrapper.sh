@@ -13,10 +13,10 @@ SFSdir=$SCRATCH/captures/analyses/SFS/${rundate}
 mkdir -p $SFSdir
 
 # location of tanya's scripts
-tanyaDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/tanya_scripts/
+tanyaDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/scripts_from_others/tanya_scripts/
 
 # neutral sites that have been called (min 10kb from genes)
-neutralBed=${vcfDir}/bedCoords/all_7_passingBespoke.min10kb.fromExon.0based.sorted.merged.bed
+neutralBed=${vcfdir}/bedCoords/all_7_passingBespoke.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.bed
 
 # generate folded SFS:
 populations="CA AK AL COM KUR"
