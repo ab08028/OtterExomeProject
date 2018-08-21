@@ -1,3 +1,13 @@
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=50:00:00,h_data=16G,highp
+#$ -N generate_sfs_allPops
+#$ -o /u/flashscratch/a/ab08028/captures/reports/SFS
+#$ -e /u/flashscratch/a/ab08028/captures/reports/SFS
+#$ -m abe
+#$ -M ab08028
+
+
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 
