@@ -33,6 +33,7 @@ populations="CA AK AL COM KUR"
 
 for pop in $populations
 do
+echo $pop
 inVCF=${pop}_all_7_passingAllFilters_allCalledraw_variants.vcf.gz
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
