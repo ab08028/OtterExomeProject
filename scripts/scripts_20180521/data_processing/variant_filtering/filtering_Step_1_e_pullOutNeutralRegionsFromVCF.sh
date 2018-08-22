@@ -26,7 +26,7 @@ vcfdir=$wd/${rundate}_filtered # date you called genotypes
 neutralBed=${vcfdir}/bedCoords/all_7_passingBespoke.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.bed
 
 
-populations="CA AL KUR AK"
+populations="CA AL KUR AK COM"
 
 for pop in $populations
 do
