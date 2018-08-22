@@ -42,5 +42,4 @@ python $tanyaDir/popgen_tools/popgen_tools.py \
 # added --sfs_no_target_bed so that it doesn't cross ref every region with bed file
 # instead, pre filter the vcf to only be neutral regions
 
-
 done
