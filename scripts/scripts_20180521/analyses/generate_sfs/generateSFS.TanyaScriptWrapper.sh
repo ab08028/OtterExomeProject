@@ -40,7 +40,7 @@ inVCF=${pop}_all_7_passingAllFilters_allCalledraw_variants.vcf.gz
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/populationVCFs/$inVCF \
---total_SNPs $SFSdir/${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/${inVCF%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed
 
