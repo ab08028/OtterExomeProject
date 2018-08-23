@@ -7,6 +7,7 @@
 #$ -m abe
 #$ -M ab08028
 
+### This is for the neutral SFS, but can modify choice of bed file to make coding SFS
 
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
@@ -21,7 +22,7 @@ neutralBed=${vcfdir}/bedCoords/all_7_passingBespoke.min10kb.fromExon.noCpGIsland
 
 # output SFS location
 SFSdir=$SCRATCH/captures/analyses/SFS/${rundate}
-mkdir -p $SFSdir
+mkdir -p $SFSdir/neutralSFS
 
 # location of tanya's scripts
 # this is latest 20180822 where it runs faster (but need to give enough memory)
@@ -40,7 +41,7 @@ inVCF=${pop}_all_7_passingAllFilters_allCalledraw_variants.vcf.gz
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/populationVCFs/$inVCF \
---sfs_out $SFSdir/${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/${inVCF%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed
 
