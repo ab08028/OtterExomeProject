@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G,highp
+#$ -l h_rt=50:00:00,h_data=8G,highp
 #$ -N generate_sfs_allStages_allPops
 #$ -o /u/flashscratch/a/ab08028/captures/reports/SFS
 #$ -e /u/flashscratch/a/ab08028/captures/reports/SFS
@@ -33,6 +33,8 @@ tanyaDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/s
 vcfs="all_1_TrimAlt_raw_variants.vcf.gz all_5_passingFilters_raw_variants.vcf.gz all_6_rmBadIndividuals_passingFilters_raw_variants.vcf.gz all_7_passingBespoke_maxNoCallFrac_0.2_rmBadIndividuals_passingFilters_raw_variants.vcf.gz"
 
 # California:
+echo "California"
+
 CA_ind=$popHeaders/california.rmBad.txt
 for vcf in $vcfs
 do
@@ -50,6 +52,7 @@ done
 
 
 # Kurils:
+echo "Kuril"
 KUR_ind=$popHeaders/kuril.rmBad.txt
 for vcf in $vcfs
 do
@@ -66,6 +69,7 @@ python $tanyaDir/popgen_tools/popgen_tools.py \
 done
 
 # Commanders:
+echo "Commanders"
 COM_ind=$popHeaders/commanders.rmBad.txt
 for vcf in $vcfs
 do
@@ -82,6 +86,7 @@ python $tanyaDir/popgen_tools/popgen_tools.py \
 done
 
 # Alaska:
+echo "Alaska"
 AK_ind=$popHeaders/alaska.rmBad.txt
 for vcf in $vcfs
 do
