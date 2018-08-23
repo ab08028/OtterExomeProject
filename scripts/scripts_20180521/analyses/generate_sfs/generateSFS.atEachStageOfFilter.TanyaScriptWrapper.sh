@@ -43,7 +43,7 @@ echo $vcf
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/$vcf \
---sfs_out $SFSdir/neutralSFS/CA_${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/CA_${vcf%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed \
 --names_list $CA_ind
@@ -61,7 +61,7 @@ echo $vcf
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/$vcf \
---sfs_out $SFSdir/neutralSFS/KUR_${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/KUR_${vcf%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed \
 --names_list $KUR_ind
@@ -78,7 +78,7 @@ echo $vcf
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/$vcf \
---sfs_out $SFSdir/neutralSFS/COM_${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/COM_${vcf%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed \
 --names_list $COM_ind
@@ -95,7 +95,7 @@ echo $vcf
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/$vcf \
---sfs_out $SFSdir/neutralSFS/AK_${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/AK_${vcf%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed \
 --names_list $AK_ind
@@ -111,7 +111,7 @@ echo $vcf
 
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/$vcf \
---sfs_out $SFSdir/neutralSFS/AL_${inVCF%.vcf.gz}.sfs.out \
+--sfs_out $SFSdir/neutralSFS/AL_${vcf%.vcf.gz}.sfs.out \
 --no_pi \
 --target_bed $neutralBed \
 --names_list $AL_ind
