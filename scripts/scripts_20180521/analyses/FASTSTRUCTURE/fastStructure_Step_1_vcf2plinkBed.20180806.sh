@@ -9,7 +9,7 @@ module load plink
 
 calldate=20180806 # date that genotypes were called
 indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered
-infile=snp_5_passingAllFilters_postMerge_raw_variants.vcf.gz
+infile=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 outdir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat
 mkdir -p $outdir
 # you need to use const-fid 0 otherwise it thinks that family name_sample name is structure of ID and tries to split it (and fails)
