@@ -16,7 +16,7 @@
 # !!!! these must be added PRIOR to setting: import matplotlib.pyplot as plot
 
 ################# running fastStructure: #############
-calldate=20180724 # date you called genotypes
+calldate=20180806 # date you called genotypes
 # program dir: (downloaded 20180726)
 fastDir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/fastStructure
 #kvals="1 2 3 4 5 6 7 8 9 10"
