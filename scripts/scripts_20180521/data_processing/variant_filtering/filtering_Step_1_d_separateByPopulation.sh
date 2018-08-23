@@ -41,7 +41,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${outdir}/populationVCFs/COM_'all_7_passingAllFilters_allCalled'${infile} \
+-o ${outdir}/populationVCFs/COM_'all_7_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
 --maxNOCALLfraction 0
@@ -51,7 +51,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${outdir}/populationVCFs/CA_'all_7_passingAllFilters_allCalled'${infile} \
+-o ${outdir}/populationVCFs/CA_'all_7_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_CA_.+' \
 -se 'RWAB003_.+_ELUT_CA_.+' \
 --maxNOCALLfraction 0
@@ -61,7 +61,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${outdir}/populationVCFs/AK_'all_7_passingAllFilters_allCalled'${infile} \
+-o ${outdir}/populationVCFs/AK_'all_7_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_AK_.+' \
 --maxNOCALLfraction 0
 
@@ -70,7 +70,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${outdir}/populationVCFs/AL_'all_7_passingAllFilters_allCalled'${infile} \
+-o ${outdir}/populationVCFs/AL_'all_7_passingAllFilters_allCalled.vcf.gz'} \
 -se '.+_Elut_AL_.+' \
 --maxNOCALLfraction 0
 
@@ -80,7 +80,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${outdir}/populationVCFs/KUR_'all_7_passingAllFilters_allCalled'${infile} \
+-o ${outdir}/populationVCFs/KUR_'all_7_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
 --maxNOCALLfraction 0
