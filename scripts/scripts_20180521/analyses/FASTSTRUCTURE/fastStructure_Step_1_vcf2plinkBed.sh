@@ -7,7 +7,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load plink
 
-calldate=20180724 # date that genotypes were called
+calldate=20180806 # date that genotypes were called
 indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered
 infile=snp_5_passingAllFilters_postMerge_raw_variants.vcf.gz
 outdir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat
