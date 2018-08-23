@@ -33,7 +33,7 @@ do
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/populationVCFs/${pop}_'all_7_passingAllFilters_allCalled'${infile} \
--o ${vcfdir}/populationVCFs/${pop}_'neutral_7_passingAllFilters_allCalled'${infile} \
+--variant ${vcfdir}/populationVCFs/${pop}_'all_7_passingAllFilters_allCalled.vcf.gz' \
+-o ${vcfdir}/populationVCFs/${pop}_'neutral_7_passingAllFilters_allCalled.vcf.gz' \
 -L $neutralBed
 done
