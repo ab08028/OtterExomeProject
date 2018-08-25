@@ -1,7 +1,8 @@
 ##### Faststructure outputs SVG plots 
 # download them and copy to : /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/FASTSTRUCTURE
-wd="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/FASTSTRUCTURE/"
+#wd="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/FASTSTRUCTURE/"
 calldate=20180806 # date genotypes were called
+wd="/u/flashscratch/a/ab08028/captures/analyses/FASTSTRUCTURE/${calldate}_filtered/"
 # install.packages("rsvg")
 # install.packages("svglite")
 require(rsvg)
