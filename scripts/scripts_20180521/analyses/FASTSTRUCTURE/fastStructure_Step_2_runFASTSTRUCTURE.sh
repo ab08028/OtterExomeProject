@@ -20,10 +20,11 @@ calldate=20180806 # date you called genotypes
 # program dir: (downloaded 20180726)
 fastDir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/fastStructure
 #kvals="1 2 3 4 5 6 7 8 9 10"
-kvals="1 2 3 4 5 6 7 8 9 10" # set this to whatever numbers you want 
-
+#kvals="1 2 3 4 5 6 7 8 9 10" # set this to whatever numbers you want 
+kvals=10
 indir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat # eventually going to be filtered SNP vcf (no monomorphic sites)
-infilePREFIX=snp_5_passingAllFilters_postMerge_raw_variants # the prefix of the .bed file
+infilePREFIX=snp_7_downSampCOM_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+# old infile prefix 20180724: snp_5_passingAllFilters_postMerge_raw_variants # the prefix of the .bed file
 outdir=$SCRATCH/captures/analyses/FASTSTRUCTURE/${calldate}_filtered
 
 # manually added pop levels (step 1b); they should be a column in exact order of samples (gotten order from .fam file) 
@@ -46,7 +47,8 @@ python $fastDir/structure.py -K $k --input=$indir/$infilePREFIX --output=$outdir
 # containing the posterior mean of admixture proportions and allele frequencies, respectively."
 # note that the output prefix has the K value appended, which is handy:
 # e.g. XX.test.faststructure_output.2.log is the result of the above line of code with K =2 
-# to choose the correct K:
+# to 
+# choose the correct K:
 
 # want to plot each one:
 if [ -s $pops ]
@@ -68,7 +70,7 @@ python $fastDir/distruct.py \
 fi
 done
 # choose amongst the K values:
-python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output > chooseK.output
+python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output > $fastDir/chooseK.output
 
 # Based on what I see, I want to know the individual names for K=5
 k=5
