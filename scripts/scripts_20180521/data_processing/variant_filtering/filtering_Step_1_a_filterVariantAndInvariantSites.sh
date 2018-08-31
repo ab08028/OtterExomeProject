@@ -44,9 +44,9 @@ noCallScript=$scriptdir/filtering_getNoCallPerInd.py
 # ftp://ftp.ncbi.nlm.nih.gov/genomes/Mustela_putorius_furo/ <-- location of mustela files
 # wget ftp://ftp.ncbi.nlm.nih.gov/genomes/Mustela_putorius_furo/masking_coordinates.gz
 
-outdir=$wd/${rundate}_filtered # date you called genotypes
-mkdir -p $outdir
-mkdir -p $outdir/filteringStats
+vcfdir=$wd/${rundate}_filtered # date you called genotypes
+mkdir -p $vcfdir
+mkdir -p $vcfdir/filteringStats
 
 #################################################################################
 ############################ Prepare File ####################################
@@ -59,7 +59,7 @@ java -jar -Xmx4G ${GATK} \
 -R ${REFERENCE} \
 -V ${indir}/${infile} \
 -trimAlternates \
--o ${outdir}/'all_1_TrimAlt_'${infile} \
+-o ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --maxNOCALLfraction 0.9 # made this very lenient, just want to get rid of super crappy sites where 90% are no-call
 
 # haven't run it this way yet, but am getting rid of sites where 90% of sites are no-call TO MAKE THE FILE SMALLER. 
@@ -78,10 +78,10 @@ echo "snp step 2: select biallelic snps"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt_'${infile} \
+-V ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${outdir}/'snp_2_Filter_TrimAlt_'${infile}
+-o ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile}
 
 
 ## this:
@@ -98,7 +98,7 @@ echo "snp step 3: variant filtering"
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
--V ${outdir}/'snp_2_Filter_TrimAlt_'${infile} \
+-V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
 --genotypeFilterExpression "GQ < 20" \
@@ -109,7 +109,7 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_DP_LOW" \
 --clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
--o ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+-o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
 ## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
@@ -125,10 +125,10 @@ echo "snp step 4: select passing variants"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+-V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
 --excludeFiltered \
 -trimAlternates \
--o ${outdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
+-o ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
 # for now removing --maxNOCALLfraction $noCallFrac \
 # also adding trimAlternates again in case some got through [luckily none got through]
 ### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
@@ -142,10 +142,10 @@ echo "starting: nv step 2: select non variant sites"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_1_TrimAlt_'${infile} \
+-V ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
--o ${outdir}/'nv_2_AllNonVariants_'${infile}
+-o ${vcfdir}/'nv_2_AllNonVariants_'${infile}
 echo "done: nv step 2: select non variant sites"
 
 
@@ -154,7 +154,7 @@ echo "starting nv step 3: filter non variant sites"
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
--V ${outdir}/'nv_2_AllNonVariants_'${infile} \
+-V ${vcfdir}/'nv_2_AllNonVariants_'${infile} \
 --filterExpression "QUAL < 30 " \
 --filterName "FAIL_QUAL30" \
 --genotypeFilterExpression "RGQ < 1" \
@@ -164,7 +164,7 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterExpression "DP < 12" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
--o ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
+-o ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
 # 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # note the rgq filter may be redundant: https://software.broadinstitute.org/gatk/blog?id=6495
@@ -177,10 +177,10 @@ echo "starting nv step 4: select only passing non variant sites"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
+-V ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
 --excludeFiltered \
 -trimAlternates \
--o ${outdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile}
+-o ${vcfdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile}
 # for now taking out: --maxNOCALLfraction $noCallFrac \
 ## merge back together the variant and invariant files - hopefully we can do that.
 #20180731: tyring to add -trimAlternates again at this stage. not sure why it keeps getting through 
@@ -193,17 +193,17 @@ echo "starting step 5a: merge passing sites"
 java -jar -Xmx4G ${GATK} \
 -T CombineVariants \
 -R ${REFERENCE} \
--V ${outdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
--V ${outdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile} \
+-V ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
+-V ${vcfdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile} \
 --assumeIdenticalSamples \
--o ${outdir}/'all_5_passingFilters_'${infile}
+-o ${vcfdir}/'all_5_passingFilters_'${infile}
 echo "done step 5a: merge passing sites"
 
 
 ########################## At this stage, calculate the no-call per individual (~10hours) #######################
 # takes ~2hrs
 echo "starting step 5b: calculate missing calls per individual"
-python $noCallScript ${outdir}/'all_5_passingFilters_'${infile} ${outdir}/filteringStats/'noCall_per_Ind_all_5_passingFilters_'${infile%.vcf.gz}.txt
+python $noCallScript ${vcfdir}/'all_5_passingFilters_'${infile} ${vcfdir}/filteringStats/'noCall_per_Ind_all_5_passingFilters_'${infile%.vcf.gz}.txt
 # then want to remove bad individuals and then run bespoke filters as a final check of AN/AC etc.
 
 echo "done step 5b: calculated missing calls per individual"

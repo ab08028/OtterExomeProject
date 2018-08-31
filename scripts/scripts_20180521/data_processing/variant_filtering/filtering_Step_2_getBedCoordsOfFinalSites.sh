@@ -9,6 +9,7 @@ infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 outdir=$wd/${rundate}_filtered
 noCallFrac=0.2 # this is the tolerated no call fraction
+# if you want to use this with your new 90% filtering, just have to change this to 0.9? or use the final all sites file (all_9)?
 sitesPassingAllFilters=${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}
 mkdir -p $outdir/bedCoords
 
