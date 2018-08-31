@@ -19,6 +19,7 @@ bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
 # only want to get rid of egregious sites where hardly anyone is called, instead of being stringent across populations
 noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) : only getting rid of terrible sites where >90% of individuals are no-call
+snpNoCallFrac=0.2 # max frac of no-call genotypes allowed in snp file that you're going to use for PCA
 # saving the stringent filtering for later!
 
 #### file locations
@@ -143,7 +144,6 @@ echo "done with step 7a: carrying out bespoke filtering"
 ############################ have a missingness filter of 0.2 ###############
 #################################################################################
 echo "starting step 7b: select final passing snps from merged file"
-NewNoCallFrac=0.2
 # Some sites that may have started as variant may have become INVARIANT by the end.
 # Want these to end up in the INVARIANT category. 
 # select the biallelic snps: 
@@ -153,8 +153,8 @@ java -jar -Xmx4G ${GATK} \
 -V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${outdir}/'snp_7_maxNoCallFrac_'${NewNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${NewNoCallFrac}
+-o ${outdir}/'snp_7_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--maxNOCALLfraction ${snpNoCallFrac}
 echo "done step 7b: select final passing snps from merged file"
 
 ## *removed this; don't need to do this quite yet; just need SNPs for PCA. Select the invariants:

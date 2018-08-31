@@ -46,3 +46,20 @@ $bgzip ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passin
 $tabix -p vcf ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' # index the vcf
 
 done
+
+
+# also filter the admixed vcfs:
+for pop in KUR AK
+do
+echo "admixed " $pop
+# usage: python [script] [full path to invcf] [full path to out vcf] [full path to error file] [max no call fraction]
+
+python $bespokeFilterScript ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_8_passingAllFilters_allCalled.vcf.gz' \
+${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz' \
+${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'fail_all_9_FAILING_perPopulationBespoke_Filters_'${infile%.vcf.gz}.txt \
+$noCallFrac
+# bgzip the result: (note: must use bgzip not gzip)
+$bgzip ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz'
+$tabix -p vcf ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz' # index the vcf
+
+done

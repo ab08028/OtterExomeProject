@@ -16,9 +16,9 @@ GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/Genome
 
 #### parameters:
 rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in early files
-allSitesNoCallFrac=0.2 # max missingness allowed in final file for all pops together (20%)
-perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs
+noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (lenient cutoff)
+snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
+perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
 
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
@@ -80,85 +80,9 @@ java -jar $GATK \
 -xl_sn ${ind14} \
 -xl_sn ${ind15}
 
-# use the "8" version of all-sites for making SFSs
-# but also make  a "9" version where you have 20% missingness cut off?
-
-# remove from snp file:
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant ${vcfdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
-# -o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
-# -xl_sn ${ind1} \
-# -xl_sn ${ind2} \
-# -xl_sn ${ind3} \
-# -xl_sn ${ind4} \
-# -xl_sn ${ind5} \
-# -xl_sn ${ind6} \
-# -xl_sn ${ind7} \
-# -xl_sn ${ind8} \
-# -xl_sn ${ind9} \
-# -xl_sn ${ind10} \
-# -xl_sn ${ind11} \
-# -xl_sn ${ind12} \
-# -xl_sn ${ind13} \
-# -xl_sn ${ind14} \
-# -xl_sn ${ind15}
-
-# remove from nv file:
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant ${vcfdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
-# -o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
-# -xl_sn ${ind1} \
-# -xl_sn ${ind2} \
-# -xl_sn ${ind3} \
-# -xl_sn ${ind4} \
-# -xl_sn ${ind5} \
-# -xl_sn ${ind6} \
-# -xl_sn ${ind7} \
-# -xl_sn ${ind8} \
-# -xl_sn ${ind9} \
-# -xl_sn ${ind10} \
-# -xl_sn ${ind11} \
-# -xl_sn ${ind12} \
-# -xl_sn ${ind13} \
-# -xl_sn ${ind14} \
-# -xl_sn ${ind15}
-
-
-############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
-
-## KURIL ADMIXED:
-
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_KUR_'all_8_rmRelatives_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_allCalled.vcf.gz' \
--sn ${ind7} \
--sn ${ind8} \
--sn ${ind9} \
--sn ${ind10} \
--sn ${ind11} \
---maxNOCALLfraction $perPopNoCallFrac
-
-## Alaska ADMIXED:
-
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_AK_'all_8_rmRelatives_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_allCalled.vcf.gz' \
--sn ${ind12} \
--sn ${ind13} \
--sn ${ind14} \
--sn ${ind15} \
---maxNOCALLfraction $perPopNoCallFrac
-
-
+#######################################################################################
 ############### make population vcfs without relatives or admixed: ####################
+#######################################################################################
 # Bering/Medny --> Commanders (COM)
 java -jar $GATK \
 -R $REFERENCE \
@@ -208,29 +132,52 @@ java -jar $GATK \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
 --maxNOCALLfraction $perPopNoCallFrac
 
-######################### after pop-vcfs made, make a final version of the all sites vcfs that uses a 20% cutoff -- use these for PCA, fastructure,etc. #########
+#######################################################################################
+############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
+#######################################################################################
+## KURIL ADMIXED (you take out of the all_7 file that still has admixed inds. in there and you positively select them with sn):
+
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_KUR_'all_8_passingAllFilters_allCalled.vcf.gz' \
+-sn ${ind7} \
+-sn ${ind8} \
+-sn ${ind9} \
+-sn ${ind10} \
+-sn ${ind11} \
+--maxNOCALLfraction $perPopNoCallFrac
+
+## Alaska ADMIXED:
+
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_AK_'all_8_passingAllFilters_allCalled.vcf.gz' \
+-sn ${ind12} \
+-sn ${ind13} \
+-sn ${ind14} \
+-sn ${ind15} \
+--maxNOCALLfraction $perPopNoCallFrac
+
+
+#######################################################################################
+######################### after pop-vcfs made, make a final version  #########################
+######################### of the all sites vcfs that uses a 20% cutoff #######################
+#######################################################################################
 # snps file: 
-java -jar $GATK \
--R $REFERENCE \
+# Some sites that may have started as variant may have become INVARIANT by the end.
+# Want these to end up in the INVARIANT category. 
+# select the biallelic snps: 
+java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
---variant ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
--o ${vcfdir}/'snp_9_rmRelativesAdmixed_maxNoCallFrac_'${allSitesNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${allSitesNoCallFrac}
+-R ${REFERENCE} \
+-V ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--restrictAllelesTo BIALLELIC \
+--selectTypeToInclude SNP \
+-o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--maxNOCALLfraction ${snpNoCallFrac}
 
-# nv file: 
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'nv_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
--o ${vcfdir}/'nv_9_rmRelativesAdmixed_maxNoCallFrac_'${allSitesNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${allSitesNoCallFrac}
-
-
-# all sites file: 
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
--o ${vcfdir}/'all_9_rmRelativesAdmixed_maxNoCallFrac_'${allSitesNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${allSitesNoCallFrac}
 
