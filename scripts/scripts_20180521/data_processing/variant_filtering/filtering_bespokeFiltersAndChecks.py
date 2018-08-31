@@ -10,8 +10,11 @@ Created on Mon Aug  6 15:45:50 2018
 # 4. must be PASS for site
 # 5. make sure not missing DP, AN, GT, AD, DP or GQ/RGQ
 # 6. make sure no called genotype is missing any info from the genotype info field
-# 7. gets rid of sites where all calls are 0/1 (all hets)
-# 8. updates AN and AC based on final sets of calls (these aren't updated when GATK does genotype filtering)
+# 7. get rid of sites where all calls are 0/1 (all hets) [20180901: note you must do this again per-population as well]
+# X. *doesn't* get rid of sites with >20% called sites [20180901: because I moved this to a per-population script]
+# 8. instead, gets rid of sites where >90% are uncalled (should have been done already in step 1a, but if it wasn't, do it here.)
+# this is very lenient ON PURPOSE because don't want to be stringent across populations. Later on can be stringent.
+# 9. updates AN and AC based on final sets of calls (these aren't updated when GATK does genotype filtering)
 
 # this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)
 
@@ -130,19 +133,21 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
             errorVCF.write('# Something is wrong with genotype counts!\n')
             errorVCF.write(line0)
             counter_nop+=1
-        # check if there are more than 20% no-called genotypes
+        #
+        # check if there are more than 90% no-called genotypes -- made this very lenient just to get rid of egregious sites
+        # really should get rid of them sooner.
         elif float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
             errorVCF.write('# More than ' + str(maxNoCallFrac) + ' fraction of genotypes are  no-call at this site\n')
             errorVCF.write(line0)
             counter_nop+=1
         # check if AC score is correct; note that if there are no hets it will be a . not a 0
         # Note that AC is sum of 2*HomAlt + Het ; if there is no variation AC = . or is missing
-        # check if all calls are heterozygous
+        # remove sites where every individual is heterozygous (note you must do this AGAIN after you split by population)
         elif myHet==myCalled:
             errorVCF.write('# All genotypes are heterozygous\n')
             errorVCF.write(line0)
             counter_nop+=1
-        # No longer doing this AC, AN checks, because I know that GATK doesn't do AN/AC correctly, so I update them later in the script.
+        # (no longer done here) AC, AN checks; not done because I know that GATK doesn't do AN/AC correctly, so I update them later in the script.
         #elif (myHet == 0 and myHomAlt==0) and 'AC' in infoFields and infoFields['AC']!=".":
         #    errorVCF.write('# Something is wrong with AC field-1!\n')
         #    errorVCF.write(line0)

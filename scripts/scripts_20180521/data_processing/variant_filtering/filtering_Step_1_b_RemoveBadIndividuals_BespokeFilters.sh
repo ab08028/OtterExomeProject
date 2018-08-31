@@ -17,7 +17,9 @@ bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 #### parameters:
 rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
+# only want to get rid of egregious sites where hardly anyone is called, instead of being stringent across populations
+noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) : only getting rid of terrible sites where >90% of individuals are no-call
+# saving the stringent filtering for later!
 
 
 #### file locations
@@ -43,10 +45,10 @@ outdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $outdir
 
 
-######################## Remove bad individuals (relatives, low coverage, PCA outliers, admixed, etc.) ###############
+######################## Remove bad individuals (low coverage) ###############
 # These individuals have missingness that is 1SD above the mean value (/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/QC_Reports/missingnessPerInd/20180806/noCall_per_Ind_all_5_passingFilters_raw_variants.txt)
 # calculated using this script: /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/generate_plots_and_tables/plotMissingGTsPerIndividual/plotMissingGenotypeCountsPerIndividual.R
-# 
+# low coverage:
 ind1=112_Elut_AL_AM_AM92022
 ind2=128_Elut_AK_AF3630
 ind3=131_Elut_BER_34
@@ -65,6 +67,7 @@ ind15=86_Elut_MED_25
 ind16=RWAB003_15_ELUT_CA_159
 ind17=RWAB003_22_ELUT_CA_410
 
+# keeping in relatives/admixed, because they aren't found til later in the pipeline; remove them in step 1f
 
 badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17"
 
@@ -117,8 +120,8 @@ done
 # 3. must have qual score
 # 4. must be PASS for site
 # 5. make sure not missing DP, AN, GT, AD, DP or GQ/RGQ
-# 6. make sure no called genotype is missing any info from the genotype info field
-# 7. gets rid of sites where all calls are 0/1 (all hets)
+# X. (does not do this anymore) make sure no called genotype is missing any info from the genotype info field [20180831: this now happens per-population]
+# X. (does not do this anymore) gets rid of sites where all calls are 0/1 (all hets)  [20180831: this now happens per-population]
 # 8. updates AN and AC based on final sets of calls (these aren't updated when GATK does genotype filtering)
 # 9. filters sites that exceed the maximum no-call fraction (supplied by user)
 # this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)

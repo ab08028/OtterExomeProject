@@ -60,9 +60,9 @@ java -jar -Xmx4G ${GATK} \
 -V ${indir}/${infile} \
 -trimAlternates \
 -o ${outdir}/'all_1_TrimAlt_'${infile} \
---maxNOCALLfraction 0.5
+--maxNOCALLfraction 0.9 # made this very lenient, just want to get rid of super crappy sites where 90% are no-call
 
-# haven't run it this way yet, but am getting rid of sites where 50% of sites are no-call TO MAKE THE FILE SMALLER. 
+# haven't run it this way yet, but am getting rid of sites where 90% of sites are no-call TO MAKE THE FILE SMALLER. 
 # [later in the steps: will do final filtering to restrict to sites where max 20% of sites are nocall]
 # previously when I did it, there were sites with only 1-2 calls that inflate file sizes and slow stuff down
 # I wanted to not filter on missingness yet, because I am going to be removing bad individuals that drag down everybody's missingness %%
