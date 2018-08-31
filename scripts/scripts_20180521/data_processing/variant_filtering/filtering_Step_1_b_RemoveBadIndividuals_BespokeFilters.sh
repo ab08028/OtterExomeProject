@@ -137,9 +137,13 @@ $tabix -p vcf ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBa
 echo "done with step 7a: carrying out bespoke filtering"
 # you should gzip your bad sites eventually.
 #################################################################################
-############################ Get final sets of variant / invariant###############
+############################ Get sets of variant / invariant sites for initial PCA ###############
+############################ Note that you're only going to use these for relatedness/admixture detection; ###############
+############################ Eventually going to remake them without your bad individuals ###############
+############################ have a missingness filter of 0.2 ###############
 #################################################################################
 echo "starting step 7b: select final passing snps from merged file"
+NewNoCallFrac=0.2
 # Some sites that may have started as variant may have become INVARIANT by the end.
 # Want these to end up in the INVARIANT category. 
 # select the biallelic snps: 
@@ -149,20 +153,22 @@ java -jar -Xmx4G ${GATK} \
 -V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${outdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
+-o ${outdir}/'snp_7_maxNoCallFrac_'${NewNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--maxNOCALLfraction ${NewNoCallFrac}
 echo "done step 7b: select final passing snps from merged file"
 
-## Select the invariants:
-echo "starting step 7c: select final passing nonvariant sites from merged file"
+## *removed this; don't need to do this quite yet; just need SNPs for PCA. Select the invariants:
+#echo "starting step 7c: select final passing nonvariant sites from merged file"
 
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
---selectTypeToInclude NO_VARIATION \
---selectTypeToExclude INDEL \
--o ${outdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
-echo "done step 7c: select final passing nonvariant sites from merged file"
+#java -jar -Xmx4G ${GATK} \
+#-T SelectVariants \
+#-R ${REFERENCE} \
+#-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+#--selectTypeToInclude NO_VARIATION \
+#--selectTypeToExclude INDEL \
+#-o ${outdir}/'nv_7_maxNoCallFrac_'${NewNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+#--maxNOCALLfraction ${NewNoCallFrac}
+#echo "done step 7c: select final passing nonvariant sites from merged file"
 
 
 # 20180806: ran with this setting --maxNOCALLfraction $noCallFrac on the last step. shouldn't make a difference beacuse all the sites were already filtered with the bespoke filters. 

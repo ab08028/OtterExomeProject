@@ -1,0 +1,3 @@
+after you have gotten your SNP file through the bespoke filters,
+do PCA and FASTRUCTURE and relatedness analyses to determine which individuals 
+you want to exclude 
