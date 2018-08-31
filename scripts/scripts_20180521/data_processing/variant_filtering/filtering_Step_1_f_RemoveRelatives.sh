@@ -84,48 +84,48 @@ java -jar $GATK \
 # but also make  a "9" version where you have 20% missingness cut off?
 
 # remove from snp file:
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--xl_sn ${ind1} \
--xl_sn ${ind2} \
--xl_sn ${ind3} \
--xl_sn ${ind4} \
--xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15}
+# java -jar $GATK \
+# -R $REFERENCE \
+# -T SelectVariants \
+# --variant ${vcfdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+# -o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+# -xl_sn ${ind1} \
+# -xl_sn ${ind2} \
+# -xl_sn ${ind3} \
+# -xl_sn ${ind4} \
+# -xl_sn ${ind5} \
+# -xl_sn ${ind6} \
+# -xl_sn ${ind7} \
+# -xl_sn ${ind8} \
+# -xl_sn ${ind9} \
+# -xl_sn ${ind10} \
+# -xl_sn ${ind11} \
+# -xl_sn ${ind12} \
+# -xl_sn ${ind13} \
+# -xl_sn ${ind14} \
+# -xl_sn ${ind15}
 
 # remove from nv file:
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--xl_sn ${ind1} \
--xl_sn ${ind2} \
--xl_sn ${ind3} \
--xl_sn ${ind4} \
--xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15}
+# java -jar $GATK \
+# -R $REFERENCE \
+# -T SelectVariants \
+# --variant ${vcfdir}/'nv_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+# -o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+# -xl_sn ${ind1} \
+# -xl_sn ${ind2} \
+# -xl_sn ${ind3} \
+# -xl_sn ${ind4} \
+# -xl_sn ${ind5} \
+# -xl_sn ${ind6} \
+# -xl_sn ${ind7} \
+# -xl_sn ${ind8} \
+# -xl_sn ${ind9} \
+# -xl_sn ${ind10} \
+# -xl_sn ${ind11} \
+# -xl_sn ${ind12} \
+# -xl_sn ${ind13} \
+# -xl_sn ${ind14} \
+# -xl_sn ${ind15}
 
 
 ############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
@@ -158,7 +158,7 @@ java -jar $GATK \
 --maxNOCALLfraction $perPopNoCallFrac
 
 
-############### remake population vcfs without relatives or admixed: ####################
+############### make population vcfs without relatives or admixed: ####################
 # Bering/Medny --> Commanders (COM)
 java -jar $GATK \
 -R $REFERENCE \
