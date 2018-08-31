@@ -20,7 +20,6 @@ rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
 # only want to get rid of egregious sites where hardly anyone is called, instead of being stringent across populations
 noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) : only getting rid of terrible sites where >90% of individuals are no-call
 # saving the stringent filtering for later!
-#test
 
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
