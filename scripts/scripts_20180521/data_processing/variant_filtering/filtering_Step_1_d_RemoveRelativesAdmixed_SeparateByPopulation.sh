@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=50:00:00,h_data=16G,highp
-#$ -N vcf1f_removeRelatives
+#$ -N vcf1d_removeRelatives
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
