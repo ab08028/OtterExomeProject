@@ -27,9 +27,8 @@ mkdir -p $wd
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
-mkdir -p $wd/populationVCFs
-mkdir -p $wd/populationVCFs/admixedVCFs
-
+mkdir -p $vcfdir/populationVCFs
+mkdir -p $vcfdir/populationVCFs/admixedVCFs
 ## Relatives to remove
 ind1="RWAB003_19_ELUT_CA_352"
 ind2="106_Elut_AL_AD_GE91109"
