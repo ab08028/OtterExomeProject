@@ -87,7 +87,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/COM_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
@@ -97,7 +97,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/CA_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_CA_.+' \
 -se 'RWAB003_.+_ELUT_CA_.+' \
@@ -107,7 +107,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AK_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_AK_.+' \
 --maxNOCALLfraction $perPopNoCallFrac
@@ -116,7 +116,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AL_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_AL_.+' \
 --maxNOCALLfraction $perPopNoCallFrac
@@ -126,7 +126,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/KUR_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
@@ -174,7 +174,7 @@ java -jar $GATK \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_rmBadIndividuals_passingFilters_'${infile} \
+-V ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
