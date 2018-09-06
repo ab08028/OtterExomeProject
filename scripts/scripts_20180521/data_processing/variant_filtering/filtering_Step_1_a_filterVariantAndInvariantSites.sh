@@ -85,7 +85,7 @@ java -jar -Xmx4G ${GATK} \
 
 
 ## this:
-# 1. masks out the UCSCRepeats (FAIL_RepMask)
+# 1. does NOT mask out the UCSCRepeats (FAIL_RepMask) (do this later when making SFS)
 # 2. applies gatk hard filters (FAIL_GATKHF)
 # use genotypeFilterExpression to filter individual genotypes  and **** --setFilteredGtToNocall to change filtered genotype to "no call" (./.) ****
 # 3. genotype quality (<20 filtered out) (FAIL_GQ)
