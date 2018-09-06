@@ -41,10 +41,10 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
     outVCF = open(outfilename, 'w')
     errorVCF = open(errorfilename, 'w')
     # set up your possible ref and alt bases
-    refbases=set(['A', 'C', 'G', 'T'])
-    altbases=set(['A', 'C', 'G', 'T', '.'])
+    #refbases=set(['A', 'C', 'G', 'T'])
+    #altbases=set(['A', 'C', 'G', 'T', '.'])
     # set up your expected genotypes (change if phased!!!!)
-    expected_genos=set(['0/0', '0/1', '1/1', './.']) # this doesn't expect phase
+    #expected_genos=set(['0/0', '0/1', '1/1', './.']) # this doesn't expect phase
     # set up a counter of no-pass (nop) or pass (p) sites
     counter_nop=0 # count no pass
     counter_p=0 # count pass
@@ -56,13 +56,13 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         ### For all other non-header lines:
         line=line0.strip().split('\t') # this splits line by tabs
         #CHROM0	POS1	ID2	REF3	ALT4	QUAL5	FILTER	INFO	FORMAT	[indivudals]
-        myref=line[3]
-        myalt=line[4]
-        myqual=line[5]
-        myfilter=line[6]
-        myinfo=line[7]
-        infoFields=dict(s.split('=') for s in myinfo.split(";")) # this makes my info into a dictionary that you can query; e.g. infoFields['AN'] will give you the AN value
-        myformat=line[8]
+        #myref=line[3]
+        #myalt=line[4]
+        #myqual=line[5]
+        #myfilter=line[6]
+        #myinfo=line[7]
+        #infoFields=dict(s.split('=') for s in myinfo.split(";")) # this makes my info into a dictionary that you can query; e.g. infoFields['AN'] will give you the AN value
+        #myformat=line[8]
         mygenoinfo=line[9:]
         # get genotype info
         allCalls=[i.split(":")[0] for i in mygenoinfo] # get genotype calls
@@ -72,11 +72,11 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         myCalled=myHomRef+myHet+myHomAlt # num of called genotypes
         myNoCalled=allCalls.count("./.") # num of no called genotypes
         # get AC and AN values:
-        myAC=myHet+(2*myHomAlt) # alternate alleles
-        myAN=myCalled *2 # all called alleles
+        #myAC=myHet+(2*myHomAlt) # alternate alleles
+        #myAN=myCalled *2 # all called alleles
         # do a series of checks
         # check if there are more than 20% no-called genotypes
-        elif float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
+        if float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
             errorVCF.write('# More than ' + str(maxNoCallFrac) + ' fraction of genotypes are  no-call at this site\n')
             errorVCF.write(line0)
             counter_nop+=1
@@ -85,3 +85,17 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
             errorVCF.write('# All genotypes are heterozygous\n')
             errorVCF.write(line0)
             counter_nop+=1
+        else:
+            outVCF.write(line0)
+            counter_p+=1
+    # write out final information
+    errorVCF.write('## This many lines failed a filter and werent printed' + '\t' + str(counter_nop) + '\n')
+    errorVCF.write('## This many lines PASSED and were printed' + '\t' + str(counter_p) + '\n')
+    errorVCF.close()
+    outVCF.close()
+    inVCF.close()
+    
+#### run the function ##########
+main_vcf_check(filepath,outname,errorname)
+# exit
+sys.exit()
