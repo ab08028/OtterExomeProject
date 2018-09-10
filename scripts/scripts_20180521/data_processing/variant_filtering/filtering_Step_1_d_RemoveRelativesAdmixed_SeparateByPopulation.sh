@@ -37,7 +37,7 @@ ind4="102_Elut_KUR_4"
 ind5="104_Elut_KUR_7"
 ind6="77_Elut_KUR_14"
 
-### Heavily admixed invididuals / PCA outliers to remove:
+### Heavily admixed invididuals / PCA outliers to keep out of population vcfs (can stay in all inds vcf):
 ind7="90_Elut_KUR_20"
 ind8="80_Elut_KUR_19"
 ind9="91_Elut_KUR_21"
@@ -47,38 +47,28 @@ ind12="68_Elut_AK_AF3370"
 ind13="56_Elut_AK_AF24903"
 ind14="57_Elut_AK_AF24906"
 ind15="163_Elut_AK_AF24915"
-## Heavily admixed invididuals / PCA outliers to remove:
+## mildly admixed invididuals / PCA outliers to remove:
+ind16="125_Elut_AK_AF3369" # (adding)
+ind17="65_Elut_AK_GE91060" # (adding)
+ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier)
 
-# Samples to exclude:
-#RWAB003_19_ELUT_CA_352 (was paired with RWAB003_20_ELUT_CA_355; kinship 0.216347723514731 )
-#106_Elut_AL_AD_GE91109 ( was paired with 118_Elut_AL_AD_GE91101; kinship 0.4845482485185 )
-#101_Elut_KUR_3 ( was paired with RWAB003_28_ELUT_KUR_12; kinship  0.479370763531055 )
-#102_Elut_KUR_4 ( was paired with RWAB003_26_ELUT_KUR_15; kinship 0.468276048119186 )
-#104_Elut_KUR_7 ( was paired with 79_Elut_KUR_17; kinship 0.48474476630868 )
-#77_Elut_KUR_14 ( was paired with 81_Elut_KUR_2; kinship 0.483877991667127 )
-# Removing them from several files:
-# remove from all sites file:
+
+## 20180910 update: I am not going to remove admixed individuals from the all_8 vcf files
+# Because they are valid sequences for PCA, etc. Just removing them from pop-specific files
+
+
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -xl_sn ${ind1} \
 -xl_sn ${ind2} \
 -xl_sn ${ind3} \
 -xl_sn ${ind4} \
 -xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15}
-
+-xl_sn ${ind6} 
+# not removing admixed at this stage 
 #######################################################################################
 ############### make population vcfs without relatives or admixed: ####################
 #######################################################################################
@@ -86,7 +76,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/COM_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
@@ -96,26 +86,33 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/CA_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_CA_.+' \
 -se 'RWAB003_.+_ELUT_CA_.+' \
 --maxNOCALLfraction $perPopNoCallFrac
 
-# Alaska --> AK
+# Alaska --> AK : remove admixed and make pop specific vcf
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AK_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_AK_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+--maxNOCALLfraction $perPopNoCallFrac \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17} \
+-xl_sn ${ind18}
 
 # Aleutian --> AL
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AL_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_AL_.+' \
 --maxNOCALLfraction $perPopNoCallFrac
@@ -125,11 +122,16 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/KUR_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+--maxNOCALLfraction $perPopNoCallFrac \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
+-xl_sn ${ind10} \
+-xl_sn ${ind11} 
 
 #######################################################################################
 ############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
@@ -139,7 +141,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_KUR_'all_8_passingAllFilters_allCalled.vcf.gz' \
 -sn ${ind7} \
 -sn ${ind8} \
@@ -153,7 +155,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_AK_'all_8_passingAllFilters_allCalled.vcf.gz' \
 -sn ${ind12} \
 -sn ${ind13} \
@@ -173,10 +175,10 @@ java -jar $GATK \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelativesAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-V ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${vcfdir}/'snp_8_rmRelativesAdmixed_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+-o ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
 --maxNOCALLfraction ${snpNoCallFrac}
 
 
