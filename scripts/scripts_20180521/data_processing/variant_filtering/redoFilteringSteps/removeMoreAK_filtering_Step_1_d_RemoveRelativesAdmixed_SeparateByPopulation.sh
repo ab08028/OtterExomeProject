@@ -73,24 +73,24 @@ java -jar $GATK \
 ############### make population vcfs without relatives or admixed: ####################
 #######################################################################################
 # Bering/Medny --> Commanders (COM)
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/COM_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
--se '.+_Elut_BER_.+' \
--se '.+_Elut_MED_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+#java -jar $GATK \
+#-R $REFERENCE \
+#-T SelectVariants \
+#--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+#-o ${vcfdir}/populationVCFs/COM_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
+#-se '.+_Elut_BER_.+' \
+#-se '.+_Elut_MED_.+' \
+#--maxNOCALLfraction $perPopNoCallFrac
 
 # California --> CA (include the RWAB hiseq4000 samples)
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/CA_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
--se '.+_Elut_CA_.+' \
--se 'RWAB003_.+_ELUT_CA_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+#java -jar $GATK \
+#-R $REFERENCE \
+#-T SelectVariants \
+#--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+#-o ${vcfdir}/populationVCFs/CA_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
+#-se '.+_Elut_CA_.+' \
+#-se 'RWAB003_.+_ELUT_CA_.+' \
+#--maxNOCALLfraction $perPopNoCallFrac
 
 # Alaska --> AK : remove admixed and make pop specific vcf
 java -jar $GATK \
@@ -109,13 +109,13 @@ java -jar $GATK \
 -xl_sn ${ind18}
 
 # Aleutian --> AL
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/AL_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
--se '.+_Elut_AL_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+#java -jar $GATK \
+#-R $REFERENCE \
+#-T SelectVariants \
+#--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+#-o ${vcfdir}/populationVCFs/AL_'all_8_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' \
+#-se '.+_Elut_AL_.+' \
+#--maxNOCALLfraction $perPopNoCallFrac
 
 
 # Kuril --> KUR (include the RWAB hiseq4000 samples)
