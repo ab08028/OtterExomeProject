@@ -21,7 +21,8 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 makefileDir=$scriptDir/makefiles/ancientMakefiles-TestMapping
 #headers=$wd/samples/ancientSamples.txt
-headers=$wd/samples/ancientSamples.temp.remainder.txt
+#headers=$wd/samples/ancientSamples.temp.remainder.txt
+headers=$wd/samples/ancientLibs.Screen.txt # 20181004: screening libraries
 # outdirectory:
 outdir=$wd/paleomix/testMapping
 mkdir -p $outdir
