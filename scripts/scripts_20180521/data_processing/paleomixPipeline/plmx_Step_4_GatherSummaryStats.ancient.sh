@@ -6,7 +6,10 @@ headers=$SCRATCH/captures/samples/ancientSamples.txt
 outdir=$SCRATCH/captures/paleomix/summaryStats
 mkdir $outdir
 outfile=$outdir/plmx.aDNA.summary.stats.txt
-REF=sea_otter_23May2016_bS9RH.deduped.99
+REF=sea_otter_23May2016_bS9RH.deduped.99 # note that you'll collect ALL ref genomes for most stats; you're
+just setting the REF here for the MD coverage stats, which you're only collecting for the sea otter
+# This script will still collect all other stats for all other ref genomes beause you aren't specifying 
+# when you grep; so it'll grep all instances of seq_retained_reads for every genome from the summary file.
 echo "sample statistic reference value" > $outfile
 cat $headers | while read header
 do
