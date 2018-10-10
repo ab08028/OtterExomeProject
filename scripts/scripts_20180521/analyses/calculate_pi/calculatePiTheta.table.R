@@ -41,18 +41,26 @@ for(i in (1:length(pops))){
 }
 allSFS <- bind_rows(allSFS_list)
 
-
-
 ss <- allSFS %>%
   group_by(population) %>%
-  tally() %>% 
-  mutate(chromCount=2*n) # multiply by 
-
+  tally()
+colnames(ss) <- c("population","numDiploidIndividuals")
 #################### calculate pi per site #####################
 # based on output of tanya's script
 # which gives you pi (not pi per site) for each region of called NEUTRAL sites
-
-
+#### !!! Note: the callable sites calculation ONLY WORKS if the region file you gave Tanya's script was the neutral CALLED sites for each population, rather than some abstract set of regions where sites may or may not be called. In my analysis, I use the per-population called neutral sites, so it is okay to calculated callable sites from the output of Tanya's script.!!! ####
+allPi <- data.frame()
+for(i in (1:length(pops))){
+  pop=pops[i]
+  pi <- read.table(paste(data.dir,pop,"_",prefix,".pi.perPopCallableSiteNeutralRegions.out",sep=""),header=T,stringsAsFactors = F)
+  colnames(pi) <- c("region_start0based","region_end_halfOpen","pi_per_region")
+  pi$siteCount <- pi$region_end_halfOpen - pi$region_start0based # note that this subtraction works because the coordinates are zero based and half open
+  piSumAllRegions=sum(pi$pi_per_region)
+  callableSitesTotal=sum(pi$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
+  piPerSite=piSumAllRegions/callableSitesTotal
+  allPi <- rbind(allPi,(cbind(pop,piPerSite,piSumAllRegions,callableSitesTotal))) # add the pi per site to your dataframe
+}
+write.table(allPi,paste(data.dir,pop,".piPerSitePerPopulation.",todaysdate,".txt",sep=""),row.names=F,col.names=T,quote=F,sep="\t")
 #################### calculate watterson's theta #####################
 # note harmonic number is sum from 1 to n of 1/n. n in this case is the number of choromosomes, not individuals, so it's 2*N if N is number of diploid inds.
 # define a function to calc harm number:
@@ -75,6 +83,7 @@ harmonicNumber_2nMinus1 <- function(num_indv){
 
 # example for 26 individuals:
 #harmonicNumber_2nMinus1(26) # is the harmonic # for 2*26-1 = 51 -->  4.518813 # checked it here for 51: https://www.math.utah.edu/~carlson/teaching/calculus/harmonic.html
+
 #### WATTERSON'S THETA (uses harmonic number function)
 # this function will calculate watterson's theta using the number of diploid inds, 
 # number of SNPs, and the number of callable (HQ) sites used for the calculation of # of SNPs. 
@@ -85,13 +94,32 @@ wattersons_theta <- function(num_indv,numSNPs,callablesites){
   return(theta_divbyL)
 }
 
+
+allTheta <- data.frame()
+for(i in (1:length(pops))){
+  pop=pops[i]
+  totalSNPs <- read.table(paste(data.dir,pop,"_",prefix,".totalSNPs.perPopCallableSiteNeutralRegions.out",sep=""),header=T,stringsAsFactors = F)
+  colnames(totalSNPs) <- c("region_start0based","region_end_halfOpen","SNPCount")
+  totalSNPs$siteCount <- totalSNPs$region_end_halfOpen - totalSNPs$region_start0based # note that this subtraction works because the coordinates are zero based and half open
+  totalSNPsSum=sum(totalSNPs$SNPCount)
+  callableSitesTotal=sum(totalSNPs$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
+  # sample size in chromosomes for this population (which is 2x number of individuals, calculated earlier in the script)
+  SampleSize=ss[ss$population==pop,]$numDiploidIndividuals # this is number of individuals NOT the number of chromosomes, because my harmonic number script multiplies it by 2 to get the number of chromosomes, so you don't need to do that yourself.
+  # this uses my watterson's theta funciton; note that even though you input number of individuals, within the function it converts that to 2*numInd which is num of chromosomes.
+  ThetaW <- wattersons_theta(num_indv = SampleSize,numSNPs = totalSNPsSum,callablesites = callableSitesTotal)
+  allTheta <- rbind(allTheta,(cbind(pop,ThetaW,SampleSize,totalSNPsSum,callableSitesTotal))) # add the pi per site to your dataframe
+}
+
 # for each population, carry out wattersons_theta calculation (maybe put all together and use dplyr?)
 ############ Write out population information (work in progress) ########## 
-pop="CA"
-sink(paste(data.dir,pop,".populationInformation.pi.theta.callableSites.txt",sep=""))
-cat(paste("Population:",pop))
-cat(paste("Sample Size (based on SFS):",ss[ss$population==pop,]$n))
-cat(paste("Chromosome Count (2x sample size):",ss[ss$population==pop,]$chromCount))
-cat(paste("Callable Neutral Sites:",callneut))
-cat(paste("pi per site:",pi))
-sink()
+for(pop in pops){
+  sink(paste(data.dir,pop,".populationInformation.pi.theta.callableSites.txt",sep=""))
+  cat(paste(todaysdate,pop,": This is information about each population based on Tanya's popGen tools script that calcualtes pi across supplied regions.\nThe regions I used were putatively neutral regions intersected with the called sites from the filtered population-specific VCF file.\nTherefore, the total called sites can be calculated from the regions (this isn't the case if you supply generic genomic regions in which case the sites may or may not be called inside them)"))
+  cat(paste("Population:",pop))
+  cat(paste("Sample Size (based on SFS):",ss[ss$population==pop,]$numDiploidIndividuals))
+  cat(paste("Chromosome Count (2x sample size):",2*ss[ss$population==pop,]$numDiploidIndividuals))
+  cat(paste("Callable Neutral Sites:",allPi[allPi$pop==pop,]$callableSitesTotal))
+  cat(paste("pi per site:",allPi[allPi$pop==pop,]$piPerSite))
+  cat(paste("Watterson's Theta:",allTheta[allTheta$pop==pop,]$))
+  sink()
+}
