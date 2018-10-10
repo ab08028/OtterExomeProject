@@ -42,13 +42,11 @@ echo $pop
 
 # if vcf file is not prefiltered to just contain neutral (or other) regions
 inVCF=${pop}_all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz
-# want to get callable sites in neutral regions per population; want a to be the vcf file because want to write out 
-# this will find every site that is in the bed neutral regions that is present in the VCF
-# it will output them as single sites in the bed:
-# like this: GL896898.1	752539	752540
-# and you can then sort and merge that bed to get new neutral regions for the specific pop
-bedtools intersect -a $neutralBed -b $vcfdir/populationVCFs/$inVCF | bedtools sort -i stdin | bedtools merge -i stdin > ${vcfdir}/bedCoords/neutralCallableSites_perPop/${inVCF%.vcf.gz}.neutral.callableSites.0based.bed
+# want to get callable sites in neutral regions per population
+bedtools intersect -a $vcfdir/populationVCFs/$inVCF -b $neutralBed | awk '{OFS="\t"; print $1,$2-1,$2}' | sort -k1,1 -k2,2n | bedtools merge -i stdin > ${vcfdir}/bedCoords/neutralCallableSites_perPop/${inVCF%.vcf.gz}.neutral.callableSites.0based.bed
+
 popNeutBed=${vcfdir}/bedCoords/neutralCallableSites_perPop/${inVCF%.vcf.gz}.neutral.callableSites.0based.bed
+
 python $tanyaDir/popgen_tools/popgen_tools.py \
 --vcf_file $vcfdir/populationVCFs/$inVCF \
 --pi_out $pidir/neutralPi/${inVCF%.vcf.gz}.pi.perPopCallableSiteNeutralRegions.out \
