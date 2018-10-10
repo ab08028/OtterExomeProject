@@ -11,6 +11,7 @@
 
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
+module load bedtools
 
 rundate=20180806
 ### wrapper for Tanya's script
