@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=00:30:00,h_data=20G,highp
+#$ -l h_rt=5:00:00,h_data=10G,highp
 #$ -pe shared 10
 #$ -m bea
 
@@ -26,7 +26,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 # this will make sure everything you need is in place and will make indices for you
 # Do this once before you set the scripts in motion
 plmx=/u/home/a/ab08028/klohmueldata/annabel_data/bin/paleomixLinks/paleomix
-MAX_THREADS=8 # adjust as needed 
+MAX_THREADS=10 # adjust as needed 
 makefile=$1
 DESTINATION=$2 # location where you want files to go 
 TEMP_DIR=$SCRATCH/temp
