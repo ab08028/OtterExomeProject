@@ -3,10 +3,11 @@
 wd=/u/flashscratch/a/ab08028/captures/paleomix/testMapping
 #headers=$SCRATCH/captures/samples/ancientSamples.txt
 # 20181005: headers for library screens
-headers=$SCRATCH/captures/samples/ancientLibs.Screen.txt
+headers=$SCRATCH/captures/samples/ancientSamples.capture.screen.all.txt
 outdir=$SCRATCH/captures/paleomix/summaryStats
 mkdir $outdir
-outfile=$outdir/plmx.aDNA.summary.stats.screening.txt
+todaysdate=`date +%Y%m%d`
+outfile=$outdir/plmx.aDNA.summary.stats.allAncient.$todaysdate.txt
 REF=sea_otter_23May2016_bS9RH.deduped.99 # note that you'll collect ALL ref genomes for most stats; you're
 #just setting the REF here for the MD coverage stats, which you're only collecting for the sea otter
 # This script will still collect all other stats for all other ref genomes beause you aren't specifying 
