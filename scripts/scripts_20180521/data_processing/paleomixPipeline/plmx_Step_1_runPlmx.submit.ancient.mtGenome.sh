@@ -20,7 +20,7 @@ scriptname=plmx_Step_1_runPlmx.mtGenome.sh
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 makefileDir=$scriptDir/makefiles/ancientMakefiles-mtGenome
-headers=$wd/samples/ancientSamples.txt
+headers=$wd/samples/ancientLibs.Screen.Remainder.txt
 
 # outdirectory:
 outdir=$wd/paleomix/mtGenome
