@@ -20,14 +20,8 @@ done
 done
 
 # set up header
-grep rundate -m1 dadi.inference.bottleneck.runNum.1.20181016.output > all.output.concatted.txt
+grep rundate -m1 $outdir/dadi.inference.bottleneck.runNum.1.*.output > $outdir/all.output.concatted.txt
 for i in {1..50}
 do
-grep rundate -A1 dadi.inference.bottleneck.runNum.${i}.20181016.output | tail -n1 >> all.output.concatted.txt
+grep rundate -A1 $outdir/dadi.inference.bottleneck.runNum.${i}.*.output | tail -n1 >> $outdir/all.output.concatted.txt
 done
-
-# once all are done, you can cat them all together, skipping header for all but first files...?
-
-
-
-# test:
