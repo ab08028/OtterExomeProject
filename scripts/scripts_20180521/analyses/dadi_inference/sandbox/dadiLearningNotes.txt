@@ -1,0 +1,29 @@
+Dadi notes
+
+- Forward in time model
+- otter questions:
+	- pop split times
+	- migration rates
+	- number of bottlenecks
+	
+	
+- Need L and mutation rate (L will differ across each population)
+- make a table of pop names and Ls
+- note that "sample" refers to a single chromosome in the manual; so 4 "samples" is from two diploids; so Nref is in terms of haploids I think....
+
+
+
+
+Questions -
+Nref is in haploids?
+samples = haploids?
+
+
+
+Stuff to add to dadi scripts 
+
+-- input fs
+-- input pop ID
+-- input L
+-- input mu
+--- 
