@@ -1,0 +1,8 @@
+tanya's scripts don't use chr designations so they collapse regions -- affects both pi and total snps!
+
+for example:
+kuril islands has 232,476 neutral regions 
+but in pi script there are only 232,274
+this is the total unique entries if you remove chr designations! so it's collapsing some.
+
+this is an issue that must be fixed

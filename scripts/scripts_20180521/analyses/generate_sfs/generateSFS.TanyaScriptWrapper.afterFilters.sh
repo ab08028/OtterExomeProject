@@ -29,7 +29,7 @@ vcfdir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered
 # is not in repeat region
 # does not blast to zebra fish
 # no other GC content filter
-neutralBed=${vcfdir}/bedCoords/all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.bed
+neutralBed=${vcfdir}/bedCoords/all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.bed
 # output SFS location
 SFSdir=$SCRATCH/captures/analyses/SFS/${rundate}
 mkdir -p $SFSdir/neutralSFS
@@ -69,3 +69,5 @@ python $tanyaDir/popgen_tools/popgen_tools.py \
 --no_pi \
 --target_bed $neutralBed
 done
+
+# is this impacted by lack of chr designations??????? 
