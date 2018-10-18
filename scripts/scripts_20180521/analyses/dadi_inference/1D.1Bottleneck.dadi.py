@@ -4,6 +4,8 @@ Created on Tue Oct 16 16:46:27 2018
 
 @author: annabelbeichman
 """
+import matplotlib
+matplotlib.use('Agg') # so graphics show up on hoffman
 import sys
 import argparse
 import dadi
