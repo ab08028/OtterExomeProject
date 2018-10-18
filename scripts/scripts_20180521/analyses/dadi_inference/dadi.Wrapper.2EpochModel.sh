@@ -1,6 +1,16 @@
 #### wrapper:
+# if using on Hoffman, have to use virtual environment:
+# you can set up the virtual env by doing:
+# module load python/2.7.13_shared
+# virtualenv $HOME/env_python2.7.13 # once
+# then activate it every future time with  source $HOME/env_python2.7.13/bin/activate
+# make sure you pip install numpy scipy matplotlib 
+# and then you can deactivate
 
-scriptdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/dadi_inference
+
+gitdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/
+# gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # hoffman
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference
 script=1D.2Epoch.dadi.py
 model=${script%.dadi.py}
 mu=8.64411385098638e-09
