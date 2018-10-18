@@ -18,7 +18,7 @@ mkdir -p $outdir
 L=`grep $pop $totalNeut | awk '{print $2}'` # get the total called neutral sites from the totalNeut table
 for i in {1..50}
 do
-echo $i
+echo $pop $i
 python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs ${sfsdir}/${pop}_${sfssuffix} --outdir $outdir
 done
 

@@ -102,10 +102,10 @@ outputFile.close()
 ############### Output SFS ########################
 print('Writing out SFS **************************************************')                                   
 
-outputSFS=open(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS","w")
+outputSFS=(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS")
 
 fs.to_file(outputSFS)
-outputSFS.close()
+#outputSFS.close()
 
 ############### Output plot ########################
 print('Making plots **************************************************')                                   
