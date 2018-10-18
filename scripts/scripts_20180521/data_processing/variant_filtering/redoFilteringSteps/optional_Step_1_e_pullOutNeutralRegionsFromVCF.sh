@@ -7,6 +7,7 @@
 #$ -m abe
 #$ -M ab08028
 
+# 20181018 decided this is an important step (Tanya's scripts for pi/total snps dont use chr designations so don't work for my data; remaking my scripts)
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -17,23 +18,23 @@ noCallFrac=0.2
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
-infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
+outdir=$vcfdir/populationVCFs/neutralVCFs
+mkdir -p $outdir
+suffix=all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled # vcf suffix
+# 20181018 neutral sites that have been called (min 10kb from genes, not in CpG island, doesn't blast to zebra fish)
+neutralBed=${vcfdir}/bedCoords/all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.bed
 
-# neutral sites that have been called (min 10kb from genes, not in CpG island, doesn't blast to zebra fish)
-neutralBed=${vcfdir}/bedCoords/all_7_passingBespoke.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.bed
-
-
-populations="COM"
+populations="CA AK AL COM KUR"
 
 for pop in $populations
 do
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/populationVCFs/${pop}_'all_7_passingAllFilters_allCalled'${infile} \
--o ${vcfdir}/populationVCFs/${pop}_'neutral_7_passingAllFilters_allCalled'${infile} \
+--variant ${vcfdir}/populationVCFs/${pop}_${suffix}.vcf.gz \
+-o $outdir/${pop}_neutral_${suffix}.vcf.gz \
 -L $neutralBed
 done
