@@ -8,7 +8,14 @@
 #$ -M ab08028
 
 ### This is for the neutral SFS, but can modify choice of bed file to make coding SFS
-
+############## THIS SCRIPT has issues
+# problem: 
+# during each of these filtering levels, not all sites have been called for all individuals
+# instead, should make a miniature vcf file with some %% of the neutral bed file (1/4?)
+# per population with all sites called
+# and make an sfs from that
+# that should be relatively easy to script (maybe haha)
+# but will take some time to figure out/ run
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 

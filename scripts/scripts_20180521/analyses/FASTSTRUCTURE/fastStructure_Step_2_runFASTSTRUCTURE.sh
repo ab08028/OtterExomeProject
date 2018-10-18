@@ -30,7 +30,10 @@ outdir=$SCRATCH/captures/analyses/FASTSTRUCTURE/${calldate}_filtered
 # manually added pop levels (step 1b); they should be a column in exact order of samples (gotten order from .fam file) 
 pops=$indir/${infilePREFIX}.pops # file list of population assignments (single column) in same order as your sample input *careful here* get order from .fam or .nosex files
 # if this is empty, you forgot to do manual assignment 
-
+# copy sample info to dir for download to laptop:
+cp $indir/${infilePREFIX}.samples $outdir
+cp $indir/${infilePREFIX}.popAssignment $outdir
+cp $indir/${infilePREFIX}.pops $outdir
 
  # eventually going to be FASTSTRUCTURE dir
 plotdir=$outdir/plots

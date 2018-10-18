@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Oct 17 15:46:50 2018
+
+@author: annabelbeichman
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Oct 16 16:46:27 2018
 
 @author: annabelbeichman
@@ -38,23 +45,25 @@ ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10
 ############### Set up Specific Model -- this will change from script to script ########################
 
-def bottleneck(params, ns, pts): 
-    nuB,nuF,TB,TF = params
+def double_bottleneck(params, ns, pts): 
+    nuB1,nuF1,nuB2,nuF2,TB1,TF1,TB2,TF2 = params
     xx = Numerics.default_grid(pts) # sets up grid
     phi = PhiManip.phi_1D(xx) # sets up initial phi for population 
-    phi = Integration.one_pop(phi, xx, TB, nuB)  # bottleneck
-    phi = Integration.one_pop(phi, xx, TF, nuF) # recovery 
+    phi = Integration.one_pop(phi, xx, TB1, nuB1)  # bottleneck 1 
+    phi = Integration.one_pop(phi, xx, TF1, nuF1) # recovery 1
+    phi = Integration.one_pop(phi, xx, TB2, nuB2)  # bottleneck 2 
+    phi = Integration.one_pop(phi, xx, TF2, nuF2) # recovery 2
     fs = Spectrum.from_phi(phi, ns, (xx,)) 
     return fs
-param_names=("nuB","nuF","TB","TF")
+param_names=("nuB1","nuF1","nuB2","nuF2","TB1","TF1","TB2","TF2")
 
 
-upper_bound = [100, 100, 10, 10]
-lower_bound = [1e-3, 1e-3, 0, 0]
-p0 = [0.01,0.3,0.001,0.001] # initial parameters
+upper_bound = [100, 100, 100, 100, 10, 10, 10, 10]
+lower_bound = [1e-3, 1e-3, 1e-3, 1e-3, 0, 0, 0, 0]
+p0 = [0.01, 1, 0.01, 0.3, 0.0005,0.01,0.0005,0.0005] # initial parameters
 
 
-func=bottleneck # set the function
+func=double_bottleneck # set the function
 
 ############### Carry out optimization (same for any model) ########################
 # Make extrapolation function:
@@ -81,10 +90,10 @@ print('Writing out parameters **************************************************
 outputFile=open(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
-param_names_str=param_names_str+"\ttheta\tLL\tmodel\tmu\tL\tmaxiter\trunNumber\trundate" # add additional parameters theta, log-likelihood, model name, run number and rundate
+param_names_str=param_names_str+"\ttheta\tLL\tmodel\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
 # joint together all the output fields, tab-separated:
-output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate] # put all the output terms together
+output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0] # put all the output terms together
 output='\t'.join(str(x) for x in output) # write out all the output fields
 # this should result in a 2 row table that could be input into R / concatenated with other runs
 outputFile.write(('{0}\n{1}\n').format(param_names_str,output))

@@ -8,7 +8,7 @@
 #$ -M ab08028
 
 ### This is for the neutral SFS, but can modify choice of bed file to make coding SFS
-
+############# NEED TO FIX SCRIPT TO WORK WITH CHR DESIGNATIONS ###########
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 module load bedtools
@@ -55,6 +55,16 @@ python $tanyaDir/popgen_tools/popgen_tools.py \
 --target_bed $popNeutBed # instead of overall all-pop neutral regions, some of which may not be called int his population, use the actual ALL-CALLED neutral regions. will make pi calculations easier
 done
 
+# also want to calculate the total amount of neutral sequence per pop in one table:
+echo -e 'pop\ttotalCalledNeutralSites' > ${vcfdir}/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt
+for pop in $populations
+do
+inVCF=${pop}_all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz
+totalNeut=`awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' ${vcfdir}/bedCoords/neutralCallableSites_perPop/${inVCF%.vcf.gz}.neutral.callableSites.0based.bed`
+echo -e ${pop}'\t'${totalNeut} >> ${vcfdir}/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt
+totalNeut=''
+inVCF=''
+done
 # Note that now the output will be 
 # start_region stop_region pi_in_region (not pi per site)
 # note that if you use a general bed of neutral regions then this output won't represent callable sites

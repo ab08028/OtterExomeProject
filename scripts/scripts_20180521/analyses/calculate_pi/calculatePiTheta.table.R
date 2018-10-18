@@ -23,9 +23,12 @@ todaysdate=format(Sys.Date(),format="%Y%m%d") # date you make plots
 
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PI_THETA/",rundate,"/",sep="")
 sfs.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",rundate,"/neutralSFS/",sep="")
-plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/PI_THETA/",rundate,sep="")
+plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/PI_THETA/",rundate,"/",sep="")
 analysis.dir=
 dir.create(plot.dir,recursive = T,showWarnings = F)
+
+################ Get total neutral callable sites from table ############
+totalNeut <- read.table(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TotalCallableNeutralSites/",rundate,"/summary.neutralCallableSites.perPop.txt",sep=""),header = T)
 ################ Get Sample Size from SFS ###############
 ########### THE SFS MUST BE FOLDED FOR THIS TO WORK! 
 # get sample sizes from the SFS; you calculate pi and theta from the same pop-specific vcf files
@@ -49,18 +52,30 @@ colnames(ss) <- c("population","numDiploidIndividuals")
 # based on output of tanya's script
 # which gives you pi (not pi per site) for each region of called NEUTRAL sites
 #### !!! Note: the callable sites calculation ONLY WORKS if the region file you gave Tanya's script was the neutral CALLED sites for each population, rather than some abstract set of regions where sites may or may not be called. In my analysis, I use the per-population called neutral sites, so it is okay to calculated callable sites from the output of Tanya's script.!!! ####
+#######***** SOMETHING WEIRD WITH PI SCRIPT, I THINK BECAUSE OF LACK OF CHROMOSOME DESIGNATION ***** deal with this! Aha -- figured out why regions differ; without chromosomes, there is definitely some condensing of regions that have exact same start/stop points. Need to reclaculate pi!!! #######
 allPi <- data.frame()
 for(i in (1:length(pops))){
   pop=pops[i]
-  pi <- read.table(paste(data.dir,pop,"_",prefix,".pi.perPopCallableSiteNeutralRegions.out",sep=""),header=T,stringsAsFactors = F)
+  pi <- read.table(paste(data.dir,pop,"_",prefix,".pi.perPopCallableSiteNeutralRegions.out",sep=""),header=F,stringsAsFactors = F)
   colnames(pi) <- c("region_start0based","region_end_halfOpen","pi_per_region")
   pi$siteCount <- pi$region_end_halfOpen - pi$region_start0based # note that this subtraction works because the coordinates are zero based and half open
   piSumAllRegions=sum(pi$pi_per_region)
-  callableSitesTotal=sum(pi$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
-  piPerSite=piSumAllRegions/callableSitesTotal
-  allPi <- rbind(allPi,(cbind(pop,piPerSite,piSumAllRegions,callableSitesTotal))) # add the pi per site to your dataframe
+  #callableSitesTotal=sum(pi$siteCount) # this only works because I used called sites in neutral regions per pop as my regions; too unreliable. using a special table instead:
+  callableSitesTotal <- totalNeut[totalNeut$pop==pop,]$totalCalledNeutralSites
+  piPerSite=(piSumAllRegions/callableSitesTotal)
+  allPi <- rbind.data.frame(allPi,(cbind.data.frame(pop,piPerSite,piSumAllRegions,callableSitesTotal)))
+  # add the pi per site to your dataframe
 }
-write.table(allPi,paste(data.dir,pop,".piPerSitePerPopulation.",todaysdate,".txt",sep=""),row.names=F,col.names=T,quote=F,sep="\t")
+write.table(allPi,paste(data.dir,"allPops.piPerSitePerPopulation.",todaysdate,".txt",sep=""),row.names=F,col.names=T,quote=F,sep="\t")
+# temp plot (make a separate real plotting script)
+piPlot <- ggplot(allPi,aes(x=pop,y=piPerSite,fill=pop))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=unlist(colors))+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Population")+
+  ggtitle("Pi Per Neutral Site")
+ggsave(paste(plot.dir,"allPops.piPerSitePerPopulation.",todaysdate,".pdf",sep=""),piPlot,device = "pdf",height=5,width=7)
 #################### calculate watterson's theta #####################
 # note harmonic number is sum from 1 to n of 1/n. n in this case is the number of choromosomes, not individuals, so it's 2*N if N is number of diploid inds.
 # define a function to calc harm number:
@@ -98,28 +113,43 @@ wattersons_theta <- function(num_indv,numSNPs,callablesites){
 allTheta <- data.frame()
 for(i in (1:length(pops))){
   pop=pops[i]
-  totalSNPs <- read.table(paste(data.dir,pop,"_",prefix,".totalSNPs.perPopCallableSiteNeutralRegions.out",sep=""),header=T,stringsAsFactors = F)
-  colnames(totalSNPs) <- c("region_start0based","region_end_halfOpen","SNPCount")
-  totalSNPs$siteCount <- totalSNPs$region_end_halfOpen - totalSNPs$region_start0based # note that this subtraction works because the coordinates are zero based and half open
-  totalSNPsSum=sum(totalSNPs$SNPCount)
-  callableSitesTotal=sum(totalSNPs$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
+  # isntead of using Tanya's "Total SNPs" whcih seems to be having problems,
+  #just get total snps from the sfs!
+  #totalSNPs <- read.table(paste(data.dir,pop,"_",prefix,".totalSNPs.perPopCallableSiteNeutralRegions.out",sep=""),header=F,stringsAsFactors = F)
+  #colnames(totalSNPs) <- c("region_start0based","region_end_halfOpen","SNPCount")
+  #totalSNPs$siteCount <- totalSNPs$region_end_halfOpen - totalSNPs$region_start0based # note that this subtraction works because the coordinates are zero based and half open
+  totalSNPsSum=sum(allSFS[allSFS$population==pop,]$num_variants)
+  # get from Pi thing for now, while Total SNPs is being wonky:
+  #callableSitesTotal=sum(totalSNPs$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
+  callableSitesTotal=allPi[allPi$pop==pop,]$callableSitesTotal
   # sample size in chromosomes for this population (which is 2x number of individuals, calculated earlier in the script)
   SampleSize=ss[ss$population==pop,]$numDiploidIndividuals # this is number of individuals NOT the number of chromosomes, because my harmonic number script multiplies it by 2 to get the number of chromosomes, so you don't need to do that yourself.
   # this uses my watterson's theta funciton; note that even though you input number of individuals, within the function it converts that to 2*numInd which is num of chromosomes.
   ThetaW <- wattersons_theta(num_indv = SampleSize,numSNPs = totalSNPsSum,callablesites = callableSitesTotal)
-  allTheta <- rbind(allTheta,(cbind(pop,ThetaW,SampleSize,totalSNPsSum,callableSitesTotal))) # add the pi per site to your dataframe
+  allTheta <- rbind.data.frame(allTheta,(cbind.data.frame(pop,ThetaW,SampleSize,totalSNPsSum,callableSitesTotal))) # add the pi per site to your dataframe
 }
 
-# for each population, carry out wattersons_theta calculation (maybe put all together and use dplyr?)
+thetaWPlot <- ggplot(allTheta,aes(x=pop,y=ThetaW,fill=pop))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=unlist(colors))+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Population")+
+  ggtitle("Watterson's Theta Per Neutral Site")
+thetaWPlot
+write.table(allTheta,paste(data.dir,"allPops.WattersonsThetaPerSitePerPopulation.",todaysdate,".txt",sep=""),row.names=F,col.names=T,quote=F,sep="\t")
+ggsave(paste(plot.dir,"allPops.WattersonsTheta.PerSitePerPopulation.",todaysdate,".pdf",sep=""),thetaWPlot,device = "pdf",height=5,width=7)
+
+
 ############ Write out population information (work in progress) ########## 
 for(pop in pops){
   sink(paste(data.dir,pop,".populationInformation.pi.theta.callableSites.txt",sep=""))
-  cat(paste(todaysdate,pop,": This is information about each population based on Tanya's popGen tools script that calcualtes pi across supplied regions.\nThe regions I used were putatively neutral regions intersected with the called sites from the filtered population-specific VCF file.\nTherefore, the total called sites can be calculated from the regions (this isn't the case if you supply generic genomic regions in which case the sites may or may not be called inside them)"))
-  cat(paste("Population:",pop))
-  cat(paste("Sample Size (based on SFS):",ss[ss$population==pop,]$numDiploidIndividuals))
-  cat(paste("Chromosome Count (2x sample size):",2*ss[ss$population==pop,]$numDiploidIndividuals))
-  cat(paste("Callable Neutral Sites:",allPi[allPi$pop==pop,]$callableSitesTotal))
-  cat(paste("pi per site:",allPi[allPi$pop==pop,]$piPerSite))
-  cat(paste("Watterson's Theta:",allTheta[allTheta$pop==pop,]$))
+  cat(paste(todaysdate,pop,"\n## This is information about each population based on Tanya's popGen tools script that calcualtes pi across supplied regions.\nThe regions I used were putatively neutral regions intersected with the called sites from the filtered population-specific VCF file.\n##Therefore, the total called sites can be calculated from the regions (this isn't the case if you supply generic genomic regions in which case the sites may or may not be called inside them)\n\n"))
+  cat(paste("Population:",pop,"\n"))
+  cat(paste("Sample Size (based on SFS):",ss[ss$population==pop,]$numDiploidIndividuals,"\n"))
+  cat(paste("Chromosome Count (2x sample size):",2*ss[ss$population==pop,]$numDiploidIndividuals,"\n"))
+  cat(paste("Callable Neutral Sites:",allPi[allPi$pop==pop,]$callableSitesTotal,"\n"))
+  cat(paste("pi (per site; neutral regions only):",round(allPi[allPi$pop==pop,]$piPerSite,5),"\n"))
+  cat(paste("Watterson's Theta:",round(allTheta[allTheta$pop==pop,]$ThetaW,5),"\n"))
   sink()
 }
