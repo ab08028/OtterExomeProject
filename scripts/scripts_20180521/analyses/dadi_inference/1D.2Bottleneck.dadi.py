@@ -11,6 +11,8 @@ Created on Tue Oct 16 16:46:27 2018
 
 @author: annabelbeichman
 """
+import matplotlib
+matplotlib.use('Agg') # so graphics show up on hoffman
 import sys
 import argparse
 import dadi
@@ -110,14 +112,15 @@ fs.to_file(outputSFS)
 ############### Output plot ########################
 print('Making plots **************************************************')                                   
 
-import pylab
-pylab.figure(1)
-pylab.ion()
+#import pylab
+import matplotlib.pyplot as plt 
+fig=plt.figure(1)
+#pylab.ion()
 outputFigure=str(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".figure.png")
 dadi.Plotting.plot_1d_comp_multinom(model, fs)
-pylab.show()
-pylab.savefig(outputFigure, dpi=50)
-pylab.clf()
+#pylab.show()
+plt.savefig(outputFigure)
+#pylab.clf()
 
 
 ###### exit #######
