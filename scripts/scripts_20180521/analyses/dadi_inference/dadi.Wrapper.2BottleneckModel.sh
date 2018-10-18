@@ -1,7 +1,7 @@
 #### wrapper:
 
 scriptdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/dadi_inference
-script=1D.Bottleneck.dadi.py
+script=1D.2Bottleneck.dadi.py
 model=${script%.dadi.py}
 mu=8.64411385098638e-09
 genotypeDate=20180806
