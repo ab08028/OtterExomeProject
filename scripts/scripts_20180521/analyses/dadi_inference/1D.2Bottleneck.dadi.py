@@ -22,7 +22,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 ############### Parse input arguments ########################
-parser = argparse.ArgumentParser(description='Infer a one-bottleneck model from a 1D folded SFS in dadi')
+parser = argparse.ArgumentParser(description='Infer a two-bottleneck model from a 1D folded SFS in dadi')
 parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
 parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'")
 parser.add_argument("--mu",required=True,help="supply mutation rate in mutation/bp/gen")
