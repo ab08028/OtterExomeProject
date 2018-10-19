@@ -20,12 +20,13 @@ from dadi import Numerics, PhiManip, Integration, Spectrum, Demographics1D
 # note: module  Demographics1D has the following models file:///Users/annabelbeichman/Documents/UCLA/dadi/dadi/doc/api/dadi.Demographics1D-module.html
 # has 2 epoch, and 3 epoch (bottleneck)
 
-from numpy import array
+from numpy import array # don't comment this out
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
+modelName="1D.2Epoch"
 ############### Parse input arguments ########################
-parser = argparse.ArgumentParser(description='Infer a two-epoch model from a 1D folded SFS in dadi')
+parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
 parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
 parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'")
 parser.add_argument("--mu",required=True,help="supply mutation rate in mutation/bp/gen")
@@ -85,10 +86,10 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
-outputFile=open(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
+outputFile=open(str(outdir)+"/dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
-param_names_str=param_names_str+"\ttheta\tLL\tmodel\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters" # add additional parameters theta, log-likelihood, model name, run number and rundate
+param_names_str=param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
 # joint together all the output fields, tab-separated:
 output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0] # put all the output terms together
