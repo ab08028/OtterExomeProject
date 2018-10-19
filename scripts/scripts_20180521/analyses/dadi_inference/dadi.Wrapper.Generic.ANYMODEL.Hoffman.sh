@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G,highp
+#$ -l h_rt=24:00:00,h_data=8G
 #$ -N dadi_inference
 #$ -o /u/flashscratch/a/ab08028/captures/reports/dadi
 #$ -e /u/flashscratch/a/ab08028/captures/reports/dadi
@@ -38,9 +38,7 @@ totalNeut=$captures/vcf_filtering/${genotypeDate}_filtered/bedCoords/neutralCall
 # run multiple models for multiple popuations?
 scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
 
-#for pop in CA AK AL COM KUR
-for pop in CA
-
+for pop in CA AK AL COM KUR
 do
 L=`grep $pop $totalNeut | awk '{print $2}'` # get the total called neutral sites from the totalNeut table
 for script in $scripts
@@ -50,7 +48,7 @@ echo "starting inference for $pop for model $model"
 outdir=$dadidir/$genotypeDate/$pop/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..2}
+for i in {1..50}
 do
 echo "carrying out inference $i for model $model for pop $pop"
 python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs ${sfsdir}/${pop}.${sfssuffix} --outdir $outdir
