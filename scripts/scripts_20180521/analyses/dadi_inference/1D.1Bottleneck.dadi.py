@@ -10,7 +10,7 @@ import sys
 import argparse
 import dadi
 from dadi import Numerics, PhiManip, Integration, Spectrum
-#from numpy import array
+from numpy import array
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 

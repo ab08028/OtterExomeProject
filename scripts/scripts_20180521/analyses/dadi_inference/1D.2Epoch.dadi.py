@@ -20,7 +20,7 @@ from dadi import Numerics, PhiManip, Integration, Spectrum, Demographics1D
 # note: module  Demographics1D has the following models file:///Users/annabelbeichman/Documents/UCLA/dadi/dadi/doc/api/dadi.Demographics1D-module.html
 # has 2 epoch, and 3 epoch (bottleneck)
 
-#from numpy import array
+from numpy import array
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
