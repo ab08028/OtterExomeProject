@@ -57,7 +57,7 @@ done
 
 echo "concatenating results"
 grep rundate -m1 $outdir/dadi.inference.${model}.runNum.1.*.output > $outdir/dadi.inference.${model}.all.output.concatted.txt
-for i in {1..2}
+for i in {1..50}
 do
 grep rundate -A1 $outdir/dadi.inference.${model}.runNum.${i}.*.output | tail -n1 >> $outdir/dadi.inference.${model}.all.output.concatted.txt
 done
