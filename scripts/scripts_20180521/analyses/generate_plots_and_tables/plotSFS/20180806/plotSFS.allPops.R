@@ -64,7 +64,7 @@ for(i in (1:length(pops))){
   allSFS_list[[i]] <- sfsNoMono # add the SFS to your list
   p <- ggplot(allSFS_list[[i]],aes(x=as.numeric(frequency),y=count))+
     geom_bar(stat="identity",fill=popcolor)+
-    #scale_x_continuous(breaks=c(seq(1,nrow(allSFS_list[[i]]))))+
+    scale_x_continuous(breaks=c(seq(1,nrow(allSFS_list[[i]]))))+
     ggtitle(paste(pop,": Folded Neutral SFS",sep=""))+
     theme_bw()+
     facet_wrap(~population,scales="free_x")+
@@ -98,7 +98,7 @@ for(i in (1:length(pops))){
   allSFS_list[[i]] <- sfsNoMono # add the SFS to your list
   p <- ggplot(allSFS_list[[i]],aes(x=as.numeric(frequency),y=proportion))+
     geom_bar(stat="identity",fill=popcolor)+
-    #scale_x_continuous(breaks=c(seq(1,nrow(allSFS_list[[i]]))))+
+    scale_x_continuous(breaks=c(seq(1,nrow(allSFS_list[[i]]))))+
     ggtitle(paste(pop,": Folded Neutral SFS",sep=""))+
     theme_bw()+
     facet_wrap(~population,scales="free_x")+
