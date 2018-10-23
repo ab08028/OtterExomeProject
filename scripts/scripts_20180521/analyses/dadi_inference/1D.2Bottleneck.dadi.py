@@ -95,7 +95,7 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
-outputFile=open(str(outdir)+"/dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
+outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
 param_names_str=param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters" # add additional parameters theta, log-likelihood, model name, run number and rundate
@@ -110,7 +110,7 @@ outputFile.close()
 ############### Output SFS ########################
 print('Writing out SFS **************************************************')                                   
 
-outputSFS=(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS")
+outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS"
 
 fs.to_file(outputSFS)
 #outputSFS.close()
@@ -122,7 +122,7 @@ print('Making plots **************************************************')
 import matplotlib.pyplot as plt 
 fig=plt.figure(1)
 #pylab.ion()
-outputFigure=str(str(outdir)+"/dadi.inference."+str(func.func_name)+".runNum."+str(runNum)+"."+str(todaysdate)+".figure.png")
+outputFigure=str(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".figure.png")
 dadi.Plotting.plot_1d_comp_multinom(model, fs)
 #pylab.show()
 plt.savefig(outputFigure)
