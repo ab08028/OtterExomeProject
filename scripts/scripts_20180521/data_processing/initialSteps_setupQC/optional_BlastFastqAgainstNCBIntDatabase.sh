@@ -21,13 +21,13 @@ blastdb=/u/flashscratch/a/ab08028/NCBI_nt_db/nt # # blast db was downloaded from
 #for file in A19_Elut_CA_SM_30_SN2_screen_S18_L007_R1_001.fastq A13_Elut_CA_AN_388_SN1_2CAP_screen_S28_L007_R1_001.fastq A9_Elut_CA_AN_388_SN1_S132_R1_001.fastq
 
 #do
-#gunzip $file
-#fastq_to_fasta -i $fastqs/$file.gz -o ${file%.fastq}.fasta -n -Q33
+#gunzip $fastqs/$file.gz
+#fastq_to_fasta -i $fastqs/$file -o $fastqs/${file%.fastq}.fasta -n -Q33
+#gzip $fastqs/$file
 #done
 
 for file in A19_Elut_CA_SM_30_SN2_screen_S18_L007_R1_001.fastq A13_Elut_CA_AN_388_SN1_2CAP_screen_S28_L007_R1_001.fastq A9_Elut_CA_AN_388_SN1_S132_R1_001.fastq
 do
-# convert fastq --> fasta
 input=${file%.fastq}.fasta
 output=${file%.fastq}.blast.out
 outdir=$wd/blast/${file%.fastq}
