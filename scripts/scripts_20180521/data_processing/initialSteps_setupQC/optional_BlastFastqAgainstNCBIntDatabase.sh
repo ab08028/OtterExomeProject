@@ -1,12 +1,12 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G
+#$ -l h_rt=24:00:00,h_data=24G
 #$ -N blastFastqOtter
 #$ -o /u/flashscratch/a/ab08028/captures/reports
 #$ -e /u/flashscratch/a/ab08028/captures/reports
 #$ -m abe
 #$ -M ab08028
-#$ -pe shared 10
+#$ -pe shared 5
 # goal of this script: to find out what a fastq file blasts to (figure out what contamination is)
 
 source /u/local/Modules/default/init/modules.sh
@@ -40,6 +40,6 @@ $blastdir/blastn \
 -db ${blastdb} \
 -outfmt "6 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore staxid qlen" \
 -out ${outdir}/$output \
--num_threads 10
+-num_threads 5
 
 done
