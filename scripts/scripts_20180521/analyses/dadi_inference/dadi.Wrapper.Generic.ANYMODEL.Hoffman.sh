@@ -46,7 +46,7 @@ for script in $scripts
 do
 model=${script%.dadi.py}
 echo "starting inference for $pop for model $model"
-outdir=$dadidir/$genotypeDate/$pop/$model/inference_$todaysdate/
+outdir=$dadidir/$genotypeDate/$pop/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
