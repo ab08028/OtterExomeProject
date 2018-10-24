@@ -55,9 +55,10 @@ def bottleneck(params, ns, pts):
 param_names=("nuB","nuF","TB","TF")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
-upper_bound = [10, 10, 10, 10]
+# changing starting position to .1, tb to 0.005; TF to 0.001
+upper_bound = [200, 200, 10, 10]
 lower_bound = [1e-4, 1e-4, 0, 0]
-p0 = [0.01,0.3,0.001,0.0005] # initial parameters
+p0 = [0.01,0.1,0.005,0.001] # initial parameters
 
 
 func=bottleneck # set the function

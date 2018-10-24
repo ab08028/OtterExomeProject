@@ -6,7 +6,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/dadi
 #$ -m abe
 #$ -M ab08028
-
+##### testing ###########
 
 ######################### set up virtual environment #####################
 # if using on Hoffman, have to use virtual environment:
@@ -39,7 +39,7 @@ totalNeut=$captures/vcf_filtering/${genotypeDate}_filtered/bedCoords/neutralCall
 # run multiple models for multiple popuations?
 scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
 
-for pop in CA AK AL COM KUR
+for pop in CA AK
 do
 L=`grep $pop $totalNeut | awk '{print $2}'` # get the total called neutral sites from the totalNeut table
 for script in $scripts
@@ -49,7 +49,7 @@ echo "starting inference for $pop for model $model"
 outdir=$dadidir/$genotypeDate/$pop/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..50}
+for i in {1..10}
 do
 echo "carrying out inference $i for model $model for pop $pop"
 python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs ${sfsdir}/${pop}.${sfssuffix} --outdir $outdir
@@ -58,7 +58,7 @@ done
 
 echo "concatenating results"
 grep rundate -m1 $outdir/${pop}.dadi.inference.${model}.runNum.1.*.output > $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
-for i in {1..50}
+for i in {1..10}
 do
 grep rundate -A1 $outdir/${pop}.dadi.inference.${model}.runNum.${i}.*.output | tail -n1 >> $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
 done

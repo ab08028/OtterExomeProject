@@ -1,12 +1,11 @@
 ######### Dadi Results processing ###########
 todaysdate=format(Sys.Date(),format="%Y%m%d") # date you make plots
 
-pop="CA"
+pop="COM"
 # want to talk to Jim Estes about possible models.
 generationTime=6 # for now using 6 yr/ gen (Tinker says 6-7 is reasonable)
 # get all output:
 genotypeDate=20180806
-dadiInferenceDate=
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/",sep="")
 #models=c("1D.1Bottleneck","1D.2Bottlenecek","1D.2Epoch")
 
@@ -97,9 +96,6 @@ bestModelResults <- get(paste("results",bestModel$modelNumber,sep=""))
 bestModelRunParams <- bestModelResults[bestModelResults$runNumber==bestModel$runNumber,]
 
 write.table(bestModelRunParams,paste(data.dir,"/",pop,"/",pop,".bestModelRunParams.AIC.",todaysdate,".txt",sep=""),quote=F,row.names=F)
-
-# locate output files that correspond and copy them into a dir.:
-dadi.inference.1D.1Bottleneck.runNum.33.20181019.output
 ############# Plot Convergence ###################
 # plot iterations in order of inc. ll and show how parameters change
 #subset results:
