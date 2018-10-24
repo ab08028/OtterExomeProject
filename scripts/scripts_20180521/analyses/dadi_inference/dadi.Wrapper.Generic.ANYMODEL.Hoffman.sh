@@ -29,6 +29,7 @@ scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference
 mu=8.64411385098638e-09
 genotypeDate=20180806
 sfsDate=20181019
+todaysdate=`date +%Y%m%d`
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/neutralSFS/
 dadidir=$captures/analyses/dadi_inference/
@@ -45,7 +46,7 @@ for script in $scripts
 do
 model=${script%.dadi.py}
 echo "starting inference for $pop for model $model"
-outdir=$dadidir/$genotypeDate/$pop/$model/
+outdir=$dadidir/$genotypeDate/$pop/$model/inference_$todaysdate/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
