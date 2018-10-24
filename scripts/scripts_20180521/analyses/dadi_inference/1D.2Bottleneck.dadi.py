@@ -65,9 +65,9 @@ def double_bottleneck(params, ns, pts):
     return fs
 param_names=("nuB1","nuF1","nuB2","nuF2","TB1","TF1","TB2","TF2")
 
-
-upper_bound = [100, 100, 100, 100, 10, 10, 10, 10]
-lower_bound = [1e-3, 1e-3, 1e-3, 1e-3, 0, 0, 0, 0]
+# 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
+upper_bound = [10, 10, 10, 10, 10, 10, 10, 10]
+lower_bound = [1e-4, 1e-4, 1e-4, 1e-4, 0, 0, 0, 0]
 p0 = [0.01, 1, 0.01, 0.3, 0.0005,0.01,0.0005,0.0005] # initial parameters
 
 

@@ -54,9 +54,9 @@ def bottleneck(params, ns, pts):
     return fs
 param_names=("nuB","nuF","TB","TF")
 
-
-upper_bound = [100, 100, 10, 10]
-lower_bound = [1e-3, 1e-3, 0, 0]
+# 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
+upper_bound = [10, 10, 10, 10]
+lower_bound = [1e-4, 1e-4, 0, 0]
 p0 = [0.01,0.3,0.001,0.0005] # initial parameters
 
 
@@ -82,8 +82,6 @@ ll_model = dadi.Inference.ll_multinom(model, fs)
 # calculate best fit theta
 theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
-############### Scale parameters by Nanc ##################################### 
-### to write ### # scale nu parameters by Nanc; scale time params by 2Nanc to get generations
 
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
