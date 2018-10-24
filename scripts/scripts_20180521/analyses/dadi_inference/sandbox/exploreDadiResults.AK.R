@@ -1,7 +1,7 @@
 ######### Dadi Results processing ###########
 todaysdate=format(Sys.Date(),format="%Y%m%d") # date you make plots
 
-pop="CA"
+pop="AK"
 # want to talk to Jim Estes about possible models.
 generationTime=6 # for now using 6 yr/ gen (Tinker says 6-7 is reasonable)
 # get all output:

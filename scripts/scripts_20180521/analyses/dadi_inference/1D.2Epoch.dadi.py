@@ -57,8 +57,9 @@ func = Demographics1D.two_epoch #
 param_names= ("nu","T")
 # nu: Ratio of contemporary to ancient population size
 # T: Time in the past at which size change happened (in units of 2*Na    generations) 
-upper_bound = [100, 10]
-lower_bound = [1e-3, 0]
+# 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
+upper_bound = [10, 10]
+lower_bound = [1e-4, 0]
 p0 = [0.01,0.001] # initial parameters
 
 
