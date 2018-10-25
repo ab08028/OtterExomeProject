@@ -1,7 +1,7 @@
 ######### Dadi Results processing ###########
 todaysdate=format(Sys.Date(),format="%Y%m%d") # date you make plots
 
-pop="AK"
+pop="AL"
 # want to talk to Jim Estes about possible models.
 generationTime=6 # for now using 6 yr/ gen (Tinker says 6-7 is reasonable)
 # get all output:
@@ -96,8 +96,7 @@ bestModel=df[df$AIC==min(df$AIC),]
 bestModelResults <- get(paste("results",bestModel$modelNumber,sep=""))
 bestModelRunParams <- bestModelResults[bestModelResults$runNumber==bestModel$runNumber,]
 bestModelName=bestModelRunParams$modelFunction
-
-write.table(bestModelRunParams,paste(data.dir,"/",pop,"/",pop,".bestModelRunParams.AIC.",todaysdate,".txt",sep=""),quote=F,row.names=F)
+write.table(bestModelRunParams,paste(data.dir,"/",pop,"/",pop,".",bestModelName,".bestModelRunParams.AIC.",todaysdate,".txt",sep=""),quote=F,row.names=F)
 ############# Plot Convergence ###################
 # plot iterations in order of inc. ll and show how parameters change
 #subset results:
@@ -108,9 +107,11 @@ results1_sub_melt <- melt(results1_sub,id.vars = c("runNumber","LL"))
 ggplot(results1_sub_melt,aes(x=runNumber,y=value,fill=LL,color=LL))+
   geom_point()+
   facet_wrap(~variable,scales="free")
+model="bottleneck"
 
 convergePlot <- ggplot(bestModelResults,aes(x=reorder(runNumber,LL),y=LL))+
   geom_point()+
   ggtitle(paste(pop," ",bestModelName," LL Convergence",sep=""))
 convergePlot
 ggsave(paste(plot.dir,"/",pop,".",bestModelName,".LLConvergence.",todaysdate,".pdf",sep=""),convergePlot,height=5,width=7)
+

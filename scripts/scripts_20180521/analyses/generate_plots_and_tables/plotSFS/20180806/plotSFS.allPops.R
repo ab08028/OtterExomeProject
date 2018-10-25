@@ -112,9 +112,13 @@ allPlots_list
 allSFS <- bind_rows(allSFS_list)
 
 
-
-
-
+# get total SNPs:
+snpCount <- allSFS %>% 
+  group_by(population) %>%
+  tally(sum(count)) 
+sSize <- allSFS %>% 
+  group_by(population) %>%
+  tally() 
 ########## admixed SFS ############
 # ADprefix="all_9_rmAllHet_passingAllFilters_allCalled"
 # ADpops=c("AK","KUR") # admixed pops

@@ -32,7 +32,7 @@ sfsDate=20181019
 todaysdate=`date +%Y%m%d`
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/neutralSFS/
-dadidir=$captures/analyses/dadi_inference/
+dadidir=$captures/analyses/dadi_inference_sandbox/
 sfssuffix=unfolded.sfs.dadi.format.${sfsDate}.txt
 totalNeut=$captures/vcf_filtering/${genotypeDate}_filtered/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt # file with total neutral sites counts for each population 
 ### want to make a slightly fancier outdir that is the model / date or something like that eventually. 
