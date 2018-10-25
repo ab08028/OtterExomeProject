@@ -79,7 +79,7 @@ java -jar $GATK \
 --maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
-python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile --pop COM --outdir ${vcfdir}/step-by-step-vcf-sfs/
+python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile --pop COM --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # California --> CA (include the RWAB hiseq4000 samples)
 echo "CA"
@@ -93,7 +93,7 @@ java -jar $GATK \
 --maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
-python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile --pop CA --outdir ${vcfdir}/step-by-step-vcf-sfs/
+python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile --pop CA --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 
 # Alaska --> AK : remove admixed and make pop specific vcf
@@ -114,7 +114,7 @@ java -jar $GATK \
 -xl_sn ${ind18} \
 -L $neutralBed
 
-python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile --pop AK --outdir ${vcfdir}/step-by-step-vcf-sfs/
+python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile --pop AK --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # Aleutian --> AL
 echo "AL"
@@ -127,7 +127,7 @@ java -jar $GATK \
 --maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
-python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile --pop AL --outdir ${vcfdir}/step-by-step-vcf-sfs/
+python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile --pop AL --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # Kuril --> KUR (include the RWAB hiseq4000 samples)
 echo "KUR"
@@ -146,7 +146,7 @@ java -jar $GATK \
 -xl_sn ${ind11} \
 -L $neutralBed
 
-python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile --pop KUR --outdir ${vcfdir}/step-by-step-vcf-sfs/
+python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile --pop KUR --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 
 done
