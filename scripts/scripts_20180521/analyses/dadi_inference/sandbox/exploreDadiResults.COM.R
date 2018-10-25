@@ -8,7 +8,8 @@ generationTime=6 # for now using 6 yr/ gen (Tinker says 6-7 is reasonable)
 genotypeDate=20180806
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/",sep="")
 #models=c("1D.1Bottleneck","1D.2Bottlenecek","1D.2Epoch")
-
+plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/dadi_inference/",genotypeDate,"/",sep="")
+dir.create(plot.dir,recursive = T)
 #### Set up a little data.frame to keep track of best fit models ####
 df = data.frame()
 ################ 2 Epoch ##################
@@ -94,6 +95,7 @@ bestModel=df[df$AIC==min(df$AIC),]
 # pull out those parameters: 
 bestModelResults <- get(paste("results",bestModel$modelNumber,sep=""))
 bestModelRunParams <- bestModelResults[bestModelResults$runNumber==bestModel$runNumber,]
+bestModelName=bestModelRunParams$modelFunction
 
 write.table(bestModelRunParams,paste(data.dir,"/",pop,"/",pop,".bestModelRunParams.AIC.",todaysdate,".txt",sep=""),quote=F,row.names=F)
 ############# Plot Convergence ###################
@@ -107,3 +109,8 @@ ggplot(results1_sub_melt,aes(x=runNumber,y=value,fill=LL,color=LL))+
   geom_point()+
   facet_wrap(~variable,scales="free")
 
+convergePlot <- ggplot(bestModelResults,aes(x=reorder(runNumber,LL),y=LL))+
+  geom_point()+
+  ggtitle(paste(pop," ",bestModelName," LL Convergence",sep=""))
+convergePlot
+ggsave(paste(plot.dir,"/",pop,".",bestModelName,".LLConvergence.",todaysdate,".pdf",sep=""),convergePlot,height=5,width=7)

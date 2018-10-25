@@ -15,11 +15,13 @@ parser = argparse.ArgumentParser(description='Generate a 1D SFS in dadi format a
 parser.add_argument("--vcf",required=True,help="path to vcf file")
 parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'")
 parser.add_argument("--outdir",required=True,help="path to output directory")
+parser.add_argument("--outPREFIX",required=False,help="output file prefix (optional)",default="")
 
 args = parser.parse_args()
 vcfFile=args.vcf
 pop=str(args.pop)
 outdir=str(args.outdir)
+prefix=str(args.outPREFIX)
 
 #### OPEN VCF TO READ ######### 
 inVCF = gzip.open(vcfFile, 'r')
@@ -73,7 +75,7 @@ for line0 in inVCF:
     # print(sum(sfs.values()))
 ############################ write out SFS in dadi format ################
 # write it out in a couple formats (dadi, fsc, R) #### dadi format : 
-outputFile=open(str(outdir)+"/"+pop+".unfolded.sfs.dadi.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+".",prefix,".unfolded.sfs.dadi.format."+todaysdate+".txt","w")
 outputFile.write(str(unfoldedSFSlen)+" unfolded "+"\""+str(pop)+"\"\n")
 #freqs='\t'.join(str(x) for x in sfs) # set up first row
 values='\t'.join(str(x) for x in sfs.values()) # set up second row 
@@ -86,7 +88,7 @@ outputFile.close()
 # header=
 #outputFile.close()
 ############################ write out SFS for easy plotting in R ################
-outputFile=open(str(outdir)+"/"+pop+".unfolded.sfs.R.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+".",prefix,".unfolded.sfs.R.format."+todaysdate+".txt","w")
 outputFile.write("frequency\tcount\n")
 [outputFile.write('{0}\t{1}\n'.format(key,value)) for key, value in sfs.items()]
 outputFile.close()

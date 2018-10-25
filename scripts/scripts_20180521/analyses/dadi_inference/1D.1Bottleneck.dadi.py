@@ -90,10 +90,10 @@ print('Writing out parameters **************************************************
 outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
-param_names_str=param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters" # add additional parameters theta, log-likelihood, model name, run number and rundate
+param_names_str=param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
 # joint together all the output fields, tab-separated:
-output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0] # put all the output terms together
+output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0,upper_bound,lower_bound] # put all the output terms together
 output='\t'.join(str(x) for x in output) # write out all the output fields
 # this should result in a 2 row table that could be input into R / concatenated with other runs
 outputFile.write(('{0}\n{1}\n').format(param_names_str,output))
