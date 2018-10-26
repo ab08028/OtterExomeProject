@@ -25,19 +25,9 @@ opt = parse_args(opt_parser)
 
 outdir=opt$outdir
 vcf.fn=opt$vcf
-vcf.fn.prefix=strsplit(vcf.fn,".vcf.gz") # strip off end 
+# note that basename will get you just the file name from a path ; dirname will get you just the dir
+vcf.fn.prefix=strsplit(basename(vcf.fn),".vcf.gz") # strip off end 
 outfile=paste(outdir,"/",vcf.fn.prefix,".gds",sep="")
-#calldate=20180806 # date gt's were called in format YYYYMMDD (set this manually)
-#todaysdate=format(Sys.Date(),format="%Y%m%d")
-#SCRATCH="/u/flashscratch/a/ab08028/"
-#indir=paste(SCRATCH,"/captures/vcf_filtering/",calldate,"_filtered/",sep="") # this is where your snp vcf file is and where you will save your gds file
-#infilePREFIX="snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants" # exclude the .vcf.gz suffix # updated filename 20180820
-#infilePREFIX="snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants"
-#outdir=paste(indir,"/gdsFormat/",sep="")
-#dir.create(outdir,showWarnings = F)
-#read vcf, and reformat to gds (this works with gzipped vcf file)
-
-#vcf.fn = paste(indir,infilePREFIX,".vcf.gz",sep="")
 
 # took ~ 5 mins (only need to do once -- in future can just open the gds file)
 snpgdsVCF2GDS(vcf.fn, outfile, method="biallelic.only")
