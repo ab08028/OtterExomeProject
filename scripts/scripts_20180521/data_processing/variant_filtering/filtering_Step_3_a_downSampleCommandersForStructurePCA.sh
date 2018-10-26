@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp
+#$ -l h_rt=20:00:00,h_data=16G
 #$ -N downSampleCommanders_forStructure
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -24,7 +24,11 @@ mkdir -p $wd
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
-
+# if you want to keep admixed in:
+# 20181026 updated to be the file that has admixed in
+vcf=snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
+# if you want to remove admixed:
+#suffix=snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
 ##### Downsample Commanders for faststructure (randomly exlcuding these 21   ; leaving 20 in)
 # excluding:
 ind1=130_Elut_BER_97
@@ -55,8 +59,8 @@ mkdir -p $vcfdir/downsampledVCFs/
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/'snp_7_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
--o ${vcfdir}/downsampledVCFs/'snp_7_downSampCOM_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--variant ${vcfdir}/vcf \
+-o ${vcfdir}/downsampledVCFs/downsampled.COM.$vcf \
 -xl_sn ${ind1} \
 -xl_sn ${ind2} \
 -xl_sn ${ind3} \
