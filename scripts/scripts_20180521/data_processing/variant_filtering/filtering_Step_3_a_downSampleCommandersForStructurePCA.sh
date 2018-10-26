@@ -26,9 +26,9 @@ REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_puto
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
 # if you want to keep admixed in:
 # 20181026 updated to be the file that has admixed in
-vcf=snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
+vcf1=snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
 # if you want to remove admixed:
-#suffix=snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
+vcf2=snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_${infile}
 ##### Downsample Commanders for faststructure (randomly exlcuding these 21   ; leaving 20 in)
 # excluding:
 ind1=130_Elut_BER_97
@@ -59,8 +59,37 @@ mkdir -p $vcfdir/downsampledVCFs/
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
---variant ${vcfdir}/vcf \
--o ${vcfdir}/downsampledVCFs/downsampled.COM.$vcf \
+--variant ${vcfdir}/$vcf1 \
+-o ${vcfdir}/downsampledVCFs/downsampled.COM.$vcf1 \
+-xl_sn ${ind1} \
+-xl_sn ${ind2} \
+-xl_sn ${ind3} \
+-xl_sn ${ind4} \
+-xl_sn ${ind5} \
+-xl_sn ${ind6} \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
+-xl_sn ${ind10} \
+-xl_sn ${ind11} \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17} \
+-xl_sn ${ind18} \
+-xl_sn ${ind19} \
+-xl_sn ${ind20} \
+-xl_sn ${ind21}
+
+
+# remove from snp file:
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/$vcf2 \
+-o ${vcfdir}/downsampledVCFs/downsampled.COM.$vcf2 \
 -xl_sn ${ind1} \
 -xl_sn ${ind2} \
 -xl_sn ${ind3} \
