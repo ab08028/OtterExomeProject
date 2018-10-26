@@ -69,82 +69,82 @@ echo "starting on " $vcfFile
 
 # Make Commanders SFS
 echo "COM"
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant $vcfdir/$vcfFile \
-# -o ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile \
-# -se '.+_Elut_BER_.+' \
-# -se '.+_Elut_MED_.+' \
-# --maxNOCALLfraction $perPopNoCallFrac \
-# -L $neutralBed
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant $vcfdir/$vcfFile \
+-o ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile \
+-se '.+_Elut_BER_.+' \
+-se '.+_Elut_MED_.+' \
+--maxNOCALLfraction $perPopNoCallFrac \
+-L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile --pop COM --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # California --> CA (include the RWAB hiseq4000 samples)
 echo "CA"
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant $vcfdir/$vcfFile \
-# -o ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile \
-# -se '.+_Elut_CA_.+' \
-# -se 'RWAB003_.+_ELUT_CA_.+' \
-# --maxNOCALLfraction $perPopNoCallFrac \
-# -L $neutralBed
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant $vcfdir/$vcfFile \
+-o ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile \
+-se '.+_Elut_CA_.+' \
+-se 'RWAB003_.+_ELUT_CA_.+' \
+--maxNOCALLfraction $perPopNoCallFrac \
+-L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile --pop CA --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 
 # Alaska --> AK : remove admixed and make pop specific vcf
 echo "AK"
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant $vcfdir/$vcfFile \
-# -o ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile \
-# -se '.+_Elut_AK_.+' \
-# --maxNOCALLfraction $perPopNoCallFrac \
-# -xl_sn ${ind12} \
-# -xl_sn ${ind13} \
-# -xl_sn ${ind14} \
-# -xl_sn ${ind15} \
-# -xl_sn ${ind16} \
-# -xl_sn ${ind17} \
-# -xl_sn ${ind18} \
-# -L $neutralBed
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant $vcfdir/$vcfFile \
+-o ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile \
+-se '.+_Elut_AK_.+' \
+--maxNOCALLfraction $perPopNoCallFrac \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17} \
+-xl_sn ${ind18} \
+-L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile --pop AK --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # Aleutian --> AL
 echo "AL"
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant $vcfdir/$vcfFile \
-# -o ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile \
-# -se '.+_Elut_AL_.+' \
-# --maxNOCALLfraction $perPopNoCallFrac \
-# -L $neutralBed
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant $vcfdir/$vcfFile \
+-o ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile \
+-se '.+_Elut_AL_.+' \
+--maxNOCALLfraction $perPopNoCallFrac \
+-L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile --pop AL --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
 # Kuril --> KUR (include the RWAB hiseq4000 samples)
 echo "KUR"
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant $vcfdir/$vcfFile \
-# -o ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile \
-# -se '.+_Elut_KUR_.+' \
-# -se 'RWAB003_.+_ELUT_KUR_.+' \
-# --maxNOCALLfraction $perPopNoCallFrac \
-# -xl_sn ${ind7} \
-# -xl_sn ${ind8} \
-# -xl_sn ${ind9} \
-# -xl_sn ${ind10} \
-# -xl_sn ${ind11} \
-# -L $neutralBed
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant $vcfdir/$vcfFile \
+-o ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile \
+-se '.+_Elut_KUR_.+' \
+-se 'RWAB003_.+_ELUT_KUR_.+' \
+--maxNOCALLfraction $perPopNoCallFrac \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
+-xl_sn ${ind10} \
+-xl_sn ${ind11} \
+-L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile --pop KUR --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
