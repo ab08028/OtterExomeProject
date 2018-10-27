@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp
+#$ -l h_rt=23:00:00,h_data=16G
 #$ -N makeSFS_eachStage
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -62,7 +62,7 @@ ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am k
 mkdir -p ${vcfdir}/step-by-step-vcf-sfs
 infile=raw_variants.vcf.gz
 # eventually
-for vcfFile in 'all_1_TrimAlt_'${infile} 'all_5_passingFilters_'${infile} 'all_6_rmBadIndividuals_passingFilters_'${infile} 'all_7_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile}
+for vcfFile in 'all_6_rmBadIndividuals_passingFilters_'${infile} 'all_7_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile}
 do
 # get stats?
 echo "starting on " $vcfFile
