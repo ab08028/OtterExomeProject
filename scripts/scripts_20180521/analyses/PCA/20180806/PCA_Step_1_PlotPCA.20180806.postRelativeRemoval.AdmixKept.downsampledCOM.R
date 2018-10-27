@@ -1,9 +1,19 @@
 #load R packages
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("gdsfmt")
+#biocLite("SNPRelate")
 library(gdsfmt)
 library(SNPRelate)
 require(ggplot2)
 require(ggally)
 require(ggrepel)
+
+########### set up colors ############
+pops=c("CA","AK","AL","COM","KUR")  # your populations
+require(RColorBrewer)
+colorPal=RColorBrewer::brewer.pal(n=length(pops),name = "Dark2")
+colors=list(California=colorPal[1],Alaska=colorPal[2],Aleutian=colorPal[3],Commander=colorPal[4],Kuril=colorPal[5]) 
+
 
 calldate=20180806 # date gt's were called in format YYYYMMDD
 todaysdate=format(Sys.Date(),format="%Y%m%d")
@@ -19,7 +29,7 @@ dir.create(fileoutdir,recursive = T)
 # before removing admixed/relatives:
 #genofile <- snpgdsOpen(paste(indir,"snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
 # after removing admixed/relatives:
-genofile <- snpgdsOpen(paste(indir,"snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
+genofile <- snpgdsOpen(paste(indir,"downsampled.COM.snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
 
 # 20180802: adding LD snp pruning: (1min); r2 threshold : 0.2; recommended by SNPRelate tutorial
 # https://bioconductor.org/packages/devel/bioc/vignettes/SNPRelate/inst/doc/SNPRelateTutorial.html#ld-based-snp-pruning
@@ -38,7 +48,7 @@ pc.percent <- pca$varprop*100
 pc = head(round(pc.percent, 2))
 pc
 
-#population information
+#population information (doesn't matter if file is downsampled or not; has the record for every sequenced individual in it)
 popmap = read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/allSamples.Populations.txt",header=T) # this includes the RWAB samples
 head(popmap)
 
@@ -58,11 +68,12 @@ p1 <- ggplot(tab,aes(x=EV1,y=EV2,color=pop1,shape=sequencer))+
   theme_bw()+
   ylab(paste("PC2 (", pc[2],"%)")) +
   xlab(paste("PC1 (", pc[1],"%)"))+
+  scale_color_manual(values=unlist(colors))+
   ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
   theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14))+
   scale_shape_manual(values=c(1,16))
 p1
-ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.PostAdmixedRelativeRemoval.",todaysdate,".pdf",sep=""),p1,device="pdf",width = 8,height=5)
+ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.postRelativeRemoval.AdmixedKept.downsampledCOM.",todaysdate,".pdf",sep=""),p1,device="pdf",width = 8,height=5)
 
 
 
@@ -70,9 +81,9 @@ ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.PostAdmixedRelativeRemoval.",today
 lbls <- paste("PC", 1:4, "\n", format(pc.percent[1:4], digit=2), "%", sep="")
 pairs(pca$eigenvect[,1:4], col=tab$pop1,labels=lbls)
 
-#choose a subset of samples, eg exclude California
+#choose a subset of samples, eg exclude California & AK
 sub <- tab$sample.id[tab$pop1!="California"]
-sink(paste(fileoutdir,"/PCA.record.excl.CA.",todaysdate,".txt",sep=""))
+sink(paste(fileoutdir,"/PCA.record.excl.CA.downsampledCOM.",todaysdate,".txt",sep=""))
 pca <- snpgdsPCA(genofile, snp.id=snpset.id,autosome.only = F, sample.id=sub, maf=0.06)
 sink()
 # check output! 
@@ -84,14 +95,15 @@ p2 <- ggplot(tab2,aes(x=EV1,y=EV2,color=pop1,shape=sequencer,label=sample.id))+
   theme_bw()+
   ylab(paste("PC2 (", pc[2],"%)")) +
   xlab(paste("PC1 (", pc[1],"%)"))+
+  scale_color_manual(values=unlist(colors))+
   theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14))+
   scale_shape_manual(values=c(1,16))+
   ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))
 p2
-ggsave(paste(plotoutdir,"/PCA.excludeCA.LDPruned.PostAdmixedRelativeRemoval.",todaysdate,".pdf",sep=""),p2,device="pdf",width = 8,height=5)
+ggsave(paste(plotoutdir,"/PCA.excludeCA.LDPruned.postRelativeRemoval.AdmixedKept.downsampledCOM.",todaysdate,".pdf",sep=""),p2,device="pdf",width = 8,height=5)
 
 
-#plot first 2 pc coloring by primary population, excluding California
+#plot first 2 pc coloring by primary population, excluding California & Alaska
 p3 <- ggplot(tab2,aes(x=EV1,y=EV2,color=pop1,shape=sequencer,label=sample.id))+
   geom_point()+
   theme_bw()+
@@ -102,7 +114,7 @@ p3 <- ggplot(tab2,aes(x=EV1,y=EV2,color=pop1,shape=sequencer,label=sample.id))+
   ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
   geom_text_repel(aes(label=sample.id))
 p3
-ggsave(paste(plotoutdir,"/PCA.excludeCA.LDPruned.PostAdmixedRelativeRemoval.withNames.",todaysdate,".pdf",sep=""),p3,device="pdf",width = 16,height=10)
+ggsave(paste(plotoutdir,"/PCA.excludeCA.LDPruned.postRelativeRemoval.AdmixedKept.withNames.downsampledCOM.",todaysdate,".pdf",sep=""),p3,device="pdf",width = 16,height=10)
 
 #close gds file
 snpgdsClose(genofile)
