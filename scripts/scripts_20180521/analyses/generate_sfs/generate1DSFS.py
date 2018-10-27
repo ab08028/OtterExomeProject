@@ -75,7 +75,7 @@ for line0 in inVCF:
     # print(sum(sfs.values()))
 ############################ write out SFS in dadi format ################
 # write it out in a couple formats (dadi, fsc, R) #### dadi format : 
-outputFile=open(str(outdir)+"/"+pop+".",prefix,".unfolded.sfs.dadi.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.dadi.format."+todaysdate+".txt","w")
 outputFile.write(str(unfoldedSFSlen)+" unfolded "+"\""+str(pop)+"\"\n")
 #freqs='\t'.join(str(x) for x in sfs) # set up first row
 values='\t'.join(str(x) for x in sfs.values()) # set up second row 
@@ -88,7 +88,7 @@ outputFile.close()
 # header=
 #outputFile.close()
 ############################ write out SFS for easy plotting in R ################
-outputFile=open(str(outdir)+"/"+pop+".",prefix,".unfolded.sfs.R.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.R.format."+todaysdate+".txt","w")
 outputFile.write("frequency\tcount\n")
 [outputFile.write('{0}\t{1}\n'.format(key,value)) for key, value in sfs.items()]
 outputFile.close()
