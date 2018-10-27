@@ -76,7 +76,7 @@ popt = dadi.Inference.optimize_log(p0, fs, func_ex, pts_l,
                                    verbose=len(p0), maxiter=maxiter)
 print('Finshed optimization **************************************************')                                   
                                    
-# Calculate the best-fit model AFS.
+# Calculate the best-fit model AFS. 
 model = func_ex(popt, ns, pts_l)
 # Likelihood of the data given the model AFS.
 ll_model = dadi.Inference.ll_multinom(model, fs)
