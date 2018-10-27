@@ -1,6 +1,6 @@
 ############## wrapper for GDS conversion script #############
 
-
+source /u/local/Modules/default/init/modules.sh
 module load R
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 
