@@ -1,0 +1,31 @@
+// Priors and rules file
+// *********************
+[PARAMETERS]
+//#isInt? #name #dist.#min #max
+//all N are in number of haploid individuals
+1 NEUR1 unif 100 20000 output
+1 NASN1 unif 100 20000 output
+1 NEURCUR unif 20000 1000000 output
+1 NASNCUR unif 20000 1000000 output
+1 NREC unif 100 20000
+1 NBOT unif 100 20000
+1 TEURGROW unif 10 1000 output
+1 T2 unif 10 1000 output
+1 T1 unif 10 1000 output
+1 T3 unif 10 1000 output
+1 T4 unif 10 1000 output
+[RULES]
+[COMPLEX PARAMETERS]
+1 TASNGROW = (T2 + TEURGROW) output
+1 TDIV = (T1 + TASNGROW) output
+1 TBOT = (T3 + TDIV) output
+1 TANC = (T4 + TBOT) output
+0 RATIOASN = NASN1/NASNCUR output
+0 RATIOEUR = NEUR1/NEURCUR output
+0 LOGRATASN = log(RATIOASN) output
+0 LOGRATEUR = log(RATIOEUR) output
+0 ASNGROWRATE = LOGRATASN/TASNGROW output
+0 EURGROWRATE = LOGRATEUR/TEURGROW output
+0 REC_EUR_RESIZE = NREC/NEUR1 output
+0 NBOT_RESIZE = NBOT/NREC output
+0 NANC_RESIZE = 20000/NBOT output

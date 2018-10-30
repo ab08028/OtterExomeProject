@@ -1,0 +1,1 @@
+note that you have to sed in the correct sample size for each population -- replacing the SAMPLE_SIZE variable (do in the wrapper)

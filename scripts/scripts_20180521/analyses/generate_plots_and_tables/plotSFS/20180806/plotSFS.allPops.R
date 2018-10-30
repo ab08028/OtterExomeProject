@@ -22,7 +22,6 @@ data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/r
 plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",rundate,"/neutralSFS/",sep="")
 
 dir.create(plot.dir,recursive = T,showWarnings = F)
-dir.create(int.plot.dir,recursive = T,showWarnings = F)
 
 
 # make a little function to fold SFS that is set up as frequency count (I checked and it matches dadi folded sfs)
@@ -38,7 +37,7 @@ foldSFS <- function(sfs){
       foldedSFS <- rbind.data.frame(foldedSFS, cbind.data.frame(frequency=i,count=(sfs[sfs$frequency==i,]$count + sfs[sfs$frequency==(ss-i),]$count)/2)) # if it's add midpoint (foldedLen, including 0 monomorphic bin), add together and divide by two (equivalent of not adding together)
     }
     else{
-      foldedSFS <- rbind.data.frame(foldedSFS, cbind.data.frame(frequency=i,count=(sfs[sfs$frequency==i,]$count + sfs[sfs$frequency==(ss-i),]$count))) # if not ad mid point, just add together like normal
+      foldedSFS <- rbind.data.frame(foldedSFS, cbind.data.frame(frequency=i,count=(sfs[sfs$frequency==i,]$count + sfs[sfs$frequency==(ss-i),]$count))) # if not at mid point, just add together like normal
     }
     }
   return(foldedSFS)
@@ -58,7 +57,7 @@ for(i in (1:length(pops))){
   # write out folded SFS:
   ss=dim(sfs)[1]-1 # sample size in chromsomes (haps). full size of sfs is ss+1 because of 0 bin
   # exclude monomorphic at freq 0 and total bins -1: 
-  sfsNoMono <- sfs_folded[sfs_folded$frequency!=0 & sfs_folded$frequency!=ss,]
+  sfsNoMono <- sfs_folded[sfs_folded$frequency!=0,]
   sfsNoMono$population <- pop
   popcolor=colors[pop]
   allSFS_list[[i]] <- sfsNoMono # add the SFS to your list
@@ -77,6 +76,14 @@ allPlots_list
 # can put all together into a dataframe:
 allSFS <- bind_rows(allSFS_list)
 
+########################### print out table of sample sizes based on SFS #############
+# get sample sizes and write them out:
+sampleSizes <- allSFS %>% 
+  group_by(population) %>% 
+  tally()
+colnames(sampleSizes) <- c("population","diploidSS")
+sampleSizes$haploidSS <- 2*sampleSizes$diploidSS # note that this doesn't include monomorphic bin, so is correct sample size
+write.table(paste(data.dir,"/sampleSizesUsedInSFSes.txt"))
 ################################# Proportional SfS ###################
 
 allSFS_list=list()
@@ -90,7 +97,7 @@ for(i in (1:length(pops))){
   sfs_folded <- foldSFS(sfs)
   ss=dim(sfs)[1]-1 # sample size in chromsomes (haps). full size of sfs is ss+1 because of 0 bin
   # exclude monomorphic at freq 0 and total bins -1: 
-  sfsNoMono <- sfs_folded[sfs_folded$frequency!=0 & sfs_folded$frequency!=ss,]
+  sfsNoMono <- sfs_folded[sfs_folded$frequency!=0,]
   sfsNoMono$population <- pop
   sfsNoMono$proportion <- sfsNoMono$count/sum(sfsNoMono$count)
   write.table(sfsNoMono[,c("frequency","proportion")],paste(data.dir,pop,".folded.PROPORTIONS.",suffix,sep=""),quote=F,row.names = F,sep="\t")
@@ -119,6 +126,29 @@ snpCount <- allSFS %>%
 sSize <- allSFS %>% 
   group_by(population) %>%
   tally() 
+
+
+
+####################### write out SFS in fastsimcoal format #######################
+# because this is a folded SFS you use the suffix: _MAFpop0.obs
+# (if it were unfolded you would use _DAFpop0.obs)
+fscSuffix="_MAFpop0.obs"
+for(i in (1:length(pops))){
+  pop=pops[i]
+  sfs <- read.table(paste(data.dir,pop,".unfolded.",suffix,sep=""),header=T,stringsAsFactors = F)
+  sfs_folded <- foldSFS(sfs)
+  # write out folded SFS:
+  ss=dim(sfs)[1]-1 # sample size in chromsomes (haps). full size of sfs is ss+1 because of 0 bin
+  # want to keep monomorphic sites in for fastsimcoal2 
+  sink(paste(data.dir,"/",pop,"_sfs_",sfsdate,fscSuffix,sep=""))
+  cat("1 observations\n")
+  cat(paste("d0",sfs_folded$frequency,sep="_"),sep="\t") # paste in the header that is in format do_frequency; starting with 0 for monomorphic
+  cat("\n")
+  cat(sfs_folded$count,sep="\t")
+  cat("\n")
+  sink()
+}
+
 ########## admixed SFS ############
 # ADprefix="all_9_rmAllHet_passingAllFilters_allCalled"
 # ADpops=c("AK","KUR") # admixed pops
