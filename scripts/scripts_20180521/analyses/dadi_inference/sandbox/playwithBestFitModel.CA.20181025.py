@@ -13,7 +13,7 @@ from dadi import Numerics, PhiManip, Integration, Spectrum
 from numpy import array # don't comment this out
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
-
+maxiter=10
 
 ########## empirical sfs ##############
 genotypeDate=20180806
@@ -97,3 +97,21 @@ def double_bottleneck_fixed(params, ns, pts):
 upper_bound = [10, 10, 10, 10]
 lower_bound = [1e-4, 1e-4, 0, 0]
 p0 = [0.01, 1, 0.0005, 0.01] # initial parameters
+func=double_bottleneck_fixed # set the function
+func_ex = dadi.Numerics.make_extrap_log_func(func)
+# perturb parameters
+p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bound,                                  lower_bound=lower_bound) 
+# optimize: 
+print('Beginning optimization ************************************************')
+popt = dadi.Inference.optimize_log(p0, fs, func_ex, pts_l, 
+                                   lower_bound=lower_bound,
+                                   upper_bound=upper_bound,
+                                   verbose=len(p0), maxiter=maxiter)
+print('Finshed optimization **************************************************')                                   
+                                   
+# Calculate the best-fit model AFS.
+model = func_ex(popt, ns, pts_l)
+# Likelihood of the data given the model AFS.
+ll_model = dadi.Inference.ll_multinom(model, fs)
+# calculate best fit theta
+theta = dadi.Inference.optimal_sfs_scaling(model, fs)
