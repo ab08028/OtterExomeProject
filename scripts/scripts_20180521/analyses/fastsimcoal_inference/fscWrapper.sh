@@ -7,7 +7,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/fsc
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-50
+#$ -t 1-2
 
 
 ############ This is a wrapper that will run 50 fastsimcoal iterations for each population for any list of models
