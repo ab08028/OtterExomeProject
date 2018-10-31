@@ -30,7 +30,6 @@ models='1D.1Bottleneck'
 pops="CA AK AL COM KUR"
 genotypeDate=20180806 # date genotypes were called
 sfsDate=20181019 # date sfses were made
-header=${model}
 cores=3 #num cores
 ############ file structure ############
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
@@ -49,6 +48,7 @@ ss=`grep $pop $sampleSizes | awk '{print $3}'` # get the haploid sample size
 
 for model in $models
 do
+header=${model}
 
 ########### copy generic files into directory and update #########
 
@@ -61,7 +61,7 @@ sed -i'' "s/SAMPLE_SIZE/$ss/g" $outdir/$model.tpl # sub in the sample size; note
 
 ########### get sfs into inference directory and rename to match .est and .tpl files #########
 /bin/cp $sfsDir/${pop}_sfs_${sfsDate}_MAFpop0.obs $outdir/${header}_MAFpop0.obs # copy your sfs into the directory where you'll be doing the fsc inference 
-/bin/cd $outdir
+cd $outdir
 $fsc -t ${header}.tpl -n100000 -m -e ${header}.est -M -L 40 -c${cores} -q
 
 done
@@ -69,10 +69,10 @@ done
 
 
 ######## make a readme  #########
-echo "genotype date: " $genotypeDate >> $infDir/$pop/$model/$rundate
-echo "sfs date: " $sfsDate > $infDir/$pop/$model/$rundate
-echo "population: " $pop > $infDir/$pop/$model/$rundate
-echo "model: " $model > $infDir/$pop/$model/$rundate
+echo "genotype date: " $genotypeDate >> $infDir/$pop/$model/$rundate/readme
+echo "sfs date: " $sfsDate > $infDir/$pop/$model/$rundate/readme
+echo "population: " $pop > $infDir/$pop/$model/$rundate/readme
+echo "model: " $model > $infDir/$pop/$model/$rundate/readme
 
 sleep 10m
 
