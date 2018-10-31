@@ -1,6 +1,16 @@
-### fsc wrapper
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=10:00:00,h_data=16G
+#$ -pe shared 3
+#$ -N fscWrapper
+#$ -o /u/flashscratch/a/ab08028/captures/reports/fsc
+#$ -e /u/flashscratch/a/ab08028/captures/reports/fsc
+#$ -m abe
+#$ -M ab08028
+#$ -t 1-50
 
-# need to input sample size in haploids into file (Pooneh can do manually) -- is equal to folded sfs dim -1  *2
+
+############ This is a wrapper that will run 50 fastsimcoal iterations for each population for any list of models
 
 # dir structure
 # fsc_inference
@@ -16,7 +26,7 @@ fsc=/u/home/a/ab08028/bin/fsc26
 # note that fsc26 has a lot of differences from fsc251!
 
 ############# parameters #############
-models='1D.2Epoch 1D.1Bottleneck'
+models='1D.1Bottleneck'
 pops="CA AK AL COM KUR"
 genotypeDate=20180806 # date genotypes were called
 sfsDate=20181019 # date sfses were made
@@ -24,11 +34,13 @@ header=${model}
 cores=3 #num cores
 ############ file structure ############
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-scriptDir=$gitDir/scripts/scripts_20180521/analyses
+scriptDir=$gitDir/scripts/scripts_20180521/analyses/
 wd=/u/flashscratch/a/ab08028/captures/analyses/ # overall working dir
 infDir=$wd/fastsimcoal_inference # specify where inference is happening
-genericDir=$scriptDir/genericModelFiles # location of generic FSC models
+genericDir=$scriptDir/fastsimcoal_inference/genericModelFiles # location of generic FSC models
 sampleSizes=$wd/SFS/$genotypeDate/neutralSFS/sampleSizesUsedInSFSes.txt # location of SS file that is in format population diploidSS haploidSS <-- you'll want haploid SS
+sfsDir=$wd/SFS/$genotypeDate/neutralSFS/ # specify where your SFS files are
+
 ############## set up your for-loops ############## 
 for pop in $pops
 do
@@ -41,11 +53,11 @@ do
 ########### copy generic files into directory and update #########
 
 outdir=$infDir/$pop/$model/$rundate/run_${SGE_TASK_ID}/ # specify where output will go
-cp $genericDir/$model.tpl $genericDir/$model.est $outdir # copy .est and .tpl files to outdir
-sed 's/$ss/SAMPLE_SIZE/g' $outdir/$model.tpl # sub in the sample size
 mkdir -p $outdir # make your out dir
-sfsDir=$wd/SFS/$genotypeDate/neutralSFS/ # specify where your SFS files are
 
+cp $genericDir/$model.tpl $genericDir/$model.est $outdir # copy .est and .tpl files to outdir
+sed -i'' "s/SAMPLE_SIZE/$ss/g" $outdir/$model.tpl # sub in the sample size; note you need double quotes for variable to be expanded
+# could also sub in new mutation rates, etc. as needed. currently set mu at 8.6 e-09
 
 ########### get sfs into inference directory and rename to match .est and .tpl files #########
 cp $sfsDir/${pop}_sfs_${sfsDate}_MAFpop0.obs $outdir/${header}_MAFpop0.obs # copy your sfs into the directory where you'll be doing the fsc inference 
@@ -72,3 +84,5 @@ echo "model: " $model > $infDir/$pop/$model/$rundate
 # note if you are getting segmentation faults
 # first check format of sfs -- does it say "1 observation" at the top? is it tab delimited?
 # then check your .est and .tpl files -- is the sample size right? do you specify the correct number of historical events? 
+
+sleep 10m
