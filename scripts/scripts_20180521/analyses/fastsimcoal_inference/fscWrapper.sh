@@ -60,8 +60,8 @@ sed -i'' "s/SAMPLE_SIZE/$ss/g" $outdir/$model.tpl # sub in the sample size; note
 # could also sub in new mutation rates, etc. as needed. currently set mu at 8.6 e-09
 
 ########### get sfs into inference directory and rename to match .est and .tpl files #########
-cp $sfsDir/${pop}_sfs_${sfsDate}_MAFpop0.obs $outdir/${header}_MAFpop0.obs # copy your sfs into the directory where you'll be doing the fsc inference 
-/bin/cp $outdir
+/bin/cp $sfsDir/${pop}_sfs_${sfsDate}_MAFpop0.obs $outdir/${header}_MAFpop0.obs # copy your sfs into the directory where you'll be doing the fsc inference 
+/bin/cd $outdir
 $fsc -t ${header}.tpl -n100000 -m -e ${header}.est -M -L 40 -c${cores} -q
 
 done
