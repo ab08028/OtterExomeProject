@@ -31,6 +31,7 @@ models='1D.1Bottleneck'
 pops="CA AK AL COM KUR"
 genotypeDate=20180806 # date genotypes were called
 sfsDate=20181019 # date sfses were made
+rundate=20181031 # date you are running inference (to distinguish later analyses) <-- can set this with date command or manually
 cores=3 #num cores
 ############ file structure ############
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
@@ -54,7 +55,7 @@ header=${model}
 
 ########### copy generic files into directory and update #########
 
-outdir=$infDir/$pop/$model/$rundate/run_${SGE_TASK_ID}/ # specify where output will go
+outdir=$infDir/$pop/$model/$rundate_inference/run_${SGE_TASK_ID}/ # specify where output will go
 mkdir -p $outdir # make your out dir
 
 cp $genericDir/$model.tpl $genericDir/$model.est $outdir # copy .est and .tpl files to outdir
