@@ -36,6 +36,8 @@ outdir=str(args.outdir)
 sfs=str(args.sfs)
 maxiter=100
 ############### Input data ####################################
+# for testing purposes:
+#sfs="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20180806/neutralSFS/CA.unfolded.sfs.dadi.format.20181019.txt"
 fs=dadi.Spectrum.from_file(sfs) # this is unfolded
 # fold the fs:
 fs=fs.fold() # folded
@@ -56,8 +58,17 @@ param_names=("nuB","nuF","TB","TF")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
 # changing starting position to .1, tb to 0.005; TF to 0.001
-upper_bound = [200, 200, 10, 10]
-lower_bound = [1e-4, 1e-4, 0, 0]
+# 20181031: note from Bernard:
+#1) for upper_bound, i'd shrink the upper bound of timesby a lot 
+#not sure about otters, but for humans i think i used like 0.1
+#in any case, even T=1 seems like a really long time for these upper bounds assuming the otter #popn size changes you're modeling are on anthropogenic timescales. i don't know how this works #out given otter generation times and the time scale of their decline though (edited)
+#another reason they tend to be smaller is that these are times for that period rather than #times from the present
+#2) the times for the lower bounds are supposed to be non-zero
+#IIRC if you give a min of 0 things get weird because of collapsing epochs
+#i'd throw something like 1e-5
+lower_bound = [1e-4, 1e-4, 1e-5, 1e-5]
+upper_bound = [10, 10, 0.1, 0.1]
+lower_bound = [1e-4, 1e-4, 1e-5, 1e-5]
 p0 = [0.01,0.1,0.005,0.001] # initial parameters
 
 
