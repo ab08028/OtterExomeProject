@@ -16,7 +16,8 @@
 # fsc_inference
 # 		|-CA
 #			|-modelName
-#				|- .est, .tpl files
+#				|-run_#
+#					|- .est, .tpl files
 #		|-AK
 # 		|-AL
 #		|-COM
@@ -48,6 +49,7 @@ ss=`grep $pop $sampleSizes | awk '{print $3}'` # get the haploid sample size
 
 for model in $models
 do
+echo "starting $pop, $model"
 header=${model}
 
 ########### copy generic files into directory and update #########
@@ -64,8 +66,6 @@ sed -i'' "s/SAMPLE_SIZE/$ss/g" $outdir/$model.tpl # sub in the sample size; note
 cd $outdir
 $fsc -t ${header}.tpl -n100000 -m -e ${header}.est -M -L 40 -c${cores} -q
 
-done
-done
 
 
 ######## make a readme  #########
@@ -74,6 +74,9 @@ echo "sfs date: " $sfsDate > $infDir/$pop/$model/$rundate/readme
 echo "population: " $pop > $infDir/$pop/$model/$rundate/readme
 echo "model: " $model > $infDir/$pop/$model/$rundate/readme
 
+
+done
+done
 sleep 10m
 
 #from fsc26 manual:
