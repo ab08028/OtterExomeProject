@@ -55,7 +55,7 @@ header=${model}
 
 ########### copy generic files into directory and update #########
 
-outdir=$infDir/$pop/$model/$rundate_inference/run_${SGE_TASK_ID}/ # specify where output will go
+outdir=$infDir/$pop/inference_${rundate}/$model/run_${SGE_TASK_ID}/ # specify where output will go
 mkdir -p $outdir # make your out dir
 
 cp $genericDir/$model.tpl $genericDir/$model.est $outdir # copy .est and .tpl files to outdir
