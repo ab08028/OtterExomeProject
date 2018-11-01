@@ -76,8 +76,8 @@ def bottleneck(params, ns, pts):
 func=Demographics1D.bottlegrowth
 param_names=("nuB","nuF","T")
 
-upper_bound = [200, 200, 10, ]
-lower_bound = [1e-4, 1e-4, 0,
+upper_bound = [200, 200, 10 ]
+lower_bound = [1e-4, 1e-4, 0]
 p0 = [0.01,0.1,0.001] # initial parameters
 
 
