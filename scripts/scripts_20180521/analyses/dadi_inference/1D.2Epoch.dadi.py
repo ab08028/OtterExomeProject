@@ -58,8 +58,10 @@ param_names= ("nu","T")
 # nu: Ratio of contemporary to ancient population size
 # T: Time in the past at which size change happened (in units of 2*Na    generations) 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
-upper_bound = [10, 10]
-lower_bound = [1e-4, 0]
+# 20181031 changed bounds based on bernard suggestions; went with 1 as upper bound on T because 
+# want to catch climatic stuff with this model (can also try with 0.1-0.5 later)
+upper_bound = [10, 1]
+lower_bound = [1e-4, 1e-5]
 p0 = [0.01,0.001] # initial parameters
 
 
