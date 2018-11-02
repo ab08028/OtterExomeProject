@@ -2,8 +2,7 @@
 #$ -cwd
 #$ -l h_rt=5:00:00,h_data=12G
 #$ -m bea
-
-
+# next seq format for Baja samples
 
 header=$1
 
@@ -15,18 +14,19 @@ fastqc=/u/home/a/ab08028/klohmueldata/annabel_data/bin/FastQC/fastqc
 SCRATCH=/u/flashscratch/a/ab08028/
 wd=$SCRATCH/captures
 fastqs=$wd/fastqs
-#headers=$wd/samples/allElutSamples.txt # can change this to work on different samples
+
 
 # make output directory
 mkdir -p $wd/fastqc
 
 # adjust if different format
-fileR1=$fastqs/${header}_*_R1_*.fastq.gz
-fileR2=$fastqs/${header}_*_R2_*.fastq.gz
 
-# run fastqc
-$fastqc $fileR1 -o $wd/fastqc
-$fastqc $fileR2 -o $wd/fastqc
-
+for i in {1..4}
+do
+for j in {1..2}
+do
+$fastqc $fastqs/$header_*_L00${i}_R${j}_*.fastq.gz -o $wd/fastqc
+done
+done
 # after it's done, run multiqc separately to aggregate.
 sleep 10m
