@@ -14,7 +14,7 @@ wd=$SCRATCH/captures
 fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 modernTemplate=$makefileDir/makefile_template.modernDNA.Nextseq.multipleLanes.yaml
-modHeaders=$wd/samples/bajaCaptures.plusDogs.txt
+modHeaders=$wd/samples/bajaCaptures.txt
 
 
 mkdir -p $makefileDir/modernMakefiles
@@ -37,13 +37,13 @@ sed -i'' "s/NAME_OF_LIBRARY:/${header}_1a:/g" $newMake
 sed -i'' "s/NAME_OF_LANE1:/Lane_1:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
 sed -i'' 's|: PATH_WITH_WILDCARDS1|: '${fastqs}\/${header}_S*_L001_R{Pair}_*fastq.gz'|g' $newMake
-sed -i'' "s/NAME_OF_LANE1:/Lane_2:/g" $newMake
+sed -i'' "s/NAME_OF_LANE2:/Lane_2:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
 sed -i'' 's|: PATH_WITH_WILDCARDS2|: '${fastqs}\/${header}_S*_L002_R{Pair}_*fastq.gz'|g' $newMake
-sed -i'' "s/NAME_OF_LANE1:/Lane_3:/g" $newMake
+sed -i'' "s/NAME_OF_LANE3:/Lane_3:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
 sed -i'' 's|: PATH_WITH_WILDCARDS3|: '${fastqs}\/${header}_S*_L003_R{Pair}_*fastq.gz'|g' $newMake
-sed -i'' "s/NAME_OF_LANE1:/Lane_4:/g" $newMake
+sed -i'' "s/NAME_OF_LANE4:/Lane_4:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
 sed -i'' 's|: PATH_WITH_WILDCARDS4|: '${fastqs}\/${header}_S*_L004_R{Pair}_*fastq.gz'|g' $newMake
 
