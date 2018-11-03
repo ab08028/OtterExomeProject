@@ -49,7 +49,7 @@ colnames(ss) <- c("population","numDiploidIndividuals")
 allPi <- data.frame()
 for(i in (1:length(pops))){
   pop=pops[i]
-  pi <- read.table(paste(data.dir,pop,"_",prefix,".sites.pi.gz",sep=""),header=T,stringsAsFactors = F) ### change this 
+  pi <- read.table(paste(data.dir,pop,"_",prefix,".sites.pi.gz",sep=""),header=T,stringsAsFactors = F) 
   piTotal=sum(pi$PI)
   callableSitesTotal <- totalNeut[totalNeut$pop==pop,]$totalCalledNeutralSites
   print(callableSitesTotal==length(pi$PI))

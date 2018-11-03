@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=10:00:00,h_data=16G
+#$ -l h_rt=3:00:00,h_data=8G
 #$ -pe shared 3
 #$ -N fscWrapper
 #$ -o /u/flashscratch/a/ab08028/captures/reports/fsc

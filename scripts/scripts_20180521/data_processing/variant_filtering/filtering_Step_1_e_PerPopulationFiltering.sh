@@ -38,13 +38,14 @@ echo $pop
 # usage: python [script] [full path to invcf] [full path to out vcf] [full path to error file] [max no call fraction]
 # 20181102 updated it to 
 # note that my bespoke script does the nocallfrac so you don't have to do it in step 8! 
-python $bespokeFilterScript ${vcfdir}/populationVCFs/${pop}_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+python $bespokeFilterScript ${vcfdir}/populationVCFs/${pop}_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_0.9.vcf.gz' \
 ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf' \
 ${vcfdir}/populationVCFs/${pop}_'fail_all_9_FAILING_perPopulationBespoke_Filters_'${infile%.vcf.gz}.txt \
 $noCallFrac
 # bgzip the result: (note: must use bgzip not gzip)
 $bgzip ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf'
-$tabix -p vcf ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' # index the vcf
+# -f forces overwrite of old index
+$tabix -f -p vcf ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' # index the vcf
 
 done
 
@@ -55,12 +56,12 @@ do
 echo "admixed " $pop
 # usage: python [script] [full path to invcf] [full path to out vcf] [full path to error file] [max no call fraction]
 
-python $bespokeFilterScript ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_8_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+python $bespokeFilterScript ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_8_passingAllFilters_maxNoCallFrac_0.9.vcf.gz' \
 ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf' \
 ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'fail_all_9_FAILING_perPopulationBespoke_Filters_'${infile%.vcf.gz}.txt \
 $noCallFrac
 # bgzip the result: (note: must use bgzip not gzip)
 $bgzip ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf'
-$tabix -p vcf ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz' # index the vcf
+$tabix -f -p vcf ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz' # index the vcf
 
 done

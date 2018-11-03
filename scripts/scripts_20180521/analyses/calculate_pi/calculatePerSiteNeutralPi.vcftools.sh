@@ -12,12 +12,10 @@ suffix=neutral_all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled
 for pop in CA AK AL COM KUR
 do
 vcf=${pop}_${suffix}.vcf.gz
-zcat $vcfdir/$vcf | vcftools --vcf - --site-pi  --out ${outdir}/${pop}_${suffix}
+zcat $vcfdir/$vcf | vcftools --gzvcf - --site-pi  --out ${outdir}/${pop}_${suffix}
 # note "-" after --vcf
 gzip ${outdir}/${pop}_${suffix}.sites.pi
 done
-
-
 
 
  
