@@ -22,7 +22,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 #headers=$wd/samples/allElutSamples.txt # all Elut samples, modern, ancient and blank
 # 20181004: screening libraries
-headers=$wd/samples/ancientLibs.Screen.txt
+headers=$wd/samples/UCLAdog.txt
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/fastqc/
 mkdir -p $errorLocation
 
