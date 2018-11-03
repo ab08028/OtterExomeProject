@@ -97,8 +97,7 @@ java -jar $GATK \
 --variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/CA_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -se '.+_Elut_CA_.+' \
--se 'RWAB003_.+_ELUT_CA_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+-se 'RWAB003_.+_ELUT_CA_.+' 
 
 # Alaska --> AK : remove admixed and make pop specific vcf
 java -jar $GATK \
@@ -107,7 +106,6 @@ java -jar $GATK \
 --variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AK_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -se '.+_Elut_AK_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -xl_sn ${ind12} \
 -xl_sn ${ind13} \
 -xl_sn ${ind14} \
@@ -122,8 +120,8 @@ java -jar $GATK \
 -T SelectVariants \
 --variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/AL_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
--se '.+_Elut_AL_.+' \
---maxNOCALLfraction $perPopNoCallFrac
+-se '.+_Elut_AL_.+'
+
 
 
 # Kuril --> KUR (include the RWAB hiseq4000 samples)
@@ -134,7 +132,6 @@ java -jar $GATK \
 -o ${vcfdir}/populationVCFs/KUR_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -xl_sn ${ind7} \
 -xl_sn ${ind8} \
 -xl_sn ${ind9} \
@@ -155,9 +152,7 @@ java -jar $GATK \
 -sn ${ind8} \
 -sn ${ind9} \
 -sn ${ind10} \
--sn ${ind11} \
---maxNOCALLfraction $perPopNoCallFrac
-
+-sn ${ind11} 
 ## Alaska ADMIXED:
 
 java -jar $GATK \
@@ -170,8 +165,7 @@ java -jar $GATK \
 -sn ${ind14} \
 -sn ${ind15} \
 -sn ${ind16} \
--sn ${ind17} \
---maxNOCALLfraction $perPopNoCallFrac
+-sn ${ind17} 
 # skipping ind 18 because it odesn't appear admixed in FASTRUCTURE; just appears like a PCA outlier
 
 #######################################################################################
@@ -189,6 +183,7 @@ java -jar -Xmx4G ${GATK} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${vcfdir}/'snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${snpNoCallFrac}
+--maxNOCALLfraction ${snpNoCallFrac} 
+# this call to maxnocallfrac is okay because it's for the snp file with a 20% cutoff for use in pca, etc.
 
 
