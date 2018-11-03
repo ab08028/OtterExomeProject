@@ -75,12 +75,12 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
         #myAC=myHet+(2*myHomAlt) # alternate alleles
         #myAN=myCalled *2 # all called alleles
         # do a series of checks
-        # check if there are more than 20% no-called genotypes
+        # check if there are more than X% no-called genotypes
         if float(myNoCalled) > round(float(len(allCalls))* float(maxNoCallFrac)):
             errorVCF.write('# More than ' + str(maxNoCallFrac) + ' fraction of genotypes are  no-call at this site\n')
             errorVCF.write(line0)
             counter_nop+=1
-        # check if all calls are heterozygous [20180901: I moved this to a per-population script]
+        # check if all calls are heterozygous at the population level
         elif myHet==myCalled:
             errorVCF.write('# All genotypes are heterozygous\n')
             errorVCF.write(line0)
