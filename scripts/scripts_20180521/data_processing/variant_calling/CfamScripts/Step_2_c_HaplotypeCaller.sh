@@ -17,7 +17,7 @@ header=$1
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 paleomixOutput=$wd/paleomix/$header
-outdir=$wd/gvcfs
+outdir=$wd/gvcfs/Cfam
 mkdir -p $outdir
 
 # these are covered intervals (result of previous step)

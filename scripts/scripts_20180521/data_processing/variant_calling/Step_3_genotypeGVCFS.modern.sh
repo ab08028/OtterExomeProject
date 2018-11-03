@@ -17,7 +17,7 @@ module load samtools
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 paleomixOutput=$wd/paleomix/${header} # specific to this header
-outdir=$wd/coveredIntervals
+# note: covered intervals already taken into account in hapcaller,so don't need to use -L flag here
 # ferret reference:
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 REFPREFIX=Mustela_putorius_furo.MusPutFur1.0.dna.toplevel
