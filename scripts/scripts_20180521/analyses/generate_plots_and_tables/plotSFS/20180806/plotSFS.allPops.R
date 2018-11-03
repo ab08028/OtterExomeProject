@@ -83,7 +83,10 @@ sampleSizes <- allSFS %>%
   tally()
 colnames(sampleSizes) <- c("population","diploidSS")
 sampleSizes$haploidSS <- 2*sampleSizes$diploidSS # note that this doesn't include monomorphic bin, so is correct sample size
-write.table(paste(data.dir,"/sampleSizesUsedInSFSes.txt"))
+write.table(sampleSizes,paste(data.dir,"/sampleSizesUsedInSFSes.txt",sep=""),sep="\t",quote = F,row.names=F)
+
+########## copy SFSes and sample size to /u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/neutralSFS
+
 ################################# Proportional SfS ###################
 
 allSFS_list=list()
