@@ -1,7 +1,7 @@
 ###### Gather up summary stats
 # I want the fraction of aligned (hits) reads out of total retained reads
 wd=/u/flashscratch/a/ab08028/captures/paleomix/
-headers=$SCRATCH/captures/samples/modernSamples.txt
+headers=$SCRATCH/captures/samples/bajaCaptures.plusDogs.txt
 
 outdir=$SCRATCH/captures/paleomix/summaryStats
 mkdir $outdir
