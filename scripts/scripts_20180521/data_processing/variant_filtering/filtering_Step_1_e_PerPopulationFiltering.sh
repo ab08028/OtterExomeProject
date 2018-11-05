@@ -42,8 +42,8 @@ python $bespokeFilterScript ${vcfdir}/populationVCFs/${pop}_'all_8_rmRelativesAd
 ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf' \
 ${vcfdir}/populationVCFs/${pop}_'fail_all_9_FAILING_perPopulationBespoke_Filters_'${infile%.vcf.gz}.txt \
 $noCallFrac
-# bgzip the result: (note: must use bgzip not gzip)
-$bgzip ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf'
+# bgzip the result: (note: must use bgzip not gzip)  use -f to force overwrite
+$bgzip -f ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf'
 # -f forces overwrite of old index
 $tabix -f -p vcf ${vcfdir}/populationVCFs/${pop}_'all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz' # index the vcf
 
@@ -60,8 +60,8 @@ python $bespokeFilterScript ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${
 ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf' \
 ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'fail_all_9_FAILING_perPopulationBespoke_Filters_'${infile%.vcf.gz}.txt \
 $noCallFrac
-# bgzip the result: (note: must use bgzip not gzip)
-$bgzip ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf'
+# bgzip the result: (note: must use bgzip not gzip) use -f to force overwrite
+$bgzip -f ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf'
 $tabix -f -p vcf ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_${pop}_'all_9_rmAllHet_passingAllFilters_allCalled.vcf.gz' # index the vcf
 
 done
