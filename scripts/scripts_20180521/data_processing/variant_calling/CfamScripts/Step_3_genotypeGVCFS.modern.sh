@@ -17,13 +17,13 @@ module load samtools
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 paleomixOutput=$wd/paleomix/${header} # specific to this header
-outdir=$wd/coveredIntervals
+
 # ferret reference:
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/dog_genome/canFam3.fasta
 REFPREFIX=canFam3
 
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
-outdir=$wd/vcfs/vcf_${rundate}
+outdir=$wd/vcfs/Cfam/vcf_${rundate}
 
 mkdir -p $outdir
 bgzip=~/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
@@ -32,7 +32,7 @@ bgzip=~/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 # manually exclude any low coverage samples you want 
 # this will joint call everything that's in the gVCFs directory (careful with that)
 > $wd/samples/vcfRunningList.${rundate}.list
-samples=`ls $wd/gvcfs/*gz`
+samples=`ls $wd/gvcfs/Cfam/*gz`
 for i in $samples
 do
 echo $i >> $wd/samples/vcfRunningList.${rundate}.list # this list will record everything that went into genotyping on XX date.
@@ -45,7 +45,7 @@ java -jar $GATK \
   -R $REFERENCE \
   -V $wd/samples/vcfRunningList.${rundate}.list \
   --includeNonVariantSites \
-  -o ${outdir}/raw_variants.vcf.gz
+  -o ${outdir}/raw_variants.Cfam.vcf.gz
  
 # zip the file if GATK didn't (may not be necessary)
 ### $bgzip ${OUT_DIR}/elut.raw_variants.${rundate}.vcf

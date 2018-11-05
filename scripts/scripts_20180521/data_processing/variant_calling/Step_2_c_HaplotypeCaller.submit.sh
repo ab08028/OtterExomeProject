@@ -20,7 +20,7 @@ scriptname=Step_2_c_HaplotypeCaller.sh # change this to final script name!!
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-headers=$wd/samples/bajaCaptures.plusDogs.txt # all Elut samples, modern, ancient and blank
+headers=$wd/samples/bajaCaptures.txt # all Elut samples, modern, ancient and blank
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
 
