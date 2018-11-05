@@ -8,7 +8,7 @@ source /u/local/Modules/default/init/modules.sh
 module load java/1.8.0_111
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/dog_genome/canFam3.fasta
-REFPREFIX=canFam
+REFPREFIX=canFam3
 # header:
 header=$1
 
