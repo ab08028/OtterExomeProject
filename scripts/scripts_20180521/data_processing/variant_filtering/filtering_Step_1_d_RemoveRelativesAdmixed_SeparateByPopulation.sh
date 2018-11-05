@@ -83,7 +83,7 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 --variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/intermediateVCFs_large/COM_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+-o ${vcfdir}/populationVCFs/COM_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+'
 # note: no more maxnocall frac at this stage; file will be big -- but in all_9 my script filters it anyway

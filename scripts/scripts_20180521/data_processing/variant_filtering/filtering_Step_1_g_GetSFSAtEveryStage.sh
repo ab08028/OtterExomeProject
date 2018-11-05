@@ -6,6 +6,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
 #$ -M ab08028
+############### --> ! need to figure out the all/no call at each stage bc maxnocallfrac doesn't work the way you thought!
 
 # sep by population and only select neutral sites
 source /u/local/Modules/default/init/modules.sh
