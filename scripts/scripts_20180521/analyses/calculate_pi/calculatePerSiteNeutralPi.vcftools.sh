@@ -14,7 +14,7 @@ do
 vcf=${pop}_${suffix}.vcf.gz
 zcat $vcfdir/$vcf | vcftools --gzvcf - --site-pi  --out ${outdir}/${pop}_${suffix}
 # note "-" after --vcf
-gzip ${outdir}/${pop}_${suffix}.sites.pi
+gzip -f ${outdir}/${pop}_${suffix}.sites.pi
 done
 
 
