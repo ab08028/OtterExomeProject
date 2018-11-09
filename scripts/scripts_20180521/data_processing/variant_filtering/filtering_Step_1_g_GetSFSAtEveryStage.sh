@@ -32,7 +32,9 @@ neutralBed=${vcfdir}/bedCoords/all_8_rmRelatives_keepAdmixed_passingBespoke_maxN
 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/generate_sfs/
-script=generate1DSFS.py
+script=generate.StepByStep.SFS.FilterNoCallSimultaneously.py # this script will exclude any line that has no-call genotypes
+# is different from regular script that will error out if there is a nocall genotype present because it indicates
+# a problem with filtering
 
 ## bad individuals (make sure gone from early steps?)
 ## Relatives to remove
@@ -59,6 +61,7 @@ ind17="65_Elut_AK_GE91060" # (adding)
 ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am keeping out of pop file and out of admixed file)
 
 ##############################################
+# don't use maxnocallfrac! Instead use sfs filtering script
 
 mkdir -p ${vcfdir}/step-by-step-vcf-sfs
 infile=raw_variants.vcf.gz
@@ -77,7 +80,6 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile --pop COM --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
@@ -91,7 +93,6 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_CA_.+' \
 -se 'RWAB003_.+_ELUT_CA_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile --pop CA --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
@@ -105,7 +106,6 @@ java -jar $GATK \
 --variant $vcfdir/$vcfFile \
 -o ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_AK_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -xl_sn ${ind12} \
 -xl_sn ${ind13} \
 -xl_sn ${ind14} \
@@ -125,7 +125,6 @@ java -jar $GATK \
 --variant $vcfdir/$vcfFile \
 -o ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_AL_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -L $neutralBed
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile --pop AL --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
@@ -139,7 +138,6 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
---maxNOCALLfraction $perPopNoCallFrac \
 -xl_sn ${ind7} \
 -xl_sn ${ind8} \
 -xl_sn ${ind9} \
