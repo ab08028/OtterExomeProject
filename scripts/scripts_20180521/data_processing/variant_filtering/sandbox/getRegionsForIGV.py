@@ -8,7 +8,7 @@ and make a samtools script so that you can pull them out of the apporpriate bam 
 for igv visualization
 
 usage: use python 2.7
-python getRegionsForIGV.py [infile full path] [outfile full path]
+python getRegionsForIGV.py [infile full path] [outfile full path] [path to paleomix dir where bams are] [path to where you want new bams to go] 
 """
 import sys
 import gzip
@@ -18,6 +18,8 @@ import gzip
 # sys argv 1 = filename
 filepath = sys.argv[1] #input file
 outname= sys.argv[2] # output file
+bamdir= sys.argv[3] # where bam  are located (upper level)
+igvdir = sys.argv[4] # where you want new bams to go
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
 # useful commands that are now part of function so dont' need to use:
 inVCF = gzip.open(filepath, 'r')
@@ -34,13 +36,18 @@ for line in inVCF:
 		break
 ################ write header lines to new vcf file #############
 # this then prints out the rest of the header lines
-  # you must give input vcf file, output script file name,
-def selectForIGV(inputvcfilename,outfilename):
+  # you must give input vcf file, output script file name, bamdir and igvdir where you want new files to go
+def selectForIGV(inputvcfilename,outfilename,bamdir,igvdir):
     # open your files:
-    bamDir="/u/flashscratch/a/ab08028/captures/paleomix/"
-    outdir="/u/flashscratch/a/ab08028/captures/IGV/"
+    # these can be changed:
+    #bamdir="/u/flashscratch/a/ab08028/captures/paleomix/"
+    #outdir="/u/flashscratch/a/ab08028/captures/IGV/"
     inVCF = gzip.open(inputvcfilename, 'r')
     script = open(outfilename, 'w')
+    # set up script :
+    script.write("module load samtools\n")
+    script.write("bamDir="+bamdir+"\n")
+    script.write("igvdir="+igvdir+"\n")
     for line0 in inVCF:
         if line0.startswith('#'):
             continue
@@ -63,8 +70,8 @@ def selectForIGV(inputvcfilename,outfilename):
             # gets you name of heterozygous individual(s)
             keys=[key for key,value in samplesCalls.items() if value=="0/1"]
             for key in keys:
-                bampath=str(bamDir+key+"/*bam")
-                samtoolsEntry=("samtools view -b " + bampath+" \""+str(line[0])+":"+str(int(line[1])-50)+"-"+str(int(line[1])+50)+"\" >  "+outdir+key+"_"+str(line[0])+"-"+str(line[1])+".bam"+"\n")
+                bampath=str(bamdir+key+"/*bam")
+                samtoolsEntry=("samtools view -b " + bampath+" \""+str(line[0])+":"+str(int(line[1])-50)+"-"+str(int(line[1])+50)+"\" >  "+igvdir+key+"_"+str(line[0])+"-"+str(line[1])+".bam"+"\n")
                 script.write(samtoolsEntry)
         else:
             continue
@@ -74,6 +81,6 @@ def selectForIGV(inputvcfilename,outfilename):
 
 
 #### run the function ##########
-selectForIGV(filepath,outname)
+selectForIGV(filepath,outname,bamdir,igvdir)
 
 sys.exit()
