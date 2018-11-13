@@ -45,7 +45,7 @@ fs=fs.fold() # folded
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10
 ############### Set up Specific Model -- this will change from script to script ########################
-
+# Bernard says to fix bottleneck duration
 def bottleneck(params, ns, pts): 
     nuB,nuF,TB,TF = params
     xx = Numerics.default_grid(pts) # sets up grid

@@ -21,8 +21,9 @@ plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/r
 dir.create(plot.dir,recursive = T,showWarnings = F)
 
 prefix="neutral_all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled" # for pi files
+sfsPrefix="all_9"
 ################ Get total neutral callable sites from table ############
-totalNeut <- read.table(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TotalCallableNeutralSites/",rundate,"/summary.neutralCallableSites.perPop.txt",sep=""),header = T)
+# not needed # totalNeut <- read.table(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TotalCallableNeutralSites/",rundate,"/summary.neutralCallableSites.perPop.txt",sep=""),header = T)
 ################ Get Sample Size from SFS ###############
 ########### THE SFS MUST BE FOLDED FOR THIS TO WORK! 
 # get sample sizes from the SFS; you calculate pi and theta from the same pop-specific vcf files
@@ -33,7 +34,7 @@ allSFS_length_list=list()
 # this is a nice for-loop -- want to EXCLUDE monomorphic bin!!!
 for(i in (1:length(pops))){
   pop=pops[i]
-  sfs <- read.table(paste(sfs.dir,pop,".folded.sfs.R.format.",sfsdate,".txt",sep=""),header=T,stringsAsFactors = F) 
+  sfs <- read.table(paste(sfs.dir,pop,".",sfsPrefix,".unfolded.",suffix,sep=""),header=T,stringsAsFactors = F) 
   sfs$population <- pop
   popcolor=colors[pop]
   allSFS_list[[i]] <- sfs[sfs$frequency!=0,] # add the SFS to your list
@@ -51,8 +52,8 @@ for(i in (1:length(pops))){
   pop=pops[i]
   pi <- read.table(paste(data.dir,pop,"_",prefix,".sites.pi.gz",sep=""),header=T,stringsAsFactors = F) 
   piTotal=sum(pi$PI)
-  callableSitesTotal <- totalNeut[totalNeut$pop==pop,]$totalCalledNeutralSites
-  print(callableSitesTotal==length(pi$PI))
+  callableSitesTotal <- length(pi$PI)
+  #print(callableSitesTotal==length(pi$PI))
   piPerSite=(piTotal/callableSitesTotal)
   allPi <- rbind.data.frame(allPi,(cbind.data.frame(pop,piPerSite,piTotal,callableSitesTotal)))
   # add the pi per site to your dataframe
@@ -70,11 +71,7 @@ piPlot
 ggsave(paste(plot.dir,"allPops.piPerSitePerPopulation.",todaysdate,".pdf",sep=""),piPlot,device = "pdf",height=5,width=7)
 
 
-################# sandbox: exome + neutral pi ###########
-test <- read.table("/Users/annabelbeichman/.Trash/unreliableRegions_dontuse/test.CA.all.9.sites.pi.gz",header=T)
-testSUM <- sum(test$PI)
-testCALLABLE <- length(test$PI)
-testpi = testSUM/testCALLABLE
+
 #################### calculate watterson's theta #####################
 # note harmonic number is sum from 1 to n of 1/n. n in this case is the number of choromosomes, not individuals, so it's 2*N if N is number of diploid inds.
 # define a function to calc harm number:
@@ -117,12 +114,12 @@ for(i in (1:length(pops))){
   #totalSNPs <- read.table(paste(data.dir,pop,"_",prefix,".totalSNPs.perPopCallableSiteNeutralRegions.out",sep=""),header=F,stringsAsFactors = F)
   #colnames(totalSNPs) <- c("region_start0based","region_end_halfOpen","SNPCount")
   #totalSNPs$siteCount <- totalSNPs$region_end_halfOpen - totalSNPs$region_start0based # note that this subtraction works because the coordinates are zero based and half open
+  SampleSize=ss[ss$population==pop,]$numDiploidIndividuals # this is number of individuals NOT the number of chromosomes, because my harmonic number script multiplies it by 2 to get the number of chromosomes, so you don't need to do that yourself.
   totalSNPsSum=sum(allSFS[allSFS$population==pop & allSFS$frequency!=0 & allSFS$frequency!=SampleSize,]$count) # need to exclude monomorphic!
   # get from Pi thing for now, while Total SNPs is being wonky:
   #callableSitesTotal=sum(totalSNPs$siteCount) # this only works because I used called sites in neutral regions per pop as my regions
   callableSitesTotal=allPi[allPi$pop==pop,]$callableSitesTotal
   # sample size in chromosomes for this population (which is 2x number of individuals, calculated earlier in the script)
-  SampleSize=ss[ss$population==pop,]$numDiploidIndividuals # this is number of individuals NOT the number of chromosomes, because my harmonic number script multiplies it by 2 to get the number of chromosomes, so you don't need to do that yourself.
   # this uses my watterson's theta funciton; note that even though you input number of individuals, within the function it converts that to 2*numInd which is num of chromosomes.
   ThetaW <- wattersons_theta(num_indv = SampleSize,numSNPs = totalSNPsSum,callablesites = callableSitesTotal)
   allTheta <- rbind.data.frame(allTheta,(cbind.data.frame(pop,ThetaW,SampleSize,totalSNPsSum,callableSitesTotal))) # add the pi per site to your dataframe

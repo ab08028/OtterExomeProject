@@ -17,13 +17,14 @@ script=generate1DSFS.py
 genotypedate=20180806
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypedate}_filtered/populationVCFs/neutralVCFs/
 suffix='neutral_all_9_rmAllHet_rmRelativesAdmixed_passingAllFilters_allCalled.vcf.gz'
+prefix="all_9" # for output
 populations="CA AK AL COM KUR"
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/20180806/neutralSFS
 
 for pop in $populations
 do
 echo $pop
-python $scriptdir/$script --vcf $vcfdir/${pop}_${suffix} --pop $pop --outdir $outdir
+python $scriptdir/$script --vcf $vcfdir/${pop}_${suffix} --pop $pop --outdir $outdir --outPREFIX all_9
 done
 
 # skipping admixed SFSs for now
