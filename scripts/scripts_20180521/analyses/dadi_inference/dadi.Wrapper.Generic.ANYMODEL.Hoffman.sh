@@ -33,12 +33,13 @@ todaysdate=`date +%Y%m%d`
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/neutralSFS/
 dadidir=$captures/analyses/dadi_inference/
-sfssuffix=unfolded.sfs.dadi.format.${sfsDate}.txt
+sfssuffix=all_9.unfolded.sfs.dadi.format.${sfsDate}.txt
+### Make sure this is the correct file #####
 totalNeut=$captures/vcf_filtering/${genotypeDate}_filtered/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt # file with total neutral sites counts for each population 
 ### want to make a slightly fancier outdir that is the model / date or something like that eventually. 
 # run multiple models for multiple popuations?
-scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
-
+#scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
+scripts='1D.2Epoch.dadi.py 1D.1Bottleneck.dadi.TB20gen.py'
 for pop in CA AK AL COM KUR
 do
 L=`grep $pop $totalNeut | awk '{print $2}'` # get the total called neutral sites from the totalNeut table

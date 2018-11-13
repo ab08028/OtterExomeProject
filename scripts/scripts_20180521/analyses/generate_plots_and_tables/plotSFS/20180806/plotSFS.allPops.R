@@ -6,7 +6,8 @@ require(gridExtra)
 
 pops=c("CA","AK","AL","COM","KUR")  # your populations
 rundate=20180806 # genotype calling date
-sfsdate=20181019 # date sfses were made
+sfsdate=20181105 # date sfses were made; 20181105 is SFSes made after fixing maxNoCallFrac error
+sfsPrefix="all_9"
 suffix=paste("sfs.R.format.",sfsdate,".txt",sep="")
 ############### set up your colors -- keep this consistent across all plots ######
 require(RColorBrewer)
@@ -52,7 +53,7 @@ allPlots_list=list()
 # this is a nice for-loop; it generates and writes out a plot for each population
 for(i in (1:length(pops))){
   pop=pops[i]
-  sfs <- read.table(paste(data.dir,pop,".unfolded.",suffix,sep=""),header=T,stringsAsFactors = F)
+  sfs <- read.table(paste(data.dir,pop,".",sfsPrefix,".unfolded.",suffix,sep=""),header=T,stringsAsFactors = F)
   sfs_folded <- foldSFS(sfs)
   # write out folded SFS:
   ss=dim(sfs)[1]-1 # sample size in chromsomes (haps). full size of sfs is ss+1 because of 0 bin

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct 18 15:27:15 2018
@@ -73,8 +74,9 @@ for line0 in inVCF:
     # make sure that there are no "./." genotypes:
     if myNoCalled==0:
         sfs[myAC]+=1 # add the snp to the appropriate bin of SFS; this works by accessing the key of the dict that corresponds to the allele frequency (AC), e.g. myAC of 30 is the bin in the unfolded
+        # this version of the script allows there to be no-call sites in the sfs, but they won't go into the SFS (contrast to generateSFS.py which will error out if there are no-call because that means something has gone wrong with your filtering)
     else:
-        sys.exit("This VCF hasn't had no-call genotypes filtered out!")
+        continue
     # SFS to add +1 to.
     # print(sum(sfs.values()))
 ############################ write out SFS in dadi format ################
