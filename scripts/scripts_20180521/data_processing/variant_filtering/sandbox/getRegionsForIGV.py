@@ -45,6 +45,7 @@ def selectForIGV(inputvcfilename,outfilename,bamdir,igvdir):
     inVCF = gzip.open(inputvcfilename, 'r')
     script = open(outfilename, 'w')
     # set up script :
+    script.write("source /u/local/Modules/default/init/modules.sh")
     script.write("module load samtools\n")
     script.write("bamDir="+bamdir+"\n")
     script.write("igvdir="+igvdir+"\n")
@@ -65,13 +66,13 @@ def selectForIGV(inputvcfilename,outfilename,bamdir,igvdir):
         #myAN=myCalled *2 # all called alleles
         # if it's a singleton (assumes no no-calls)
         if myAC==1 or myAC==(2*len(allCalls)-1):
-            print("found a singleton!"+"AC = " + str(myAC))
+            print("found a singleton! "+"AC = " + str(myAC))
             samplesCalls=dict(zip(samples,allCalls))
             # gets you name of heterozygous individual(s)
             keys=[key for key,value in samplesCalls.items() if value=="0/1"]
             for key in keys:
                 bampath=str(bamdir+key+"/*bam")
-                samtoolsEntry=("samtools view -b " + bampath+" \""+str(line[0])+":"+str(int(line[1])-50)+"-"+str(int(line[1])+50)+"\" >  "+igvdir+key+"_"+str(line[0])+"-"+str(line[1])+".bam"+"\n")
+                samtoolsEntry=("samtools view -b " + bampath+" \""+str(line[0])+":"+str(int(line[1])-50)+"-"+str(int(line[1])+50)+"\" >  "+igvdir+key+"_"+str(line[0])+"-"+str(line[1])+".bam"+"\n samtools index "+igvdir+key+"_"+str(line[0])+"-"+str(line[1])+".bam")
                 script.write(samtoolsEntry)
         else:
             continue
