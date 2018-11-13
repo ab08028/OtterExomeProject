@@ -1,6 +1,8 @@
 ####### IGV wrapper:
+source /u/local/Modules/default/init/modules.sh
 
 module load python/2.7
+module load samtools
 
 todaysdate=2018113
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
