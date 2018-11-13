@@ -8,7 +8,7 @@ and make a samtools script so that you can pull them out of the apporpriate bam 
 for igv visualization
 
 usage: use python 2.7
-python getRegionsForIGV.py [infile full path] [outfile full path] [path to paleomix dir where bams are] [path to where you want new bams to go] 
+python getRegionsForIGV.py [infile full path] [outfile script path] [path to paleomix dir where bams are] [path to where you want new bams to go] 
 """
 import sys
 import gzip
