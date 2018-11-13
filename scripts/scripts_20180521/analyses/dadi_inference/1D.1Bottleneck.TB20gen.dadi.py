@@ -14,14 +14,9 @@ from numpy import array # don't comment this out
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
-# this model is the same as 1D.1Bottleneck but the duration of the bottleneck is fixed
-modelName="1D.1Bottleneck.fixedDuration"
 
-# for testing purposes:
-sfs="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20180806/neutralSFS/CA.unfolded.sfs.dadi.format.20181019.txt"
-pop="CA"
-mu=float(8.64411385098638e-09)
-L=float(4193967)
+modelName="1D.1Bottleneck.TB20gen"
+
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
 parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
@@ -40,9 +35,9 @@ L=float(args.L)
 outdir=str(args.outdir)
 sfs=str(args.sfs)
 maxiter=100
-
-
 ############### Input data ####################################
+# for testing purposes:
+#sfs="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20180806/neutralSFS/CA.all_9.unfolded.sfs.dadi.format.20181105.txt"
 fs=dadi.Spectrum.from_file(sfs) # this is unfolded
 # fold the fs:
 fs=fs.fold() # folded
@@ -50,40 +45,40 @@ fs=fs.fold() # folded
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10
 ############### Set up Specific Model -- this will change from script to script ########################
-
-def bottleneck_fixedDur(params, ns, pts): 
-    TB, TF = params # removed TB because that is fixed at fixed DUR
-    xx = Numerics.default_grid(pts) # sets up grid
-    phi = PhiManip.phi_1D(xx) # sets up initial phi for population 
-    phi = Integration.one_pop(phi, xx, TB, 0.01)  # replace TB with fixed duration fors bottleneck
-    phi = Integration.one_pop(phi, xx, TF, 0.1) # recovery 
-    fs = Spectrum.from_phi(phi, ns, (xx,)) 
-    return fs
-param_names=("TB","TF")
-
+# Bernard says to fix bottleneck duration
+# 20 generations ~ 20/(3000*2)
 def bottleneck(params, ns, pts): 
-    nuB,nuF,TB,TF = params
+    nuB,nuF,TF = params
     xx = Numerics.default_grid(pts) # sets up grid
     phi = PhiManip.phi_1D(xx) # sets up initial phi for population 
-    phi = Integration.one_pop(phi, xx, TB, nuB)  # bottleneck
+    phi = Integration.one_pop(phi, xx, 0.005, nuB)  # bottleneck
     phi = Integration.one_pop(phi, xx, TF, nuF) # recovery 
     fs = Spectrum.from_phi(phi, ns, (xx,)) 
     return fs
-param_names=("nuB","nuF","TB","TF")
+param_names=("nuB","nuF","TF")
 
-upper_bound = [200, 200, 10, 10]
-lower_bound = [1e-4, 1e-4, 0, 0]
-p0 = [0.01,0.1,0.005,0.001] # initial parameters
+# 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
+# changing starting position to .1, tb to 0.005; TF to 0.001
+# 20181031: note from Bernard:
+#1) for upper_bound, i'd shrink the upper bound of timesby a lot 
+#not sure about otters, but for humans i think i used like 0.1
+#in any case, even T=1 seems like a really long time for these upper bounds assuming the otter #popn size changes you're modeling are on anthropogenic timescales. i don't know how this works #out given otter generation times and the time scale of their decline though (edited)
+#another reason they tend to be smaller is that these are times for that period rather than #times from the present
+#2) the times for the lower bounds are supposed to be non-zero
+#IIRC if you give a min of 0 things get weird because of collapsing epochs
+#i'd throw something like 1e-5
+upper_bound = [10, 2, 0.1]
+lower_bound = [1e-4, 1e-4, 1e-5]
+p0 = [0.01,0.1,0.001] # initial parameters
 
 
+func=bottleneck # set the function
 
 ############### Carry out optimization (same for any model) ########################
 # Make extrapolation function:
 func_ex = dadi.Numerics.make_extrap_log_func(func)
 # perturb parameters
 p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bound,                                  lower_bound=lower_bound) 
-
-
 # optimize: 
 print('Beginning optimization ************************************************')
 popt = dadi.Inference.optimize_log(p0, fs, func_ex, pts_l, 
@@ -99,12 +94,7 @@ ll_model = dadi.Inference.ll_multinom(model, fs)
 # calculate best fit theta
 theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
-############ for testing:
-Nanc=theta/(4*mu*L)
-nuB=popt[0]*Nanc
-#nuF=popt[1]*Nanc
-TF=popt[0]*2*Nanc
-Nanc,nuB,TF,ll_model
+
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
