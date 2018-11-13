@@ -64,7 +64,7 @@ def selectForIGV(inputvcfilename,outfilename,bamdir,igvdir):
         myAC=myHet+(2*myHomAlt) # alternate alleles
         #myAN=myCalled *2 # all called alleles
         # if it's a singleton (assumes no no-calls)
-        if myAC==1 or myAC==(len(allCalls)-1):
+        if myAC==1 or myAC==(2*len(allCalls)-1):
             print("found a singleton!"+"AC = " + str(myAC))
             samplesCalls=dict(zip(samples,allCalls))
             # gets you name of heterozygous individual(s)
