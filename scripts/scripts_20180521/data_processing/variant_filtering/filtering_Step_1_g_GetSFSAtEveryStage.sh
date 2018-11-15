@@ -36,29 +36,10 @@ script=generate.StepByStep.SFS.FilterNoCallSimultaneously.py # this script will 
 # is different from regular script that will error out if there is a nocall genotype present because it indicates
 # a problem with filtering
 
-## bad individuals (make sure gone from early steps?)
+
 ## Relatives to remove
-ind1="RWAB003_19_ELUT_CA_352"
-ind2="106_Elut_AL_AD_GE91109"
-ind3="101_Elut_KUR_3"
-ind4="102_Elut_KUR_4"
-ind5="104_Elut_KUR_7"
-ind6="77_Elut_KUR_14"
 
 ### Heavily admixed invididuals / PCA outliers to keep out of population vcfs (can stay in all inds vcf):
-ind7="90_Elut_KUR_20"
-ind8="80_Elut_KUR_19"
-ind9="91_Elut_KUR_21"
-ind10="92_Elut_KUR_22"
-ind11="93_Elut_KUR_23"
-ind12="68_Elut_AK_AF3370"
-ind13="56_Elut_AK_AF24903"
-ind14="57_Elut_AK_AF24906"
-ind15="163_Elut_AK_AF24915"
-## mildly admixed invididuals / PCA outliers to remove:
-ind16="125_Elut_AK_AF3369" # (adding)
-ind17="65_Elut_AK_GE91060" # (adding)
-ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am keeping out of pop file and out of admixed file)
 
 ##############################################
 # don't use maxnocallfrac! Instead use sfs filtering script
@@ -80,7 +61,12 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_BER_.+' \
 -se '.+_Elut_MED_.+' \
--L $neutralBed
+-L $neutralBed \
+-xl_sn 161_Elut_MED_19 \
+-xl_sn 76_Elut_BER_31 \
+-xl_sn 86_Elut_MED_25 \
+-xl_sn 131_Elut_BER_34
+
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/COM.allCalled.neutralOnly.$vcfFile --pop COM --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
@@ -93,7 +79,11 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_CA_.+' \
 -se 'RWAB003_.+_ELUT_CA_.+' \
--L $neutralBed
+-L $neutralBed \
+-xl_sn RWAB003_15_ELUT_CA_159 \
+-xl_sn RWAB003_22_ELUT_CA_410 \
+-xl_sn RWAB003_19_ELUT_CA_352
+
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/CA.allCalled.neutralOnly.$vcfFile --pop CA --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
@@ -106,14 +96,20 @@ java -jar $GATK \
 --variant $vcfdir/$vcfFile \
 -o ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_AK_.+' \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15} \
--xl_sn ${ind16} \
--xl_sn ${ind17} \
--xl_sn ${ind18} \
--L $neutralBed
+-L $neutralBed \
+-xl_sn 128_Elut_AK_AF3630 \
+-xl_sn 150_Elut_AK_AF3631 \
+-xl_sn 151_Elut_AK_AF3714 \
+-xl_sn 152_Elut_AK_AF3720 \
+-xl_sn 153_Elut_AK_AF3181 \
+-xl_sn 68_Elut_AK_AF3370 \
+-xl_sn 56_Elut_AK_AF24903 \
+-xl_sn 57_Elut_AK_AF24906 \
+-xl_sn 163_Elut_AK_AF24915 \
+-xl_sn 125_Elut_AK_AF3369 \
+-xl_sn 65_Elut_AK_GE91060 \
+-xl_sn 165_Elut_AK_AL4661
+
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AK.allCalled.neutralOnly.$vcfFile --pop AK --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
@@ -125,7 +121,9 @@ java -jar $GATK \
 --variant $vcfdir/$vcfFile \
 -o ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_AL_.+' \
--L $neutralBed
+-L $neutralBed \
+-xl_sn 112_Elut_AL_AM_AM92022 \
+-xl_sn 106_Elut_AL_AD_GE91109
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/AL.allCalled.neutralOnly.$vcfFile --pop AL --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
 
@@ -138,12 +136,21 @@ java -jar $GATK \
 -o ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile \
 -se '.+_Elut_KUR_.+' \
 -se 'RWAB003_.+_ELUT_KUR_.+' \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--L $neutralBed
+-L $neutralBed \
+-xl_sn 101_Elut_KUR_3 \
+-xl_sn 102_Elut_KUR_4 \
+-xl_sn 104_Elut_KUR_7 \
+-xl_sn 77_Elut_KUR_14 \
+-xl_sn 143_Elut_KUR_5original \
+-xl_sn 144_Elut_KUR_1 \
+-xl_sn 145_Elut_KUR_18 \
+-xl_sn 154_Elut_KUR_11 \
+-xl_sn 155_Elut_KUR_9 \
+-xl_sn 90_Elut_KUR_20 \
+-xl_sn 80_Elut_KUR_19 \
+-xl_sn 91_Elut_KUR_21 \
+-xl_sn 92_Elut_KUR_22 \
+-xl_sn 93_Elut_KUR_23
 
 
 python $scriptdir/$script --vcf ${vcfdir}/step-by-step-vcf-sfs/KUR.allCalled.neutralOnly.$vcfFile --pop KUR --outdir ${vcfdir}/step-by-step-vcf-sfs/ --outPREFIX ${vcfFile%_${infile}}
