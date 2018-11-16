@@ -30,10 +30,11 @@ mkdir -p $outdir
 
 for type in syn missense
 do
-vcf=${pop}_VEP_${type}_${suffix}.vcf.gz
 for pop in $populations
 do
+
 echo $pop
+vcf=${pop}_VEP_${type}_${suffix}.vcf.gz
 
 python $scriptdir/$script --vcf $vcfdir/$vcf --pop $pop --outdir $outdir --outPREFIX ${prefix}_${type}
 
