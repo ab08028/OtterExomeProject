@@ -57,24 +57,26 @@ $vepdir/vep -v -i $outdir/${pop}_cds_${suffix}.vcf  \
 ###### S (synonymous):
 
 $vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is YES" \
---input_file $outdir/${pop}_VEP_cds_${suffix}.vcf.gz \
---output_file $outdir/${pop}_VEP_syn_${suffix}.vcf.gz  \
+--input_file $outdir/${pop}_VEP_cds_${suffix}.vcf \
+--output_file $outdir/${pop}_VEP_syn_${suffix}.vcf  \
 --force_overwrite
 
 
 $vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YES" \
---input_file $outdir/${pop}_VEP_cds_${suffix}.vcf.gz \
---output_file $outdir/${pop}_VEP_missense_${suffix}.vcf.gz  \
+--input_file $outdir/${pop}_VEP_cds_${suffix}.vcf \
+--output_file $outdir/${pop}_VEP_missense_${suffix}.vcf  \
 --force_overwrite
 
 done
 
+
+## bgzip vcfs at some point
 ######### For records, get a bed file of the coords that overlap between pop vcfs and neutBed, and the total amnt of neut sequence per pop: 
 echo -e 'pop\ttotalCalledcdsSites' > ${vcfdir}/bedCoords/cdsCallableSites_perPop/summary.cdsCallableSites.perPop.txt
 for pop in $populations
 do
 echo $pop
-for file in $outdir/${pop}_VEP_cds_${suffix}.vcf.gz $outdir/${pop}_VEP_syn_${suffix}.vcf.gz $outdir/${pop}_VEP_missense_${suffix}.vcf.gz
+for file in $outdir/${pop}_VEP_cds_${suffix}.vcf $outdir/${pop}_VEP_syn_${suffix}.vcf $outdir/${pop}_VEP_missense_${suffix}.vcf
 do
 # for reference, want to get bed file of callable sites in cds regions per population
 bedtools intersect -a ${vcfdir}/populationVCFs/${pop}_${suffix}.vcf.gz -b $cdsBed | awk '{OFS="\t"; print $1,$2-1,$2}' | sort -k1,1 -k2,2n | bedtools merge -i stdin > ${vcfdir}/bedCoords/cdsCallableSites_perPop/${pop}_${suffix}.cds.callableSites.0based.bed
