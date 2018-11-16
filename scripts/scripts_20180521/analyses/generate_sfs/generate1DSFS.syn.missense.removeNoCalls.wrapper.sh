@@ -6,7 +6,8 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/SFS
 #$ -m abe
 #$ -M ab08028
-########### NOTE THAT VCF FILES MUST BE BGZIPPED #############
+########### NOTE THAT VCF FILES MUST BE ANNOTATED USING VEP, pre-filtered for syn/miss using filter_vep and BGZIPPED #############
+# this occurs in step flitering_Step_1_f-iii
 
 # wrapper for making syn and missense SFSs with my custom script generate.StepByStep.SFS.FilterNoCallSimultaneously.py
 # which for each site also removes the 
