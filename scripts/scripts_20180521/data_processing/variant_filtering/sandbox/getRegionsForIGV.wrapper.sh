@@ -29,3 +29,5 @@ python $scriptdir/$script $vcf $scriptdir/gatherRegionsForIGV.${todaysdate}.sh $
 
 # then run the script:
 sh $scriptdir/gatherRegionsForIGV.${todaysdate}.sh
+
+# need to index the bams
