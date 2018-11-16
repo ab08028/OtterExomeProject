@@ -24,11 +24,9 @@ outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/20180806/neutralSFS
 for pop in $populations
 do
 echo $pop
-<<<<<<< HEAD
-python $scriptdir/$script --vcf $vcfdir/${pop}_${suffix} --pop $pop --outdir $outdir --outPREFIX "all_9"
-=======
-python $scriptdir/$script --vcf $vcfdir/${pop}_${suffix} --pop $pop --outdir $outdir --outPREFIX all_9
->>>>>>> 264255acabf5762a9b5006c6d40d6f046468abe4
+
+python $scriptdir/$script --vcf $vcfdir/${pop}_${suffix} --pop $pop --outdir $outdir --outPREFIX $prefix
+
 done
 
 # skipping admixed SFSs for now
