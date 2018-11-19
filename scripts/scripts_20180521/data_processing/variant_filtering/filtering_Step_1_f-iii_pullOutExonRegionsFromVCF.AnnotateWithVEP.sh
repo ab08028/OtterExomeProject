@@ -2,8 +2,8 @@
 #$ -cwd
 #$ -l h_rt=50:00:00,h_data=16G,highp
 #$ -N exonVEPSFS
-#$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
-#$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
+#$ -o /u/flashscratch/a/ab08028/captures/reports/VEP
+#$ -e /u/flashscratch/a/ab08028/captures/reports/VEP
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 3
@@ -18,6 +18,8 @@ module load htslib
 
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 vepdir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/ensembl-vep/
+tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
+bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 rundate=20180806
 noCallFrac=0.2
@@ -67,6 +69,20 @@ $vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YE
 --output_file $outdir/${pop}_VEP_missense_${suffix}.vcf  \
 --force_overwrite
 
+# bgzip and tabix the VEP vcf 
+
+$bgzip -f $outdir/${pop}_cds_${suffix}.vcf
+$tabix -f -p vcf $outdir/${pop}_cds_${suffix}.vcf.gz
+
+$bgzip -f $outdir/${pop}_VEP_cds_${suffix}.vcf
+$tabix -f -p vcf $outdir/${pop}_VEP_cds_${suffix}.vcf.gz
+
+$bgzip -f  $outdir/${pop}_VEP_syn_${suffix}.vcf
+$tabix -f -p vcf $outdir/${pop}_VEP_syn_${suffix}.vcf.gz
+
+$bgzip -f $outdir/${pop}_VEP_missense_${suffix}.vcf
+$tabix -f -p vcf $outdir/${pop}_VEP_missense_${suffix}.vcf.gz
+# bgzip and tabix the VEP vcf
 done
 
 
