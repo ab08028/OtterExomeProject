@@ -14,6 +14,8 @@
 # cd easySFS
 # chmod +x *.py
 # easySFS.py
+source /u/local/Modules/default/init/modules.sh
+module load python/2.7
 
 genotypeDate=20180806
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/
