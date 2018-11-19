@@ -32,7 +32,7 @@ neutralBed=${vcfdir}/bedCoords/all_8_rmRelatives_keepAdmixed_passingBespoke_maxN
 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/generate_sfs/
-script=generate.StepByStep.SFS.FilterNoCallSimultaneously.py # this script will exclude any line that has no-call genotypes
+script=generate.1D.SFS.FilterNoCallSimultaneously.py # this script will exclude any line that has no-call genotypes
 # is different from regular script that will error out if there is a nocall genotype present because it indicates
 # a problem with filtering
 
