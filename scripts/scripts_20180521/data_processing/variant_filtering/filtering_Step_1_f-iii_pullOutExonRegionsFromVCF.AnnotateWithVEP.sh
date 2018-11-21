@@ -50,24 +50,28 @@ java -jar $GATK \
 $vepdir/vep -v -i $outdir/${pop}_cds_${suffix}.vcf  \
 --cache --force_overwrite --species mustela_putorius_furo \
 --variant_class --vcf --canonical \
--o $outdir/${pop}_VEP_cds_${suffix}.vcf
-
-
-# excluding: numbers, domains
-# --fork 3
-# select NS (missense) and S in canonical transcripts:
-###### S (synonymous):
+-o $outdir/${pop}_VEP_cds_${suffix}.vcf \
+--pick
+# Using PICK to pick one variant per site:
+# https://uswest.ensembl.org/info/docs/tools/vep/script/vep_other.html#pick_options
+# "This is the option we anticipate will be of use to most users. VEP chooses one block of annotation per variant, using an ordered set of criteria. This order may be customised using --pick_order. "
+   # canonical status of transcript
+   # APPRIS isoform annotation
+   # transcript support level
+   # biotype of transcript ("protein_coding" preferred)
+   # CCDS status of transcript
+   # consequence rank according to this table
+   # translated, transcript or feature length (longer preferred)
 
 $vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is YES" \
 --input_file $outdir/${pop}_VEP_cds_${suffix}.vcf \
 --output_file $outdir/${pop}_VEP_syn_${suffix}.vcf  \
 --force_overwrite
 
-
 $vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YES" \
 --input_file $outdir/${pop}_VEP_cds_${suffix}.vcf \
 --output_file $outdir/${pop}_VEP_missense_${suffix}.vcf  \
---force_overwrite
+--force_overwrite 
 
 # bgzip and tabix the VEP vcf 
 
@@ -84,7 +88,7 @@ $bgzip -f $outdir/${pop}_VEP_missense_${suffix}.vcf
 $tabix -f -p vcf $outdir/${pop}_VEP_missense_${suffix}.vcf.gz
 # bgzip and tabix the VEP vcf
 done
-
+# okaky this works now. 
 
 ## bgzip vcfs at some point
 ######### For records, get a bed file of the coords that overlap between pop vcfs and neutBed, and the total amnt of neut sequence per pop: 
