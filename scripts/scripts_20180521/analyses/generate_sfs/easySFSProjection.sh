@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=30:00:00,h_data=16G,highp
+#$ -l h_rt=30:00:00,h_data=32G,highp
 #$ -N easySFSPreview
 #$ -o /u/flashscratch/a/ab08028/captures/reports/SFS
 #$ -e /u/flashscratch/a/ab08028/captures/reports/SFS
