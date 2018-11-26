@@ -52,3 +52,4 @@ totalNeut=`awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' ${vcfdir}/bedCo
 echo -e ${pop}'\t'${totalNeut} >> ${vcfdir}/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt
 totalNeut=''
 done
+

@@ -47,7 +47,7 @@ script=generate.1D.SFS.FilterNoCallSimultaneously.py # this script will exclude 
 mkdir -p ${vcfdir}/step-by-step-vcf-sfs
 infile=raw_variants.vcf.gz
 # eventually
-for vcfFile in 'all_1_TrimAlt_'${infile} 'all_5_passingFilters_'${infile} 'all_6_rmBadIndividuals_passingFilters_'${infile} 'all_7_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'snp_2_Filter_TrimAlt_'${infile} snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} 'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} 'snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_'${infile}
+for vcfFile in 'all_1_TrimAlt_'${infile} 'all_5_passingFilters_'${infile} 'all_6_rmBadIndividuals_passingFilters_'${infile} 'all_7_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.9_rmBadIndividuals_passingFilters_'${infile} 'snp_2_Filter_TrimAlt_'${infile} 'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} 'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} 'snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_'${infile}
 
 
 do

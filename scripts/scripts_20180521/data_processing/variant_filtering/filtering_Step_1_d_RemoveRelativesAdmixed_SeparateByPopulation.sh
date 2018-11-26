@@ -187,8 +187,30 @@ java -jar -Xmx4G ${GATK} \
 # this call to maxnocallfrac is okay because it's for the snp file with a 20% cutoff for use in pca, etc.
 ########### this also keeps PCA outliers.
 
-#### Also want a version that excludes admixed and outliers and doesn't impose 0.2 filter: 
+#### new: 20181130 Also want a version that excludes admixed and outliers and doesn't impose 0.2 filter:  #######
+# use for easy SFS, etc.
+######## all sites #########
+java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/'all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--maxNOCALLfraction ${noCallFrac} \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
+-xl_sn ${ind10} \
+-xl_sn ${ind11} \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17} \
+-xl_sn ${ind18}
 
+
+#### only snps #############
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
@@ -209,3 +231,4 @@ java -jar -Xmx4G ${GATK} \
 -xl_sn ${ind16} \
 -xl_sn ${ind17} \
 -xl_sn ${ind18}
+
