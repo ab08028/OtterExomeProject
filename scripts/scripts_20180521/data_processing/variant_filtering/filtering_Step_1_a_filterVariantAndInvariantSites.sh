@@ -110,6 +110,12 @@ java -jar -Xmx4G ${GATK} \
 --clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+
+## what to do about some sites here that end up as non variant. Hmmmmm. 
+# need to reselect biallelic snps 
+## when/where does it make sense to filter snp clusters?
+
+
 ## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
@@ -119,7 +125,7 @@ java -jar -Xmx4G ${GATK} \
 ####### PAY ATTENTION TO WARNINGS! IF IT WARNS THAT AN ANNOTATION IS MISSING, YOU'LL HAVE WAY TOO MANY FAILING THAT SHOULDN'T ##########
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
-# and only select sites where max 20% of genotypes are not called
+# 
 echo "snp step 4: select passing variants"
 
 java -jar -Xmx4G ${GATK} \
