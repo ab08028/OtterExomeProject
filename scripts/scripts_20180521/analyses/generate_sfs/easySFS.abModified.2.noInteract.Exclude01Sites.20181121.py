@@ -306,7 +306,7 @@ def make_datadict(genotypes, pops, verbose=False, ploidy=1):
             homRef_count=sum([x == "0" or x == "0/0" or x == "0|0" for x in pop_genotypes])
             homAlt_count=sum([x == "1" or x == "1/1" or x == "1|1" for x in pop_genotypes])
             if homRef_count==0 and homAlt_count==0 and het_count!=0:
-                print("found an all 0/1 site for "+str(pop))
+                print("found an all 0/1 site for "+str(pop)+": "+str(pop_genotypes) )
                 calls[pop] =(0,0) # set it as though it's no-call for that population
             else:
                 calls[pop] = (ref_count, alt_count)

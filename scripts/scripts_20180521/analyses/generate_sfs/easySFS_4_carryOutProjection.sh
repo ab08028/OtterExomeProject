@@ -37,12 +37,13 @@ mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
 
 # make sure vcf isn't zipped
-#vcf=neutral.snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_0.9_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
-vcf='neutral.all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf'
-# hoping I can get it to work with this neutral all-sites file so that I have monomorphic sites sampled as well. This would be ideal.
 
-$easySFS -i $vcfdir/${vcf} -p $popFile -a -v --proj 20,20,20,20,20 -f -o $outdir/projection-no01Filter_${todaysdate}
+vcf=neutral.snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_0.9_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
+#vcf='neutral.all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf'
+# hoping I can get it to work with this neutral all-sites file so that I have monomorphic sites sampled as well. This would be ideal.
+gunzip ${vcf}.gz
+$easySFS -i $vcfdir/${vcf} -p $popFile -a -v --proj 20,20,20,20,20 -f -o $outdir/projection-modified01filter_${todaysdate}
 # test run only had --proj 20 (maybe just projects 1 population? will have to see)
 # -f forces overwrite of outdir
-
+$bgzip ${vcf}
 # then do for SYN and MIS (eventually)
