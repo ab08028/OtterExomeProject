@@ -144,6 +144,8 @@ java -jar -Xmx4G ${GATK} \
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # 
+################# dont' know if I want to this this way ############ 
+# i think with pre dp filter that I want to be more conservative 
 echo "snp step 4: select passing variants"
 
 java -jar -Xmx4G ${GATK} \
@@ -152,7 +154,7 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
 --excludeFiltered \
 -o ${vcfdir}/'snp_3b_Filtered_GQ_DP_GaTKHF_'${infile}
-
+##
 
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
@@ -160,6 +162,7 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/testingFilters/${scaffold}.'snp_3b_Filtered_GQ_DP_GaTKHF_'${infile} \
 --clusterWindowSize 10 --clusterSize 3 \
 -o ${vcfdir}/testingFilters/${scaffold}.'snp_4a_Flagged_GQ_DP_GaTKHF_cluster_'${infile} 
+# issue: does clustering work by 
 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \

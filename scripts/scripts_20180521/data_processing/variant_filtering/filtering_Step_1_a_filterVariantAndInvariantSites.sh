@@ -22,7 +22,8 @@
 # in slightly fewer snpclusters called (~566 for one chromosome) but I want to get rid of sites 
 # that are surrounded by low quality snps (within 10bp ), rather than wait until those sites
 # have been filtered away and I have no idea that a 'good' site was actually surrounded by multiple bad sites
-
+## Based on plotting the QD dist for one scaffold, see that most sites are clustered with QD > 20, shifted pretty far to the right
+# so instead of QD 2 which is from GATK, I am going to switch to QD < 10 as a filter. 
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -100,13 +101,16 @@ java -jar -Xmx4G ${GATK} \
 # 6. clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
-
+# modified QD filter to be QD < 10.0 instead of 2.0 based on my plot which showed most variants clustered at QD > 20 (I'm guessing this is a capture feature)
+# I separated QD out from the rest of the GATK HFs so that I can better see how it is behaving.
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
 -V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
---filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
+--filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
+--filterExpression "QD < 10.0" \
+--filterName "FAIL_QD10" \
 --genotypeFilterExpression "GQ < 20" \
 --genotypeFilterName "FAIL_GQ" \
 --genotypeFilterExpression "DP < 8" \
@@ -213,9 +217,26 @@ java -jar -Xmx4G ${GATK} \
 echo "done step 5a: merge passing sites"
 
 
+################## Variant Evaluation ############## (still experimental)
+# only evaluate on one scaffold (takes too long otherwise)
+echo "starting step 5b: variant evaluation"
+
+scaffold="GL896899.1"
+java -jar -Xmx4G ${GATK} \
+-T VariantEval \
+-R $REFERENCE \
+-o ${vcfdir}/filteringStats/${scaffold}.'allSNPstages'.variant.eval.txt \
+--eval:all1 ${vcfdir}/'all_1_TrimAlt_'${infile} \
+--eval:snp2 ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
+--eval:snp3 ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+--eval:snp4 ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
+-L $scaffold
+   
+
+
 ########################## At this stage, calculate the no-call per individual (~10hours) #######################
 # takes ~2hrs
-echo "starting step 5b: calculate missing calls per individual"
+echo "starting step 5c: calculate missing calls per individual"
 python $noCallScript ${vcfdir}/'all_5_passingFilters_'${infile} ${vcfdir}/filteringStats/'noCall_per_Ind_all_5_passingFilters_'${infile%.vcf.gz}.txt
 # then want to remove bad individuals and then run bespoke filters as a final check of AN/AC etc.
 
