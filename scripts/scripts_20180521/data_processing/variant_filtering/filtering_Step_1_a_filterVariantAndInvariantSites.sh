@@ -97,7 +97,7 @@ java -jar -Xmx4G ${GATK} \
 # use genotypeFilterExpression to filter individual genotypes  and **** --setFilteredGtToNocall to change filtered genotype to "no call" (./.) ****
 # 3. genotype quality (<20 filtered out) (FAIL_GQ)
 # X. *no longer doing this* Individual Depth > 1000 filtered out (FAIL_DP_HIGH)
-# 5. Individual DP < 12 filtered out (FAIL_DP_LOW)
+# 5. Individual DP < 8 filtered out (FAIL_DP_LOW)
 # 6. clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
@@ -171,14 +171,14 @@ java -jar -Xmx4G ${GATK} \
 --filterName "FAIL_QUAL30" \
 --genotypeFilterExpression "RGQ < 1" \
 --genotypeFilterName "FAIL_RGQ" \
---genotypeFilterExpression "DP < 12" \
+--genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
 
 # removing: 
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
+#--genotypeFilterExpression "DP > 1000" \
+#--genotypeFilterName "FAIL_DP_HIGH" \
 
 # 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
