@@ -9,6 +9,6 @@ vcfdir=$wd/${genotypedate}_filtered # date you called genotypes
 
 vcf=all_1_TrimAlt_raw_variants.vcf.gz
 scaff=GL896899.1
-output=$wd/${scaff}.${vcf%.vcf.gz}.DP.dist.txt
-python extract_DP.py --VCF $vcfdir/$vcf --scaffold $scaff --outfile $output
+output=$vcfdir/${scaff}.${vcf%.vcf.gz}.DP.dist.txt
+python $scriptdir/$script --VCF $vcfdir/$vcf --scaffold $scaff --outfile $output
 gzip $output
