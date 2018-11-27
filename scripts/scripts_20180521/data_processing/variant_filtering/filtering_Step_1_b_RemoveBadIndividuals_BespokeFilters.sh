@@ -16,9 +16,9 @@ tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 #### parameters:
-rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
+rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
 # only want to get rid of egregious sites where hardly anyone is called, instead of being stringent across populations
-noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) : only getting rid of terrible sites where >90% of individuals are no-call
+noCallFrac=1.0 # instead of maxnocallfrac, have min DP requirements that were set in 1a. So doing away with this filter for now. (setting to 1.0) : maximum fraction of genotypes that can be "no call" (./.) ; previously was 0.9 for 20180806 gt filtering
 snpNoCallFrac=0.2 # max frac of no-call genotypes allowed in snp file that you're going to use for PCA
 # saving the stringent filtering for later!
 
