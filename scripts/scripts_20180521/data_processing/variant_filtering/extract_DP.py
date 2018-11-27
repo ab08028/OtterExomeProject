@@ -29,7 +29,7 @@ def main():
 	args = parse_args()
 
 	outfile = open(args.outfile, "w")
-	scaff=str(args.scaff)
+	scaff=str(args.scaffold)
 
 	with gzip.open(args.VCF, "r") as VCF:
 		for line in VCF:
