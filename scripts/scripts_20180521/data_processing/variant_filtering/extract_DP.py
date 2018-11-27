@@ -13,7 +13,8 @@ def parse_args():
 	parser.add_argument(
             "--VCF", required=True,
             help="REQUIRED. Path to the VCF file. Should be gzipped.")
-    parser.add_argument(
+
+	parser.add_argument(
             "--scaffold", required=True,
             help="REQUIRED. Full name of scaffold")
 
