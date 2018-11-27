@@ -13,15 +13,9 @@
 # But it's also okay, because we filter by the maximum fraction of NO CALL genotypes, NOT by the fraction of PASS genotypes
 # So it actually is okay, because the ./. won't contribute to anything
 
-# 20181127: ** big changes for filtering genotypes called 20181119***
-# adding an overall per site DP filter that is very loose, min DP 500, no max DP.
-# note that GATK doesn't recommend DP filters, esp. for captures, since you expect pileups of reads. 
-# these values are arbitrary; based on plotting results on one scaffold for 20180806 genotypes.
-# Genotypes: set min genotype DP to 8 instead of 12, with no max DP for genotypes.
-# continuing to filter SnpClusters at the same time as HF. I found that doing them sequentially results
-# in slightly fewer snpclusters called (~566 for one chromosome) but I want to get rid of sites 
-# that are surrounded by low quality snps (within 10bp ), rather than wait until those sites
-# have been filtered away and I have no idea that a 'good' site was actually surrounded by multiple bad sites
+# 20181127: for new filtering, going to set min genotype DP to 8 instead of 12
+# don't technically have to filter on genotype depth at all (GATK docs ) because you filter on QD (qual/depth)
+# but am setting a minimum baseline of 8
 
 # modules
 source /u/local/Modules/default/init/modules.sh
@@ -57,6 +51,8 @@ noCallScript=$scriptdir/filtering_getNoCallPerInd.py
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $vcfdir
 mkdir -p $vcfdir/filteringStats
+mkdir -p $vcfdir/testingFilters
+scaffold="GL896899.1"
 
 #################################################################################
 ############################ Prepare File ####################################
@@ -69,11 +65,21 @@ java -jar -Xmx4G ${GATK} \
 -R ${REFERENCE} \
 -V ${indir}/${infile} \
 -trimAlternates \
--o ${vcfdir}/'all_1_TrimAlt_'${infile} \
---select "DP > 500"
-# made this very lenient, just want to get rid of super crappy sites avg ~8 reads/sample
-# below will do further filtering at GT level
+-o ${vcfdir}/testingFilters/${scaffold}.'all_1_TrimAlt_'${infile} \
+-select "DP > 500" \
+-L $scaffold 
+# choosing DP min 500 per site. not doing a maximum DP because it's capture data.
+# okay 1,372,144 with DP vs 1,902,321 with no call frac. but the no call frac file has a lot of low coverage garbage sites in it
+# so I think it's better to do DP site filter. No maximum because capture. But some sort of minimum.
 
+# --maxNOCALLfraction 0.9 # made this very lenient, just want to get rid of super crappy sites where 90% are no-call
+
+# haven't run it this way yet, but am getting rid of sites where 90% of sites are no-call TO MAKE THE FILE SMALLER. 
+# [later in the steps: will do final filtering to restrict to sites where max 20% of sites are nocall]
+# previously when I did it, there were sites with only 1-2 calls that inflate file sizes and slow stuff down
+# I wanted to not filter on missingness yet, because I am going to be removing bad individuals that drag down everybody's missingness %%
+# but I think there's a middle ground perhaps. At this stage I could filter sites that have >80% missing. (Whereas later I filter more stringently with those 
+# that have >20% missing)
 
 
 #################################################################################
@@ -84,10 +90,11 @@ echo "snp step 2: select biallelic snps"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_1_TrimAlt_'${infile} \
+-V ${vcfdir}/testingFilters/${scaffold}.'all_1_TrimAlt_DP500'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile}
+-o ${vcfdir}/testingFilters/${scaffold}.'snp_2_Filter_TrimAlt_'${infile} \
+-L $scaffold
 
 
 ## this:
@@ -95,16 +102,17 @@ java -jar -Xmx4G ${GATK} \
 # 2. applies gatk hard filters (FAIL_GATKHF)
 # use genotypeFilterExpression to filter individual genotypes  and **** --setFilteredGtToNocall to change filtered genotype to "no call" (./.) ****
 # 3. genotype quality (<20 filtered out) (FAIL_GQ)
-# X. *no longer doing this* Individual Depth > 1000 filtered out (FAIL_DP_HIGH)
+# 4. Individual Depth > 1000 filtered out (FAIL_DP_HIGH)
 # 5. Individual DP < 12 filtered out (FAIL_DP_LOW)
-# 6. clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
+# 6. clustered snps (3/10) (SnpCluster)
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
-
+# taking out failing GT high. 
+# removed upper bound on DP bc are captures and GATK says not supposed to have DP filter
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
+-V ${vcfdir}/testingFilters/${scaffold}.'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
 --genotypeFilterExpression "GQ < 20" \
@@ -113,11 +121,16 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_DP_LOW" \
 --clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
--o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+-o ${vcfdir}/testingFilters/${scaffold}.'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+-L $scaffold 
 
-# removed:
-# --genotypeFilterExpression "DP > 1000" \
-# --genotypeFilterName "FAIL_DP_HIGH" \
+
+java -jar -Xmx4G ${GATK} \
+-T VariantEval \
+-R $REFERENCE \
+-o 'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'.eval.txt \
+--eval:set1 ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+   
 
 # do variant eval here * **** # 
 
@@ -136,11 +149,25 @@ echo "snp step 4: select passing variants"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+-V ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
+--excludeFiltered \
+-o ${vcfdir}/'snp_3b_Filtered_GQ_DP_GaTKHF_'${infile}
+
+
+java -jar -Xmx4G ${GATK} \
+-T VariantFiltration \
+-R ${REFERENCE} \
+-V ${vcfdir}/testingFilters/${scaffold}.'snp_3b_Filtered_GQ_DP_GaTKHF_'${infile} \
+--clusterWindowSize 10 --clusterSize 3 \
+-o ${vcfdir}/testingFilters/${scaffold}.'snp_4a_Flagged_GQ_DP_GaTKHF_cluster_'${infile} 
+
+java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_4a_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
 --excludeFiltered \
 -trimAlternates \
--o ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
-
+-o ${vcfdir}/'snp_4b_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
 #################################################################################
 ############################ INVARIANT SITES ####################################
 #################################################################################
@@ -158,7 +185,7 @@ echo "done: nv step 2: select non variant sites"
 
 
 echo "starting nv step 3: filter non variant sites"
-
+# removed DP max filter 
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
@@ -167,14 +194,10 @@ java -jar -Xmx4G ${GATK} \
 --filterName "FAIL_QUAL30" \
 --genotypeFilterExpression "RGQ < 1" \
 --genotypeFilterName "FAIL_RGQ" \
---genotypeFilterExpression "DP < 12" \
+--genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
-
-# removing: 
---genotypeFilterExpression "DP > 1000" \
---genotypeFilterName "FAIL_DP_HIGH" \
 
 # 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
