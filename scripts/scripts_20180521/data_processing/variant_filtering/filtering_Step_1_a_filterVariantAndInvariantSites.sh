@@ -70,7 +70,7 @@ java -jar -Xmx4G ${GATK} \
 -V ${indir}/${infile} \
 -trimAlternates \
 -o ${vcfdir}/'all_1_TrimAlt_'${infile} \
---select "DP > 500"
+-select "DP > 500"
 # made this very lenient, just want to get rid of super crappy sites avg ~8 reads/sample
 # below will do further filtering at GT level
 
