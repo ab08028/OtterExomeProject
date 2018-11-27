@@ -50,3 +50,4 @@ def main():
 
 main()
 
+sys.exit()
