@@ -13,6 +13,10 @@
 # But it's also okay, because we filter by the maximum fraction of NO CALL genotypes, NOT by the fraction of PASS genotypes
 # So it actually is okay, because the ./. won't contribute to anything
 
+# 20181127: for new filtering, going to set min genotype DP to 8 instead of 12
+# don't technically have to filter on genotype depth at all (GATK docs ) because you filter on QD (qual/depth)
+# but am setting a minimum baseline of 8
+
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -105,18 +109,14 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_GQ" \
 --genotypeFilterExpression "DP > 1000" \
 --genotypeFilterName "FAIL_DP_HIGH" \
---genotypeFilterExpression "DP < 12" \
+--genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
 
-## what to do about some sites here that end up as non variant. Hmmmmm. 
-# need to reselect biallelic snps 
-## when/where does it make sense to filter snp clusters?
 
-
-## note: don't use the 'if it is missing, the site fails' flag: manny sites don't have MQRankSum annotations but don't want those to fail
+## note: don't use the 'if it is missing, the site fails' flag: many sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
 # note that if you want to do it, you'll need to make scaffold IDs consistent between the repeat mask (NCBI) and the ref genome
@@ -135,10 +135,7 @@ java -jar -Xmx4G ${GATK} \
 --excludeFiltered \
 -trimAlternates \
 -o ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
-# for now removing --maxNOCALLfraction $noCallFrac \
-# also adding trimAlternates again in case some got through [luckily none got through]
-### Also want to restrict for sites with calls in 80% of chromosomes. (use AN =?)
-### Also want to eliminate any that are all hets. How to find those?
+
 #################################################################################
 ############################ INVARIANT SITES ####################################
 #################################################################################
@@ -171,6 +168,7 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
+
 # 20180731 : found bug in my script : was missing --setFilteredGtToNocall for invariant sites. Need to rerun that. 
 # took out: --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # note the rgq filter may be redundant: https://software.broadinstitute.org/gatk/blog?id=6495
@@ -187,9 +185,11 @@ java -jar -Xmx4G ${GATK} \
 --excludeFiltered \
 -trimAlternates \
 -o ${vcfdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile}
+
 # for now taking out: --maxNOCALLfraction $noCallFrac \
 ## merge back together the variant and invariant files - hopefully we can do that.
 #20180731: tyring to add -trimAlternates again at this stage. not sure why it keeps getting through 
+
 echo "done nv step 4: select only passing non variant sites"
 
 #################################################################################
