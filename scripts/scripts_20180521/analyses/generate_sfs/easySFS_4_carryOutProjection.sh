@@ -19,6 +19,7 @@ module load python/2.7
 bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 todaysdate=`date +%Y%m%d`
 genotypeDate=20180806
+noCallFrac=0.9
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutralVCF_allPops
 popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.2.txt
 # this has admixed in it , but they aren't in pop file
