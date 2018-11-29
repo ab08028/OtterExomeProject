@@ -48,6 +48,6 @@ def main():
 						if i_sep[0] == "DP":
 							print >>outfile, i_sep[1]
 
-main()
+sys.exit(main())
 
-sys.exit()
+#sys.exit()
