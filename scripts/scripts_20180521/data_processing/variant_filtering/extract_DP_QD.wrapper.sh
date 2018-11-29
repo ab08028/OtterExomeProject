@@ -18,3 +18,7 @@ gzip $vcfdir/${scaff}.${vcf%.vcf.gz}.DP.dist.txt
 # get QD dist: 
 python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf --scaffold $scaff --outfile $vcfdir/${scaff}.${vcf%.vcf.gz}.QD.dist.txt
 gzip $vcfdir/${scaff}.${vcf%.vcf.gz}.QD.dist.txt
+
+# get QD dist POST min depth 500 filtering:
+vcf2=snp_2_Filter_TrimAlt_raw_variants.vcf.gz
+python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/${scaff}.${vcf%.vcf.gz}.QD.dist.txt
