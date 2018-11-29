@@ -139,25 +139,27 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
 --excludeFiltered \
 -trimAlternates \
--o ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile}
-
-
-java -jar -Xmx4G ${GATK} \
--T SelectVariants \
--R ${REFERENCE} \
--V ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile} \
---restrictAllelesTo BIALLELIC \
---selectTypeToInclude SNP \
--o ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile}
+-o ${vcfdir}/'snp_3b_Filtered_TrimAlt_GQ_DP_GaTKHF_'${infile}
 
 # pull out sites that have become nv after filtering: will combine them with other nv sites below
 # you need to do this before flagging snp clusters because otherwise they are counted as snps rather than nv sites
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile} \
+-V ${vcfdir}/'snp_3b_Filtered_TrimAlt_GQ_DP_GaTKHF_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 -o ${vcfdir}/'nv_2b_Filtered_GQ_DP_GaTKHF_'${infile}
+
+# pull out snps:
+
+java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_3b_Filtered_TrimAlt_GQ_DP_GaTKHF_'${infile} \
+--restrictAllelesTo BIALLELIC \
+--selectTypeToInclude SNP \
+-o ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile}
+
 
 echo "snp step 4b: flag clusters"
 # flag: clusters: 

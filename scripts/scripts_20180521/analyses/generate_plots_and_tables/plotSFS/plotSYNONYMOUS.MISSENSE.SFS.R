@@ -5,7 +5,7 @@ require(purrr) # for map, reduce
 require(readr) # for read_csv
 require(tidyr)# for unnest 
 
-sfsdate=20181116
+todaysdate=format(Sys.Date(),format="%Y%m%d")
 genotypeDate=20180806
 plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",genotypeDate,"/cdsSFS/",sep="")
 dir.create(plot.dir,recursive = T)
@@ -87,7 +87,7 @@ plot <- ggplot(foldedData_exclMono,aes(x=frequency,y=count,fill=newLabel))+
   theme_bw()
 plot
 
-ggsave(paste(plot.dir,"allPops.",sfsdate,"syn.mis.neut.count.SFS.pdf",sep=""),plot,device="pdf",width=7,height=5)
+ggsave(paste(plot.dir,"allPops.",todaysdate,"syn.mis.neut.count.SFS.pdf",sep=""),plot,device="pdf",width=7,height=5)
 
 pops=c("CA","AK","AL","COM","KUR")
 allPlots_list=list()
@@ -98,7 +98,7 @@ for(i in (1:length(pops))){
     theme_bw()+
     ggtitle(pop)+
     theme(legend.position = c(0.5,0.6))
-  ggsave(paste(plot.dir,pop,".",sfsdate,"syn.mis.count.SFS.pdf",sep=""),plot,device="pdf",width=10,height=5)
+  ggsave(paste(plot.dir,pop,".",todaysdate,"syn.mis.count.SFS.pdf",sep=""),plot,device="pdf",width=10,height=5)
   allPlots_list[[i]]=plot
 }
 allPlots_list
@@ -110,7 +110,7 @@ plot <- ggplot(foldedData_exclMono_prop,aes(x=frequency,y=proportion,fill=newLab
   theme_bw()
 plot
 
-ggsave(paste(plot.dir,"allPops.",sfsdate,"syn.mis.proportion.SFS.pdf",sep=""),plot,device="pdf",width=7,height=5)
+ggsave(paste(plot.dir,"allPops.",todaysdate,"syn.mis.proportion.SFS.pdf",sep=""),plot,device="pdf",width=7,height=5)
 
 pops=c("CA","AK","AL","COM","KUR")
 allPlots_list=list()
@@ -121,7 +121,7 @@ for(i in (1:length(pops))){
     theme_bw()+
     ggtitle(pop)+
     theme(legend.position = c(0.5,0.6))
-  ggsave(paste(plot.dir,pop,".",sfsdate,"syn.mis.proportion.SFS.pdf",sep=""),plot,device="pdf",width=10,height=5)
+  ggsave(paste(plot.dir,pop,".",todaysdate,"syn.mis.proportion.SFS.pdf",sep=""),plot,device="pdf",width=10,height=5)
   allPlots_list[[i]]=plot
 }
 allPlots_list
