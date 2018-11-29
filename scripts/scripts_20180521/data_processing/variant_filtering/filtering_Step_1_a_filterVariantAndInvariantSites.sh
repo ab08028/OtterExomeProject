@@ -95,7 +95,7 @@ java -jar -Xmx4G ${GATK} \
 # 3. genotype quality (<20 filtered out) (FAIL_GQ)
 # X. *no longer doing this* Individual Depth > 1000 filtered out (FAIL_DP_HIGH)
 # 5. Individual DP < 8 filtered out (FAIL_DP_LOW)
-# 6. clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
+# X. *no longer done in this step * clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
 # modified QD filter to be QD < 10.0 instead of 2.0 based on my plot which showed most variants clustered at QD > 20 (I'm guessing this is a capture feature)
@@ -113,7 +113,7 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
--o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile}
+-o ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile}
 
 # removed:
 # --genotypeFilterExpression "DP > 1000" \
@@ -130,28 +130,36 @@ java -jar -Xmx4G ${GATK} \
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # 
-echo "snp step 4: select passing variants"
+echo "snp step 4a and nv step 2b: select passing snps (snp_4a) and passing nv sites (nv_2b)"
+
+##### trim alternates and remove filtered:
+java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
+--excludeFiltered \
+-trimAlternates \
+-o ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile}
+
 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile} \
---excludeFiltered \
--trimAlternates \
+-V ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile}
 
 # pull out sites that have become nv after filtering: will combine them with other nv sites below
+# you need to do this before flagging snp clusters because otherwise they are counted as snps rather than nv sites
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile} \
---excludeFiltered \
--trimAlternates \
+-V ${vcfdir}/'snp_3b_TrimAlt_Flagged_GQ_DP_GaTKHF_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 -o ${vcfdir}/'nv_2b_Filtered_GQ_DP_GaTKHF_'${infile}
 
+echo "snp step 4b: flag clusters"
 # flag: clusters: 
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
@@ -159,6 +167,8 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile} \
 --clusterWindowSize 10 --clusterSize 3 \
 -o ${vcfdir}/'snp_4b_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+
+echo "snp step 4c: remove clusters"
 
 # remove clusters:
  java -jar -Xmx4G ${GATK} \
