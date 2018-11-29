@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=30:00:00,h_data=32G,highp
-#$ -N easySFSProjection
+#$ -l h_rt=30:00:00,h_data=64G,highp
+#$ -N easySFSProjection2
 #$ -o /u/flashscratch/a/ab08028/captures/reports/SFS
 #$ -e /u/flashscratch/a/ab08028/captures/reports/SFS
 #$ -m abe
@@ -17,7 +17,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
-todaysdate=`date +%Y%m%d`
+todaysdate=20181127-64gb
 genotypeDate=20180806
 noCallFrac=0.9
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutralVCF_allPops
@@ -42,7 +42,7 @@ mkdir -p $outdir
 #vcf=neutral.snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_0.9_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
 vcf='neutral.all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf'
 # hoping I can get it to work with this neutral all-sites file so that I have monomorphic sites sampled as well. This would be ideal.
-gunzip ${vcf}.gz
+#gunzip ${vcf}.gz
 $easySFS -i $vcfdir/${vcf} -p $popFile -a -v --proj 20,20,20,20,20 -f -o $outdir/projection-${todaysdate}
 # test run only had --proj 20 (maybe just projects 1 population? will have to see)
 # -f forces overwrite of outdir
