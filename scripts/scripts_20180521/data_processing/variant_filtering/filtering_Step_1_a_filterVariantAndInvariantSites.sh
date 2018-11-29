@@ -18,10 +18,7 @@
 # note that GATK doesn't recommend DP filters, esp. for captures, since you expect pileups of reads. 
 # these values are arbitrary; based on plotting results on one scaffold for 20180806 genotypes.
 # Genotypes: set min genotype DP to 8 instead of 12, with no max DP for genotypes.
-# continuing to filter SnpClusters at the same time as HF. I found that doing them sequentially results
-# in slightly fewer snpclusters called (~566 for one chromosome) but I want to get rid of sites 
-# that are surrounded by low quality snps (within 10bp ), rather than wait until those sites
-# have been filtered away and I have no idea that a 'good' site was actually surrounded by multiple bad sites
+# Filtering away SNP clusters separately from HFs -- filters slightly fewer SNPs than if you do it simultaneously 
 ## Based on plotting the QD dist for one scaffold, see that most sites are clustered with QD > 20, shifted pretty far to the right
 # so instead of QD 2 which is from GATK, I am going to switch to QD < 10 as a filter. 
 # modules
@@ -115,16 +112,14 @@ java -jar -Xmx4G ${GATK} \
 --genotypeFilterName "FAIL_GQ" \
 --genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
---clusterWindowSize 10 --clusterSize 3 \
 --setFilteredGtToNocall \
--o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+-o ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile}
 
 # removed:
 # --genotypeFilterExpression "DP > 1000" \
 # --genotypeFilterName "FAIL_DP_HIGH" \
 
-# do variant eval here * **** # 
-
+# decided to do snp cluster removal separately (20181129)
 ## note: don't use the 'if it is missing, the site fails' flag: many sites don't have MQRankSum annotations but don't want those to fail
 # --mask ${repeatMaskCoords} --maskName "FAIL_RepMask" \
 # skipping repeat masking because I designed exome capture away from repeats
@@ -140,10 +135,38 @@ echo "snp step 4: select passing variants"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+-V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile} \
 --excludeFiltered \
 -trimAlternates \
--o ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
+--restrictAllelesTo BIALLELIC \
+--selectTypeToInclude SNP \
+-o ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile}
+
+# pull out sites that have become nv after filtering: will combine them with other nv sites below
+java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_'${infile} \
+--excludeFiltered \
+-trimAlternates \
+--selectTypeToInclude NO_VARIATION \
+-o ${vcfdir}/'nv_2b_Filtered_GQ_DP_GaTKHF_'${infile}
+
+# flag: clusters: 
+java -jar -Xmx4G ${GATK} \
+-T VariantFiltration \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_4a_Filtered_GQ_DP_GaTKHF_'${infile} \
+--clusterWindowSize 10 --clusterSize 3 \
+-o ${vcfdir}/'snp_4b_Flagged_GQ_DP_GaTKHF_cluster_'${infile}
+
+# remove clusters:
+ java -jar -Xmx4G ${GATK} \
+-T SelectVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_4b_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+--excludeFiltered \
+-o ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
 
 #################################################################################
 ############################ INVARIANT SITES ####################################
@@ -157,16 +180,24 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
--o ${vcfdir}/'nv_2_AllNonVariants_'${infile}
+-o ${vcfdir}/'nv_2a_AllNonVariants_'${infile}
 echo "done: nv step 2: select non variant sites"
 
+## combine with nv nv_2b_Filtered_GQ_DP_GaTKHF_ that used to be snps before filtering:
+java -jar -Xmx4G ${GATK} \
+-T CombineVariants \
+-R ${REFERENCE} \
+-V ${vcfdir}/'nv_2a_AllNonVariants_'${infile} \
+-V ${vcfdir}/'nv_2b_Filtered_GQ_DP_GaTKHF_'${infile} \
+--assumeIdenticalSamples \
+-o ${vcfdir}/'nv_2c_comboAllNonVariants_'${infile}
 
 echo "starting nv step 3: filter non variant sites"
 
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
--V ${vcfdir}/'nv_2_AllNonVariants_'${infile} \
+-V ${vcfdir}/'nv_2c_comboAllNonVariants_'${infile} \
 --filterExpression "QUAL < 30 " \
 --filterName "FAIL_QUAL30" \
 --genotypeFilterExpression "RGQ < 1" \
@@ -210,7 +241,7 @@ echo "starting step 5a: merge passing sites"
 java -jar -Xmx4G ${GATK} \
 -T CombineVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
+-V ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
 -V ${vcfdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile} \
 --assumeIdenticalSamples \
 -o ${vcfdir}/'all_5_passingFilters_'${infile}
@@ -229,7 +260,7 @@ java -jar -Xmx4G ${GATK} \
 --eval:all1 ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --eval:snp2 ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --eval:snp3 ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
---eval:snp4 ${vcfdir}/'snp_4_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
+--eval:snp4 ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
 -L $scaffold
    
 
