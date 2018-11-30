@@ -5,21 +5,23 @@ scriptdir=$gitdir/scripts/scripts_20180521/data_processing/variant_filtering
 genotypedate=20181119 # new 
 wd=$SCRATCH/captures/vcf_filtering
 vcfdir=$wd/${genotypedate}_filtered # date you called genotypes
+rawvcfdir=/u/flashscratch/a/ab08028/captures/vcfs/vcf_20181119/
 
-vcf=all_1_TrimAlt_raw_variants.vcf.gz
 scaff=GL896899.1
+mkdir -p $vcfdir/filteringStats
+# get DP dist before any filtering (from raw file):
+vcf1=raw_variants.vcf.gz
 
-# get DP dist:
+python $scriptdir/extract_DP.py  --VCF $rawvcfdir/$vcf1 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.DP.dist.txt
+gzip $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.DP.dist.txt
+# get QD dist from raw vcf:
+python $scriptdir/extract_QD.py  --VCF $rawvcfdir/$vcf1 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.QD.dist.txt
+gzip $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.QD.dist.txt
 
-python $scriptdir/extract_DP.py  --VCF $vcfdir/$vcf --scaffold $scaff --outfile $vcfdir/${scaff}.${vcf%.vcf.gz}.DP.dist.txt
-gzip $vcfdir/${scaff}.${vcf%.vcf.gz}.DP.dist.txt
 
+# get QD dist after min dp 500 filtering: 
+vcf2=all_1_TrimAlt_raw_variants.vcf.gz
 
-# get QD dist: 
-python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf --scaffold $scaff --outfile $vcfdir/${scaff}.${vcf%.vcf.gz}.QD.dist.txt
-gzip $vcfdir/${scaff}.${vcf%.vcf.gz}.QD.dist.txt
-
-# get QD dist POST min depth 500 filtering:
-vcf2=snp_2_Filter_TrimAlt_raw_variants.vcf.gz
-python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
+python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
 gzip $vcfdir/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
+
