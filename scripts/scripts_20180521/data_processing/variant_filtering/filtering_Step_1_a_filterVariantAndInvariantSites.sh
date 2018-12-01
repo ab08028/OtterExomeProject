@@ -30,7 +30,6 @@ tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
 #### parameters:
 rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
 
 
 #### file locations
@@ -98,7 +97,7 @@ java -jar -Xmx4G ${GATK} \
 # X. *no longer done in this step * clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
-# modified QD filter to be QD < 10.0 instead of 2.0 based on my plot which showed most variants clustered at QD > 20 (I'm guessing this is a capture feature)
+# going back to QD < 2 filter
 # I separated QD out from the rest of the GATK HFs so that I can better see how it is behaving.
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
@@ -106,15 +105,16 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
---filterExpression "QD < 10.0" \
---filterName "FAIL_QD10" \
+--filterExpression "QD < 2.0" \
+--filterName "FAIL_QD2" \
 --genotypeFilterExpression "GQ < 20" \
 --genotypeFilterName "FAIL_GQ" \
 --genotypeFilterExpression "DP < 8" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile}
-
+# okay QD 10 is too stringent! QD 2 may also be too stringent
+#
 # removed:
 # --genotypeFilterExpression "DP > 1000" \
 # --genotypeFilterName "FAIL_DP_HIGH" \
