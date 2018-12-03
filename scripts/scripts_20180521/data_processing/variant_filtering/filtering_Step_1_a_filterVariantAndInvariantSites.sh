@@ -271,11 +271,10 @@ java -jar -Xmx4G ${GATK} \
 -o ${vcfdir}/filteringStats/${scaffold}.'allSNPstages'.variant.eval.txt \
 --eval:all1 ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --eval:snp2 ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
---eval:snp3 ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+--eval:snp3 ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
 --eval:snp4 ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
 -L $scaffold
    
-
 
 ########################## At this stage, calculate the no-call per individual (~10hours) #######################
 # takes ~2hrs
