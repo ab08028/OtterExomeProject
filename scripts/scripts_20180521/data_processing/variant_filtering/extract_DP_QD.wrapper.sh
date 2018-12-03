@@ -25,3 +25,10 @@ vcf2=all_1_TrimAlt_raw_variants.vcf.gz
 python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
 gzip $vcfdir/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
 
+# get QD for all snps across all scaffolds:
+vcf3=snp_2_Filter_TrimAlt_raw_variants.vcf.gz 
+
+python $scriptdir/extract_QD.allscaffs.py --VCF $vcfdir/$vcf3 --outfile $vcfdir/filteringStats/allscaffs.${vcf3%.vcf.gz}.QD.dist.txt
+
+
+########### new script: pulls out QD, DP and QUAL for each site.
