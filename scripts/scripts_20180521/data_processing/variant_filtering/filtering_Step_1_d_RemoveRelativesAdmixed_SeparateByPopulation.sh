@@ -138,6 +138,13 @@ java -jar $GATK \
 -xl_sn ${ind10} \
 -xl_sn ${ind11} 
 
+# Baja --> BAJ
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/populationVCFs/BAJ_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+-se '.+_Elut_BAJ_.+' \
 #######################################################################################
 ############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
 #######################################################################################
