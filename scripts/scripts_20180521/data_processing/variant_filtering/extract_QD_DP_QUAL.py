@@ -9,7 +9,7 @@ def parse_args():
     """
     Parse command-line arguments
     """
-    parser = argparse.ArgumentParser(description="This script takes in a VCF files before any filtering on variants is done. The input VCF should contain all the sites (both variants and nonvariants). This script outputs the value of QD for each site. ")
+    parser = argparse.ArgumentParser(description="This script will extract QUAL, DP and QD for all variant sites")
 
     parser.add_argument(
             "--VCF", required=True,
@@ -55,7 +55,11 @@ def main():
                     myDP=infoFields["DP"]
                     outfile.write("\t".join(str(x) for x in (myqual, myDP, myQD)))
                     outfile.write("\n")
+                else:
+                    continue
     VCF.close()
+    print("closing vcf now")
     outfile.close()
+    print("closing outfile now")
 sys.exit(main())
 

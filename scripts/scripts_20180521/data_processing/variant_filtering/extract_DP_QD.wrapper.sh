@@ -31,4 +31,9 @@ vcf3=snp_2_Filter_TrimAlt_raw_variants.vcf.gz
 python $scriptdir/extract_QD.allscaffs.py --VCF $vcfdir/$vcf3 --outfile $vcfdir/filteringStats/allscaffs.${vcf3%.vcf.gz}.QD.dist.txt
 
 
-########### new script: pulls out QD, DP and QUAL for each site.
+########### new script: pulls out QD, DP and QUAL for each site. ########
+# get  dist from raw vcf:
+python $scriptdir/extract_QD_DP_QUAL.py  --VCF $rawvcfdir/$vcf1 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.joint.QD.DP.QUAL.dist.txt
+
+# get dist from min dp 500 vcf:
+python $scriptdir/extract_QD_DP_QUAL.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf2%.vcf.gz}.joint.QD.DP.QUAL.dist.txt
