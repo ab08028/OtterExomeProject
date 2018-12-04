@@ -37,3 +37,13 @@ python $scriptdir/extract_QD_DP_QUAL.py  --VCF $rawvcfdir/$vcf1 --scaffold $scaf
 
 # get dist from min dp 500 vcf:
 python $scriptdir/extract_QD_DP_QUAL.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf2%.vcf.gz}.joint.QD.DP.QUAL.dist.txt
+
+# get dist of final filtered sites:
+vcf4=all_5_passingFilters_raw_variants.vcf.gz
+
+python $scriptdir/extract_QD_DP_QUAL.py  --VCF $vcfdir/$vcf4 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf4%.vcf.gz}.joint.QD.DP.QUAL.dist.txt
+
+
+# check it out for Gidget?
+
+

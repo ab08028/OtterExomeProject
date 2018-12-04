@@ -20,7 +20,7 @@
 # Genotypes: set min genotype DP to 8 instead of 12, with no max DP for genotypes.
 # Filtering away SNP clusters separately from HFs -- filters slightly fewer SNPs than if you do it simultaneously 
 ## Based on plotting the QD dist for one scaffold, see that most sites are clustered with QD > 20, shifted pretty far to the right
-# so instead of QD 2 which is from GATK, I am going to switch to QD < 10 as a filter. 
+# so instead of QD 2 which is from GATK, I am going to switch to QD < 5. (see DecidingOnQCFilter ppt for details and ChangesToFiltering.20181121 for more plots)
 # modules
 source /u/local/Modules/default/init/modules.sh
 module load java
@@ -70,6 +70,7 @@ java -jar -Xmx4G ${GATK} \
 -select "DP > 500"
 # made this very lenient, just want to get rid of super crappy sites avg ~8 reads/sample
 # below will do further filtering at GT level
+# note that at the end some sites may end up with DP < 500 after individuals/gts are removed
 
 
 
@@ -105,8 +106,8 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
---filterExpression "QD < 2.0" \
---filterName "FAIL_QD2" \
+--filterExpression "QD < 5.0" \
+--filterName "FAIL_QD5" \
 --genotypeFilterExpression "GQ < 20" \
 --genotypeFilterName "FAIL_GQ" \
 --genotypeFilterExpression "DP < 8" \
@@ -172,12 +173,13 @@ java -jar -Xmx4G ${GATK} \
 
 echo "snp step 4c: remove clusters"
 
-####### remove clusters:
+####### remove clusters and reimpose min DP 500 (because some dropped below):
  java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${vcfdir}/'snp_4b_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
 --excludeFiltered \
+-select "DP > 500" \
 -o ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile}
 
 #################################################################################
@@ -230,14 +232,15 @@ echo "done nv step 3: filter non variant sites"
 
 ### Second round of select variants
 
-echo "starting nv step 4: select only passing non variant sites"
-
+echo "starting nv step 4: select only passing non variant sites and reimpose min DP 500"
+# 20181203 reselect min DP 500 because DP gets updated as gts are masked, some sites end up < 500 again.
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile} \
 --excludeFiltered \
 -trimAlternates \
+-select "DP > 500" \
 -o ${vcfdir}/'nv_4_Filtered_DP_RGQ_QUAL_'${infile}
 
 # for now taking out: --maxNOCALLfraction $noCallFrac \
