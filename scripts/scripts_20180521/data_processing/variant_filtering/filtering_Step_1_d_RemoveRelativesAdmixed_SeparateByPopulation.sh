@@ -20,8 +20,8 @@ module load java
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 
 #### parameters:
-rundate=20180806 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0.9 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (lenient cutoff)
+rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
+noCallFrac=0 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (currently no cutoff)
 snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
 perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
 
@@ -38,8 +38,11 @@ mkdir -p $vcfdir/populationVCFs/admixedVCFs
 ## Relatives to remove
 ind1="RWAB003_19_ELUT_CA_352"
 ind2="106_Elut_AL_AD_GE91109"
-ind3="101_Elut_KUR_3"
-ind4="102_Elut_KUR_4"
+#ind3="101_Elut_KUR_3"
+#ind4="102_Elut_KUR_4"
+# switched ind3 and ind4 to remove other member of relative pair (removing RWAB) -- 20181204
+ind3="RWAB003_28_ELUT_KUR_12"
+ind4="RWAB003_26_ELUT_KUR_15"
 ind5="104_Elut_KUR_7"
 ind6="77_Elut_KUR_14"
 
@@ -62,7 +65,7 @@ ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am k
 ## 20180910 update: I am not going to remove admixed individuals from the all_8 vcf files
 # Because they are valid sequences for PCA, etc. Just removing them from pop-specific files
 
-
+````
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
@@ -145,6 +148,8 @@ java -jar $GATK \
 --variant ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/BAJ_'all_8_rmRelativesAdmixed_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -se '.+_Elut_BAJ_.+' \
+
+````
 #######################################################################################
 ############## also put admixed individuals (but not relatives) into their own VCFs for later ##############
 #######################################################################################
@@ -186,7 +191,7 @@ java -jar $GATK \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-V ${vcfdir}/'all_8a_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${vcfdir}/'snp_8a_rmRelatives_keepAdmixedOutliers_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
@@ -195,13 +200,13 @@ java -jar -Xmx4G ${GATK} \
 ########### this also keeps PCA outliers.
 
 #### new: 20181130 Also want a version that excludes admixed and outliers and doesn't impose 0.2 filter:  #######
-# use for easy SFS, etc.
+# use for easy SFS projection!
 ######## all sites #########
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/'all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+-V ${vcfdir}/'all_8a_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/'all_8b_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
 --maxNOCALLfraction ${noCallFrac} \
 -xl_sn ${ind7} \
 -xl_sn ${ind8} \
@@ -221,21 +226,9 @@ java -jar -Xmx4G ${GATK} \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-V ${vcfdir}/'all_8b_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${vcfdir}/'snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${noCallFrac} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15} \
--xl_sn ${ind16} \
--xl_sn ${ind17} \
--xl_sn ${ind18}
+-o ${vcfdir}/'snp_8b_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--maxNOCALLfraction ${noCallFrac} 
 
