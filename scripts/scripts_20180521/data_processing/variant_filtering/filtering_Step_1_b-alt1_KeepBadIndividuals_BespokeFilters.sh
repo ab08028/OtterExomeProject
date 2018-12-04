@@ -53,68 +53,68 @@ mkdir -p $outdir
 # 20181204: Decided to leave these individuals in the vcf now that I am doing SFS projections. I used to take them out when my SFS required that all sites be called across individuals
 # projections avoid that necessity, so these individuals won't drag things down any more (and may even contribute)
 # However, I may want to use this part of the script to remove the RWAB individuals that pull away in the PCA
-ind1=112_Elut_AL_AM_AM92022
-ind2=128_Elut_AK_AF3630
-ind3=131_Elut_BER_34
-ind4=143_Elut_KUR_5original
-ind5=144_Elut_KUR_1
-ind6=145_Elut_KUR_18
-ind7=150_Elut_AK_AF3631
-ind8=151_Elut_AK_AF3714
-ind9=152_Elut_AK_AF3720
-ind10=153_Elut_AK_AF3181
-ind11=154_Elut_KUR_11
-ind12=155_Elut_KUR_9
-ind13=161_Elut_MED_19
-ind14=76_Elut_BER_31
-ind15=86_Elut_MED_25
-ind16=RWAB003_15_ELUT_CA_159
-ind17=RWAB003_22_ELUT_CA_410
+# ind1=112_Elut_AL_AM_AM92022
+# ind2=128_Elut_AK_AF3630
+# ind3=131_Elut_BER_34
+# ind4=143_Elut_KUR_5original
+# ind5=144_Elut_KUR_1
+# ind6=145_Elut_KUR_18
+# ind7=150_Elut_AK_AF3631
+# ind8=151_Elut_AK_AF3714
+# ind9=152_Elut_AK_AF3720
+# ind10=153_Elut_AK_AF3181
+# ind11=154_Elut_KUR_11
+# ind12=155_Elut_KUR_9
+# ind13=161_Elut_MED_19
+# ind14=76_Elut_BER_31
+# ind15=86_Elut_MED_25
+# ind16=RWAB003_15_ELUT_CA_159
+# ind17=RWAB003_22_ELUT_CA_410
 
 # keeping in relatives/admixed, because they aren't found til later in the pipeline; remove them in step 1f
 
-badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17"
+# badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17"
 
-echo "starting step 6: remove bad individuals"
-echo "These are the bad individuals that are getting removed: $badInds because they have > mean + 1sd missing genotypes"
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${outdir}/'all_5_passingFilters_'${infile} \
--o ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
--xl_sn ${ind1} \
--xl_sn ${ind2} \
--xl_sn ${ind3} \
--xl_sn ${ind4} \
--xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15} \
--xl_sn ${ind16} \
--xl_sn ${ind17}
+# echo "starting step 6: remove bad individuals"
+# echo "These are the bad individuals that are getting removed: $badInds because they have > mean + 1sd missing genotypes"
+# java -jar $GATK \
+# -R $REFERENCE \
+# -T SelectVariants \
+# --variant ${outdir}/'all_5_passingFilters_'${infile} \
+# -o ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
+# -xl_sn ${ind1} \
+# -xl_sn ${ind2} \
+# -xl_sn ${ind3} \
+# -xl_sn ${ind4} \
+# -xl_sn ${ind5} \
+# -xl_sn ${ind6} \
+# -xl_sn ${ind7} \
+# -xl_sn ${ind8} \
+# -xl_sn ${ind9} \
+# -xl_sn ${ind10} \
+# -xl_sn ${ind11} \
+# -xl_sn ${ind12} \
+# -xl_sn ${ind13} \
+# -xl_sn ${ind14} \
+# -xl_sn ${ind15} \
+# -xl_sn ${ind16} \
+# -xl_sn ${ind17}
 
 ### make sure there are no spaces after the \ ! ###
 # there must be more efficient way; doing it this way now.
 
 # note that 4 extremely low samples were already excluded prior to genotype calling from the medgenome captures
 # note I need to add the other bad individuals from 
-echo "done with step 6: remove bad individuals"
+#echo "done with step 6: remove bad individuals"
 # double check that it worked:
-echo "checking that bad individuals are gone"
-> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
-for i in $badInds
-do
-zcat ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} | grep $i >> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
-done
-
-#################################################################################
+#echo "checking that bad individuals are gone"
+#> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
+#for i in $badInds
+#do
+#zcat ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} | grep $i >> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
+#done
+echo "I decided to keep the bad low-coverage individuals in because I am projecting my SFS. \n If you choose to use a direct SFS method you should remove them \n because they will keep too many sites from being called in all inds."  > $outdir/all_6_rmBadIndividuals_notDone_decidedToKeep.info.txt
+###############################################################################
 ############################ RUN BESPOKE FILTERS and UPDATE AN/AC ##########################
 #################################################################################
 # These filters will check for:
@@ -131,13 +131,13 @@ done
 # this script does NOT: change any genotypes; do any genotype filtering; change any FT fields for genotypes (./. gts will still be PASS if they started as ./. -- bit of GATK weirdness that isn't fatal)
 echo "starting step 7a: carrying out bespoke filtering (includes filtering out sites exceeding max no-call frac: $noCallFrac)"
 
-python $bespokeFilterScript ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
-${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
+python $bespokeFilterScript ${outdir}/'all_5_passingFilters_'${infile} \
+${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_keepBadIndividuals_passingFilters_'${infile%.gz} \
 ${outdir}/'fail_all_7_FAILINGBespoke_passingFilters_'${infile%.vcf.gz}.txt \
 $noCallFrac
 # bgzip the result: (note: must use bgzip not gzip)
-$bgzip -f  ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz}
-$tabix -f -p vcf ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} # index the vcf
+$bgzip -f  ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_keepBadIndividuals_passingFilters_'${infile%.gz}
+$tabix -f -p vcf ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_keepBadIndividuals_passingFilters_'${infile} # index the vcf
 
 echo "done with step 7a: carrying out bespoke filtering"
 # you should gzip your bad sites eventually.
@@ -154,7 +154,7 @@ echo "starting step 7b: select final passing snps from merged file"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-V ${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_keepBadIndividuals_passingFilters_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${outdir}/'snp_7_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
