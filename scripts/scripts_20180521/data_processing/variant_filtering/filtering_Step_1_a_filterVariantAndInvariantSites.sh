@@ -20,8 +20,8 @@
 # Genotypes: set min genotype DP to 8 instead of 12, with no max DP for genotypes.
 # Filtering away SNP clusters separately from HFs -- filters slightly fewer SNPs than if you do it simultaneously 
 ## Based on plotting the QD dist for one scaffold, see that most sites are clustered with QD > 20, shifted pretty far to the right
-# so instead of QD 2 which is from GATK, I am going to switch to QD < 5. (see DecidingOnQCFilter ppt for details and ChangesToFiltering.20181121 for more plots)
-# modules
+# so instead of QD 2 which is from GATK, I am going to switch to QD < 8. (see DecidingOnQCFilter ppt for details and ChangesToFiltering.20181121 for more plots)
+# While examining sites I found some dubious ones that were AD 6,2 -- would be below the calling threshold if I did a higher min DP. I think am going to gt min DP 10. a bit arbitrary, but safer.
 source /u/local/Modules/default/init/modules.sh
 module load java
 module load python/2.7
@@ -94,11 +94,11 @@ java -jar -Xmx4G ${GATK} \
 # use genotypeFilterExpression to filter individual genotypes  and **** --setFilteredGtToNocall to change filtered genotype to "no call" (./.) ****
 # 3. genotype quality (<20 filtered out) (FAIL_GQ)
 # X. *no longer doing this* Individual Depth > 1000 filtered out (FAIL_DP_HIGH)
-# 5. Individual DP < 8 filtered out (FAIL_DP_LOW)
+# 5. Individual genotype DP < 10 filtered out (FAIL_DP_LOW) -- decided 8 was too liberal; 12 too stringent; going for 10. (fairly arbitrary; note that GATK recommends no DP filters)
 # X. *no longer done in this step * clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
-# going back to QD < 2 filter
+# going  to QD < 8 filter
 # I separated QD out from the rest of the GATK HFs so that I can better see how it is behaving.
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
@@ -106,16 +106,15 @@ java -jar -Xmx4G ${GATK} \
 -V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
 --filterName "FAIL_GATKHF" \
---filterExpression "QD < 5.0" \
---filterName "FAIL_QD5" \
+--filterExpression "QD < 8.0" \
+--filterName "FAIL_QD8" \
 --genotypeFilterExpression "GQ < 20" \
 --genotypeFilterName "FAIL_GQ" \
---genotypeFilterExpression "DP < 8" \
+--genotypeFilterExpression "DP < 10" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile}
-# okay QD 10 is too stringent! QD 2 may also be too stringent
-#
+
 # removed:
 # --genotypeFilterExpression "DP > 1000" \
 # --genotypeFilterName "FAIL_DP_HIGH" \
@@ -216,7 +215,7 @@ java -jar -Xmx4G ${GATK} \
 --filterName "FAIL_QUAL30" \
 --genotypeFilterExpression "RGQ < 1" \
 --genotypeFilterName "FAIL_RGQ" \
---genotypeFilterExpression "DP < 8" \
+--genotypeFilterExpression "DP < 10" \
 --genotypeFilterName "FAIL_DP_LOW" \
 --setFilteredGtToNocall \
 -o ${vcfdir}/'nv_3_Flagged_DP_RGQ_QUAL_'${infile}
