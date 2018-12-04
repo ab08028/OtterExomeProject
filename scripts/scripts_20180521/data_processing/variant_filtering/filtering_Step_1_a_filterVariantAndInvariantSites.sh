@@ -66,7 +66,7 @@ java -jar -Xmx4G ${GATK} \
 -R ${REFERENCE} \
 -V ${indir}/${infile} \
 -trimAlternates \
--o ${vcfdir}/'all_1_TrimAlt_'${infile} \
+-o ${vcfdir}/'all_1_TrimAlt_DP500_'${infile} \
 -select "DP > 500"
 # made this very lenient, just want to get rid of super crappy sites avg ~8 reads/sample
 # below will do further filtering at GT level
@@ -82,7 +82,7 @@ echo "snp step 2: select biallelic snps"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_1_TrimAlt_'${infile} \
+-V ${vcfdir}/'all_1_TrimAlt_DP500_'${infile} \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
 -o ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile}
@@ -191,7 +191,7 @@ echo "starting: nv step 2: select non variant sites"
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_1_TrimAlt_'${infile} \
+-V ${vcfdir}/'all_1_TrimAlt_DP500_'${infile} \
 --selectTypeToInclude NO_VARIATION \
 --selectTypeToExclude INDEL \
 -o ${vcfdir}/'nv_2a_AllNonVariants_'${infile}
@@ -272,7 +272,7 @@ java -jar -Xmx4G ${GATK} \
 -T VariantEval \
 -R $REFERENCE \
 -o ${vcfdir}/filteringStats/${scaffold}.'allSNPstages'.variant.eval.txt \
---eval:all1 ${vcfdir}/'all_1_TrimAlt_'${infile} \
+--eval:all1 ${vcfdir}/'all_1_TrimAlt_DP500_'${infile} \
 --eval:snp2 ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
 --eval:snp3 ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile} \
 --eval:snp4 ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
