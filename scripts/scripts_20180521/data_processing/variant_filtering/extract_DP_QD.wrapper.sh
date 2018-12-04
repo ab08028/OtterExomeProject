@@ -20,7 +20,7 @@ gzip $vcfdir/filteringStats/${scaff}.${vcf1%.vcf.gz}.QD.dist.txt
 
 
 # get QD dist after min dp 500 filtering: 
-vcf2=all_1_TrimAlt_raw_variants.vcf.gz
+vcf2=all_1_TrimAlt_DP500_raw_variants.vcf.gz
 
 python $scriptdir/extract_QD.py  --VCF $vcfdir/$vcf2 --scaffold $scaff --outfile $vcfdir/filteringStats/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
 gzip $vcfdir/${scaff}.${vcf2%.vcf.gz}.QD.dist.txt
