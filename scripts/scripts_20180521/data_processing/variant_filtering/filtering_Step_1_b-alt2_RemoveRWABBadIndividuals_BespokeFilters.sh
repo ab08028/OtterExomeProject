@@ -53,23 +53,27 @@ mkdir -p $outdir
 # 20181204: Decided to leave these individuals in the vcf now that I am doing SFS projections. I used to take them out when my SFS required that all sites be called across individuals
 # projections avoid that necessity, so these individuals won't drag things down any more (and may even contribute)
 # However, I may want to use this part of the script to remove the RWAB individuals that pull away in the PCA
-ind1=112_Elut_AL_AM_AM92022
-ind2=128_Elut_AK_AF3630
-ind3=131_Elut_BER_34
-ind4=143_Elut_KUR_5original
-ind5=144_Elut_KUR_1
-ind6=145_Elut_KUR_18
-ind7=150_Elut_AK_AF3631
-ind8=151_Elut_AK_AF3714
-ind9=152_Elut_AK_AF3720
-ind10=153_Elut_AK_AF3181
-ind11=154_Elut_KUR_11
-ind12=155_Elut_KUR_9
-ind13=161_Elut_MED_19
-ind14=76_Elut_BER_31
-ind15=86_Elut_MED_25
-ind16=RWAB003_15_ELUT_CA_159
-ind17=RWAB003_22_ELUT_CA_410
+
+# Going to keep low coverage in for SFS projection
+# Going to try removing the RWAB samples from capture 2 which were sequenced on a HiSeq4000 and had spottier coverage
+# so they pull away in PCA 
+# ind1=112_Elut_AL_AM_AM92022
+# ind2=128_Elut_AK_AF3630
+# ind3=131_Elut_BER_34
+# ind4=143_Elut_KUR_5original
+# ind5=144_Elut_KUR_1
+# ind6=145_Elut_KUR_18
+# ind7=150_Elut_AK_AF3631
+# ind8=151_Elut_AK_AF3714
+# ind9=152_Elut_AK_AF3720
+# ind10=153_Elut_AK_AF3181
+# ind11=154_Elut_KUR_11
+# ind12=155_Elut_KUR_9
+# ind13=161_Elut_MED_19
+# ind14=76_Elut_BER_31
+# ind15=86_Elut_MED_25
+# ind16=RWAB003_15_ELUT_CA_159
+# ind17=RWAB003_22_ELUT_CA_410
 
 # keeping in relatives/admixed, because they aren't found til later in the pipeline; remove them in step 1f
 
@@ -82,23 +86,7 @@ java -jar $GATK \
 -T SelectVariants \
 --variant ${outdir}/'all_5_passingFilters_'${infile} \
 -o ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} \
--xl_sn ${ind1} \
--xl_sn ${ind2} \
--xl_sn ${ind3} \
--xl_sn ${ind4} \
--xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15} \
--xl_sn ${ind16} \
--xl_sn ${ind17}
+-xl_sn 'RWAB003_.+_ELUT'
 
 ### make sure there are no spaces after the \ ! ###
 # there must be more efficient way; doing it this way now.
