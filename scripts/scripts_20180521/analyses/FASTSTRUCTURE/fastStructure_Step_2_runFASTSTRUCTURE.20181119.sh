@@ -73,7 +73,7 @@ python $fastDir/distruct.py \
 fi
 done
 # choose amongst the K values:
-python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output > $fastDir/chooseK.output
+python $fastDir/chooseK.py --input=$outdir/$infilePREFIX.faststructure_output > $outdir/$infilePREFIX.faststructure.chooseK.output
 
 # Based on what I see, I want to know the individual names for K=5
 #k=5
