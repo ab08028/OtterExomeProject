@@ -30,7 +30,6 @@ tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
 #### parameters:
 rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
 
 
 #### file locations
@@ -98,23 +97,24 @@ mkdir -p $vcfdir/filteringStats
 # X. *no longer done in this step * clustered snps (3/10) (SnpCluster) *note, this will filter more snps out than if you did it sequentially with HFs - since it takes the filtered snps into account*
 # adding this: --missingValuesInExpressionsShouldEvaluateAsFailing : see how it impacts things
 echo "snp step 3: variant filtering"
-# modified QD filter to be QD < 10.0 instead of 2.0 based on my plot which showed most variants clustered at QD > 20 (I'm guessing this is a capture feature)
+# going back to QD < 2 filter
 # I separated QD out from the rest of the GATK HFs so that I can better see how it is behaving.
-#java -jar -Xmx4G ${GATK} \
-#-T VariantFiltration \
-#-R ${REFERENCE} \
-#-V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
-#--filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
-#--filterName "FAIL_GATKHF" \
-#--filterExpression "QD < 10.0" \
-#--filterName "FAIL_QD10" \
-#--genotypeFilterExpression "GQ < 20" \
-##--genotypeFilterName "FAIL_GQ" \
-#--genotypeFilterExpression "DP < 8" \
-#--genotypeFilterName "FAIL_DP_LOW" \
-#--setFilteredGtToNocall \
-#-o ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile}
-
+java -jar -Xmx4G ${GATK} \
+-T VariantFiltration \
+-R ${REFERENCE} \
+-V ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
+--filterExpression "FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0 || SOR > 3.0" \
+--filterName "FAIL_GATKHF" \
+--filterExpression "QD < 2.0" \
+--filterName "FAIL_QD2" \
+--genotypeFilterExpression "GQ < 20" \
+--genotypeFilterName "FAIL_GQ" \
+--genotypeFilterExpression "DP < 8" \
+--genotypeFilterName "FAIL_DP_LOW" \
+--setFilteredGtToNocall \
+-o ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_'${infile}
+# okay QD 10 is too stringent! QD 2 may also be too stringent
+#
 # removed:
 # --genotypeFilterExpression "DP > 1000" \
 # --genotypeFilterName "FAIL_DP_HIGH" \
@@ -130,7 +130,7 @@ echo "snp step 3: variant filtering"
 
 ### Select only passing variants: (this only selects based on those that don't fail the filterExpressions, not the genotypeFilterExpressions)
 # 
-echo "snp step 4a and nv step 2b: select passing snps (snp_4a) and passing nv sites (nv_2b)"
+echo "snp step 3b and nv step 2b: trim alts and exclude filters (3b) ; select bi snps (snp_4a) and passing nv sites (nv_2b)"
 
 ##### trim alternates and remove filtered:
 java -jar -Xmx4G ${GATK} \
@@ -141,7 +141,7 @@ java -jar -Xmx4G ${GATK} \
 -trimAlternates \
 -o ${vcfdir}/'snp_3b_Filtered_TrimAlt_GQ_DP_GaTKHF_'${infile}
 
-# pull out sites that have become nv after filtering: will combine them with other nv sites below
+########## pull out sites that have become nv after filtering: will combine them with other nv sites below
 # you need to do this before flagging snp clusters because otherwise they are counted as snps rather than nv sites
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
@@ -150,7 +150,7 @@ java -jar -Xmx4G ${GATK} \
 --selectTypeToInclude NO_VARIATION \
 -o ${vcfdir}/'nv_2b_Filtered_GQ_DP_GaTKHF_'${infile}
 
-# pull out snps:
+####### pull out snps:
 
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
@@ -162,7 +162,7 @@ java -jar -Xmx4G ${GATK} \
 
 
 echo "snp step 4b: flag clusters"
-# flag: clusters: 
+####### flag: clusters: 
 java -jar -Xmx4G ${GATK} \
 -T VariantFiltration \
 -R ${REFERENCE} \
@@ -172,7 +172,7 @@ java -jar -Xmx4G ${GATK} \
 
 echo "snp step 4c: remove clusters"
 
-# remove clusters:
+####### remove clusters:
  java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
@@ -271,7 +271,7 @@ java -jar -Xmx4G ${GATK} \
 -o ${vcfdir}/filteringStats/${scaffold}.'allSNPstages'.variant.eval.txt \
 --eval:all1 ${vcfdir}/'all_1_TrimAlt_'${infile} \
 --eval:snp2 ${vcfdir}/'snp_2_Filter_TrimAlt_'${infile} \
---eval:snp3 ${vcfdir}/'snp_3_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
+--eval:snp3 ${vcfdir}/'snp_3a_Flagged_GQ_DP_GaTKHF_cluster_'${infile} \
 --eval:snp4 ${vcfdir}/'snp_4c_Filtered_GQ_DP_GaTKHF_cluster_'${infile} \
 -L $scaffold
    
