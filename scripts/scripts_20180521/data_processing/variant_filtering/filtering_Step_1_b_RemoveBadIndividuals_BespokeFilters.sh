@@ -114,7 +114,7 @@ echo "done with step 6: remove bad individuals"
 # double check that it worked:
 echo "checking that bad individuals are gone"
 > ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
-for i in $badInds
+for i in $badInds RWAB
 do
 zcat ${outdir}/'all_6_rmBadIndividuals_passingFilters_'${infile} | grep $i >> ${outdir}/badIndsThatSurvivedFiltering.shouldBeEmpty.txt
 done
