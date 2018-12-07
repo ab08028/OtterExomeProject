@@ -21,7 +21,7 @@ GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/Genome
 
 #### parameters:
 rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
-noCallFrac=0 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (currently no cutoff)
+noCallFrac=1.0 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (currently no cutoff)
 snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
 perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
 
@@ -60,10 +60,37 @@ ind15="163_Elut_AK_AF24915"
 ind16="125_Elut_AK_AF3369" # (adding)
 ind17="65_Elut_AK_GE91060" # (adding)
 ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am keeping out of pop file and out of admixed file)
+ind19="141_Elut_CA_419" # doesn't appear admixed but is a PCA outlier 
 ###### ** UPDATE THIS LIST *** for 20181119 ## 
 
 ## 20180910 update: I am not going to remove admixed individuals from the all_8 vcf files
 # Because they are valid sequences for PCA, etc. Just removing them from pop-specific files
+
+############################# remove admixed and relatives and other outliers from the all file ###############
+# update in 20181206: not making an all file that removes relatives but keeps admixed; that is excessive file size
+# and you can get that from all_7 if you need it (just exclude relatives)
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-xl_sn ${ind1} \
+-xl_sn ${ind2} \
+-xl_sn ${ind5} \
+-xl_sn ${ind6} \
+-xl_sn ${ind7} \
+-xl_sn ${ind8} \
+-xl_sn ${ind9} \
+-xl_sn ${ind10} \
+-xl_sn ${ind11} \
+-xl_sn ${ind12} \
+-xl_sn ${ind13} \
+-xl_sn ${ind14} \
+-xl_sn ${ind15} \
+-xl_sn ${ind16} \
+-xl_sn ${ind17} \
+-xl_sn ${ind18} \
+-xl_sn ${ind19}
 
 #######################################################################################
 ############## put admixed individuals (but not relatives) into their own VCFs for later ##############
@@ -96,30 +123,6 @@ java -jar $GATK \
 # skipping ind 18 because it odesn't appear admixed in FASTRUCTURE; just appears like a PCA outlier
 
 
-############################# Then remove admixed and relatives and other outliers from the all file ###############
-# update in 20181206: not making an all file that removes relatives but keeps admixed; that is excessive file size
-# and you can get that from all_7 if you need it (just exclude relatives)
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--xl_sn ${ind1} \
--xl_sn ${ind2} \
--xl_sn ${ind5} \
--xl_sn ${ind6} \
--xl_sn ${ind7} \
--xl_sn ${ind8} \
--xl_sn ${ind9} \
--xl_sn ${ind10} \
--xl_sn ${ind11} \
--xl_sn ${ind12} \
--xl_sn ${ind13} \
--xl_sn ${ind14} \
--xl_sn ${ind15} \
--xl_sn ${ind16} \
--xl_sn ${ind17} \
--xl_sn ${ind18}
 ######## removing all outliers, relatives and admixed here ########
 
 #######################################################################################
@@ -189,7 +192,8 @@ java -jar -Xmx4G ${GATK} \
 # -xl_sn ${ind15} \
 # -xl_sn ${ind16} \
 # -xl_sn ${ind17} \
-# -xl_sn ${ind18}
+# -xl_sn ${ind18} \
+# -xl_sn ${ind19}
 
 ## Aleutian --> AL
 # java -jar $GATK \
