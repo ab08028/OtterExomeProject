@@ -103,7 +103,7 @@ java -jar $GATK \
 -xl_sn ${ind15} \
 -xl_sn ${ind16} \
 -xl_sn ${ind17} \
--xl_sn 'RWAB003_.+_ELUT'
+-xl_se 'RWAB003_.+_ELUT'
 
 ### make sure there are no spaces after the \ ! ###
 # there must be more efficient way; doing it this way now.
