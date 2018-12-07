@@ -139,7 +139,7 @@ java -jar -Xmx4G ${GATK} \
 # this call to maxnocallfrac is okay because it's for the snp file with a 20% cutoff for use in pca, etc.
 ########### this also keeps PCA outliers.
 
-######### sns file: this one has no missingness cutoff for use in EASY SFS
+######### sns file: this one has no missingness cutoff for use in EASY SFS -- will become neutral regions.
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
