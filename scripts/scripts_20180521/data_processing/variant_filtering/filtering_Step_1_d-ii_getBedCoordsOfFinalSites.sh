@@ -1,16 +1,16 @@
 source /u/local/Modules/default/init/modules.sh
 module load bedtools
 #### parameters:
-rundate=20180806 # date genotypes were called
+rundate=20181119 # date genotypes were called
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering/
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 outdir=$wd/${rundate}_filtered
-noCallFrac=0.9 # this is the tolerated no call fraction 20181008: doing this with the liberal filter instead of the stringent 0.2 filter
+noCallFrac=1.0 # no filter # this is the tolerated no call fraction 20181008: doing this with the liberal filter instead of the stringent 0.2 filter
 #sitesPassingAllFilters=${outdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} # old filtering scheme 
-prefix='all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters'
+prefix='all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters'
 sitesPassingAllFilters=${outdir}/${prefix}'_raw_variants.vcf.gz' # new filteirng scheme Oct 2018
 mkdir -p $outdir/bedCoords
 
