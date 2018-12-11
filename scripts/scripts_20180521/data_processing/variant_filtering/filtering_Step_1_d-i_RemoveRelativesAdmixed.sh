@@ -90,9 +90,12 @@ java -jar $GATK \
 -xl_sn ${ind16} \
 -xl_sn ${ind17} \
 -xl_sn ${ind18} \
--xl_sn ${ind19}
+-xl_sn ${ind19} \
+-xl_se '********[SOME RWAB to be removed here]******'
+# change: remove some (or all ) of the RWAB samples here (look at PCA for outliers)
+# definitely remove all KUR RWAB samples, but maybe keep a couple of the CA ones. Look at PCA now.
 
-#######################################################################################
+######################################################################################
 ############## put admixed individuals (but not relatives) into their own VCFs for later ##############
 #######################################################################################
 ## KURIL ADMIXED (you take out of the all_7 file that still has admixed inds. in there and you positively select them with sn):
