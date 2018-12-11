@@ -4,13 +4,13 @@ source /u/local/Modules/default/init/modules.sh
 module load bedtools
 module load blast
 
-rundate=20180806
+rundate=20181119
 
 SCRATCH=/u/flashscratch/a/ab08028
 filterDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/
 bedDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/bedCoords
 wd=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/checkingNeutralSites
-mkdir -p $wd/
+mkdir -p $wd
 mfurDir=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome
 drerDir=/u/home/a/ab08028/klohmueldata/annabel_data/zebra_fish_genome
 REFERENCE=$mfurDir/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
@@ -37,8 +37,8 @@ getGC=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scri
 
 ############ HQ site coords ####################
 # results of filtering snps (all populations; all nv and snps)
-noCallFrac=0.9 # very liberal
-prefix=all_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_${noCallFrac}_rmBadIndividuals_passingFilters
+noCallFrac=1.0 # no filter at all. no limits on how many individuals must be called. but there is min dp 500 at site level
+prefix=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_${noCallFrac}_rmBadIndividuals_passingFilters
 hqSites=$bedDir/${prefix}.sorted.merged.coords.bed # bed coords (sorted, merged) of sites from step 7 of filtering (comes from filtering_Step_2.sh)
 
 ############# Get distance of every set of sites from exonic regions in ferret genome ################
@@ -59,7 +59,7 @@ bedtools closest -d -a ${hqSites} -b ${exonicRegions} > $wd/distanceFromExons/${
 
 # last column (8) is the distance; want it to be at least 10,000, and want to keep
 # track of the distance. Collect all that are >10,000 away. 
-# pick the ones with high distance (awk)
+# pick the ones with high distance (awk) (get site totals below)
 awk -F'\t' '{OFS="\t";if($8>10000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min10kb.fromExon.0based.sorted.merged.bed
 
 awk -F'\t' '{OFS="\t";if($8>100000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min100kb.fromExon.0based.sorted.merged.bed
@@ -87,6 +87,13 @@ done
 # get regions that DO NOT intersect with CpG islands
 # *** -v **** this will output regions in "A" that ***DO NOT*** intersect with "B" (CpG Islands)
 bedtools intersect -v -a $wd/distanceFromExons/${prefix}.min10kb.fromExon.0based.sorted.merged.bed -b $mfurCpG > $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.0based.sorted.merged.bed
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' 
+
+########## 20181119 value:
+#9,212,233 sites >10kb from genes (no max call frac) w no max no call frac filter
+#9,062,287 after CpG filter (no max call frac filter)
+
+########## 20180806 value
 # total sequence before CpG filter: 9,030,072 w 0.9 max no call frac (7,818,882 when using 0.2 max no call frac)
 # total sequence after CpG filter: 8,885,106 w 0.9 max no call frac  (6,816,729 when using 0.2 max no call frac)
 # so lost ~100kb of sequence
@@ -94,16 +101,20 @@ bedtools intersect -v -a $wd/distanceFromExons/${prefix}.min10kb.fromExon.0based
 # overly conservative to filter >10kb from CpG Islands.
 #bedtools closest -d -a $wd/distanceFromExons/all_7_passingBespoke.min10kb.fromExon.0based.sorted.merged.bed -b ${mfurCpG} > $wd/CpG_Islands/all_7_passingBespoke.min10kb.fromExon.distanceFromCpGIslands.0based.txt
 #awk -F'\t' '{OFS="\t";if($8>10000)print $1,$2,$3}' $wd/CpG_Islands/all_7_passingBespoke.min10kb.fromExon.distanceFromCpGIslands.0based.txt > $wd/CpG_Islands/all_7_passingBespoke.min10kb.fromExon.min10kb.fromCpG.0based.bed
-
+ 
 
 ######### Check to see if any regions intersect with RepeatMasker Regions ##############
-# got repeat mask from UCSC browser;
+# got repeat mask from UCSC browser
 # added .1 to each scaffold name so it matches my reference (see script in mfurDir/repeatMasker_UCSC)
 # trying to intersect 
 # get regions that DO NOT intersect with repeat regions
+
 bedtools intersect -v -a $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.0based.sorted.merged.bed -b $mfurRepeat > $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
 # check amount  of sequence lost:
-# awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  $wd/repeat_regions/all_7_passingBespoke.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
+# awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
+# 2018119 values: (no max call frac)
+# 6,853,475 (so lost 2,208,812 sites (same as before))
+# 20180806 values:
 # 6,701,482 remain with 0.9 max no call frac (5,953,300 with 0.2 max no call frac) (lost 2Mb). Lost more with 0.9 setting at this stage: maybe because things that map poorly are in repeat regions more
 
 ##### just for the fasta file (not for the eventual list of HQ sites) re-merge the bed file with -d 10 setting (if things are 10bp apart you can still merge them)
@@ -153,7 +164,11 @@ cp $finalBedDir/$finalBed $filterDir/bedCoords/${finalBed%.bed}.useThis.bed
 
 # get final amount of sequence:
 awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $wd/passing_sites/${finalBed%.bed}.useThis.bed > $wd/passing_sites/totalPassingSequence.txt
-# 6687614 ~6.7 Mb with 0.9 max no call frac. (up from 5942506 under this is with 0.2 max no call frac) so I gained 745kb of sequence. Not very much.
+# and copy this info to filteringStats as well
+cp $wd/passing_sites/totalPassingSequence.txt $SCRATCH/captures/vcf_filtering/${rundate}_filtered/filteringStats/totalPassingNeutralSequence.txt
+
+# 20181119 value: 6839537 ~6.8 with no max call frac
+# 20180806 valu: 6687614 ~6.7 Mb with 0.9 max no call frac. (up from 5942506 under this is with 0.2 max no call frac) so I gained 745kb of sequence. Not very much.
 # That is okay, shows it doesn't matter much which way you do it. So can keep neutral SFSs as-is, or remake based on these new coords
 # going to remake to be thorough.
  
