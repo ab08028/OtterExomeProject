@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp,arch=intel*
+#$ -l h_rt=100:00:00,h_data=16G,highp,arch=intel*
 #$ -N vcf1b_filtering
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -72,12 +72,12 @@ ind16=RWAB003_15_ELUT_CA_159
 ind17=RWAB003_22_ELUT_CA_410
 
 
-### also decided to remove all RWAB individuals (capture 2 that was highly multiplexed) -- changed my mind on this, want to remove them at step 7 instead of here (as pca outliers; may be useful for something and it doesn't hurt ot have them here.)
+### also decided to remove all RWAB individuals (capture 2 that was highly multiplexed)
 # because they are outliers at low frequencies
 
 # keeping in relatives/admixed, because they aren't found til later in the pipeline; remove them in step 1f
 
-badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17"
+badInds="$ind1 $ind2 $ind3 $ind4 $ind5 $ind6 $ind7 $ind8 $ind9 $ind10 $ind11 $ind12 $ind13 $ind14 $ind15 $ind16 $ind17 and all RWAB samples"
 
 echo "starting step 6: remove bad individuals"
 echo "These are the bad individuals that are getting removed: $badInds because they have > mean + 1sd missing genotypes"
@@ -102,7 +102,8 @@ java -jar $GATK \
 -xl_sn ${ind14} \
 -xl_sn ${ind15} \
 -xl_sn ${ind16} \
--xl_sn ${ind17}
+-xl_sn ${ind17} \
+-xl_se 'RWAB003_.+_ELUT'
 
 ### make sure there are no spaces after the \ ! ###
 # there must be more efficient way; doing it this way now.
