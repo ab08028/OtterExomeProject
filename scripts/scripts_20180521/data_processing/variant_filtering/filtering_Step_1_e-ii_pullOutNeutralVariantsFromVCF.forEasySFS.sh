@@ -6,6 +6,8 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
 #$ -M ab08028
+source /u/local/Modules/default/init/modules.sh
+
 module load java
 module load bedtools
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
