@@ -33,7 +33,7 @@ vcfdir=$wd/${rundate}_filtered # date you called genotypes
 outdir=$vcfdir/populationVCFs/cdsVCFs
 mkdir -p $outdir
 mkdir -p ${vcfdir}/bedCoords/cdsCallableSites/
-allVCF=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.vcf.gz
+allVCF=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
 
 snpVCF=snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 
