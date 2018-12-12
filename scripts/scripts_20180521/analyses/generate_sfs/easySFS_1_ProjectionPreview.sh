@@ -23,7 +23,7 @@ vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered
 popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.3.20181119.txt # this doesn't have baja on it; doesn't have any admixed/bad inds on it. 
 # this has admixed in it , but they aren't in pop file
 easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abContinueMod.py
-outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS
+outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/projection_preview
 mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
 # want it to just output that info and continue , not prompt yes/no.
