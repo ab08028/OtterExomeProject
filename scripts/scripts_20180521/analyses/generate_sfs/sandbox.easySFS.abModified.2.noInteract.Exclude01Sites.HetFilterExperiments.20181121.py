@@ -308,10 +308,10 @@ def make_datadict(genotypes, pops, verbose=False, ploidy=1,maxHetFilter):
             homAlt_count=sum([x == "1" or x == "1/1" or x == "1|1" for x in pop_genotypes])
             called_gts=sum([x!="./." for x in pop_genotypes])
             #noCall_count=sum([x == "./." for x in pop_genotypes])
-            if homRef_count==0 and homAlt_count==0 and het_count!=0:
+            #if homRef_count==0 and homAlt_count==0 and het_count!=0:
                 #print("found an all 0/1 site for "+str(pop)+str(pop_genotypes))
-                calls[pop] =(0,0) # set it as though it's no-call for that population
-            elif het_count !=0 and het_count > called_gts*float(maxHetFilter):
+                #calls[pop] =(0,0) # set it as though it's no-call for that population
+            if het_count !=0 and het_count >= called_gts*float(maxHetFilter):
                 print("found a site with >=80% of all calls hets. het count = "+str(het_count)+" genotypes: "+ str(pop_genotypes) +"\ndadi call would be: " +str(ref_count)+","+str(alt_count))
                 hetFailSiteCounter += 1
                 calls[pop] =(0,0) # set it as though it's no-call for that population
@@ -565,7 +565,7 @@ def parse_command_line():
         help="Set verbosity. Dump tons of info to the screen")
     
     parser.add_argument("-maxHetFilter", dest="maxHetFilter", default=1.0,
-        help="Fraction of called genotypes per population that are heterozygous (0/1). e.g. -maxHetFilter 0.8 would exclude any site that has >80% of called genotypes 0/1 within a population. Default is 1.0 which only removes sites that are all 0/1 within the population. If your SFS is U-shaped after projection, I recommend lowering the max threshold to .7-.9")
+        help="Fraction of called genotypes per population that are heterozygous (0/1). e.g. -maxHetFilter 0.8 would exclude any site that has >80% of called genotypes 0/1 within a population. Default is 1.0 which only removes sites that are all 0/1 within the population. If your SFS is U-shaped after projection, I recommend lowering the max threshold to .7-.9.")
 
     ## if no args then return help message
     if len(sys.argv) == 1:
