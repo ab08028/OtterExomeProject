@@ -1,11 +1,17 @@
+require(dplyr)
+require(ggplot2)
+require(purrr) # for map
+require(reshape2)
+require(readr)
+require(tidyr)
 ## these files are the result of easySFS_2_parseProjection
-genotypeDate="20180806"
-data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/",sep="")
+genotypeDate="20181119"
+data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/projection_preview",sep="")
 plot.dir=data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",genotypeDate,"/easySFS_projection/",sep="")
-#dir.create(plot.dir)
+dir.create(plot.dir,recursive = T)
 # get list of files:
 fileList=list.files(pattern=paste("R.format",sep=""),path = data.dir,full.names = F )
-
+fileList
 data1 <- data_frame(filename = fileList) %>% # create a data frame
   # holding the file names
   mutate(file_contents = map(filename,          # read files into
@@ -26,26 +32,8 @@ p0 <- ggplot(data,aes(x=projection,y=snps))+
   geom_point()+
   facet_wrap(~population,scales="free_x")+
   theme_bw()+
-  scale_x_continuous(breaks=seq(2,80,2))+
-  geom_vline(xintercept = 20,color="red")
+  scale_x_continuous(breaks=seq(2,80,2))
 p0
 # want to find the maximum # of snps that still has sample size >10
 ggsave(paste(plot.dir,"/easySFS.projections.allPops.pdf",sep=""),p0,height=5,width=10)
   
-##### Want to plot difference in snp number #######
-before <- data %>% 
-  group_by(population) %>%
-  filter(projection == max(projection)) 
-before$label <- "original"
-
-after <- data %>% 
-  group_by(population) %>%
-  filter(projection == 20) 
-after$label <- "projection"
-both <- rbind(before,after)
-p1 <- ggplot(both,aes(x=population,y=snps,fill=label))+
-  geom_bar(stat="identity",position="dodge")+
-  theme_bw()+
-  ggtitle("Increase in SNPs (of all types) per population predicted after projection")
-p1
-ggsave(paste(plot.dir,"/easySFS.predictedGainInSNPs.postProj.allPops.pdf",sep=""),p1,height=5,width=10)

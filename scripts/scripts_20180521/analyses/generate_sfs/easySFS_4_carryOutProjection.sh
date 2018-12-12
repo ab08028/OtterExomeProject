@@ -26,15 +26,16 @@ popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS
 #easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abContinueMod.py 
 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
-scriptdir=${gitdir}/analyses/data_processing/variant_filtering/generate_sfs/
-script=getMonomorphicProjectionCounts.py
+scriptdir=${gitdir}/analyses/generate_sfs/
 
 
-easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abModified.2.noInteract.Exclude01Sites.20181121.py  # this is my modification
+easySFS=$scriptdir/easySFS.abModified.2.noInteract.Exclude01Sites.20181121.py  # this is my modification
 # this version of script excludes sites that are 0-1 across all populations (maybe) -- not sure if it does yet. 
 
 ## choose your projections:
-projections="20,20,20,20,20"
+#projections="20,20,20,20,20"
+### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
+# note that order is CA,AK,AL,COM,KUR 
 
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS
 mkdir -p $outdir
@@ -50,13 +51,13 @@ allSitesvcf=neutral_all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0
 
 ### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
 # note that order is CA,AK,AL,COM,KUR 
-$easySFS -i $vcfdir/${snpvcf} -p $popFile -a -v --proj 14,16,16,16,14 -f -o $outdir/projection-${todaysdate}
+$easySFS -i $vcfdir/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdir/projection-${todaysdate}
 # test run only had --proj 20 (maybe just projects 1 population? will have to see)
 # -f forces overwrite of outdir
 $bgzip ${vcf}
 # then do for SYN and MIS (eventually)
 ########## get counts of monomorphic sites to add to the SFSes ############
-python $scriptdir/$script --vcf $vcfdir/${allSitesvcf} --popMap $popFile --proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR --outdir $outdir/projection-${todaysdate}
+python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/${allSitesvcf} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir/projection-${todaysdate}
 
 # need to add these to the 0/0 bin for everything. How to do that? Manually? dadi could do in python when I parse results because it's masked anyway. for fastsimcoal need to add to SFS directly 
 # in the 0/0 bin. (but want to add to what's already there.)
@@ -64,9 +65,9 @@ python $scriptdir/$script --vcf $vcfdir/${allSitesvcf} --popMap $popFile --proj 
 ########### eventually; to start with can do by hand #######
 
 
-######## run a lil test:
-script=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/generate_sfs/getMonomorphicProjectionCounts.py
-python $scriptdir/$script --vcf "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" \
---popMap /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.2.goingtoModifyFor20181119.txt \
---proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR \
---outdir /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/testRunsEasySFSModificatoins
+######## run a little test:
+# script=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/generate_sfs/getMonomorphicProjectionCounts.py
+# python $scriptdir/$script --vcf "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" \
+# --popMap /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.2.goingtoModifyFor20181119.txt \
+# --proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR \
+# --outdir /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/testRunsEasySFSModificatoins
