@@ -282,7 +282,7 @@ def oneD_sfs_per_pop(dd, pops, outdir, prefix):
         print(pop, counts)
 
 
-def make_datadict(genotypes, pops, verbose=False, ploidy=1,maxHetFilter):
+def make_datadict(genotypes, pops, verbose=False, maxHetFilter,ploidy=1):
     dd = {}
     hetFailSiteCounter=0
     ## Get genotype counts for each population
