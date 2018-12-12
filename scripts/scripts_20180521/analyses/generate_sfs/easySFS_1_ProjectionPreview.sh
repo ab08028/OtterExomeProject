@@ -18,9 +18,9 @@ source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
-genotypeDate=20180806
-vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/
-popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.2.txt
+genotypeDate=20181119
+vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutral_and_cds_VCFs/neutralVCFs
+popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.3.20181119.txt # this doesn't have baja on it; doesn't have any admixed/bad inds on it. 
 # this has admixed in it , but they aren't in pop file
 easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abContinueMod.py
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS
@@ -30,7 +30,7 @@ mkdir -p $outdir
 # this vcf has all snps across all categories (cds, neutral, etc.) with 0.9 max no call frac (v. liberal)
 # and has had all individuals removed that won't go into the SFS
 # going to do the actual projection for each category of site
-vcf=snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_0.9_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
+vcf=neutral.snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
 #gunzip $vcfdir/populationVCFs/$vcf it must be unzipped
 #( you are here )
 $easySFS -i $vcfdir/${vcf} -p $popFile --preview -a -v > $outdir/${vcf%.vcf}.easySFS.projPreview.txt

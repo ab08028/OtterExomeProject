@@ -6,6 +6,7 @@ modified by annabel beichman -- november 2018
 so that sites that are 0/1 across a population get excluded
 and so that there isn't an interactive portion of the script that stops it running remotely 
 this script only retains bi-allelic SNPs.
+#### note: you must have your projection values be in the same order as the populations are in your popMap file ########
 '''
 from __future__ import print_function
 import matplotlib
@@ -430,23 +431,29 @@ def check_inputs(ind2pop, indnames, pops):
     vcf_set = set(indnames)
     
     if not pop_set == vcf_set:
-        print("\nSamples in pops file not present in VCF: {}"\
+        print("\nSamples in pops file not present in VCF: {}\n"\
             .format(", ".join(pop_set.difference(vcf_set))))
         ## Remove the offending samples from ind2pop
+            
         map(ind2pop.pop, pop_set.difference(vcf_set))
-        print("Samples in VCF not present in pops file: {}"\
+        print("Samples in VCF not present in pops file: {}\n"\
             .format(", ".join(vcf_set.difference(pop_set))))
 
         ## Remove the offending individuals from the pops dict
         for k,v in pops.items():
             for ind in pop_set.difference(vcf_set):
                 if ind in v:
-                    pops[k] = v.remove(ind)
+                    # ab modified 20181206 so this works correctly
+                    v.remove(ind) # remove individual from v
+                    pops[k] = v # reset pops to that new v
         ## Make sure to remove any populations that no longer have samples
         for k, v in pops.items():
             if not v:
-                print("Empty population, removing - {}".format(k))
+                print("Empty population, removing - {}\n".format(k))
                 pops.pop(k)
+        # sanity check (AB - 20181206)
+        for key,value in pops.items():
+            print(str(len(value)) + ' Surviving individuals for {0}: {1}\n'.format(key,value))        
         # AB: 20181121: removing this part of the script so that there isn't an interactive portion
         #cont = raw_input("\nContinue, excluding samples not in both pops file and VCF? (yes/no)\n")
         #while not cont in ["yes", "no"]:

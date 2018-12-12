@@ -25,6 +25,9 @@ popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS
 # this has admixed in it , but they aren't in pop file
 #easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abContinueMod.py 
 
+gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
+scriptdir=${gitdir}/analyses/data_processing/variant_filtering/generate_sfs/
+script=getMonomorphicProjectionCounts.py
 
 
 easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abModified.2.noInteract.Exclude01Sites.20181121.py  # this is my modification
@@ -39,12 +42,31 @@ mkdir -p $outdir
 
 # make sure vcf isn't zipped
 
-#vcf=neutral.snp_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_0.9_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
-vcf='neutral.all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf'
+snpvcf=neutral_snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
+allSitesvcf=neutral_all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
+#vcf='neutral.all_8a_rmRelatives_rmAdmixedOutliers_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf'
 # hoping I can get it to work with this neutral all-sites file so that I have monomorphic sites sampled as well. This would be ideal.
 #gunzip ${vcf}.gz
-$easySFS -i $vcfdir/${vcf} -p $popFile -a -v --proj 20,20,20,20,20 -f -o $outdir/projection-${todaysdate}
+
+### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
+# note that order is CA,AK,AL,COM,KUR 
+$easySFS -i $vcfdir/${snpvcf} -p $popFile -a -v --proj 14,16,16,16,14 -f -o $outdir/projection-${todaysdate}
 # test run only had --proj 20 (maybe just projects 1 population? will have to see)
 # -f forces overwrite of outdir
 $bgzip ${vcf}
 # then do for SYN and MIS (eventually)
+########## get counts of monomorphic sites to add to the SFSes ############
+python $scriptdir/$script --vcf $vcfdir/${allSitesvcf} --popMap $popFile --proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR --outdir $outdir/projection-${todaysdate}
+
+# need to add these to the 0/0 bin for everything. How to do that? Manually? dadi could do in python when I parse results because it's masked anyway. for fastsimcoal need to add to SFS directly 
+# in the 0/0 bin. (but want to add to what's already there.)
+# maybe a little R or python script? (coudl read in the fsc SFSes and add this to 0/0 bin?)
+########### eventually; to start with can do by hand #######
+
+
+######## run a lil test:
+script=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/generate_sfs/getMonomorphicProjectionCounts.py
+python $scriptdir/$script --vcf "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" \
+--popMap /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.2.goingtoModifyFor20181119.txt \
+--proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR \
+--outdir /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/testRunsEasySFSModificatoins
