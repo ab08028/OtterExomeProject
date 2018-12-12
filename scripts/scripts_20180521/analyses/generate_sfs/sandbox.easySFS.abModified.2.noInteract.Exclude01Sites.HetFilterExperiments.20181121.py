@@ -309,7 +309,7 @@ def make_datadict(genotypes, pops, verbose=False, ploidy=1):
             called_gts=sum([x!="./." for x in pop_genotypes])
             #noCall_count=sum([x == "./." for x in pop_genotypes])
             if het_count >= called_gts*0.8:
-                print("found a site with >=80% of all calls hets" +str(pop_genotypes))
+                print("found a site with >=80% of all calls hets. het count = "+str(het_count)+"genotypes: "+  +str(pop_genotypes) +"\ncalls would be:" +str((ref_count, alt_count)))
                 calls[pop] =(0,0) # set it as though it's no-call for that population
 
             #if homRef_count==0 and homAlt_count==0 and het_count!=0:
