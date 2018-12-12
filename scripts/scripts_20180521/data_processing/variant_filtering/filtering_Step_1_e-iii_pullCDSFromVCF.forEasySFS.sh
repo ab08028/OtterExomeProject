@@ -30,7 +30,7 @@ REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_puto
 cdsBed=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/MusPutFuro1.0.91.cdsOnly.0based.sorted.merged.bed
 # based on MusPutFuro1.0.91.cdsOnly.gff
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
-outdir=$vcfdir/populationVCFs/cdsVCFs
+outdir=$vcfdir/neutral_and_cds_VCFs/cdsVCFs
 mkdir -p $outdir
 mkdir -p ${vcfdir}/bedCoords/cdsCallableSites/
 allVCF=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
@@ -64,7 +64,7 @@ java -jar $GATK \
 
 # run VEP :
 $vepdir/vep -v -i $outdir/cds_${snpVCF}  \
---gz --cache --force_overwrite --species mustela_putorius_furo \
+--cache --force_overwrite --species mustela_putorius_furo \
 --variant_class --vcf --canonical \
 -o $outdir/vep_cds_${snpVCF%.gz} \
 --pick
@@ -81,12 +81,12 @@ $vepdir/vep -v -i $outdir/cds_${snpVCF}  \
    # translated, transcript or feature length (longer preferred)
 
 $vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is YES" \
---input_file $outdir/vep_cds_${snpVCF%.gz} --gz \
+--input_file $outdir/vep_cds_${snpVCF%.gz} \
 --output_file $outdir/syn_vep_cds_${snpVCF%.gz} \
 --force_overwrite
 
 $vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YES" \
---input_file $outdir/vep_cds_${snpVCF%.gz} --gz \
+--input_file $outdir/vep_cds_${snpVCF%.gz} \
 --output_file $outdir/missense_vep_cds_${snpVCF%.gz}  \
 --force_overwrite 
 

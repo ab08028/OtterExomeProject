@@ -1,11 +1,13 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=10:00:00,h_data=16G,highp,arch=intel*
+#$ -l h_rt=3:00:00,h_data=16G,highp,arch=intel*
 #$ -N vcf1e_pullOutNeutral
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -m abe
 #$ -M ab08028
+
+# can also be run in the shell in about 1 hours + 30 mins
 source /u/local/Modules/default/init/modules.sh
 
 module load java
@@ -20,7 +22,7 @@ wd=$SCRATCH/captures/vcf_filtering
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
-outdir=$vcfdir/populationVCFs/neutralVCFs
+outdir=$vcfdir/neutral_and_cds_VCFs/neutralVCFs
 mkdir -p $outdir
  # note that these still have per-population all-het sites present ; but I modified the easy sfs script to remove them ()
 # 20181018 bed file of neutral sites that have been called (min 10kb from genes, not in CpG island, doesn't blast to zebra fish); max no call frac is 0.9 (liberal)
