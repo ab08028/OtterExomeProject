@@ -26,12 +26,18 @@ header=${model}
 
 outfile=$sumdir/${pop}.fsc.inference.${model}.${rundate}.all.output.concatted.txt
 # get header:
-head -n1 $infDir/$pop/inference_${rundate}/$model/run_1/$model/*bestlhoods > $outfile
+header=`head -n1 $infDir/$pop/inference_${rundate}/$model/run_1/$model/*bestlhoods`
+echo -e "runNum\t$header" > $outfile
 ########### copy generic files into directory and update #########
 for i in {1..50}
 do
 outdir=$infDir/$pop/inference_${rundate}/$model/run_${i}/$model # specify where output will be pulled from
-grep -v [A-Z] $outdir/*bestlhoods >> $outfile
+results=`grep -v [A-Z] $outdir/*bestlhoods`
+echo -e "$i\t$results" >> $outfile
+
+
+# try
+
 done
 done
 done

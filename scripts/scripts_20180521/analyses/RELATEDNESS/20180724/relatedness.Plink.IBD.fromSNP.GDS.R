@@ -4,7 +4,7 @@ library(SNPRelate)
 # guide: https://bioconductor.org/packages/devel/bioc/vignettes/SNPRelate/inst/doc/SNPRelateTutorial.html#principal-component-analysis-pca
 # For relatedness analysis, identity-by-descent (IBD) estimation in SNPRelate can be done by either the method of moments (MoM) (Purcell et al., 2007) or maximum likelihood estimation (MLE) (Milligan, 2003; Choi et al., 2009). For both of these methods it is preffered to use a LD pruned SNP set.
 
-calldate=20180724 # date gt's were called in format YYYYMMDD
+calldate=20181119 # date gt's were called in format YYYYMMDD
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 # file locations:
 
