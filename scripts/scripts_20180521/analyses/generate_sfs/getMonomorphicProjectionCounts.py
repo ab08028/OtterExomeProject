@@ -188,7 +188,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                 if "0/1" in pop_gts or "1/1" in pop_gts:
                     #print("expelled:" + str(pop_gts))
                     continue
-                elif pop_gts.count("0/0") >= popProjValue/2:
+                elif pop_gts.count("0/0") >= float(popProjValue)/2:
                     #print("found one!")
                     #print(pop_gts)
                     countDict[population] += 1
