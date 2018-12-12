@@ -323,7 +323,7 @@ def make_datadict(genotypes, pops, verbose=False, ploidy=1):
             {"segregating":[row["REF"], row["ALT"]],\
             "calls":calls,\
             "outgroup_allele":row["REF"]}
-        print(str(hetFailSiteCounter))
+        #print(str(hetFailSiteCounter))
     return dd
 
 
