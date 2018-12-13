@@ -579,8 +579,8 @@ def parse_command_line():
     
     parser.add_argument("-maxHetFilter", dest="maxHetFilter", default=1.0,
         help="Fraction of called genotypes per population that are heterozygous (0/1). e.g. -maxHetFilter 0.8 would exclude any site that has >=80% of called genotypes 0/1 within a population. Default is 1.0 which only removes sites that are all 0/1 within the population. If your SFS is U-shaped after projection, I recommend lowering the max threshold to .7-.9.")
-    
-     parser.add_argument("-dpFile", dest="dpFile", default=str(),
+        
+    parser.add_argument("-dpFile", dest="dpFile", default=str(),
         help="Path to a file to get depth/qual/qd distribution for sites that pass/fail Het filter")
 
     ## if no args then return help message
