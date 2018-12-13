@@ -287,7 +287,7 @@ def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
     #hetFailSiteCounter=0
     ## Get genotype counts for each population
     dpFile= open(dpFile, "w")
-    dpFile.write("pop\tHETFILTER\tQUAL\tDP\tQD\thetCount\ncalledGTCount\n") 
+    dpFile.write("pop\tHETFILTER\tQUAL\tDP\tQD\thetCount\tcalledGTCount\n") 
     for row in genotypes.iterrows():
         ## iterrows() returns a tuple for some reason
         row = row[1]
