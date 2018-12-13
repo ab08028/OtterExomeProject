@@ -312,7 +312,7 @@ def make_datadict(genotypes, pops, maxHetFilter,verbose=False,ploidy=1):
                 #print("found an all 0/1 site for "+str(pop)+str(pop_genotypes))
                 #calls[pop] =(0,0) # set it as though it's no-call for that population
             if het_count !=0 and het_count >= called_gts*float(maxHetFilter):
-                print("found a site with >="+str(maxHetFilter*100)+"% of all calls hets. het count = "+str(het_count)+" genotypes: "+ str(pop_genotypes) +"\ndadi call would be: " +str(ref_count)+","+str(alt_count))
+                print("found a site with >="+str(float(maxHetFilter)*100)+"% of all calls hets. het count = "+str(het_count)+" genotypes: "+ str(pop_genotypes) +"\ndadi call would be: " +str(ref_count)+","+str(alt_count))
                 hetFailSiteCounter += 1
                 calls[pop] =(0,0) # set it as though it's no-call for that population
 
