@@ -287,7 +287,7 @@ def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
     #hetFailSiteCounter=0
     ## Get genotype counts for each population
     dpFile= open(dpFile, "w")
-    dpFile.write("HETFILTER\tQUAL\tDP\tQD\n") 
+    dpFile.write("HETFILTER\tQUAL\tDP\tQD\tcalledGTCount\n") 
     for row in genotypes.iterrows():
         ## iterrows() returns a tuple for some reason
         row = row[1]
@@ -325,12 +325,14 @@ def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
                 passStatus="FAIL_HETFILTER_"+str(maxHetFilter)
                 #hetFailSiteCounter += 1
                 calls[pop] =(0,0) # set it as though it's no-call for that population
-                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD)))
+                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD,called_gts)))
+                dpFile.write("\n")
 
             else:
                 calls[pop] = (ref_count, alt_count)
                 passStatus="PASS_HETFILTER_"+str(maxHetFilter)
-                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD)))
+                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD,called_gts)))
+                dpFile.write("\n")
 
         dd[row["#CHROM"]+"-"+row["POS"]] =\
             {"segregating":[row["REF"], row["ALT"]],\
