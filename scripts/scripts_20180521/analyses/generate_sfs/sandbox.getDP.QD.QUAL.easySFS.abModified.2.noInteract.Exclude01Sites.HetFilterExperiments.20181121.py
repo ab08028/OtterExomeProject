@@ -284,7 +284,7 @@ def oneD_sfs_per_pop(dd, pops, outdir, prefix):
 
 def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
     dd = {}
-    hetFailSiteCounter=0
+    #hetFailSiteCounter=0
     ## Get genotype counts for each population
     dpFile= open(dpFile, "w")
     dpFile.write("HETFILTER\tQUAL\tDP\tQD\n") 
@@ -336,7 +336,8 @@ def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
             {"segregating":[row["REF"], row["ALT"]],\
             "calls":calls,\
             "outgroup_allele":row["REF"]}
-        print(str(hetFailSiteCounter))
+        #print(str(hetFailSiteCounter))
+        dpFile.close()
     return dd
 
 
