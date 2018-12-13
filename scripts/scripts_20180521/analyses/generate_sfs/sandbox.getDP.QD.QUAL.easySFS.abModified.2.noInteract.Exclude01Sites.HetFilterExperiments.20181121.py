@@ -337,7 +337,7 @@ def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
             "calls":calls,\
             "outgroup_allele":row["REF"]}
         #print(str(hetFailSiteCounter))
-        dpFile.close()
+    dpFile.close()
     return dd
 
 
