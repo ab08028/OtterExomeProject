@@ -98,4 +98,5 @@ python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/${allSitesvcf}
 # # line count (without # lines) should equal 5790572 for CA count.
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/troubleshoot-hetFilter
 mkdir -p $outdir
-$scriptdir/sandbox.easySFS.abModified.2.noInteract.Exclude01Sites.HetFilterExperiments.20181121.py -i $vcfdir/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter 0.9
+maxHetFilter=0.9
+$scriptdir/sandbox.easySFS.abModified.2.noInteract.Exclude01Sites.HetFilterExperiments.20181121.py -i $vcfdir/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter $maxHetFilter
