@@ -105,6 +105,28 @@ all <- rbind(sfs0.7_exclMono,sfs0.8_exclMono,sfs0.9_exclMono,sfs1_exclMono)
 p <- ggplot(all,aes(x=frequency, y=count,fill=label))+
   geom_bar(stat="identity",position="dodge")+
   theme_bw()+
-  scale_x_continuous(breaks=c(seq(1,length(sfs_exclMono$frequency))))+
+  scale_x_continuous(breaks=c(seq(1,length(sfs0.7_exclMono$frequency))))+
   ggtitle("COM")
 p
+
+
+################# statistics on passing/failing het sites ##############
+
+stats <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20181119/easySFS_projection/troubleshoot-hetFilter-0.8/DP.QD.QUAL.dist.HetFilter.0.8.txt.gz",header=T)
+
+test <- stats[stats$pop=="COM" & stats$calledGTCount!=0,] # one population (COM) , and make sure sites with no-calls are not included
+ggplot(test,aes(x=QUAL,color=HETFILTER))+
+  geom_density()
+ggplot(test,aes(x=DP,color=HETFILTER))+
+  geom_density()+
+  geom_vline(xintercept = 500)
+# okay so 
+ggplot(test,aes(x=QD,color=HETFILTER))+
+  geom_density()
+
+# stratify it more:
+ggplot(test[test$calledGTCount >= 16,],aes(x=DP,color=HETFILTER))+
+  geom_density()+
+  geom_vline(xintercept = 500)
+
+ggplot(test,aes(x=))

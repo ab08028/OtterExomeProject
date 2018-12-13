@@ -13,6 +13,7 @@ import datetime
 ################# This function will count the number of monomorphci sites passing a projection level for minimum calls ################
 # sites must be all 0/0 
 # must have at least (projection / 2 ) genotype calls (opposed to missing data)
+# note this script assumes unphased data with 0/0 calls rather than 0|0 calls
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Count the number of 0/0 sites that have have called genotypes in at least [your projection value  / 2 ] or more individuals. Note that easy SFS projection values are in *haploids* Not Diploids')
 parser.add_argument("--vcf",required=True,help="path to vcf file")
@@ -185,12 +186,12 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                 # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
                 # check if the number of 0/0 for that population is greater than the projection value / 2 (divided by 2 because projection of 16 represents 8 diploids and these are diploid genotypes)
                 #### but must also NOT have any other genotypes! must be monomorphic only!!! 
-                if "0/1" in pop_gts or "1/1" in pop_gts:
+                if "0/1" in pop_gts or "1/0" in pop_gts or "1|0" in pop_gts or "0|1" in pop_gts or "1|1" in pop_gts or "1/1" in pop_gts:
                     #print("expelled:" + str(pop_gts))
                     continue
                 elif pop_gts.count("0/0") >= float(popProjValue)/2:
                     #print("found one!")
-                    #print(pop_gts)
+                    print(pop_gts.count("0/0"))
                     countDict[population] += 1
                 else:
                     continue
