@@ -282,10 +282,12 @@ def oneD_sfs_per_pop(dd, pops, outdir, prefix):
         print(pop, counts)
 
 
-def make_datadict(genotypes, pops, maxHetFilter,verbose=False,ploidy=1):
+def make_datadict(genotypes, pops, maxHetFilter,dpFile,verbose=False,ploidy=1):
     dd = {}
     hetFailSiteCounter=0
     ## Get genotype counts for each population
+    dpFile= open(dpFile, "w")
+    dpFile.write("HETFILTER\tQUAL\tDP\tQD\n") 
     for row in genotypes.iterrows():
         ## iterrows() returns a tuple for some reason
         row = row[1]
@@ -311,13 +313,24 @@ def make_datadict(genotypes, pops, maxHetFilter,verbose=False,ploidy=1):
             #if homRef_count==0 and homAlt_count==0 and het_count!=0:
                 #print("found an all 0/1 site for "+str(pop)+str(pop_genotypes))
                 #calls[pop] =(0,0) # set it as though it's no-call for that population
+            myqual=row[5]
+            myinfo=row[7]
+                    # split info fields:
+                    # instead of iterating through each one, make a dict.
+            infoFields=dict(s.split('=') for s in myinfo.split(";"))
+            myQD=infoFields["QD"]
+            myDP=infoFields["DP"]
             if het_count !=0 and het_count >= called_gts*float(maxHetFilter):
                 print("found a site with >="+str(float(maxHetFilter)*100)+"% of all calls hets. het count = "+str(het_count)+" genotypes: "+ str(pop_genotypes) +"\ndadi call would be: " +str(ref_count)+","+str(alt_count))
+                passStatus="FAIL_HETFILTER_"+str(maxHetFilter)
                 #hetFailSiteCounter += 1
                 calls[pop] =(0,0) # set it as though it's no-call for that population
+                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD)))
 
             else:
                 calls[pop] = (ref_count, alt_count)
+                passStatus="PASS_HETFILTER_"+str(maxHetFilter)
+                dpFile.write("\t".join(str(x) for x in (passStatus,myqual, myDP, myQD)))
 
         dd[row["#CHROM"]+"-"+row["POS"]] =\
             {"segregating":[row["REF"], row["ALT"]],\
@@ -566,6 +579,9 @@ def parse_command_line():
     
     parser.add_argument("-maxHetFilter", dest="maxHetFilter", default=1.0,
         help="Fraction of called genotypes per population that are heterozygous (0/1). e.g. -maxHetFilter 0.8 would exclude any site that has >=80% of called genotypes 0/1 within a population. Default is 1.0 which only removes sites that are all 0/1 within the population. If your SFS is U-shaped after projection, I recommend lowering the max threshold to .7-.9.")
+    
+     parser.add_argument("-dpFile", dest="dpFile", default=str(),
+        help="Path to a file to get depth/qual/qd distribution for sites that pass/fail Het filter")
 
     ## if no args then return help message
     if len(sys.argv) == 1:
@@ -627,7 +643,7 @@ def main():
     genotypes = read_input(args.vcf_name, all_snps=args.all_snps,
                             verbose=args.verbose)
     ## Convert dataframe to dadi-style datadict
-    dd = make_datadict(genotypes, pops=pops, ploidy=args.ploidy, verbose=args.verbose,maxHetFilter=args.maxHetFilter)
+    dd = make_datadict(genotypes, pops=pops, ploidy=args.ploidy, verbose=args.verbose,maxHetFilter=args.maxHetFilter,dpFile=args.dpFile)
     ## Don't write the datadict to the file for preview mode
     if not args.preview:
         with open(os.path.join(args.outdir, "datadict.txt"), 'w') as outfile:
