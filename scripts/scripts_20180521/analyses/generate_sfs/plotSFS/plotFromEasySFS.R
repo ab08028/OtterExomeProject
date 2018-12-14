@@ -59,7 +59,7 @@ for(pop in popOrder) {
 
 
 ############### 2D SFS ###################
-############ need to update to automate ######## (to do)
+############ need to update to automate ######## ## do this!
 # so pop 0 is position 1 in pop Order (pythonic numbering). 
 
 test2D$pop1 <- as.character(row.names(test2D))
