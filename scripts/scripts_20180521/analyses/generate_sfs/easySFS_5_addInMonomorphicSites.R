@@ -1,0 +1,34 @@
+###################### Adding monomorphic sites to fastsimcoal SFSes ##########
+# don't need to add to dadi because are masked anyway
+# just need the total value of sites for dadi (L) that is sum of SFS + monomorphic. going to output that 
+genotypeDate=20181119
+projectionDate=20181212 # date projection was carried out
+data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/projection-",projectionDate,"/",sep="")
+
+plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",genotypeDate,"/easySFS_projection/",sep="")
+fsc.format.dir=paste(data.dir,"fastsimcoal2/",sep="") # where easysfs output is
+new.fsc.format.dir=paste(data.dir,"fastsimcoal2-plusMono-useThis/") # where you'll put the new sfses that have monomorphic sites added in
+dir.create(new.fsc.format.dir) 
+dadi.format.dir = paste(data.dir,"dadi/",sep="")
+popFile=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt",header=F) # used in easySFS; update if used a different one. The order of populations in this script is the order that pops are assigned numbers in easy sfs (that's a bit hacky). So get order of pops from this file for 0/1 (double check manually)
+colnames(popFile) <- c("sample","population")
+popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,COM,KUR  for my project
+
+####################### read in file of monomorphic site counts that are monomorphic in all individuals and are called in at least [projection value] for each population ######
+# note that sites that are variable in the whole sample, but monomorphic in one population, are already included in the zero bin of the sfs. # 
+
+monomorph <- read.table(paste(data.dir,"countsOfMonomorphicPassingProjectionThresholds.",projectionDate,".txt",sep=""),header = T)
+monomorph
+
+#### go through SFSes and write them out with the monomorphic added in: #########
+for(pop in popOrder) {
+  input <- list.files(fsc.format.dir,pattern=pop,full.names = T)
+  sfs <- read.table(input,skip = 1,header = T) # skip first line: "1 observation"
+  monoCount <- monomorph[monomorph$population==pop,]$HomREFcount
+  sfs$d0_0 <- sfs$d0_0+monoCount
+  sink(paste(new.fsc.format.dir,pop,"_MAFpop0.obs",sep=""))
+  cat("1 observation\n")
+  write.table(sfs,quote=F,row.names = F) # writes new sfs to the table
+  sink()
+}
+
