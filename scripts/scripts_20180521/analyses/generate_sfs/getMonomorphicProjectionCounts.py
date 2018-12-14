@@ -169,6 +169,8 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
     inVCF.seek(0)
     # set up dictionary:
     countDict=dict()
+    # set up dict for total number of overall sites
+    totalCountDict=dict()
     for population in pops.keys():
         countDict[population]=0
     for line0 in inVCF:
@@ -181,7 +183,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
         allCalls=[i.split(":")[0] for i in mygenoinfo] # get genotype calls
         callDict = dict(zip(samples,allCalls))
         #for population in pops.keys(): # go through each population 
-        for population in "CA":
+        for population in ["CA"]:
                 pop_gts = [ callDict[x] for x in pops[population] ] 
                 popProjValue=projDict[population]
                 # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
@@ -192,11 +194,14 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                     continue
                 elif pop_gts.count("0/0") >= float(popProjValue)/2:
                     #print("found one!")
-                    print(pop_gts.count("0/0"))
+                    #print(pop_gts.count("0/0"))
                     countDict[population] += 1
+                    totalCountDict[population]+=1
                 else:
+                    totalCountDict[population]+=1
                     continue
     inVCF.close()
+    print(totalCountDict)
     return countDict
     
 counts = count_PassingMonomorphicSites(pops,projDict,vcfFile)
@@ -205,7 +210,7 @@ counts = count_PassingMonomorphicSites(pops,projDict,vcfFile)
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 outputFile=open(str(outdir)+"/countsOfMonomorphicPassingProjectionThresholds."+todaysdate+".txt","w")
-outputFile.write("population\tHomREFcount\tProjectionValue\n")
+outputFile.write("population\tHomREFcountPassingProjThreshold\tProjectionValue\tTotalSiteCount\n")
 for key,value in counts.items():
     outputFile.write('{0}\t{1}\t'.format(key,value))
     outputFile.write(str(projDict[key])+"\n")
