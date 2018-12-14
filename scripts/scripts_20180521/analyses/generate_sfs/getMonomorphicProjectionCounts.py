@@ -173,6 +173,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
     totalCountDict=dict()
     for population in pops.keys():
         countDict[population]=0
+	totalCountDict[population]=0
     for line0 in inVCF:
         if line0.startswith('#'):
             continue
