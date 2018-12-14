@@ -187,7 +187,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
             continue
         else: # it's entirely monomorphic
             callDict = dict(zip(samples,allCalls))
-            for population in ["CA"]: # pops.keys(): # go through each population 
+            for population in pops.keys(): # go through each population 
                     pop_gts = [ callDict[x] for x in pops[population] ] 
                     popProjValue=projDict[population]
                     # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
@@ -199,7 +199,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                     else:
                         TotalDict[population] += 1
                         continue
-    print(TotalDict)
+    print(str(TotalDict))
     inVCF.close()
     return countDict
     
