@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp
+#$ -l h_rt=20:00:00,h_data=16G,highp
 #$ -N vcf1d_removeRelatives
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -24,7 +24,7 @@ rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
 noCallFrac=1.0 # maximum fraction of genotypes that can be "no call" (./.) that was used in previous steps in previous "all sites" files (currently no cutoff)
 snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
 perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
-
+maxHetFilter=0.75 # (maximum heterozygous genotypes per site filter)
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
@@ -34,6 +34,9 @@ REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_puto
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $vcfdir/populationVCFs
 mkdir -p $vcfdir/populationVCFs/admixedVCFs
+gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
+scriptdir=$gitdir/data_processing/variant_filtering
+hetFilterScript=
 
 ## Relatives to remove
 ind1="RWAB003_19_ELUT_CA_352"
@@ -90,7 +93,27 @@ java -jar $GATK \
 -xl_sn ${ind16} \
 -xl_sn ${ind17} \
 -xl_sn ${ind18} \
--xl_sn ${ind19}
+-xl_sn ${ind19} \
+-trimAlternates
+# adding trim alternates? 20181214
+
+
+######## removing all outliers, relatives and admixed here ########
+
+#######################################################################################
+###################################### imposing excess heterozygosity filter ################################
+#######################################################################################
+
+##### going to filter out sites that exceed a number of het-calls across all samples (then I do more specific population filtering)
+# of heterozygosity within easysfs. But the goal of this stage is to make sure that my files that go into PCA, etc. aren't too affected by these
+# weird sites.
+
+python $scriptdir/$hetFilterScript --vcf ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--outfile ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--errorfile ${vcfdir}/'sitesFailingMaxHetFilter_'${maxHetFilter}'.txt' \
+--maxNoCallFrac $noCallFrac \
+--maxHetFilter $maxHetFilter
+# no maxnocallfrac filter (comes at next stage)
 
 #######################################################################################
 ############## put admixed individuals (but not relatives) into their own VCFs for later ##############
@@ -100,6 +123,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
+-trimAlternates \
 --variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
 -o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_KUR_'all_8_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -sn ${ind7} \
@@ -112,6 +136,7 @@ java -jar $GATK \
 java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
+-trimAlternates \
 --variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
 -o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_AK_'all_8_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -sn ${ind12} \
@@ -122,9 +147,6 @@ java -jar $GATK \
 -sn ${ind17} 
 # skipping ind 18 because it odesn't appear admixed in FASTRUCTURE; just appears like a PCA outlier
 
-
-######## removing all outliers, relatives and admixed here ########
-
 #######################################################################################
 ######################### after pop-vcfs made, make a final version  #########################
 ######################### of the all sites vcfs that uses a 20% cutoff #######################
@@ -134,11 +156,12 @@ java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--trimAlternates \
 -o ${vcfdir}/'snp_8a_forPCAetc_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
---maxNOCALLfraction ${snpNoCallFrac} 
+--maxNOCALLfraction ${snpNoCallFrac}  \
+--excludeNonVariants
 # this call to maxnocallfrac is okay because it's for the snp file with a 20% cutoff for use in pca, etc.
 ########### this also keeps PCA outliers.
 
@@ -147,13 +170,15 @@ java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
 -V ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--trimAlternates \
--o ${vcfdir}/'snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile}
+-o ${vcfdir}/'snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+--excludeNonVariants
 # no maxnocall frac.
 # added trimAlternates in case removal of some individuals made some sites not variable anymore.
-
+# added excludeNonVariants as extra precaution since I was seeing some sites that used to be variable not getting removed by trim alt
+# need to do trim alt upstream (all 7 --> all 8 )
 
 #######################################################################################
 ############### not making population VCFs anymore (because projecting with EasySFS from one file) ####################
