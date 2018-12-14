@@ -96,7 +96,7 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename,maxHetFilter,maxNoC
         # check if all calls are heterozygous at the population level
         # adding a max het filter 
         elif myHet !=0 and myHet >= myCalled*float(maxHetFilter):
-            errorVCF.write("# found a site with          >="+str(float(maxHetFilter)*100)+"% heterozygous genotypes\n")
+            errorVCF.write("# found a site with >="+str(float(maxHetFilter)*100)+"% heterozygous genotypes\n")
             errorVCF.write(line0)
             counter_nop+=1
         else:

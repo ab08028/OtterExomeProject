@@ -18,6 +18,8 @@
 source /u/local/Modules/default/init/modules.sh
 module load java
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
+tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
+bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 #### parameters:
 rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
@@ -36,7 +38,7 @@ mkdir -p $vcfdir/populationVCFs
 mkdir -p $vcfdir/populationVCFs/admixedVCFs
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
 scriptdir=$gitdir/data_processing/variant_filtering
-hetFilterScript=
+hetFilterScript=filtering_perPopulation.noCall.maxHetFilter.py
 
 ## Relatives to remove
 ind1="RWAB003_19_ELUT_CA_352"
@@ -107,45 +109,17 @@ java -jar $GATK \
 ##### going to filter out sites that exceed a number of het-calls across all samples (then I do more specific population filtering)
 # of heterozygosity within easysfs. But the goal of this stage is to make sure that my files that go into PCA, etc. aren't too affected by these
 # weird sites.
+# don't use no maxnocallfrac filter at this pont (though the script is capable)(comes at next stage)
 
 python $scriptdir/$hetFilterScript --vcf ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
---outfile ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--outfile ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
 --errorfile ${vcfdir}/'sitesFailingMaxHetFilter_'${maxHetFilter}'.txt' \
 --maxNoCallFrac $noCallFrac \
 --maxHetFilter $maxHetFilter
-# no maxnocallfrac filter (comes at next stage)
 
-#######################################################################################
-############## put admixed individuals (but not relatives) into their own VCFs for later ##############
-#######################################################################################
-## KURIL ADMIXED (you take out of the all_7 file that still has admixed inds. in there and you positively select them with sn):
-# 20181206: don't need to make all_8 that keeps admixed; can just pull them out of all_7:
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
--trimAlternates \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
--o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_KUR_'all_8_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
--sn ${ind7} \
--sn ${ind8} \
--sn ${ind9} \
--sn ${ind10} \
--sn ${ind11} 
-## Alaska ADMIXED:
+$bgzip -f ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} 
+$tabix -f -p vcf ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} 
 
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
--trimAlternates \
---variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
--o ${vcfdir}/populationVCFs/admixedVCFs/admixIndOnly_AK_'all_8_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
--sn ${ind12} \
--sn ${ind13} \
--sn ${ind14} \
--sn ${ind15} \
--sn ${ind16} \
--sn ${ind17} 
-# skipping ind 18 because it odesn't appear admixed in FASTRUCTURE; just appears like a PCA outlier
 
 #######################################################################################
 ######################### after pop-vcfs made, make a final version  #########################
@@ -155,7 +129,7 @@ java -jar $GATK \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
 -trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
@@ -169,7 +143,7 @@ java -jar -Xmx4G ${GATK} \
 java -jar -Xmx4G ${GATK} \
 -T SelectVariants \
 -R ${REFERENCE} \
--V ${vcfdir}/'all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+--variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
 -trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
@@ -179,6 +153,41 @@ java -jar -Xmx4G ${GATK} \
 # added trimAlternates in case removal of some individuals made some sites not variable anymore.
 # added excludeNonVariants as extra precaution since I was seeing some sites that used to be variable not getting removed by trim alt
 # need to do trim alt upstream (all 7 --> all 8 )
+#### CHECK final output to make sure there are no sneaky sites that are just made up of 0/0s and ./.s and so aren't really variant anymore 
+
+#######################################################################################
+############## put admixed individuals (but not relatives) into their own VCFs for later ##############
+#######################################################################################
+## KURIL ADMIXED (you take out of the all_7 file that still has admixed inds. in there and you positively select them with sn):
+# 20181206: don't need to make all_8 that keeps admixed; can just pull them out of all_7:
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+-trimAlternates \
+--variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
+-o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_KUR_all_9_maxHetFilter_'${maxHetFilter}'_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+-sn ${ind7} \
+-sn ${ind8} \
+-sn ${ind9} \
+-sn ${ind10} \
+-sn ${ind11} 
+
+## Alaska ADMIXED:
+
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+-trimAlternates \
+--variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
+-o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_AK_all_9_maxHetFilter_'${maxHetFilter}'_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+-sn ${ind12} \
+-sn ${ind13} \
+-sn ${ind14} \
+-sn ${ind15} \
+-sn ${ind16} \
+-sn ${ind17} 
+# skipping ind 18 because it odesn't appear admixed in FASTRUCTURE; just appears like a PCA outlier
+
 
 #######################################################################################
 ############### not making population VCFs anymore (because projecting with EasySFS from one file) ####################
