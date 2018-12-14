@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=20:00:00,h_data=16G,highp
+#$ -l h_rt=30:00:00,h_data=16G,highp
 #$ -N vcf1d_removeRelatives
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
@@ -157,6 +157,7 @@ java -jar -Xmx4G ${GATK} \
 
 #######################################################################################
 ############## put admixed individuals (but not relatives) into their own VCFs for later ##############
+######### note these have not been through het filtering #################
 #######################################################################################
 ## KURIL ADMIXED (you take out of the all_7 file that still has admixed inds. in there and you positively select them with sn):
 # 20181206: don't need to make all_8 that keeps admixed; can just pull them out of all_7:
@@ -164,8 +165,8 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 -trimAlternates \
---variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
--o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_KUR_all_9_maxHetFilter_'${maxHetFilter}'_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+--variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_KUR_all_8_notHetFiltered_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -sn ${ind7} \
 -sn ${ind8} \
 -sn ${ind9} \
@@ -178,8 +179,8 @@ java -jar $GATK \
 -R $REFERENCE \
 -T SelectVariants \
 -trimAlternates \
---variant ${vcfdir}/'all_9_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile}  \
--o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_AK_all_9_maxHetFilter_'${maxHetFilter}'_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
+--variant ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+-o ${vcfdir}/populationVCFs/admixedVCFs/'admixIndOnly_AK_all_8_notHetFiltered_passingAllFilters_maxNoCallFrac_'${noCallFrac}'.vcf.gz' \
 -sn ${ind12} \
 -sn ${ind13} \
 -sn ${ind14} \
