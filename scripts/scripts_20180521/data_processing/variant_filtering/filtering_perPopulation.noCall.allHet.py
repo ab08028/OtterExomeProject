@@ -13,14 +13,27 @@ python filtering_bespokeFiltersAndChecks.py [infile full path] [outfile full pat
 """
 import sys
 import gzip
+import argparse
 #import re
 #import time
 #from collections import Counter
 # sys argv 1 = filename
-filepath = sys.argv[1] #input file
-outname= sys.argv[2] # output file
-errorname= sys.argv[3] # error file
-maxNoCallFrac=sys.argv[4] # this is fraction of no-call genotypes you'll permit per site (anything greater than that will be excluded)
+
+parser = argparse.ArgumentParser(description='Count the number of 0/0 sites that have have called genotypes in at least [your projection value  / 2 ] or more individuals. Note that easy SFS projection values are in *haploids* Not Diploids')
+parser.add_argument("--vcf",required=True,help="path to vcf file")
+parser.add_argument("--outfile",required=True,help="path to output file")
+parser.add_argument("--errorfile",required=True,help="path to error file")
+parser.add_argument("--maxNoCallFrac",required=False,help="set a maximum no call fraction. 1.0 indicates no filter; 0.2 allows up to 20% missing data.",default="")
+parser.add_argument("--maxHetFilter",required=True,help="desired maximum het filter; 1.0 means that any site that has 100% het calls is excluded; 0.75 means that any site with >75% het calls is excluded. Note that this is at the full sample level. You can do more fine-scale filtering per population in EasySFS.",default="")
+
+args = parser.parse_args()
+filepath=args.vcf #input file
+outname= args.outfile #  output file
+errorname= args.errorfile # error file
+maxNoCallFrac= args.maxNoCallFrac
+maxHetFilter = args.maxHetFilter
+
+ # this is fraction of no-call genotypes you'll permit per site (anything greater than that will be excluded)
 # example: 118 samples, 118*.2 = 23.6 so any site with > 24 no-call sites will be excluded. A site with 23 no-call will be kept.
 #
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
@@ -35,7 +48,7 @@ maxNoCallFrac=sys.argv[4] # this is fraction of no-call genotypes you'll permit 
 
 ################ write header lines to new vcf file #############
 # this then prints out the rest of the header lines
-def main_vcf_check(inputvcfilename,outfilename,errorfilename):
+def main_vcf_check(inputvcfilename,outfilename,errorfilename,maxHetFilter,maxNoCallFrac):
     # open your files:
     inVCF = gzip.open(inputvcfilename, 'r')
     outVCF = open(outfilename, 'w')
@@ -81,8 +94,9 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
             errorVCF.write(line0)
             counter_nop+=1
         # check if all calls are heterozygous at the population level
-        elif myHet==myCalled:
-            errorVCF.write('# All genotypes are heterozygous\n')
+        # adding a max het filter 
+        elif myHet !=0 and myHet >= myCalled*float(maxHetFilter):
+            errorVCF.write("# found a site with          >="+str(float(maxHetFilter)*100)+"% heterozygous genotypes\n")
             errorVCF.write(line0)
             counter_nop+=1
         else:
@@ -96,6 +110,6 @@ def main_vcf_check(inputvcfilename,outfilename,errorfilename):
     inVCF.close()
     
 #### run the function ##########
-main_vcf_check(filepath,outname,errorname)
+main_vcf_check(filepath,outname,errorname,maxHetFilter,maxNoCallFrac)
 # exit
 sys.exit()

@@ -62,47 +62,15 @@ $easySFS -i $vcfdir/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdi
 # then do for SYN and MIS (eventually)
 ########## get counts of monomorphic sites to add to the SFSes ############
 python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/${allSitesvcf} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
-# test: started 12:20
-# need to add these to the 0/0 bin for everything. How to do that? Manually? dadi could do in python when I parse results because it's masked anyway. for fastsimcoal need to add to SFS directly 
-# in the 0/0 bin. (but want to add to what's already there.)
-# maybe a little R or python script? (coudl read in the fsc SFSes and add this to 0/0 bin?)
-########### eventually; to start with can do by hand #######
 
-
-######## run a little test:
-# script=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/generate_sfs/getMonomorphicProjectionCounts.py
-# python $scriptdir/$script --vcf "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" \
-# --popMap /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.2.goingtoModifyFor20181119.txt \
-# --proj 14,16,16,16,14 --popIDs CA,AK,AL,COM,KUR \
-# --outdir /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/testRunsEasySFSModificatoins
-
-## testing that my monormophic script matches what GATK would give:
-# zcat $vcfdir/$allSitesvcf | grep -v "#" | grep "0/0" | grep -v "0/1" | grep -v "1/1" -c
-# # lines that are all 0/0 and no 0/1 and 1/1 (doesn't account for missing data or projection values yet: 6585427
-# # Okay, so they are on the right order of magnitude. 
-# # how to test that this is right? compare to GATK with nocallfrac and restrict to just one population
-# vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/20181119_filtered/neutral_and_cds_VCFs/neutralVCFs/
-# allSitesvcf=neutral.all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
-# wd=/u/flashscratch/a/ab08028/sandbox/monomorphicCounts
-# GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
-# REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
-# java -jar $GATK \
-# -R $REFERENCE \
-# -T SelectVariants \
-# --variant ${vcfdir}/$allSitesvcf \
-# --maxNOCALLnumber 6 \
-# -selectType NO_VARIATION \
-# -se 'Elut_CA' \
-# -o $wd/test.MonomorphicCounter.CA.vcf.gz
-# runs in 15 min
-# # line count (without # lines) should equal 5790572 for CA count.
+############ troubleshooting: 
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/troubleshoot-hetFilter
 mkdir -p $outdir
 maxHetFilter=0.5
 $scriptdir/sandbox.easySFS.abModified.2.noInteract.Exclude01Sites.HetFilterExperiments.20181121.py -i $vcfdir/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter $maxHetFilter
 
 
-# get DP of sites that pass/fail a het filter:
+# get DP dist of sites that pass/fail a het filter:
 wd=/u/flashscratch/a/ab08028/sandbox/hetFilters
 script=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/analyses/generate_sfs/sandbox.getDP.QD.QUAL.easySFS.abModified.2.noInteract.Exclude01Sites.HetFilterExperiments.20181121.py
 maxHetFilter=0.8
