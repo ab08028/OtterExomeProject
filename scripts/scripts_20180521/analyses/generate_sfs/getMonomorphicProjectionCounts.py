@@ -169,8 +169,6 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
     inVCF.seek(0)
     # set up dictionary:
     countDict=dict()
-    # set up dict for total number of overall sites
-    totalCountDict=dict()
     for population in pops.keys():
         countDict[population]=0
     for line0 in inVCF:
@@ -181,27 +179,24 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
         #CHROM0    POS1    ID2    REF3    ALT4    QUAL5    FILTER    INFO    FORMAT    [indivudals]
         mygenoinfo=line[9:]
         allCalls=[i.split(":")[0] for i in mygenoinfo] # get genotype calls
-        callDict = dict(zip(samples,allCalls))
+        # want to exclude variable sites AT THIS STAGE because any variable site 
+        # made it into neutral.snps file and is taken care of by EasySFs even if it's monomorphic within a population
+        if "0/1" in allCalls or "1/0" in allCalls or "1|0" in allCalls or "0|1" in allCalls or "1|1" in allCalls or "1/1" in allCalls:
+            continue
+        else: # it's entirely monomorphic
+            callDict = dict(zip(samples,allCalls))
         #for population in pops.keys(): # go through each population 
-        for population in ["CA"]:
-                pop_gts = [ callDict[x] for x in pops[population] ] 
-                popProjValue=projDict[population]
-                # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
-                # check if the number of 0/0 for that population is greater than the projection value / 2 (divided by 2 because projection of 16 represents 8 diploids and these are diploid genotypes)
-                #### but must also NOT have any other genotypes! must be monomorphic only!!! 
-                if "0/1" in pop_gts or "1/0" in pop_gts or "1|0" in pop_gts or "0|1" in pop_gts or "1|1" in pop_gts or "1/1" in pop_gts:
-                    #print("expelled:" + str(pop_gts))
-                    continue
-                elif pop_gts.count("0/0") >= float(popProjValue)/2:
-                    #print("found one!")
-                    #print(pop_gts.count("0/0"))
-                    countDict[population] += 1
-                    totalCountDict[population]+=1
-                else:
-                    totalCountDict[population]+=1
-                    continue
+            for population in ["CA"]:
+                    pop_gts = [ callDict[x] for x in pops[population] ] 
+                    popProjValue=projDict[population]
+                    # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
+                    # check if the number of 0/0 for that population is greater than the projection value / 2 (divided by 2 because projection of 16 represents 8 diploids and these are diploid genotypes)
+                    # have already selected for only monomorphic sites above
+                    if pop_gts.count("0/0") >= float(popProjValue)/2:
+                        countDict[population] += 1
+                    else:
+                        continue
     inVCF.close()
-    print(totalCountDict)
     return countDict
     
 counts = count_PassingMonomorphicSites(pops,projDict,vcfFile)
