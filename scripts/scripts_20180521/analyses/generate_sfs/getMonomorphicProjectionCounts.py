@@ -169,8 +169,10 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
     inVCF.seek(0)
     # set up dictionary:
     countDict=dict()
+    TotalDict=dict()
     for population in pops.keys():
         countDict[population]=0
+        TotalDict[population]=0
     for line0 in inVCF:
         if line0.startswith('#'):
             continue
@@ -191,10 +193,13 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                     # this is saying to go through each individual of the population and get that call eg. callDict["145_Elut_CA_145"] is 0/0 (fake example) and pops[pop] gives you all individuals from the pops dictionary (from the popmap file) 
                     # check if the number of 0/0 for that population is greater than the projection value / 2 (divided by 2 because projection of 16 represents 8 diploids and these are diploid genotypes)
                     # have already selected for only monomorphic sites above
-                    if pop_gts.count("0/0") >= float(popProjValue)/2:
+                    if pop_gts.count("0/0") >= (float(popProjValue)/2):
                         countDict[population] += 1
+                        TotalDict[population] += 1
                     else:
+                        TotalDict[population] += 1
                         continue
+    print(TotalDict)
     inVCF.close()
     return countDict
     
