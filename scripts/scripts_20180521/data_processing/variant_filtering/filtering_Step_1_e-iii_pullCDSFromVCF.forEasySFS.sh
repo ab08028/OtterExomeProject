@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=16G,highp
+#$ -l h_rt=20:00:00,h_data=16G,highp
 #$ -N exonVEPSFS
 #$ -o /u/flashscratch/a/ab08028/captures/reports/VEP
 #$ -e /u/flashscratch/a/ab08028/captures/reports/VEP
@@ -33,9 +33,9 @@ vcfdir=$wd/${rundate}_filtered # date you called genotypes
 outdir=$vcfdir/neutral_and_cds_VCFs/cdsVCFs
 mkdir -p $outdir
 mkdir -p ${vcfdir}/bedCoords/cdsCallableSites/
-allVCF=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
+allVCF=all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
 
-snpVCF=snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
+snpVCF=snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 
 # intersect cds bed with population vcf files that have all sites called in all individuals
 
