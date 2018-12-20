@@ -206,9 +206,9 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
 counts = count_PassingMonomorphicSites(pops,projDict,vcfFile)
 
 ############ write out counts 
-todaysdate=datetime.datetime.today().strftime('%Y%m%d')
+#todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
-outputFile=open(str(outdir)+"/countsOfMonomorphicPassingProjectionThresholds."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/countsOfMonomorphicPassingProjectionThresholds.txt","w")
 outputFile.write("population\tHomREFcountPassingProjThreshold\tProjectionValue\n")
 for key,value in counts.items():
     outputFile.write('{0}\t{1}\t'.format(key,value))

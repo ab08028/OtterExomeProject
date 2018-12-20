@@ -24,6 +24,26 @@ fileoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject
 dir.create(plotoutdir,recursive = T)
 dir.create(fileoutdir,recursive = T)
 
+
+#################### get approx distances #############
+###### get combinations of all locations 
+approxLatLongOfSamples <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/SamplingLatLong/approxLatLongOfSamples.txt",header=T,sep="\t",stringsAsFactors = F)
+# add in Baja average -- averaging lat/long actually doesn't make sense
+# need to average distances properly using geomean -- needs to take earth into account can't just average numbers. used geomean instead!
+BajAvg <- c(Population="BAJ",centralLocation="Baja",latConverted=geomean(approxLatLongOfSamples[approxLatLongOfSamples$Population=="BAJ",][4:3])[2],longConverted=geomean(approxLatLongOfSamples[approxLatLongOfSamples$Population=="BAJ",][4:3])[1])
+approxLatLongOfSamples2 <- rbind.data.frame(approxLatLongOfSamples,BajAvg,stringsAsFactors = F) # adding in baja average
+# make numeric:
+approxLatLongOfSamples2$latConverted <- as.numeric(approxLatLongOfSamples2$latConverted)
+approxLatLongOfSamples2$longConverted <- as.numeric(approxLatLongOfSamples2$longConverted)
+
+# get a distance matrix from geospheres: 
+distances <- distm(approxLatLongOfSamples2[4:3],approxLatLongOfSamples2[4:3])/1000 # output is in meters, so am dividing by 1000 to get km.
+colnames(distances) <- approxLatLongOfSamples2$centralLocation
+rownames(distances) <- approxLatLongOfSamples2$centralLocation
+distances_melt <- melt(distances)
+colnames(distances_melt) <- c("pop1","pop2","approxDistance_km")
+# okay so now I have a distance matrix! Need an fst matrix too.
+
 ############## open gds file #############
 #open the gds file
 genofile <- snpgdsOpen(paste(data.dir,"snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
@@ -32,6 +52,8 @@ genofile <- snpgdsOpen(paste(data.dir,"snp_7_maxNoCallFrac_0.2_passingBespoke_pa
 ###### *note* this popmap has bad samples in it (labeled as such)
 # but don't worry, they get removed by interescting with the vcf file sample.id set!
 popmap = read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/allSamples.Populations.PCA.txt",header=T) # this includes the RWAB samples
+# exclude outliers, admixed,etc.
+popmap <- popmap[popmap$notes=="good",]
 sample.id=popmap$Sample
 pop1_code=as.character(popmap$popCode)
 #pop1_code = as.character(popmap$PrimaryPop)
@@ -153,9 +175,75 @@ for(i in seq(1,length(alcomcombos[1,]))){
 }
 write.table(alcomfstResults,paste(fileoutdir,"pairwiseFst.AleutianIslands.CommanderIslands.specific.",todaysdate,".txt",sep=""),row.names = F,quote=F,sep="\t")
 
+####################### combos of all secondary locations ###################
 
+secondaryPops <- unique(as.character(unlist(popmap$SecondaryPop)))
+# want to treat Baja as one population: 
+secondaryPops_combineBajasecondaryPops <- secondaryPops[!secondaryPops %in% c("ElRosario","TodosSantos")]
+secondaryPops_combineBajasecondaryPops <- c(secondaryPops_combineBajasecondaryPops,"Baja")
+secondaryCombos <- combn(secondaryPops_combineBajasecondaryPops,2)
+fstResults=data.frame(t(secondaryCombos))
+colnames(fstResults) <- c("pop1","pop2")
+fstResults$pairwiseWeightedFst <- NA
+fstResults$meanFst <- NA
+fstResults$approxDistance_km <- NA
+
+# set up popmap so that ElRosario and TodosSantos are Just Baja
+# only use good samples:
+
+popmap2 <- popmap
+head(popmap2)
+popmap2$locationPop <- as.character(popmap2$SecondaryPop) #population to use for distance calculation
+
+popmap2[popmap2$SecondaryPop %in% c("TodosSantos","ElRosario"),]$locationPop <- ("Baja")
+
+# and use SanNicolas for California locationPop
+
+
+for(i in seq(1,length(secondaryCombos[1,]))){
+  combo=secondaryCombos[,i]
+  sample.id <- read.gdsn(index.gdsn(genofile, "sample.id"))
+  # want to get fst for every pair
+  # select samples
+  selection <- popmap2[(popmap2$locationPop %in% combo & popmap2$Sample %in% sample.id),c("Sample","locationPop")]
+  samp.sel <- selection$Sample
+  # select population 
+  pop.sel <- selection$locationPop
+  
+  results <- snpgdsFst(genofile, sample.id=samp.sel, population=as.factor(as.character(pop.sel)),
+                       method="W&C84",remove.monosnp = T,autosome.only = F,missing.rate = 0.2)
+  fstResults[fstResults$pop1==combo[1] & fstResults$pop2==combo[2],]$pairwiseWeightedFst <- results$Fst
+  fstResults[fstResults$pop1==combo[1] & fstResults$pop2==combo[2],]$meanFst <- results$MeanFst
+  # add in approximate distance calculated from approx lat /long (note: using monterey as california representative)
+  fstResults[fstResults$pop1==combo[1] & fstResults$pop2==combo[2],]$approxDistance_km <- as.numeric(distances_melt[distances_melt$pop1==combo[1] & distances_melt$pop2==combo[2],]$approxDistance_km)
+}
+
+head(fstResults)
+write.table(fstResults,paste(fileoutdir,"pairwiseFst.allpopsWithDistances.km.",todaysdate,".txt",sep=""),row.names = F,quote=F,sep="\t")
+
+###################### Plot FST vs Distance ##############################
+# want to get FST for all the centralLocations
+# make - fst 0:
+fstResults$pairwiseWeightedFst_adjusted <- fstResults$pairwiseWeightedFst
+fstResults[fstResults$pairwiseWeightedFst<0,]$pairwiseWeightedFst_adjusted <- 0
+fstResults$bajaCA <- "no"
+fstResults[fstResults$pop1 =="Baja" & fstResults$pop2 =="California" | fstResults$pop2 =="Baja" & fstResults$pop1 =="California", ]$bajaCA <- "Baja-California"
+fstVsDistance <- ggplot(fstResults,aes(x=approxDistance_km,y=pairwiseWeightedFst_adjusted,color=bajaCA))+
+  geom_point()+
+  ggtitle("Fst vs Distance (km)\nNote: CA distances calc'd from Monterey; Baja is averaged; neg. fst set to 0")+
+  xlab("Approximate Distance Between Populations (km)")+
+  ylab("Pairwise Fst (weighted)")+
+  geom_smooth()+
+  geom_point(aes(y=0,x=distances_melt[distances_melt$pop1=="SanNicolas" & distances_melt$pop2=="Baja",]$approxDistance_km),color="red",shape=4)+
+  geom_text(aes(y=-0.01,x=distances_melt[distances_melt$pop1=="SanNicolas" & distances_melt$pop2=="Baja",]$approxDistance_km),label="SanNic-Baja",color="red",size=5)+
+  geom_text(aes(y=-0.01,x=distances_melt[distances_melt$pop1=="California" & distances_melt$pop2=="Baja",]$approxDistance_km+800),label="Monterey-Baja",color="black",size=5)+
+  theme_bw()+
+  theme(legend.position = "none")
+  
+fstVsDistance
+ggsave(paste(plotoutdir,"/fstVsDistance.BajaAvgd.CaMonterey.andSanNic.labels.pdf",sep=""),fstVsDistance,width=10,height=6,device="pdf")
+# need to figure out how to deal with the Bajas / San Nic distance. Currently it is Monterey_Baja distance. 
 ####################### Plot FST as a tile plot between populations ###############
-
 
 ############## close gds file #############
 

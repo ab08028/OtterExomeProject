@@ -5,6 +5,7 @@ module load bedtools
 module load blast
 
 rundate=20181119
+maxHetFilter=0.75 # het filter used across all samples (per population het filter occurs during easy sfs)
 
 SCRATCH=/u/flashscratch/a/ab08028
 filterDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/
@@ -38,7 +39,9 @@ getGC=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scri
 ############ HQ site coords ####################
 # results of filtering snps (all populations; all nv and snps)
 noCallFrac=1.0 # no filter at all. no limits on how many individuals must be called. but there is min dp 500 at site level
-prefix=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_${noCallFrac}_rmBadIndividuals_passingFilters
+#prefix=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_${noCallFrac}_rmBadIndividuals_passingFilters
+prefix=all_9_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters
+
 hqSites=$bedDir/${prefix}.sorted.merged.coords.bed # bed coords (sorted, merged) of sites from step 7 of filtering (comes from filtering_Step_2.sh)
 
 ############# Get distance of every set of sites from exonic regions in ferret genome ################

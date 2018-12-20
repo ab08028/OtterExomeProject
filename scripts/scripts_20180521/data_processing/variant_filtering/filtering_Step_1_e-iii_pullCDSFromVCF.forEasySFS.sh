@@ -23,6 +23,8 @@ bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
 
 rundate=20181119
 noCallFrac=1.0 # no filter
+maxHetFilter=0.75 # het filter used across all samples (per population het filter occurs during easy sfs)
+
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
@@ -33,9 +35,9 @@ vcfdir=$wd/${rundate}_filtered # date you called genotypes
 outdir=$vcfdir/neutral_and_cds_VCFs/cdsVCFs
 mkdir -p $outdir
 mkdir -p ${vcfdir}/bedCoords/cdsCallableSites/
-allVCF=all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
+allVCF=all_9_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
 
-snpVCF=snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
+snpVCF=snp_9b_forEasySFS_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 
 # intersect cds bed with population vcf files that have all sites called in all individuals
 

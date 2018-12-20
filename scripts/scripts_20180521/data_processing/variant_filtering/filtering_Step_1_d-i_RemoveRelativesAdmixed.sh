@@ -67,7 +67,7 @@ ind16="125_Elut_AK_AF3369" # (adding)
 ind17="65_Elut_AK_GE91060" # (adding)
 ind18="165_Elut_AK_AL4661" # (doesn't appear admixed but is PCA outlier; so am keeping out of pop file and out of admixed file)
 ind19="141_Elut_CA_419" # doesn't appear admixed but is a PCA outlier 
-###### ** UPDATE THIS LIST *** for 20181119 ## 
+###### ** UPDATED THIS LIST *** for 20181119 ## 
 
 ## 20180910 update: I am not going to remove admixed individuals from the all_8 vcf files
 # Because they are valid sequences for PCA, etc. Just removing them from pop-specific files
@@ -134,7 +134,7 @@ java -jar -Xmx4G ${GATK} \
 -trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${vcfdir}/'snp_8a_forPCAetc_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+-o ${vcfdir}/'snp_9a_forPCAetc_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${snpNoCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
 --maxNOCALLfraction ${snpNoCallFrac}  \
 --excludeNonVariants
 # this call to maxnocallfrac is okay because it's for the snp file with a 20% cutoff for use in pca, etc.
@@ -148,7 +148,7 @@ java -jar -Xmx4G ${GATK} \
 -trimAlternates \
 --restrictAllelesTo BIALLELIC \
 --selectTypeToInclude SNP \
--o ${vcfdir}/'snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
+-o ${vcfdir}/'snp_9b_forEasySFS_maxHetFilter_'${maxHetFilter}_'rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_passingBespoke_passingAllFilters_postMerge_'${infile} \
 --excludeNonVariants
 # no maxnocall frac.
 # added trimAlternates in case removal of some individuals made some sites not variable anymore.
