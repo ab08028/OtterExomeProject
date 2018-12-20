@@ -1,7 +1,7 @@
 ####### Parse EasySFS output
 genotypeDate=20181119
 wd=/u/flashscratch/a/ab08028/captures/analyses/SFS/${genotypeDate}/easySFS
-easyOut=neutral.snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.easySFS.projPreview.txt
+easyOut=neutral.snp_9b.easySFS.projPreview.txt
 pops="CA AK AL COM KUR"
 
 for pop in $pops

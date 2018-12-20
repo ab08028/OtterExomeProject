@@ -17,6 +17,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 bgzip=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/bgzip
+maxHetFilter=0.75 # het filter used across all samples (per population het filter occurs during easy sfs)
 
 genotypeDate=20181119
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutral_and_cds_VCFs/neutralVCFs
@@ -30,10 +31,12 @@ mkdir -p $outdir
 # this vcf has all snps across all categories (cds, neutral, etc.) with 0.9 max no call frac (v. liberal)
 # and has had all individuals removed that won't go into the SFS
 # going to do the actual projection for each category of site
-vcf=neutral.snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
+#vcf=neutral.snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
+vcf=neutral.snp_9b_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf
+
 #gunzip $vcfdir/populationVCFs/$vcf it must be unzipped
 #( you are here )
-$easySFS -i $vcfdir/${vcf} -p $popFile --preview -a -v > $outdir/${vcf%.vcf}.easySFS.projPreview.txt
+$easySFS -i $vcfdir/${vcf} -p $popFile --preview -a -v > $outdir/neutral.snp_9b.easySFS.projPreview.txt
 
 ### now plot projections in R and decide on your levels. Actually DO the projections on 
 
