@@ -23,7 +23,11 @@ genotypeDate=20181119
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutral_and_cds_VCFs/neutralVCFs
 popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.3.20181119.txt # this doesn't have baja on it; doesn't have any admixed/bad inds on it. 
 # this has admixed in it , but they aren't in pop file
-easySFS=/u/home/a/ab08028/klohmueldata/annabel_data/bin/easySFS/easySFS.abContinueMod.py
+
+gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
+scriptdir=${gitdir}/analyses/generate_sfs/
+
+easySFS=$scriptdir/easySFS.abModified.3.noInteract.Exclude01Sites.HetFiltering.20181121.py  # this is my modification
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/projection_preview
 mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
@@ -32,11 +36,12 @@ mkdir -p $outdir
 # and has had all individuals removed that won't go into the SFS
 # going to do the actual projection for each category of site
 #vcf=neutral.snp_8b_forEasySFS_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
-vcf=neutral.snp_9b_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf
+vcf=neutral.snp_9b_forEasySFS_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
 
 #gunzip $vcfdir/populationVCFs/$vcf it must be unzipped
 #( you are here )
 $easySFS -i $vcfdir/${vcf} -p $popFile --preview -a -v > $outdir/neutral.snp_9b.easySFS.projPreview.txt
+
 
 ### now plot projections in R and decide on your levels. Actually DO the projections on 
 

@@ -37,7 +37,15 @@ easySFS=$scriptdir/easySFS.abModified.3.noInteract.Exclude01Sites.HetFiltering.2
 
 ## choose your projections: choosing for now: 
 # CA,AK,AL,COM,KUR 
-projections="12,14,16,16,12" # may change these after lab meeting
+# choosing projections to maximize snps:
+#Choices based on 20181220 projection preview: 
+#AK Ð 14 (max)
+#AL Ð 20 (max)
+#CA Ð 12 (max would be at 8)
+#COM Ð 34 (max)
+#KUR Ð 12 (max would be at 10)
+ #CA,AK,AL,COM,KUR 
+projections="12,14,20,34,12" # updated these values on 20181220
 ### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
 # note that order is CA,AK,AL,COM,KUR 
 
@@ -51,21 +59,21 @@ mkdir -p $outdir
 echo "CA,AK,AL,COM,KUR : $projections " > $outdir/projectionChoices.${todaysdate}.txt
 # make sure vcf isn't zipped
 
-allVCF=all_9_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
-snpVCF=snp_9b_forEasySFS_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
+allVCF=neutral.all_9_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
+snpVCF=neutral.snp_9b_forEasySFS_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
 
 
 ### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
 # note that order is CA,AK,AL,COM,KUR 
-$easySFS -i $vcfdir/neutralVCFs/${snpvcf} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter $perPopHetFilter
+$easySFS -i $vcfdir/neutralVCFs/${snpVCF} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter $perPopHetFilter
 # test run only had --proj 20 (maybe just projects 1 population? will have to see)
 # -f forces overwrite of outdir
 # $bgzip ${vcf}
 # then do for SYN and MIS (eventually)
 ########## get counts of monomorphic sites to add to the SFSes ############
-python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/neutralVCFs/${allSitesvcf} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
+python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/neutralVCFs/${allVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
 
-
+###### you are here in interactive node ########
 ############## adding monomorphic sites to fsc SFSes #####################
  # this script add monomorphic sites to 0 bin of fsc sfses. doesn't add them to dadi SFSes because those sites are masked anyway. 
 Rscript $scriptdir/easySFS_5_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile # will write them out in your data dir in new directories
