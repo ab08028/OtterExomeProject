@@ -14,7 +14,8 @@ opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
 data.dir=opt$dataDir
-popFile=read.table(opt$popFile,header=F)
+pop=opt$popFile
+popFile=read.table(pop,header=F)
 
 #genotypeDate=20181119
 #projectionDate=20181212 # date projection was carried out
