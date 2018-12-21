@@ -22,10 +22,10 @@ popFile=read.table(pop,header=F)
 #data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/projection-",projectionDate,"/",sep="")
 #popFile=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt",header=F) # used in easySFS; update if used a different one. The order of populations in this script is the order that pops are assigned numbers in easy sfs (that's a bit hacky of easySFs). So get order of pops from this file for 0/1 (double check manually)
 
-fsc.format.dir=paste(data.dir,"fastsimcoal2/",sep="") # where easysfs output is
+fsc.format.dir=paste(data.dir,"/fastsimcoal2/",sep="") # where easysfs output is
 new.fsc.format.dir=paste(data.dir,"/fastsimcoal2-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
 dir.create(new.fsc.format.dir) 
-dadi.format.dir = paste(data.dir,"dadi/",sep="")
+dadi.format.dir = paste(data.dir,"/dadi/",sep="")
 new.dadi.format.dir=paste(data.dir,"/dadi-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
 dir.create(new.dadi.format.dir) 
 colnames(popFile) <- c("sample","population")
