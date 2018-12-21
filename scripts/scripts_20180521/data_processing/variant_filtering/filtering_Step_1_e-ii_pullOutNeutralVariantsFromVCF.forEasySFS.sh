@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=3:00:00,h_data=16G,highp,arch=intel*
+#$ -l h_rt=3:00:00,h_data=16G,highp
 #$ -N vcf1e_pullOutNeutral
 #$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
 #$ -e /u/flashscratch/a/ab08028/captures/reports/GATK

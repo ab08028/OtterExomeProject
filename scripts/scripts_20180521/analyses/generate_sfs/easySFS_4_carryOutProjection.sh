@@ -25,8 +25,8 @@ noCallFrac=1.0
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutral_and_cds_VCFs/
 popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.3.20181119.txt
 allSamplesHetFilter=0.75 # het filtering done across all samples
-perPopHetFilter=0.75 # the vcf file has already had some degree of maxHetFiltering. now per-population, easy sfs will do per-population filtering at this level  
-
+perPopHetFilter=0.5 # the vcf file has already had some degree of maxHetFiltering. now per-population, easy sfs will do per-population filtering at this level  
+# try with 0.5 as well.
 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
 scriptdir=${gitdir}/analyses/generate_sfs/
@@ -51,7 +51,7 @@ projections="12,14,20,34,12" # updated these values on 20181220
 
 ############################### NEUTRAL SITE PROJECTIONS #############################
 
-outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${todaysdate}
+outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${todaysdate}-hetFilter-${perPopHetFilter}
 mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
 # write projection choices into a readme
@@ -73,16 +73,14 @@ $easySFS -i $vcfdir/neutralVCFs/${snpVCF} -p $popFile -a -v --proj $projections 
 ########## get counts of monomorphic sites to add to the SFSes ############
 python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/neutralVCFs/${allVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
 
-###### you are here in interactive node ########
 ############## adding monomorphic sites to fsc SFSes #####################
  # this script add monomorphic sites to 0 bin of fsc sfses. doesn't add them to dadi SFSes because those sites are masked anyway. 
 Rscript $scriptdir/easySFS_5_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile # will write them out in your data dir in new directories
 
-
-
-
-
+################################################################################
 ##################################### coding sites #############################
+################################################################################
+
 cdsVCF=cds_${allVCF}
 synVCF=syn_vep_cds_${snpVCF%.gz}
 misVCF=missense_vep_cds_${snpVCF%.gz}
