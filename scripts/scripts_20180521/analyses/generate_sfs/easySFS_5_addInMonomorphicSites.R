@@ -24,10 +24,10 @@ popFile=read.table(pop,header=F)
 
 fsc.format.dir=paste(data.dir,"/fastsimcoal2/",sep="") # where easysfs output is
 new.fsc.format.dir=paste(data.dir,"/fastsimcoal2-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
-dir.create(new.fsc.format.dir) 
+dir.create(new.fsc.format.dir,showWarnings = F) 
 dadi.format.dir = paste(data.dir,"/dadi/",sep="")
 new.dadi.format.dir=paste(data.dir,"/dadi-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
-dir.create(new.dadi.format.dir) 
+dir.create(new.dadi.format.dir,showWarnings = F) 
 colnames(popFile) <- c("sample","population")
 popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,COM,KUR  for my project
 
@@ -68,7 +68,7 @@ for(pop in popOrder) {
   sink()
   sink(paste(new.dadi.format.dir,pop,"-",as.character(length(sfs)),".totalSiteCount.L.withMonomorphic.txt",sep=""))
   cat("pop\ttotalSites\n")
-  cat(pop, totalSites)
+  cat(pop, totalSites,"\n")
   sink()
 }
 
