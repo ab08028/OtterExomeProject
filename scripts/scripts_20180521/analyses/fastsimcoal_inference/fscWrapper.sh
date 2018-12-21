@@ -29,9 +29,9 @@ fsc=/u/home/a/ab08028/bin/fsc26
 ############# parameters #############
 models='1D.1Bottleneck'
 pops="CA AK AL COM KUR"
-genotypeDate=20180806 # date genotypes were called
-sfsDate=20181019 # date sfses were made
-rundate=20181031 # date you are running inference (to distinguish later analyses) <-- can set this with date command or manually
+genotypeDate=20181119 # date genotypes were called
+sfsDate=20181220 # date sfses were made
+rundate=20181220 # date you are running inference (to distinguish later analyses) <-- can set this with date command or manually
 cores=3 #num cores
 ############ file structure ############
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
@@ -40,8 +40,8 @@ wd=/u/flashscratch/a/ab08028/captures/analyses/ # overall working dir
 infDir=$wd/fastsimcoal_inference # specify where inference is happening
 genericDir=$scriptDir/fastsimcoal_inference/genericModelFiles # location of generic FSC models
 sampleSizes=$wd/SFS/$genotypeDate/neutralSFS/sampleSizesUsedInSFSes.txt # location of SS file that is in format population diploidSS haploidSS <-- you'll want haploid SS
-sfsDir=$wd/SFS/$genotypeDate/neutralSFS/ # specify where your SFS files are
-
+#sfsDir=$wd/SFS/$genotypeDate/neutralSFS/ # specify where your SFS files are
+sfsDir=$wd/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}/fastsimcoal2-1D-plusMonomorphic/
 ############## set up your for-loops ############## 
 for pop in $pops
 do
