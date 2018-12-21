@@ -199,7 +199,7 @@ def count_PassingMonomorphicSites(pops,projDict,VCF):
                     else:
                         TotalDict[population] += 1
                         continue
-    print(str(TotalDict))
+    #print(str(TotalDict))
     inVCF.close()
     return countDict
     

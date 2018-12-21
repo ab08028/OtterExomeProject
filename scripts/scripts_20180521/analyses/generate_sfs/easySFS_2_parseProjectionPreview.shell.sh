@@ -1,6 +1,6 @@
 ####### Parse EasySFS output
 genotypeDate=20181119
-wd=/u/flashscratch/a/ab08028/captures/analyses/SFS/${genotypeDate}/easySFS
+wd=/u/flashscratch/a/ab08028/captures/analyses/SFS/${genotypeDate}/easySFS/projection_preview
 easyOut=neutral.snp_9b.easySFS.projPreview.txt
 pops="CA AK AL COM KUR"
 

@@ -33,7 +33,7 @@ popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,C
 ####################### read in file of monomorphic site counts that are monomorphic in all individuals and are called in at least [projection value] for each population ######
 # note that sites that are variable in the whole sample, but monomorphic in one population, are already included in the zero bin of the sfs. # 
 
-monomorph <- read.table(paste(data.dir,"countsOfMonomorphicPassingProjectionThresholds.txt",sep=""),header = T)
+monomorph <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.txt",sep=""),header = T)
 
 
 ################################## fastsimcoal format ################################
