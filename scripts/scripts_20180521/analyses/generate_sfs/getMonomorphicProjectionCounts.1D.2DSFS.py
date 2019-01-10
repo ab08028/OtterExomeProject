@@ -46,7 +46,7 @@ else:
 
 # write out projection values:
 proj_outputFile=open(str(outdir)+"/projectionValues.txt","w")
-proj_outputFile.write("population\tProjectionValueHaploids\tProjectionValueDiploids\n")
+proj_outputFile.write("population\tProjectionValueHaploids\n")
 for key,value in projDict.items():
     proj_outputFile.write('{0}\t{1}\n'.format(key,value))
 proj_outputFile.close()
