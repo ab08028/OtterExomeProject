@@ -26,7 +26,7 @@ vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered
 popFile=/u/flashscratch/a/ab08028/captures/samples/samplesPop.Headers.forEasySFS.3.20181119.txt
 allSamplesHetFilter=0.75 # het filtering done across all samples
 perPopHetFilter=0.75 # the vcf file has already had some degree of maxHetFiltering. now per-population, easy sfs will do per-population filtering at this level  
-# try with 0.5 as well.
+# after troubleshooting and looking at HWE exact test, 0.75 was chosen.
 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/
 scriptdir=${gitdir}/analyses/generate_sfs/
@@ -44,10 +44,12 @@ easySFS=$scriptdir/easySFS.abModified.3.noInteract.Exclude01Sites.HetFiltering.2
 #CA Ð 12 (max would be at 8)
 #COM Ð 34 (max)
 #KUR Ð 12 (max would be at 10)
- #CA,AK,AL,COM,KUR 
-projections="12,14,20,34,12" # updated these values on 20181220
+populations="CA,AK,AL,COM,KUR"
+projections="12,14,20,34,12" # haploids; updated these values on 20181220
+
 ### NOTE: projection values must be in same order as populations are in your popFile (this isn't ideal -- at some point I am going to modify the easySFS script)
 # note that order is CA,AK,AL,COM,KUR 
+# write out projection values:
 
 ############################### NEUTRAL SITE PROJECTIONS #############################
 
@@ -56,7 +58,7 @@ mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
 # write projection choices into a readme
 
-echo "CA,AK,AL,COM,KUR : $projections " > $outdir/projectionChoices.${todaysdate}.txt
+echo "CA,AK,AL,COM,KUR : $projections " > $outdir/projectionChoices.haploids.${todaysdate}.txt
 # make sure vcf isn't zipped
 
 allVCF=neutral.all_9_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
@@ -71,12 +73,19 @@ $easySFS -i $vcfdir/neutralVCFs/${snpVCF} -p $popFile -a -v --proj $projections 
 # $bgzip ${vcf}
 # then do for SYN and MIS (eventually)
 ########## get counts of monomorphic sites to add to the SFSes ############
-python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/neutralVCFs/${allVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
+# will output two files, one for individual population's counst and one file with the pairs of populations 
+# for the pairs of populations, it is a count of sites where both populations were monomorphic at whatever their 
+# individual projection levels were. Note that easy sfs takes care of cases where one pop is monomorphic and the other is polymorphic
+# this is just about sites where all individuals in all pops is monomorphic but where there might be missing data
+# for example: a monomorphic site that is 0/0 for all individuals. Alaska has > Projection value gts at that site, so does KUR, so it would be included in the AK-KUR 2D sfs
+# if at another site, AK has > proj value but KUR has < its proj value, that site wouldn't be included in the 2D sfs (though would be included in AK's 1D sfs)
+
+python $scriptdir/getMonomorphicProjectionCounts.2DSFS.py --vcf $vcfdir/neutralVCFs/${allVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
 
 ############## adding monomorphic sites to fsc SFSes #####################
  # this script add monomorphic sites to 0 bin of fsc sfses. doesn't add them to dadi SFSes because those sites are masked anyway. 
 Rscript $scriptdir/easySFS_5_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile # will write them out in your data dir in new directories
-
+# need to modify this R script so that it also adds to 2D sfses.
 ################################################################################
 ##################################### coding sites #############################
 ################################################################################
@@ -94,10 +103,11 @@ mkdir -p $outdir
 $easySFS -i $vcfdir/cdsVCFs/${misVCF} -p $popFile -a -v --proj $projections -f -o $outdir -maxHetFilter $perPopHetFilter
 
 
-########## get counts of monomorphic cds sites (but don't add to SFSes yet; need to think about scaling more)############
+########## get counts of monomorphic cds sites -- still have to think about how to scale these for syn/mis ############
 outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/cds/monomorphicCDSSites/projection-${todaysdate}-hetFilter-${perPopHetFilter}
 mkdir -p $outdir
-python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/cdsVCFs/${cdsVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
+#python $scriptdir/getMonomorphicProjectionCounts.py --vcf $vcfdir/cdsVCFs/${cdsVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
+python $scriptdir/getMonomorphicProjectionCounts.2DSFS.py --vcf $vcfdir/cdsVCFs/${cdsVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
 
 
 ############ troubleshooting het filter: 
