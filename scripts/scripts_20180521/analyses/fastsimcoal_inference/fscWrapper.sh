@@ -43,6 +43,7 @@ sampleSizes=$wd/SFS/$genotypeDate/neutralSFS/sampleSizesUsedInSFSes.txt # locati
 #sfsDir=$wd/SFS/$genotypeDate/neutralSFS/ # specify where your SFS files are
 sfsDir=$wd/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}/fastsimcoal2-1D-plusMonomorphic/
 ############## set up your for-loops ############## 
+
 for pop in $pops
 do
 ############ get sample size for the population ############
@@ -66,7 +67,6 @@ sed -i'' "s/SAMPLE_SIZE/$ss/g" $outdir/$model.tpl # sub in the sample size; note
 /bin/cp $sfsDir/${pop}_sfs_${sfsDate}_MAFpop0.obs $outdir/${header}_MAFpop0.obs # copy your sfs into the directory where you'll be doing the fsc inference 
 cd $outdir
 $fsc -t ${header}.tpl -n100000 -m -e ${header}.est -M -L 40 -c${cores} -q
-
 
 
 ######## make a readme  #########
