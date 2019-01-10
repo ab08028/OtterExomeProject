@@ -16,6 +16,9 @@ from itertools import combinations
 # must have at least (projection / 2 ) genotype calls (opposed to missing data)
 # note this script assumes unphased data with 0/0 calls rather than 0|0 calls
 # This script modifies code from Overcast's EasySFS
+# and will give monomorphic site counts passing given projections for each individual pop
+# and for each pair of pops (passing sites meet projection levels specific to each population for bot pops in the pair)
+# will output both sets of counts.
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Count the number of 0/0 sites that have have called genotypes in at least [your projection value  / 2 ] or more individuals. Note that easy SFS projection values are in *haploids* Not Diploids')
 parser.add_argument("--vcf",required=True,help="path to vcf file")
@@ -248,12 +251,16 @@ dualPop_outputFile=open(str(outdir)+"/countsOfMonomorphicPassingProjectionThresh
 dualPop_outputFile.write("populationPair\tHomREFcountPassingBothProjThresholds\tProjectionValue1\tProjectionValue2\n")
 for key,value in popPaircounts.items():
     # split key into the two populations that make it up (key[0] and key[1])
-    dualPop_outputFile.write('{0}\t{1}\t{2}'.format(key[0],key[1],value))
+    dualPop_outputFile.write('{0}\t{1}\t{2}\t'.format(key[0],key[1],value))
     # projection value of first population: 
     dualPop_outputFile.write(str(projDict[key[0]])+"\t")
     dualPop_outputFile.write(str(projDict[key[1]])+"\n")
 dualPop_outputFile.close()
 #[outputFile.write(('{0}\t{1}\t'.format(key,value)+str(projDict[key])) for key,value in counts.items())]
 #outputFile.close()
-
+# write out projection values:
+proj_outputFile=open(str(outdir)+"/projectionValues.txt","w")
+proj_outputFile.write("population\tProjectionValueHaploids\tProjectionValueDiploids\n")
+proj_outputFile.write(str(projDict[key])+str(projDict[key]/2)+"\n")
+proj_outputFile.close()
 sys.exit()
