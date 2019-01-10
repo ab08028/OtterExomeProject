@@ -1,7 +1,7 @@
 ###################### Adding monomorphic sites to fastsimcoal SFSes ##########
-# don't need to add to dadi because are masked anyway
-# just need the total value of sites for dadi (L) that is sum of SFS + monomorphic. going to output that 
-# make this work on Hoffman as part of easySFS script.
+# adding to fastsimcoal and dadi, and writing out total sites (L) for dadi
+# this works on 1D and 2D sfses that are output from easySFS
+# the wrapper for this script is in 
 library("optparse")
 option_list = list(
   make_option(c("-dataDir", "--dataDir"), type="character", default=NULL, 
@@ -17,6 +17,7 @@ data.dir=opt$dataDir
 pop=opt$popFile
 popFile=read.table(pop,header=F)
 
+# for testing purposes only:
 #genotypeDate=20181119
 #projectionDate=20181212 # date projection was carried out
 #data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/projection-",projectionDate,"/",sep="")
@@ -73,7 +74,7 @@ for(pop in popOrder) {
   sink()
 }
 
-####################################### 2D SFS ###################################
+####################################### 2D SFS -- fastsimcoal ###################################
 # fsc files are numbered by pop0_1 where pop numbers are from my pop order (check this carefully)
 # order should be CA,AK,AL,COM,KUR  for my project (0,1,2,3,4)
 #combos = combn(seq(0,length(popOrder)-1),2)
@@ -83,6 +84,7 @@ for(i in seq(0,length(popOrder)-1)) {
   pop1=popOrder[i+1] # i and j are zero based so add 1 to get right index
   pop2=popOrder[j+1]
   input <- list.files(fsc.format.dir,pattern=paste("jointMAFpop",i,"_",j,sep=""),full.names = T)
+  # if input is one file:
   if(length(input)==1){
     sfs <- read.table(input,skip = 1,header = T) # skip first line: "1 observation"
     monoCount <- monomorph2D[monomorph2D$population1==pop1 & monomorph2D$population2==pop2,]$HomREFcountPassingBothProjThresholds
@@ -95,3 +97,32 @@ for(i in seq(0,length(popOrder)-1)) {
   }
   }
 }
+
+
+####################################### 2D SFS -- dadi ###################################
+# dadi files are labeled with populations, so don't need to indexing that i did for fsc above
+# first entry in sfs is 0,0 bin
+for(pop1 in popOrder){
+  for(pop2 in popOrder){
+    input <- list.files(dadi.format.dir,pattern=paste(pop1,"-",pop2,".sfs",sep=""),full.names = T)
+    if(length(input)==1){
+      header <- readLines(input,n=1) # get first line of file
+      sfs <- read.table(input,skip = 1,header = F) # skip first line: "13 folded "KUR""
+      monoCount <- monomorph2D[monomorph2D$population1==pop1 & monomorph2D$population2==pop2,]$HomREFcountPassingBothProjThresholds
+      # two rows; first is counts, second is mask; don't change the mask
+      # 0,0 bin is first entry
+      sfs[1,"V1"] <- sfs[1,"V1"]+monoCount
+      totalSites <- sum(sfs[1,])
+      sink(paste(new.dadi.format.dir,pop1,"-",pop2,".plusMonomorphic.sfs",sep=""))
+      cat(header,"\n") # put the header back in
+      write.table(sfs,quote=F,row.names = F,col.names = F) # writes new sfs to the table
+      sink()
+      sink(paste(new.dadi.format.dir,pop1,"-",pop2,".totalSiteCount.L.withMonomorphic.txt",sep=""))
+      cat("pop1\tpop2\ttotalSites\n")
+      cat(pop1, pop2, totalSites,"\n")
+      sink()
+      
+    }
+  }
+}
+
