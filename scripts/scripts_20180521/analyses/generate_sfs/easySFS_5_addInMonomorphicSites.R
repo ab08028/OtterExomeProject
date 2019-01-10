@@ -23,10 +23,10 @@ popFile=read.table(pop,header=F)
 #popFile=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt",header=F) # used in easySFS; update if used a different one. The order of populations in this script is the order that pops are assigned numbers in easy sfs (that's a bit hacky of easySFs). So get order of pops from this file for 0/1 (double check manually)
 
 fsc.format.dir=paste(data.dir,"/fastsimcoal2/",sep="") # where easysfs output is
-new.fsc.format.dir=paste(data.dir,"/fastsimcoal2-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
+new.fsc.format.dir=paste(data.dir,"/fastsimcoal2-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
 dir.create(new.fsc.format.dir,showWarnings = F) 
 dadi.format.dir = paste(data.dir,"/dadi/",sep="")
-new.dadi.format.dir=paste(data.dir,"/dadi-1D-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
+new.dadi.format.dir=paste(data.dir,"/dadi-plusMonomorphic/",sep="") # where you'll put the new sfses that have monomorphic sites added in
 dir.create(new.dadi.format.dir,showWarnings = F) 
 colnames(popFile) <- c("sample","population")
 popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,COM,KUR  for my project
@@ -34,7 +34,8 @@ popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,C
 ####################### read in file of monomorphic site counts that are monomorphic in all individuals and are called in at least [projection value] for each population ######
 # note that sites that are variable in the whole sample, but monomorphic in one population, are already included in the zero bin of the sfs. # 
 
-monomorph <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.txt",sep=""),header = T)
+monomorph <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPop.txt",sep=""),header = T)
+monomorph2D <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPop.txt",sep=""),header = T)
 
 
 ################################## fastsimcoal format ################################
@@ -71,5 +72,7 @@ for(pop in popOrder) {
   cat(pop, totalSites,"\n")
   sink()
 }
+
+####################################### 2D SFS ###################################
 
 

@@ -248,7 +248,7 @@ singlePop_outputFile.close()
 
 # write out dual pop counts
 dualPop_outputFile=open(str(outdir)+"/countsOfMonomorphicPassingProjectionThresholds.perPair.txt","w")
-dualPop_outputFile.write("populationPair\tHomREFcountPassingBothProjThresholds\tProjectionValue1\tProjectionValue2\n")
+dualPop_outputFile.write("population1\tpopulation2\tHomREFcountPassingBothProjThresholds\tProjectionValue1\tProjectionValue2\n")
 for key,value in popPaircounts.items():
     # split key into the two populations that make it up (key[0] and key[1])
     dualPop_outputFile.write('{0}\t{1}\t{2}\t'.format(key[0],key[1],value))
