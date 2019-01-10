@@ -57,8 +57,8 @@ outdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/neu
 mkdir -p $outdir
 # had to modify easySFS so that it wouldn't prompt a "yes/no" response about samples that are missing from VCF file
 # write projection choices into a readme
-
-echo "CA,AK,AL,COM,KUR : $projections " > $outdir/projectionChoices.haploids.${todaysdate}.txt
+# this gets written out as part of monomorphic script now; don't need to do here.
+#echo "CA,AK,AL,COM,KUR : $projections " > $outdir/projectionChoices.haploids.${todaysdate}.txt
 # make sure vcf isn't zipped
 
 allVCF=neutral.all_9_maxHetFilter_${allSamplesHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
