@@ -43,7 +43,14 @@ if len(popIDs)==len(projectionValues):
 else:
     print("you must supply the same number of projection values as populations that you want to project!")
     sys.exit()
-    
+
+# write out projection values:
+proj_outputFile=open(str(outdir)+"/projectionValues.txt","w")
+proj_outputFile.write("population\tProjectionValueHaploids\tProjectionValueDiploids\n")
+for key,value in projDict.items():
+    proj_outputFile.write('{0}\t{1}\n'.format(key,value))
+proj_outputFile.close()
+
 # for testing purposes
 # vcfFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing)
 
@@ -258,11 +265,5 @@ for key,value in popPaircounts.items():
 dualPop_outputFile.close()
 #[outputFile.write(('{0}\t{1}\t'.format(key,value)+str(projDict[key])) for key,value in counts.items())]
 #outputFile.close()
-# write out projection values:
-proj_outputFile=open(str(outdir)+"/projectionValues.txt","w")
-proj_outputFile.write("population\tProjectionValueHaploids\tProjectionValueDiploids\n")
-for key,value in projDict.items():
-    proj_outputFile.write('{0}\t{1}\n'.format(key,value))
-proj_outputFile.close()
 
 sys.exit()
