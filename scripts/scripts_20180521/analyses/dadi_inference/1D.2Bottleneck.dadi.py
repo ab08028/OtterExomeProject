@@ -29,7 +29,7 @@ parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)"
 parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'")
 parser.add_argument("--mu",required=True,help="supply mutation rate in mutation/bp/gen")
 parser.add_argument("--L",required=True,help="number of called neutral sites that went into making SFS (monomorphic+polymorphic)")
-parser.add_argument("--sfs",required=True,help="path to UNFOLDED SFS in dadi format (mask optional)")
+parser.add_argument("--sfs",required=True,help="path to FOLDED SFS in dadi format from easySFS (mask optional)")
 parser.add_argument("--outdir",required=True,help="path to output directory")
 # usage:
 # python 1D.Bottleneck.dadi.py --runNum $i --pop CA --mu 8.64411385098638e-09 --L 4193488 --sfs [path to sfs] --outdir [path to outdir]
@@ -44,9 +44,9 @@ maxiter=100
 
 
 ############### Input data ####################################
-fs=dadi.Spectrum.from_file(sfs) # this is unfolded
+fs=dadi.Spectrum.from_file(sfs) # this is folded from easy sfs
 # fold the fs:
-fs=fs.fold() # folded
+#fs=fs.fold() # folded
 
 ############### Set up General Dadi Parameters ########################
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
