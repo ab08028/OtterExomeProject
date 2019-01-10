@@ -8,15 +8,25 @@
 # and then you can deactivate
 
 
+# 20190110 -- updated to work with easy sfs output
+
 gitdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/
 # gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # hoffman
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference
 script=1D.2Epoch.dadi.py
 model=${script%.dadi.py}
 mu=8.64411385098638e-09
-genotypeDate=20180806
-sfsDate=20181019
-sfsdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/${genotypeDate}/neutralSFS/
+genotypeDate=20181119 # newer gts
+sfsDate=20181221 # projection with 0.75 het filter and these projection values
+hetFilter=0.75
+#AK Ð 14 (max)
+#AL Ð 20 (max)
+#CA Ð 12 (max would be at 8)
+#COM Ð 34 (max)
+#KUR Ð 12 (max would be at 10)
+
+sfsdir=/u/flashscratch/a/ab08028/captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
+
 sfssuffix=unfolded.sfs.dadi.format.${sfsDate}.txt
 totalNeut=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TotalCallableNeutralSites/${genotypeDate}/summary.neutralCallableSites.perPop.txt # file with total neutral sites counts for each population 
 ### want to make a slightly fancier outdir that is the model / date or something like that eventually. 

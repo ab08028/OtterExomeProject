@@ -44,9 +44,9 @@ outdir=str(args.outdir)
 sfs=str(args.sfs)
 maxiter=100
 ############### Input data ####################################
-fs=dadi.Spectrum.from_file(sfs) # this is unfolded
+fs=dadi.Spectrum.from_file(sfs) # this is folded if from easy SFS
 # fold the fs:
-fs=fs.fold() # folded
+#fs=fs.fold() # folded
 
 ############### Set up General Dadi Parameters ########################
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
