@@ -44,7 +44,7 @@ scripts='1D.2Epoch.dadi.py 1D.1Bottleneck.dadi.TB20gen.py'
 for pop in CA AK AL COM KUR
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
-L=`grep $pop $pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`
+L=`grep $pop $sfsdir/$pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`
 
 for script in $scripts
 do
@@ -53,7 +53,7 @@ echo "starting inference for $pop for model $model"
 outdir=$dadidir/$genotypeDate/$pop/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..5}
+for i in {1..50}
 do
 echo "carrying out inference $i for model $model for pop $pop" 
 # [0-9] indicates that it's a number, but not specific about proj value
