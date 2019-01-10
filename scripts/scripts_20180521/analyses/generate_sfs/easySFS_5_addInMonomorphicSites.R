@@ -35,7 +35,7 @@ popOrder <- as.character(unique(popFile$population)) # this should be CA,AK,AL,C
 # note that sites that are variable in the whole sample, but monomorphic in one population, are already included in the zero bin of the sfs. # 
 
 monomorph <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPop.txt",sep=""),header = T)
-monomorph2D <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPop.txt",sep=""),header = T)
+monomorph2D <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPair.txt",sep=""),header = T)
 
 
 ################################## fastsimcoal format ################################
@@ -74,5 +74,24 @@ for(pop in popOrder) {
 }
 
 ####################################### 2D SFS ###################################
-
-
+# fsc files are numbered by pop0_1 where pop numbers are from my pop order (check this carefully)
+# order should be CA,AK,AL,COM,KUR  for my project (0,1,2,3,4)
+#combos = combn(seq(0,length(popOrder)-1),2)
+for(i in seq(0,length(popOrder)-1)) {
+  for(j in seq(0,length(popOrder)-1)){
+  # note counts are zero based in filename (eg CA is 0), but 1 based in R
+  pop1=popOrder[i+1] # i and j are zero based so add 1 to get right index
+  pop2=popOrder[j+1]
+  input <- list.files(fsc.format.dir,pattern=paste("jointMAFpop",i,"_",j,sep=""),full.names = T)
+  if(length(input)==1){
+    sfs <- read.table(input,skip = 1,header = T) # skip first line: "1 observation"
+    monoCount <- monomorph2D[monomorph2D$population1==pop1 & monomorph2D$population2==pop2,]$HomREFcountPassingBothProjThresholds
+  # row and column names reflect pop numbers; first number in file name is colnames, second is rownames. so row is first and should be j, and col is second and should be i
+    sfs[paste("d",j,"_0",sep=""),paste("d",i,"_0",sep = "")] <- sfs[paste("d",j,"_0",sep=""),paste("d",i,"_0",sep = "")]+monoCount
+    sink(paste(new.fsc.format.dir,"/neutral.",pop1,".",pop2,"_jointMAFpop",i,"_",j,".obs",sep=""))
+    cat("1 observation\n")
+    write.table(sfs,quote=F,row.names = T) # writes new sfs to the table
+    sink()
+  }
+  }
+}

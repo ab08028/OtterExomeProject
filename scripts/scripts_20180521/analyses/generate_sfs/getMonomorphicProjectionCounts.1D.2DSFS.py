@@ -261,6 +261,8 @@ dualPop_outputFile.close()
 # write out projection values:
 proj_outputFile=open(str(outdir)+"/projectionValues.txt","w")
 proj_outputFile.write("population\tProjectionValueHaploids\tProjectionValueDiploids\n")
-proj_outputFile.write(str(projDict[key])+str(projDict[key]/2)+"\n")
+for key,value in projDict.items():
+    proj_outputFile.write('{0}\t{1}\n'.format(key,value))
 proj_outputFile.close()
+
 sys.exit()
