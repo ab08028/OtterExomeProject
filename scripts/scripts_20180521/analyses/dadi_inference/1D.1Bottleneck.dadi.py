@@ -94,20 +94,30 @@ ll_model = dadi.Inference.ll_multinom(model, fs)
 # calculate best fit theta
 theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
+###### model specific scaling of parameters (will depend on mu and L that you supply) #######
 
+Nanc=theta / (4*mu*L)
+nuB_scaled_dip=popt[0]*Nanc
+nuF_scaled_dip=popt[1]*Nanc
+TB_scaled_gen=popt[2]*2*Nanc
+TF_scaled_gen=popt[3]*2*Nanc
+scaled_param_names=("Nanc","nuB_scaled_dip","nuF_scaled_dip","TB_scaled_gen","TFTB_scaled_gen")
+scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip,TB_scaled_gen,TF_scaled_gen)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
 outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
-param_names_str=param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
+scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
+header=param_names_str+scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
+scaled_popt_str='\t'.join(str(x) for x in scaled_popt)
 # joint together all the output fields, tab-separated:
-output=[popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0,upper_bound,lower_bound] # put all the output terms together
+output=[popt_str,scaled_popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate,p0,upper_bound,lower_bound] # put all the output terms together
 output='\t'.join(str(x) for x in output) # write out all the output fields
 # this should result in a 2 row table that could be input into R / concatenated with other runs
-outputFile.write(('{0}\n{1}\n').format(param_names_str,output))
+outputFile.write(('{0}\n{1}\n').format(header,output))
 outputFile.close()
 
 ############### Output SFS ########################
