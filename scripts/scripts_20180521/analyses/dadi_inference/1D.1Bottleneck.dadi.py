@@ -101,7 +101,7 @@ nuB_scaled_dip=popt[0]*Nanc
 nuF_scaled_dip=popt[1]*Nanc
 TB_scaled_gen=popt[2]*2*Nanc
 TF_scaled_gen=popt[3]*2*Nanc
-scaled_param_names=("Nanc","nuB_scaled_dip","nuF_scaled_dip","TB_scaled_gen","TFTB_scaled_gen")
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB_scaled_dip","nuF_scaled_dip","TB_scaled_gen","TFTB_scaled_gen")
 scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip,TB_scaled_gen,TF_scaled_gen)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
@@ -110,7 +110,7 @@ outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".run
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
 scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
-header=param_names_str+scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
+header=param_names_str+"\t"+scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
 scaled_popt_str='\t'.join(str(x) for x in scaled_popt)
 # joint together all the output fields, tab-separated:

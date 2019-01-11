@@ -93,7 +93,7 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 Nanc=theta / (4*mu*L)
 nu_scaled_dip=popt[0]*Nanc
 T_scaled_gen=popt[1]*2*Nanc
-scaled_param_names=("Nanc","nu_scaled_dip","T_scaled_gen")
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nu_scaled_dip","T_scaled_gen")
 scaled_popt=(Nanc,nu_scaled_dip,T_scaled_gen)
 
 
@@ -104,7 +104,7 @@ outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".run
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
 scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
-header=param_names_str+scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
+header=param_names_str+"\t"+scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
 popt_str='\t'.join(str(x) for x in popt) # get opt'd parameters as a tab-delim string
 scaled_popt_str='\t'.join(str(x) for x in scaled_popt)
 # joint together all the output fields, tab-separated:
