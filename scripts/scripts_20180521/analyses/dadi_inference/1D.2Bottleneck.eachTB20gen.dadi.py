@@ -52,18 +52,19 @@ fs=dadi.Spectrum.from_file(sfs) # this is folded from easy sfs
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10
 ############### Set up Specific Model -- this will change from script to script ########################
-
+# Bernard says to fix bottleneck duration (TB1 and TB2) 
+# 20 generations ~ 20/(3000*2); loosely setting it as 0.005 
 def double_bottleneck(params, ns, pts): 
     nuB1,nuF1,nuB2,nuF2,TB1,TF1,TB2,TF2 = params
     xx = Numerics.default_grid(pts) # sets up grid
     phi = PhiManip.phi_1D(xx) # sets up initial phi for population 
-    phi = Integration.one_pop(phi, xx, TB1, nuB1)  # bottleneck 1 
+    phi = Integration.one_pop(phi, xx, 0.005, nuB1)  # bottleneck 1 
     phi = Integration.one_pop(phi, xx, TF1, nuF1) # recovery 1
-    phi = Integration.one_pop(phi, xx, TB2, nuB2)  # bottleneck 2 
+    phi = Integration.one_pop(phi, xx, 0.005, nuB2)  # bottleneck 2 
     phi = Integration.one_pop(phi, xx, TF2, nuF2) # recovery 2
     fs = Spectrum.from_phi(phi, ns, (xx,)) 
     return fs
-param_names=("nuB1","nuF1","nuB2","nuF2","TB1","TF1","TB2","TF2")
+param_names=("nuB1","nuF1","nuB2","nuF2","TF1","TF2")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
 # 20181031 changed bounds based on bernard suggestions; went with .1 as upper bound on T intervals (similar to humans)
@@ -97,18 +98,16 @@ ll_model = dadi.Inference.ll_multinom(model, fs)
 theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
 ###### model specific scaling of parameters (will depend on mu and L that you supply) #######
-# param_names=("nuB1","nuF1","nuB2","nuF2","TB1","TF1","TB2","TF2")
+# param_names=("nuB1","nuF1","nuB2","nuF2","TF1","TF2")
 Nanc=theta / (4*mu*L)
 nuB1_scaled_dip=popt[0]*Nanc
 nuF1_scaled_dip=popt[1]*Nanc
 nuB2_scaled_dip=popt[2]*Nanc
 nuF2_scaled_dip=popt[3]*Nanc
-TB1_scaled_gen=popt[4]*2*Nanc
-TF1_scaled_gen=popt[5]*2*Nanc
-TB2_scaled_gen=popt[6]*2*Nanc
-TF2_scaled_gen=popt[7]*2*Nanc
-scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB1_scaled_dip","nuF1_scaled_dip","nuB2_scaled_dip","nuF2_scaled_dip","TB1_scaled_gen","TF1_scaled_gen","TB2_scaled_gen","TF2_scaled_gen")
-scaled_popt=(Nanc,nuB1_scaled_dip,nuF1_scaled_dip,nuB2_scaled_dip,nuF2_scaled_dip,TB1_scaled_gen,TF1_scaled_gen,TB2_scaled_gen,TF2_scaled_gen)
+TF1_scaled_gen=popt[4]*2*Nanc
+TF2_scaled_gen=popt[5]*2*Nanc
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB1_scaled_dip","nuF1_scaled_dip","nuB2_scaled_dip","nuF2_scaled_dip","TF1_scaled_gen","TF2_scaled_gen")
+scaled_popt=(Nanc,nuB1_scaled_dip,nuF1_scaled_dip,nuB2_scaled_dip,nuF2_scaled_dip,TF1_scaled_gen,TF2_scaled_gen)
 
 
 ############### Write out output (same for any model) ########################
