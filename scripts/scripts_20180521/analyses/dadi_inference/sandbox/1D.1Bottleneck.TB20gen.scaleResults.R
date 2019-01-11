@@ -4,7 +4,7 @@ results.dir = paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProj
 # want to sort by LL
 # want to rescale results by theta 
 # and write out as a table that can be easily examined in Excel
-
+mu= # can test different mus 
 test$Nanc <- test$theta / (4*test$mu*test$L)
 
 # scale:
