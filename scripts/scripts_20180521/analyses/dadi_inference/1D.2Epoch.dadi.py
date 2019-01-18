@@ -120,7 +120,8 @@ print('Writing out SFS **************************************************')
 
 outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS"
 
-fs.to_file(outputSFS)
+# 20190117 -- fixed this to output EXPECTED sfs not obs sfs
+model.to_file(outputSFS)
 #outputSFS.close()
 
 ############### Output plot ########################
