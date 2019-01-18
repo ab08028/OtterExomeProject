@@ -89,9 +89,9 @@ print('Writing out parameters **************************************************
 outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 #param_names_str='\t'.join(str(x) for x in param_names)
-scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
+scaled_param_names_str=str(scaled_param_names)
 header=scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
-scaled_popt_str='\t'.join(str(x) for x in scaled_popt)
+scaled_popt_str=str(scaled_popt)
 # joint together all the output fields, tab-separated:
 output=[scaled_popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate] # put all the output terms together
 output='\t'.join(str(x) for x in output) # write out all the output fields
