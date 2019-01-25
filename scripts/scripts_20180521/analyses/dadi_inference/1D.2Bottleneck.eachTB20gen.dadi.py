@@ -47,7 +47,11 @@ maxiter=100
 fs=dadi.Spectrum.from_file(sfs) # this is folded from easy sfs
 # fold the fs:
 #fs=fs.fold() # folded
-
+# check if it's folded, if not folded, fold it
+if fs.folded==False:
+    fs=fs.fold()
+else:
+    fs=fs
 ############### Set up General Dadi Parameters ########################
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10

@@ -23,7 +23,7 @@ slim=/u/home/a/ab08028/klohmueldata/annabel_data/bin/SLiM/slim_build/slim # loca
 
 ############## files and dirs ############
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # project github location
-scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/sandbox # location of slim scripts
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/ # location of slim scripts
 slimscript=generic.2Epoch.100kb.10genContraction.20180125.slim # specific slim script
 model=2Epoch
 
