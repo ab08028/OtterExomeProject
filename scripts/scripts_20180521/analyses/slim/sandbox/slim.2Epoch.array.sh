@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=300:00:00,h_data=8G
+#$ -l h_rt=02:00:00,h_data=8G
 #$ -N slimSimple
 #$ -o /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
@@ -12,7 +12,7 @@
 ######### 2 Epoch script generates 100 x 1kb independent blocks ###########
 # want a total of 6000 blocks. so 60 instances of this script for one replicate.
 
-rep=1 # doing one replicate, then will set from command line and do a submission script
+rep=$1 # doing one replicate, then will set from command line from submission script
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/analyses/slim/
 slimscript=generic.2Epoch.100kb.slim
@@ -52,18 +52,20 @@ generic.2Epoch.100kb.slim
 # this will output vcf and full population state.
 # test; okay something about seed is breaking
 # need double quotes " ' ' " for strings!
-outdir="'/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/slim/sandbox/'"
-slim \
--long \
--seed $seed \
--d v_MU=$mu \
--d v_R=$r \
--d v_SS=$ss \
--d v_NANC=$nanc \
--d v_NU=$nu \
--d v_OUTFILE=$outdir \
--d v_TCONTRACT=$t \
--d block=1 \
-generic.2Epoch.100kb.slim
+
+####### testing on home computer ########
+# outdir="'/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/slim/sandbox/'"
+# slim \
+# -long \
+# -seed $seed \
+# -d v_MU=$mu \
+# -d v_R=$r \
+# -d v_SS=$ss \
+# -d v_NANC=$nanc \
+# -d v_NU=$nu \
+# -d v_OUTFILE=$outdir \
+# -d v_TCONTRACT=$t \
+# -d block=1 \
+# generic.2Epoch.100kb.slim
 # okay this works! something was bad about seed.
 sleep 10m
