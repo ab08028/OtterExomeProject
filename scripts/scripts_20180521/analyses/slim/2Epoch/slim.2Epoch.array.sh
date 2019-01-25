@@ -1,19 +1,20 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=02:00:00,h_data=2G
-#$ -N slimSimple
 #$ -o /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-5
+#$ -t 1-60
 
 
 ######### 2 Epoch script generates 100 x 1kb independent blocks ###########
 # want a total of 6000 blocks. so 60 instances of this script for one replicate.
 
 rep=$1 # doing one replicate, then will set from command line from submission script
-
+rundate=$2 # date arrays are submitted; set in submitter so as not to have jobs on different days
+outdir=$SCRATCH/captures/analyses/slim/$model/$rundate/replicate_${rep} # set this in submission script 
+mkdir -p $outdir
 ######### programs #########
 # load the proper gcc 
 source /u/local/Modules/default/init/modules.sh
@@ -25,9 +26,7 @@ gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # project 
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/sandbox # location of slim scripts
 slimscript=generic.2Epoch.100kb.10genContraction.20180125.slim # specific slim script
 model=2Epoch
-todaysdate=`date +%Y%m%d`
-outdir=$SCRATCH/captures/analyses/slim/$model/$todaysdate/replicate_${rep} # set this in submission script 
-mkdir -p $outdir
+
 ######## parameters #############
 seed=1 # figure out seed ; dont use SGE TASK ID
 mu=8.64e-9
