@@ -38,10 +38,25 @@ initialize() {
 }
 
 // output generation number so I can track progress
-late() {
-cat(paste(c("generation:",sim.generation,"\n")));
-}
-
+// I used to do it every eneration but that made too large output
+//late() {
+//cat(paste(c("generation:",sim.generation,"\n")));
+//}
+// now just do it every 10K
+10000 {
+	cat(paste(c("generation:",sim.generation,"\n")))
+	}
+20000 {
+	cat(paste(c("generation:",sim.generation,"\n")))
+	}
+30000 {
+	cat(paste(c("generation:",sim.generation,"\n")))
+	}
+40000 {
+	cat(paste(c("generation:",sim.generation,"\n")))
+	}
+	
+	
 // set burn in at 50K generations (>10*Ne of 4000)
 50000 {
 	p1.setSubpopulationSize(v_NU);
