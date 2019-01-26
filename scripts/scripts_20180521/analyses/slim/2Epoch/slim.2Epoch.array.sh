@@ -10,7 +10,7 @@
 
 ######### 2 Epoch script generates 100 x 1kb independent blocks ###########
 # want a total of 6000 blocks. so 60 instances of this script for one replicate.
-
+model=1D.2Epoch
 rep=$1 # doing one replicate, then will set from command line from submission script
 rundate=$2 # date arrays are submitted; set in submitter so as not to have jobs on different days
 outdir=$SCRATCH/captures/analyses/slim/$model/$rundate/replicate_${rep} # set this in submission script 
@@ -25,7 +25,7 @@ slim=/u/home/a/ab08028/klohmueldata/annabel_data/bin/SLiM/slim_build/slim # loca
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # project github location
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/ # location of slim scripts
 slimscript=generic.2Epoch.100kb.10genContraction.20180125.slim # specific slim script
-model=2Epoch
+
 
 ######## parameters #############
 seed=1 # figure out seed ; dont use SGE TASK ID
