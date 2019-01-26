@@ -28,7 +28,9 @@ slimscript=generic.1D.2Epoch.100kb.10genContraction.20180125.slim # specific sli
 
 
 ######## parameters #############
-seed=1 # figure out seed ; dont use SGE TASK ID
+todaysdate=`date +%Y%m%d`
+seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus random , plus the replicate and SGE task id. so no task should be the same, and no jobs run on different days should be the same, even if they have same task id
+# so if two tasks with the same task id across different reps start in the same second (get same random), then they will still be different because of 10*rep 
 mu=8.64e-9
 r=1e-8
 ss=7 # sample size in individuals
@@ -53,7 +55,7 @@ $slim \
 -d v_NANC=$nanc \
 -d v_NU=$nu \
 -d v_OUTFILE="'$outdir'" \
--d block=${SGE_TASK_ID} \
+-d chunk=${SGE_TASK_ID} \
 $scriptdir/$slimscript
 # script comes at end
 # long prints out what vars are set as 
