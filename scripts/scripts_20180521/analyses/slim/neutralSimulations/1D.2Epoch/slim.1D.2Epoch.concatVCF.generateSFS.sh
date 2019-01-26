@@ -1,18 +1,22 @@
+
 ######## concatenate VCF files per replicate, and add a 'chromosome' identifier (that's really a portion identifier)
+# loop over all replicates
+for i in {1..100}
+do
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/
 
-model=2Epoch
+model=1D.2Epoch
 rundate=20190125 # date of running slim
-outdir=/u/flashscratch/a/ab08028/captures/analyses/slim/$model/$rundate/replicate_1 # eventually loop over all replicates 
+outdir=$SCRATCH/captures/analyses/slim/neutralSimulations/$model/$rundate/replicate_${i} # eventually loop over all replicates 
 mkdir -p $outdir/SFS
 
-outfile=concatted.slim.output.ALL.vcf
+outfile=${model}.rep.${i}.concatted.slim.output.ALL.vcf
 
 # get header from first vcf
 
 grep "#" $outdir/slim.output.1.vcf > $outdir/$outfile
-
+# loop over all chunks
 for i in {1..60}
 do
 # want to select everything but first column (setting it to "") and replace with a chromosome 'identifier' that is the chunk nunber
@@ -35,5 +39,5 @@ python $scriptdir/generate_sfs/make_sfs_without_easySFS/generate1DSFS.py \
 --outdir $outdir/SFS \
 --outPREFIX $model.slim.output
 
-
+done
 # can then fold it when you do dadi inference.

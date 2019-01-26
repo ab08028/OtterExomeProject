@@ -24,7 +24,7 @@ source /u/home/a/ab08028/env_python2.7.13/bin/activate # activate virtual enviro
 slimModel=1D.2Epoch # model SLIM was simulated under 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scripts=$gitdir/scripts/scripts_20180521/analyses
-slimscriptdir=$scripts/slim/${slimModel}
+slimscriptdir=$scripts/slim/neutralSimulations/${slimModel}
 dadiscriptdir=$scripts/dadi_inference/
 
 rundate= # date slim was run
@@ -34,21 +34,21 @@ mu=8.64411385098638e-09
 L=6000000 # 6Mb
 
 captures=/u/flashscratch/a/ab08028/captures/
-wd=$captures/analyses/slim/${slimModel}/${rundate}/replicate_${SGE_TASK_ID}
+wd=$captures/analyses/slim/neutralSimulations/${slimModel}/${rundate}/replicate_${SGE_TASK_ID}
 
 scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py'
 
 
 for script in $scripts
 do
-model=${script%.dadi.py}
-echo "starting inference for $model"
-outdir=$wd/dadiInfBasedOnSlim/dadiInfModel_$model/
+dadimodel=${script%.dadi.py}
+echo "starting inference for $dadimodel"
+outdir=$wd/dadiInfBasedOnSlim/dadiInfModel_$dadimodel/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
 do
-echo "carrying out inference $i for model $model for pop $pop" 
+echo "carrying out inference $i for model $dadimodel for pop $pop" 
 # [0-9] indicates that it's a number, but not specific about proj value
 python $dadiscriptdir/$script \
 --runNum $i \
