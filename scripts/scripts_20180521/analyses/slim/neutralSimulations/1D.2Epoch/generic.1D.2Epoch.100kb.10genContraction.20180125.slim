@@ -44,16 +44,16 @@ initialize() {
 //}
 // now just do it every 10K
 10000 {
-	cat(paste(c("generation:",sim.generation,"\n")))
+	cat(paste(c("generation:",sim.generation,"\n")));
 	}
 20000 {
-	cat(paste(c("generation:",sim.generation,"\n")))
+	cat(paste(c("generation:",sim.generation,"\n")));
 	}
 30000 {
-	cat(paste(c("generation:",sim.generation,"\n")))
+	cat(paste(c("generation:",sim.generation,"\n")));
 	}
 40000 {
-	cat(paste(c("generation:",sim.generation,"\n")))
+	cat(paste(c("generation:",sim.generation,"\n")));
 	}
 	
 	
@@ -66,7 +66,7 @@ initialize() {
 // an awkward solution; but recommended https://groups.google.com/forum/#!topic/slim-discuss/0jOCti_t380
 // try reschedule block as well
 50010 late() {
-p1.outputVCFSample(v_SS, F,filePath=paste(c(v_OUTFILE,"/slim.output.",block,".vcf"),sep=""));
+p1.outputVCFSample(v_SS, F,filePath=paste(c(v_OUTFILE,"/slim.output.",chunk,".vcf"),sep=""));
 }
 
 
