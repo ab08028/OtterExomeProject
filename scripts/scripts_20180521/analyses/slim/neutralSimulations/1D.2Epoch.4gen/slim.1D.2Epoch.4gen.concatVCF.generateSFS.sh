@@ -6,7 +6,7 @@ do
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/
 
-model=1D.2Epoch
+model=1D.2Epoch.4gen
 rundate=20190125 # date of running slim
 outdir=/u/flashscratch/a/ab08028/captures/analyses/slim/neutralSimulations/$model/$rundate/replicate_${i} # eventually loop over all replicates 
 mkdir -p $outdir/SFS

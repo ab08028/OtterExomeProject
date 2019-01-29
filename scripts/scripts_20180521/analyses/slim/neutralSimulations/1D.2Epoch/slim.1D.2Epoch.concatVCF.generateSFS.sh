@@ -52,7 +52,5 @@ echo "gathering sfses together for download"
 
 
 done
-<<<<<<< HEAD
+
 # can then fold it when you do dadi inference.
-=======
->>>>>>> ff6f8d9ae3901cdde86f93cad5858965aa55015d

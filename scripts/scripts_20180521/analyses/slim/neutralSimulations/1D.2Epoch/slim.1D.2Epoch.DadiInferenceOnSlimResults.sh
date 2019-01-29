@@ -1,11 +1,12 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=02:00:00,h_data=2G
+#$ -l h_rt=08:00:00,h_data=8G
 #$ -o /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-1
+#$ -t 1-11
+#$ -N dadiInfOnSlim
 
 # 100 replicates (or however many you did with slim)
 ## order
@@ -27,7 +28,7 @@ scripts=$gitdir/scripts/scripts_20180521/analyses
 slimscriptdir=$scripts/slim/neutralSimulations/${slimModel}
 dadiscriptdir=$scripts/dadi_inference/
 
-rundate= # date slim was run
+rundate=20190125 # date slim was run
 pop=generic
 
 mu=8.64411385098638e-09
@@ -55,10 +56,11 @@ python $dadiscriptdir/$script \
 --pop generic \
 --mu $mu \
 --L $L \
---sfs $wd/SFS/generic.${slimModel}.slim.output.unfolded.sfs.dadi.format.${rundate}.txt \
+--sfs $wd/SFS/generic.${slimModel}.slim.output.unfolded.sfs.dadi.format.*.txt \
 --outdir $outdir
 done
 
+# note the date on the sfs is the date it was made ; not super helpful. can I fix that in the python script?
 
 echo "concatenating results"
 grep rundate -m1 $outdir/${pop}.dadi.inference.${model}.runNum.1.*.output > $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt

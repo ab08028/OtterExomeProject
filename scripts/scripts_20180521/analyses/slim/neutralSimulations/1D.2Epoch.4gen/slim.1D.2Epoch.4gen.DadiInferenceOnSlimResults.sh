@@ -1,11 +1,12 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=02:00:00,h_data=2G
+#$ -l h_rt=08:00:00,h_data=2G
 #$ -o /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
+#$ -N dadiInfOnSlim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-100
+#$ -t 1-11
 
 # 100 replicates (or however many you did with slim)
 ## order
@@ -21,13 +22,13 @@ source /u/home/a/ab08028/env_python2.7.13/bin/activate # activate virtual enviro
 
 
 # do 2epoch and 1 epoch inference on the 2epoch model
-slimModel=1D.2Epoch # model SLIM was simulated under 
+slimModel=1D.2Epoch.4gen # model SLIM was simulated under 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scripts=$gitdir/scripts/scripts_20180521/analyses
 slimscriptdir=$scripts/slim/neutralSimulations/${slimModel}
 dadiscriptdir=$scripts/dadi_inference/
 
-rundate= # date slim was run
+rundate=20190128 # date slim was run
 pop=generic
 
 mu=8.64411385098638e-09
