@@ -1,0 +1,19 @@
+the basic slim model is in : generic.2Epoch.100kb.10genContraction.20180125.slim
+ this has a burnin period of 50,000 generations and a contracton time of 10generations. You must change 
+these values within the script if you want to change them (going to work on a better approach to this)
+
+
+slim.2Epoch.array.sh will let you set values for the rest of the parameters (mu, r, Nanc, etc.) and submit an array of 60 tasks
+each of which simulates 100x1kb independent blocks, for a total of 6000x1kb blocks
+
+
+slim.2Epoch.submitter.sh will let you submit 100 (or more) replicates of the array jobs. 
+
+
+
+So if you wanted to do 100 replicates of the array, you would just sh slim.2Epoch.submitter.sh and then it would submit 100 array jobs (each with 60 chunks) for you based on the generic.2Epoch.100kb.10genContraction.20180125.slim model
+
+To modify parameters, you change them in slim.2Epoch.array.sh script, unless it is adjusting the burnin or time of contraction, which must be modified in the script body itself (for now)
+
+
+
