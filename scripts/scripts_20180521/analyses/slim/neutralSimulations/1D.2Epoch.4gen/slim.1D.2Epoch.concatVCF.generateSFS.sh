@@ -3,9 +3,6 @@
 # loop over all replicates
 for i in {1..11}
 do
-
-echo "starting replicate $i"
-
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/
 
@@ -18,10 +15,6 @@ outfile=${model}.rep.${i}.concatted.slim.output.ALL.vcf
 
 # get header from first vcf
 
-
-echo "concatenating chunks"
-
-
 grep "#" $outdir/slim.output.1.vcf > $outdir/$outfile
 # loop over all chunks
 for j in {1..60}
@@ -32,9 +25,6 @@ do
 grep -v "#" $outdir/slim.output.${j}.vcf | awk -v chr=$i '{OFS="\t";$1=""; print chr,$0}' >> $outdir/$outfile
 done
 
-
-echo "gzipping output"
-
 # gzip the result
 gzip -f $outdir/$outfile
 # this will give you once vcf for the whole run
@@ -43,9 +33,6 @@ gzip -f $outdir/$outfile
 
 # use my SFS script
 # this will generate an UNFOLDED SFS in dadi and R format
-
-echo "generating SFS"
-
 python $scriptdir/generate_sfs/make_sfs_without_easySFS/generate1DSFS.py \
 --vcf $outdir/${outfile}.gz \
 --pop generic \
@@ -62,9 +49,3 @@ echo "gathering sfses together for download"
 
 
 done
-
-
-
-# can then fold it when you do dadi inference.
-
-
