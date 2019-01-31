@@ -8,8 +8,7 @@ import sys
 import gzip
 import datetime
 import argparse
-todaysdate=datetime.datetime.today().strftime('%Y%m%d')
-
+# no longer including date in output; if you want date included, put it in your outPREFIX
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Generate a 1D SFS in dadi format and in easy input format for R based on a pre-filtered VCF that contains ONLY the regions you of interest')
 parser.add_argument("--vcf",required=True,help="path to vcf file")
@@ -79,7 +78,7 @@ for line0 in inVCF:
     # print(sum(sfs.values()))
 ############################ write out SFS in dadi format ################
 # write it out in a couple formats (dadi, fsc, R) #### dadi format : 
-outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.dadi.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.dadi.format.txt","w")
 outputFile.write(str(unfoldedSFSlen)+" unfolded "+"\""+str(pop)+"\"\n")
 #freqs='\t'.join(str(x) for x in sfs) # set up first row
 values='\t'.join(str(x) for x in sfs.values()) # set up second row 
@@ -92,7 +91,7 @@ outputFile.close()
 # header=
 #outputFile.close()
 ############################ write out SFS for easy plotting in R ################
-outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.R.format."+todaysdate+".txt","w")
+outputFile=open(str(outdir)+"/"+pop+"."+prefix+".unfolded.sfs.R.format.txt","w")
 outputFile.write("frequency\tcount\n")
 [outputFile.write('{0}\t{1}\n'.format(key,value)) for key, value in sfs.items()]
 outputFile.close()
