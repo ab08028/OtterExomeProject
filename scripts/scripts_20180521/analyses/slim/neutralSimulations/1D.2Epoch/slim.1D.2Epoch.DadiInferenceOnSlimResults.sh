@@ -49,6 +49,7 @@ echo "starting inference for $dadimodel"
 outdir=$wd/dadiInfBasedOnSlim/dadiInfModel_$dadimodel/replicate_${SGE_TASK_ID}
 concatdir=$wd/dadiInfBasedOnSlim/allDadiResultsConcatted/dadiInfModel_$dadimodel/
 mkdir -p $outdir
+mkdir -p $concatdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
 do
@@ -56,7 +57,7 @@ echo "carrying out inference $i for model $dadimodel for pop $pop"
 # [0-9] indicates that it's a number, but not specific about proj value
 python $dadiscriptdir/$script \
 --runNum $i \
---pop generic \
+--pop $pop \
 --mu $mu \
 --L $L \
 --sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
@@ -66,14 +67,14 @@ done
 
 
 echo "concatenating results"
-grep rundate -m1 $outdir/${pop}.dadi.inference.${model}.runNum.1.*.output > $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${model}.all.output.concatted.txt
+grep rundate -m1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.1.*.output > $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
 for i in {1..50}
 do
-grep rundate -A1 $outdir/${pop}.dadi.inference.${model}.runNum.${i}.*.output | tail -n1 >> $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${model}.all.output.concatted.txt
+grep rundate -A1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.${i}.*.output | tail -n1 >> $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
 done
 
 # copy results to the concat folder for download
-/bin/cp -f $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${model}.all.output.concatted.txt $concatdir
+/bin/cp -f $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt $concatdir/
 
 done
 

@@ -5,6 +5,7 @@ rundate=20190125 # date of running slim
 model=1D.2Epoch
 wd=/u/flashscratch/a/ab08028/captures/analyses/slim/neutralSimulations/$model/$rundate/ # eventually loop over all replicates 
 sfsdir=$wd/allSFSes
+pop=generic
 mkdir -p $sfsdir
 # loop over all replicates
 for i in {1..11}
@@ -46,7 +47,7 @@ echo "generating SFS"
 
 python $scriptdir/generate_sfs/make_sfs_without_easySFS/generate1DSFS.py \
 --vcf $repdir/${concatFile}.gz \
---pop generic \
+--pop $pop \
 --outdir $sfsdir \
 --outPREFIX rep.$i.$model.slim.output
 
