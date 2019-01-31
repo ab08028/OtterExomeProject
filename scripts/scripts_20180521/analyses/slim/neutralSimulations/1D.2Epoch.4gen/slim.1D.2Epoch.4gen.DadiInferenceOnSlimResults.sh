@@ -57,7 +57,7 @@ echo "carrying out inference $i for model $dadimodel for pop $pop"
 # [0-9] indicates that it's a number, but not specific about proj value
 python $dadiscriptdir/$script \
 --runNum $i \
---pop generic \
+--pop $pop \
 --mu $mu \
 --L $L \
 --sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
