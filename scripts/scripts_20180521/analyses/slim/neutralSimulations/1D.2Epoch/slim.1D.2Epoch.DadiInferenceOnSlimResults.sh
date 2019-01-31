@@ -80,3 +80,5 @@ done
 
 ############################ deactivate virtualenv ###############
 deactivate # deactivate virtualenv
+
+sleep 10m
