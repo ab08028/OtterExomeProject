@@ -56,16 +56,8 @@ initialize() {
 	cat(paste(c("generation:",sim.generation,"\n")));
 	}
 	
-	
-// set burn in at 50K generations (>10*Ne of 4000)
-50000 {
-	p1.setSubpopulationSize(v_NU);
-	}
-	
-// run for ~10 more generations and then output the vcf for 7 individuals sampled w/out replacement after X gens of contraction 
-// an awkward solution; but recommended https://groups.google.com/forum/#!topic/slim-discuss/0jOCti_t380
-// try reschedule block as well
-50010 late() {
+// after 50K generation burn in, sample 7 individuals
+50000 late() {
 p1.outputVCFSample(v_SS, F,filePath=paste(c(v_OUTFILE,"/slim.output.",chunk,".vcf"),sep=""));
 }
 
