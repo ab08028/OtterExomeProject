@@ -1,7 +1,7 @@
 
 ######## concatenate VCF files per replicate, and add a 'chromosome' identifier (that's really a portion identifier)
 ########### set up dir structure ##########
-rundate=RUNDATE # date of running slim
+rundate=20190213 # date of running slim
 model=1D.1Epoch
 wd=/u/flashscratch/a/ab08028/captures/analyses/slim/neutralSimulations/$model/$rundate/ # eventually loop over all replicates 
 sfsdir=$wd/allSFSes
