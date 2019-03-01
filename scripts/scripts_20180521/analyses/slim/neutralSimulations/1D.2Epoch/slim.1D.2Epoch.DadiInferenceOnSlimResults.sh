@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-11
+#$ -t 2-11
 #$ -N dadiInfOnSlim
 
 # 100 replicates (or however many you did with slim)
@@ -40,8 +40,8 @@ wd=$captures/analyses/slim/neutralSimulations/${slimModel}/${rundate}/
 sfsdir=$wd/allSFSes
 mkdir -p $wd/dadiInfBasedOnSlim/allDadiResultsConcatted
 # adding dadi script that has T fixed at 0.0001 (10gen/(4000*2))
-scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py 1D.1Bottleneck.TB10gen.dadi.py'
-
+#scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py 1D.1Bottleneck.TB10gen.dadi.py'
+scripts=1D.1Bottleneck.TB10gen.dadi.py
 
 for script in $scripts
 do
