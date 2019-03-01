@@ -2,8 +2,8 @@ require(ggplot2)
 require(gridExtra)
 ####### sandbox trying to plot dadi results 
 slimmodel="1D.2Epoch.30gen" # model you simulated under
-slimdate=[SET DATE] # date you ran slim
-pop="sim.AK" # what you named population in slim simulation
+slimdate=20190227 # date you ran slim
+pop="generic" # what you named population in slim simulation
 # params from /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/slim/neutralSimulations/1D.2Epoch.30gen/slim.1D.2Epoch.30gen.array.sh
 Nanc_true=4000 # nanc you simulated
 nu_true=30 # nu you simulated
@@ -54,22 +54,24 @@ ggplot(allbest,aes(x=T_scaled_gen))+
   ggtitle("Best (out of 50) LL estimate of nu\nAcross simulation replicates\n(dadi 1D.2Epoch inferred from Slim 1D.2Epoch")+
   theme_bw()
 
+#################### 20190301 : new info ! got LL-data ###################
+
 ################  plot all 2 Epoch results #############
 
-p1 <- ggplot(allresults,aes(x=rep,y=Nanc_FromTheta_scaled_dip,color=LL))+
+p1 <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=Nanc_FromTheta_scaled_dip,color=LL))+
   geom_point()+
   geom_hline(yintercept = Nanc_true)+
   scale_color_gradientn(colours=rainbow(5))+
   ylab("Nanc\n(ancestral size)")
 p1
-p2 <- ggplot(allresults,aes(x=rep,y=T_scaled_gen,color=LL))+
+p2 <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=LL))+
   geom_point()+
   geom_hline(yintercept = T_true)+
   scale_color_gradientn(colours=rainbow(6))+
   scale_y_log10()+
   ylab("T\n(time of contraction)")
 p2 
-p3 <- ggplot(allresults,aes(x=rep,y=nu_scaled_dip,color=LL))+
+p3 <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=LL))+
   geom_point()+
   geom_hline(yintercept = nu_true)+
   scale_color_gradientn(colours=rainbow(6))+
@@ -83,14 +85,14 @@ allP <- grid.arrange(p1,p3,p2)
 ggsave(paste(data.dir,"comparingDadiReplicates.pdf",sep=""),allP,width=9,height=7)
 
 ####################### without log-scaling p2 and p3 ############
-p2b <- ggplot(allresults,aes(x=rep,y=T_scaled_gen,color=LL))+
+p2b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=LL))+
   geom_point()+
   geom_hline(yintercept = T_true)+
   scale_color_gradientn(colours=rainbow(6))+
   #scale_y_log10()+
   ylab("T\n(time of contraction)")
 p2b 
-p3b <- ggplot(allresults,aes(x=rep,y=nu_scaled_dip,color=LL))+
+p3b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=LL))+
   geom_point()+
   geom_hline(yintercept = nu_true)+
   scale_color_gradientn(colours=rainbow(6))+
@@ -125,3 +127,20 @@ p4
 ##### gather them all together
 #grid.arrange(p1,p3,p2,p4,ncol=1)
 ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/neutralSimulations/",slimmodel,"/",slimdate,"/dadiInfBasedOnSlim/allDadiResultsConcatted/","comparing.1Epoch.2Epoch.DadiLLs.perReplicate.pdf",sep=""),p4,width=8.5,height=3)
+
+
+################### for each pair plot x-y correlation ############
+p5 <- ggplot(allbest,aes(x=nu_scaled_dip,y=T_scaled_gen,color=Nanc_FromTheta_scaled_dip))+
+  geom_point(size=3,alpha=0.8)+
+  theme_bw()+
+  ggtitle("Correlation between nu and T (MLE for each replicate)")+
+  xlab("nu")+
+  ylab("T")+
+  geom_hline(yintercept = T_true)+
+  geom_vline(xintercept= nu_true)+
+  scale_y_log10()+
+  guides(colour=guide_legend("Nanc"))
+p5
+
+ggsave(paste(data.dir,"nu.vs.T.MLEs.2Epoch.pdf",sep=""),p5,width=5,height=5)
+
