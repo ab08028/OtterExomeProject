@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-11
+#$ -t 2-11
 #$ -N dadiInfOnSlim
 
 # 100 replicates (or however many you did with slim)
@@ -28,7 +28,7 @@ scripts=$gitdir/scripts/scripts_20180521/analyses
 slimscriptdir=$scripts/slim/neutralSimulations/${slimModel}
 dadiscriptdir=$scripts/dadi_inference/
 
-rundate=20190125 # date slim was run
+rundate=20190213 # date slim was run
 pop=generic
 
 mu=8.64411385098638e-09

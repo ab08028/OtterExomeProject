@@ -39,7 +39,8 @@ wd=$captures/analyses/slim/neutralSimulations/${slimModel}/${rundate}/
 #repdir=$wd/replicate_${SGE_TASK_ID}
 sfsdir=$wd/allSFSes
 mkdir -p $wd/dadiInfBasedOnSlim/allDadiResultsConcatted
-scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py'
+# adding dadi script that has T fixed at 0.0001 (10gen/(4000*2))
+scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py 1D.1Bottleneck.TB10gen.dadi.py'
 
 
 for script in $scripts
