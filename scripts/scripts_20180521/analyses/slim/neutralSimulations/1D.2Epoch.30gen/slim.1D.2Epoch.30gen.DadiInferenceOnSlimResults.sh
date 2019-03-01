@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-1
+#$ -t 2-11
 #$ -N dadiInfOnSlim
 
 # 100 replicates (or however many you did with slim)
@@ -67,10 +67,10 @@ done
 
 
 echo "concatenating results"
-grep rundate -m1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.1.*.output > $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
+grep rundate -m1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.1.output > $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
 for i in {1..50}
 do
-grep rundate -A1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.${i}.*.output | tail -n1 >> $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
+grep rundate -A1 $outdir/${pop}.dadi.inference.${dadimodel}.runNum.${i}.output | tail -n1 >> $outdir/${pop}.rep.${SGE_TASK_ID}.dadi.inf.${dadimodel}.all.output.concatted.txt
 done
 
 # copy results to the concat folder for download
