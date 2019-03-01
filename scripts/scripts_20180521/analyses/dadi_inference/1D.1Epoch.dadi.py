@@ -75,6 +75,10 @@ func_ex = dadi.Numerics.make_extrap_log_func(func)
 model = func_ex("N/A", ns, pts_l)
 # Likelihood of the data given the model AFS.
 ll_model = dadi.Inference.ll_multinom(model, fs)
+
+# also get the LL of the data to itself (best possible ll)
+ll_data=dadi.Inference.ll_multinom(fs, fs)
+
 # calculate best fit theta
 theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
@@ -94,10 +98,10 @@ outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".run
 # get all param names:
 #param_names_str='\t'.join(str(x) for x in param_names)
 scaled_param_names_str=str(scaled_param_names)
-header=scaled_param_names_str+"\ttheta\tLL\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
+header=scaled_param_names_str+"\ttheta\tLL\tLL_data\tmodelFunction\tmu\tL\tmaxiter\trunNumber\trundate\tinitialParameters\tupper_bound\tlower_bound" # add additional parameters theta, log-likelihood, model name, run number and rundate
 scaled_popt_str=str(scaled_popt)
 # joint together all the output fields, tab-separated:
-output=[scaled_popt_str,theta,ll_model,func.func_name,mu,L,maxiter,runNum,todaysdate] # put all the output terms together
+output=[scaled_popt_str,theta,ll_model,ll_data,func.func_name,mu,L,maxiter,runNum,todaysdate] # put all the output terms together
 output='\t'.join(str(x) for x in output) # write out all the output fields
 # this should result in a 2 row table that could be input into R / concatenated with other runs
 outputFile.write(('{0}\n{1}\n').format(header,output))
