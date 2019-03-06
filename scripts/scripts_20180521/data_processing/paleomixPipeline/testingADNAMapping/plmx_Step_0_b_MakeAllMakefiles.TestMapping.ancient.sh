@@ -13,7 +13,7 @@ fastqs=$wd/fastqs
 makefileDir=$scriptDir/paleomixPipeline/makefiles
 modernTemplate=$makefileDir/makefile_template.modernDNA.yaml
 ancientTemplate=$makefileDir/makefile_template.aDNA.noIndelR.testMultGenomes.yaml
-ancHeaders=$wd/samples/ancientSamples.txt
+ancHeaders=$wd/samples/aDNA.Screens.2.txt # 20190219 screens of long-probe time libraries 
 #modHeaders=$wd/samples/modernSamples.txt
 
 mkdir -p $makefileDir/ancientMakefiles-TestMapping

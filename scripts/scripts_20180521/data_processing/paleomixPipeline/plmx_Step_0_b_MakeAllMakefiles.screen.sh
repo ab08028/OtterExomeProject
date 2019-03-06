@@ -15,7 +15,7 @@ makefileDir=$scriptDir/paleomixPipeline/makefiles
 ancientTemplate=$makefileDir/makefile_template.aDNA.yaml
 #ancHeaders=$wd/samples/ancientSamples.txt
 # 20181004: using aDNA screening fastqs (and updated filename to include L*)
-ancHeaders=$wd/samples/ancientLibs.Screen.txt
+ancHeaders=$wd/samples/aDNA.Screens.2.txt
 #modHeaders=$wd/samples/modernSamples.txt
 
 mkdir -p $makefileDir/ancientMakefiles

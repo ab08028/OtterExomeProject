@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=13G
+#$ -l h_rt=300:00:00,h_data=13G,highp,arch=intel*
 #$ -pe shared 8
 #$ -m bea
 # ran in 8 hours.

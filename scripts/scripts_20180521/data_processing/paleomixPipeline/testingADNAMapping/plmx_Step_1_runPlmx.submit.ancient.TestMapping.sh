@@ -22,7 +22,7 @@ wd=$SCRATCH/captures
 makefileDir=$scriptDir/makefiles/ancientMakefiles-TestMapping
 #headers=$wd/samples/ancientSamples.txt
 #headers=$wd/samples/ancientSamples.temp.remainder.txt
-headers=$wd/samples/ancientLibs.Screen.txt # 20181004: screening libraries
+headers=$wd/samples/aDNA.Screens.2.txt # new: 20190219 screening 2 more libs; 20181004: screening libraries
 # outdirectory:
 outdir=$wd/paleomix/testMapping
 mkdir -p $outdir
