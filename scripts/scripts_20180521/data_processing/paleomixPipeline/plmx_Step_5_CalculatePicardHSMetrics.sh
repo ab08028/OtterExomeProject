@@ -1,6 +1,18 @@
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=10:00:00,h_data=8G
+#$ -N picardHSMetrics
+#$ -o /u/flashscratch/a/ab08028/otters/reports
+#$ -e /u/flashscratch/a/ab08028/otters/reports
+#$ -m abe
+#$ -M ab08028
+source /u/local/Modules/default/init/modules.sh
+module load java/1.8.0_111
+# note you need java 1.8; if you used -V and have a different java installed you may have to unload it
 ###### this should be part of paleomix pipeline
 
-headers=/u/flashscratch/a/ab08028/captures/samples/ancientSamples.capture.screen.all.txt
+#headers=/u/flashscratch/a/ab08028/captures/samples/ancientSamples.capture.screen.all.txt
+headers=/u/flashscratch/a/ab08028/captures/samples/aDNA.Screens.2.txt # 20190219 new screens
 PICARD=/u/home/a/ab08028/klohmueldata/annabel_data/bin/Picard_2.8.1/picard.jar
 
 # capture regions in sea otter genome:
