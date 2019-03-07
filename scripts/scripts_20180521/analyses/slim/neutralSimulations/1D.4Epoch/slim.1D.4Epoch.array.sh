@@ -61,7 +61,7 @@ $slim \
 -d v_NANC=$nanc \
 -d v_NU=$nu \
 -d v_NREC=$nrec \
--d v_NBOT=$nbot
+-d v_NBOT=$nbot \
 -d v_OUTFILE="'$outdir'" \
 -d chunk=${SGE_TASK_ID} \
 $scriptdir/$slimscript
