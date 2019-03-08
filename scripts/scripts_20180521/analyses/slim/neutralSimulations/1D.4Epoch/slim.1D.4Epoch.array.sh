@@ -5,7 +5,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-1
+#$ -t 1-60
 
 
 ######### 2 Epoch script generates 100 x 1kb independent blocks ###########
