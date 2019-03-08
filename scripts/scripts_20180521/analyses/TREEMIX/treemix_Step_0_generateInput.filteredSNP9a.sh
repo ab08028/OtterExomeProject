@@ -1,6 +1,5 @@
 ################ TREEMIX ############# 
-# this should be run *after* you've converted your vcf to plink format for faststructure
-# maybe run with all_8? for now running with all-7...
+# this should be run *after* you've converted your vcf to plink format
 module load treemix
 module load plink
 
@@ -24,12 +23,13 @@ vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered
 plinkFileDir=$vcfdir/plinkFormat/ 
 treeFileDir=$vcfdir/treemixFormat/
 mkdir -p $treeFileDir
-header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+#header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+header=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
 
 # must add a snp name to my .bim file:
 # make a backup
-/bin/cp $plinkFileDir/snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.bim $plinkFileDir/original.bim
-awk '{$2 = $1":"$4; print}' $plinkFileDir/original.bim >  $plinkFileDir/snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.bim
+/bin/cp $plinkFileDir/$header.bim $plinkFileDir/original.bim
+awk '{$2 = $1":"$4; print}' $plinkFileDir/original.bim >  $plinkFileDir/$header.bim
 
 # need to assign populations MANUALLY and need to be formatted 0 ID POP: 
 awk '{print $1,$2}' $plinkFileDir/$header.fam > $plinkFileDir/$header.samples

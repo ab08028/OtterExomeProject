@@ -303,6 +303,7 @@ plot_tree = function(stem, o = NA, cex = 1, disp = 0.003, plus = 0.01, flip = ve
 	return(list( d= d, e = e))
 }
 
+
 get_dist_to_nmig = function(d, e, n1, n2){
 	toreturn = e[e[,1] == n1 & e[,2] == n2,3]
 	#print(toreturn)

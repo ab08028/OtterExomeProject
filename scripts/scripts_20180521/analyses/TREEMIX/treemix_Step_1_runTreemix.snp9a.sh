@@ -1,3 +1,5 @@
+
+
 ####### NOTES: the weird RWAB samples seemed to cause false migration edges to ferret; make sure they are not in your dataset
 # on 20190307 I remade my plink files without the RWAB files (need to redo faststructure at some point too)
 # going to redo treemix and see if those weird mig edges are gone (I hope so!)
@@ -8,8 +10,10 @@ scriptdir=$gitdir/analyses/TREEMIX/
 genotypeDate=20181119
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/
 treeFileDir=$vcfdir/treemixFormat/
-header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
-wd=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/$genotypeDate
+#header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+header=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+wd=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/$genotypeDate/snp9a # update if using snp7 8 etc 
+mkdir -p $wd
 # decisions: ld pruning or not? all individuals or not? 
 # start with most basic treemix (no migration)
 ##### aha! you need to specify "m" -- the number of migration events! and can ratchet it up and down 
@@ -36,23 +40,41 @@ treemix -i $treeFileDir/$infile -root FERRET -k1000 -o $wd/$outdir/ferretOutgrou
 #treemix -i $treeFileDir/${header}.frq.strat.treemixFormat.gz -k1000 -noss -o vanilla.treemix.k1000.noss # change out stem to something more intelligent
 
 
-# start with most basic treemix + migration
+########## model 3: adding migration, no ld 
 outdir=ferretOutgroup.migration.treemix
 mkdir $wd/$outdir
 echo "model: migration, no ld pruning" > $wd/$outdir/modelInfo.txt
-echo "model command: treemix -i $treeFileDir/$infile -m -root FERRET -o $wd/$outdir/ferretOutgroup.migration.treemix" >> $wd/$outdir/modelInfo.txt
+echo "model command: treemix -i $treeFileDir/$infile -m 10 -root FERRET -o $wd/$outdir/ferretOutgroup.migration.treemix" >> $wd/$outdir/modelInfo.txt
 treemix -i $treeFileDir/$infile -m 10 -root FERRET -o $wd/$outdir/ferretOutgroup.migration.treemix  # change out stem to something more intelligent
 
 
+########## model 4: adding migration, with 1000k ld 
 
-# start with most basic treemix + migration + k1000 ld pruning
+#  migration + k1000 ld pruning
 outdir=ferretOutgroup.migration.ldPruning.k1000.treemix
 mkdir $wd/$outdir
 echo "model: migration, with k=1000 ld pruning" > $wd/$outdir/modelInfo.txt
-echo "model command: treemix -i $treeFileDir/$infile -m -root FERRET -k1000 -o $wd/$outdir/ferretOutgroup.migration.treemix" >> $wd/$outdir/modelInfo.txt
+echo "model command: treemix -i $treeFileDir/$infile -m 10 -root FERRET -k1000 -o $wd/$outdir/ferretOutgroup.migration.ldPruning.k1000.treemix" >> $wd/$outdir/modelInfo.txt
 treemix -i $treeFileDir/$infile -m 10 -root FERRET -k1000 -o $wd/$outdir/ferretOutgroup.migration.ldPruning.k1000.treemix  # change out stem to something more intelligent
 
 
+########## model 5: migration with m =5, plus ld pruning 
+
+#  migration + k1000 ld pruning
+outdir=ferretOutgroup.migration.m5.ldPruning.k1000.treemix
+mkdir $wd/$outdir
+echo "model: migration, with k=1000 ld pruning,m=5" > $wd/$outdir/modelInfo.txt
+echo "model command: treemix -i $treeFileDir/$infile -m 5 -root FERRET -k1000 -o $wd/$outdir/ferretOutgroup.migration.m5.ldPruning.k1000.treemixx" >> $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m 5 -root FERRET -k1000 -o $wd/$outdir/ferretOutgroup.migration.m5.ldPruning.k1000.treemix  # change out stem to something more intelligent
+
+
+######### model 6: migration with m =5, no ld prunin 
+#  migration + k1000 ld pruning
+outdir=ferretOutgroup.migration.m5.treemix
+mkdir $wd/$outdir
+echo "model: migration, with k=1000 ld pruning,m=5" > $wd/$outdir/modelInfo.txt
+echo "model command: treemix -i $treeFileDir/$infile -m 5 -root FERRET -o $wd/$outdir/ferretOutgroup.migration.m5.treemixx" >> $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m 5 -root FERRET -o $wd/$outdir/ferretOutgroup.migration.m5.treemix  # change out stem to something more intelligent
 
 # subset populations:
 # columns:

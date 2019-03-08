@@ -9,11 +9,11 @@ module load plink
 
 calldate=20181119 # date that genotypes were called
 indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered/
- # temporary
-#indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered/downsampledVCFs/
-# sample size can have an effect, so have downsampled the commanders:
 #infile=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
-infile=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
+# trying without the admixed individuals -- for now? Not sure of best approach. also tried with snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
+# that contained admixed and relatives and some pca outliers, but not rwab bad samples -- but led to some weird 'migration' edges with ferret
+
+infile=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 outdir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat 
 mkdir -p $outdir
 # you need to use const-fid 0 otherwise it thinks that family name_sample name is structure of ID and tries to split it (and fails)
