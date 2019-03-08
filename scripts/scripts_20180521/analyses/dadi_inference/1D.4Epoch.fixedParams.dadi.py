@@ -57,15 +57,15 @@ pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than s
 # and size is 30/4000 = 0.0075
 #
 def fourEpoch(params, ns, pts): 
-    nuBOT,nuREC = params
+    nuBOT,nuREC,nuCUR = params
     xx = Numerics.default_grid(pts) # sets up grid
     phi = PhiManip.phi_1D(xx) # sets up initial phi for population 
     phi = Integration.one_pop(phi, xx, 0.013, nuBOT)  # bottleneck 1 
     phi = Integration.one_pop(phi, xx, 0.024, nuREC) # recovery 1
-    phi = Integration.one_pop(phi, xx, 0.0013, 0.0075)  # bottleneck 2 
+    phi = Integration.one_pop(phi, xx, 0.0013, nuCUR)  # contraction  
     fs = Spectrum.from_phi(phi, ns, (xx,)) 
     return fs
-param_names=("nuB","nuF","TF")
+param_names=("nuBOT","nuREC","nuCUR")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
 # changing starting position to .1, tb to 0.005; TF to 0.001
@@ -77,9 +77,9 @@ param_names=("nuB","nuF","TF")
 #2) the times for the lower bounds are supposed to be non-zero
 #IIRC if you give a min of 0 things get weird because of collapsing epochs
 #i'd throw something like 1e-5
-upper_bound = [10, 10]
-lower_bound = [1e-4, 1e-4]
-p0 = [0.25,1] # initial parameters guessing that bneck is 1000/4000 and recovery is 4000/4000
+upper_bound = [10, 10,10]
+lower_bound = [1e-4, 1e-4,1e-4]
+p0 = [0.25,1,0.0075] # initial parameters guessing that bneck is 1000/4000 and recovery is 4000/4000 and contraction is 30/4000
 
 
 func=fourEpoch # set the function
@@ -112,8 +112,9 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 Nanc=theta / (4*mu*L)
 nuBOT_scaled_dip=popt[0]*Nanc
 nuREC_scaled_dip=popt[1]*Nanc
-scaled_param_names=("Nanc_FromTheta_scaled_dip","nuBOT_scaled_dip","nuREC_scaled_dip")
-scaled_popt=(Nanc,nuBOT_scaled_dip,nuREC_scaled_dip)
+nuCUR_scaled_dip=popt[2]*Nanc
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nuBOT_scaled_dip","nuREC_scaled_dip","nuCUR_scaled_dip")
+scaled_popt=(Nanc,nuBOT_scaled_dip,nuREC_scaled_dip,nuCUR_scaled_dip)
 
 
 ############### Write out output (same for any model) ########################
