@@ -8,7 +8,7 @@ source /u/local/Modules/default/init/modules.sh
 module load plink
 
 calldate=20181119 # date that genotypes were called
-indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered/QD2Filter_deleteAfterCompare/
+indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered/
  # temporary
 #indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${calldate}_filtered/downsampledVCFs/
 # sample size can have an effect, so have downsampled the commanders:
