@@ -40,8 +40,10 @@ r=1e-8
 ss=7 # sample size in individuals
 nanc=4000 # ancestral size from dadi 
 nu=30 # extreme contraction size from dadi
-nbot=1000 # mild bottleneck
+nbot=100 # severe bottleneck
 nrec=4000 #recovers back to nanc
+
+echo "mu:$mu r:$r ss:$ss nanc:$nanc nu:$nu nbot:$nbot nrec:$nrec" > $SCRATCH/captures/analyses/slim/neutralSimulations/$model/$rundate/params.txt
 
 #t=10 # time before present that contraction occured
 #burnin=$((nanc*10)) # burn in time (nanc *10)
