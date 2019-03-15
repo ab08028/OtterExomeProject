@@ -3,8 +3,8 @@
 require(ggplot2)
 require(gridExtra)
 ####### sandbox trying to plot dadi results 
-slimmodel="1D.2Epoch" # model you simulated under
-slimdate=20190125 # date you ran slim
+slimmodel="1D.2Epoch.70gen.500dip" # model you simulated under
+slimdate=20190313 # date you ran slim
 pop="generic" # what you named population in slim simulation
 totalSitesSimulated=6000000 # 6Mb; so monomorphic will be 6000000 - total SFS sites 
 # need to show a couple things
