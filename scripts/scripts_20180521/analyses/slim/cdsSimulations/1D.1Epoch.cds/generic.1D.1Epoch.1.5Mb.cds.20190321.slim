@@ -18,11 +18,11 @@ initialize() {
 	defineConstant("geneLength", 1500); // length of each gene
 	defineConstant("seqLength", g*geneLength); // total sequence length starting with 3Mb (AB)
 	cat("Exome portion length:"+seqLength+"\n");
-	initializeMutationRate(8.64e-09 );
+	initializeMutationRate(v_MU);
 	// m1 mutation type: neutral *synonymous*
 	initializeMutationType("m1", 0.5, "f", 0.0);
 	// m2 mutation type: missense(?) -- This is from Chris; ask where he got params (Kim et al?)
-	initializeMutationType("m2", 0, "g",-0.01314833, 0.186); // set H in array (0 for recessive, 0.5 for additive) 
+	initializeMutationType("m2", v_H, "g",-0.01314833, 0.186); // set H in array (0 for recessive, 0.5 for additive) 
 	m2.convertToSubstitution = F; // don't want to remove fixed mutations, right?
 	m1.convertToSubstitution = F; // maybe? not sure.
 	// initialize exon: g1, has both neutral (m1) and misense (m2) mutations

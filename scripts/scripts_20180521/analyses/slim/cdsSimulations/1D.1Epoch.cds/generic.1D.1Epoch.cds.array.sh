@@ -50,7 +50,7 @@ mu=8.64e-9
 ss=7 # sample size in individuals
 nanc=4000 # ancestral size from dadi 
 domH=0 # dominance coefficient for NS mutations
-echo "mu:$mu ss:$ss nanc:$nanc" > $wd/params.txt
+echo "mu:$mu ss:$ss nanc:$nanc h:$domH" > $wd/params.txt
 
 $slim \
 -long \
