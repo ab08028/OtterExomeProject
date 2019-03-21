@@ -32,7 +32,20 @@ prefix=str(args.outPREFIX)
 #outdir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/gettingNS_SynCounts"
 #prefix="test"
 #### OPEN VCF TO READ ######### 
-inVCF = gzip.open(vcfFile, 'r')
+# first check if it's gzipped or not (from Tanya Phung)
+def file_test(vcf_file):
+	"""
+    This function checks if the input VCF file is gzip or not.
+    """
+	if vcf_file.endswith('.gz'):
+		return gzip.open, 'rb'
+	else:
+           return open, 'rb'
+           
+open_func, mode = file_test(vcf_file=vcfFile)
+#inVCF = gzip.open(vcfFile, 'r')
+# open the VCF using the appropriate function (open for not gzipped; gzip.open for gzipped)
+inVCF=open_func(vcfFile,mode)
 ############# reset vcf to make sure no lines are missed #########
 inVCF.seek(0)
 
