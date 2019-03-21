@@ -63,7 +63,7 @@ HomAltCount=dict.fromkeys(samples,0)
 HomRefCount=dict.fromkeys(samples,0)
 HetCount=dict.fromkeys(samples,0)
 noCallCount=dict.fromkeys(samples,0)
-linesProcessed=[0]
+linesProcessed=0
 # so for each individual, am going to count the 1/1 0/0 and 0/1 values
 ###### READ THROUGH VCF AND EXTRACT INFO LINE BY LINE #######
 # first read the header lines ("#") 
