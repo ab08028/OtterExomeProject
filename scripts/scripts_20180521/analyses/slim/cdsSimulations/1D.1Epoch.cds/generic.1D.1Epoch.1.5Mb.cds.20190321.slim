@@ -1,0 +1,88 @@
+// questions for Chris: keep fixed mutations? (currently keeping)
+// 
+
+
+// set up a simple neutral simulation
+// two epoch model that simulates 100 x 1kb independent blocks
+// and uses the following variables
+// v_MU (mutation rate); v_R = recomb rate within blocks; v_NANC = ancestral size; v_NU = contraction size; 50K gen of burnin; 10gen contraction; v_OUTFILE = path to outfile ; v_SS = sample size in individuals for the vcf
+// added sea otter mutation rate 8.64e-09 (from genome paper)
+
+// changes to make: apparently 1e-03 is reasonable between-gene recomb rate
+// and then want to make separate chromosomes with 0.5 between them
+// okay I think I am going to model 1.5Mb stretches of seqeunce, each containing 1000 genes of size 1500bp
+// recomb w/in each gene will be 1e-08, between genes will be 1e-3
+// will either do 14x1.5mb so they are independent, or will 
+initialize() {
+	defineConstant("g",1000); //number of genes; starting with 2000 (AB)
+	defineConstant("geneLength", 1500); // length of each gene
+	defineConstant("seqLength", g*geneLength); // total sequence length starting with 3Mb (AB)
+	cat("Exome portion length:"+seqLength+"\n");
+	initializeMutationRate(8.64e-09 );
+	// m1 mutation type: neutral *synonymous*
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	// m2 mutation type: missense(?) -- This is from Chris; ask where he got params (Kim et al?)
+	initializeMutationType("m2", 0, "g",-0.01314833, 0.186); // set H in array (0 for recessive, 0.5 for additive) 
+	m2.convertToSubstitution = F; // don't want to remove fixed mutations, right?
+	m1.convertToSubstitution = F; // maybe? not sure.
+	// initialize exon: g1, has both neutral (m1) and misense (m2) mutations
+	// syn happens at rate 1, mis at rate 2.31:1 since there are more missense sites (Christian/Chris); note chris names neutral as m2 and missense at m1 so I reversed things here 
+	initializeGenomicElementType("g1", c(m1,m2), c(1.0,2.31)); // 2.31 is the NS:S ratio
+
+	for (i in 0:(g-1)){
+		initializeGenomicElement(g1, ((i)*geneLength+1), ((i+1)*geneLength));
+	}
+// figured out a way for recomb to be 0.5 between blocks, but 1e-08 within blocks
+// so that they aren't actually linked; simulating  independent genes/exons
+	//initializeRecombinationRate(1e-8);
+	// this sets up rates that alternate between 1e-08 and 1e-03
+	// and ends that are in pattern 999 1000 1999 2000 2999 ...
+	// so that the pattern is that r is 1e-8 for 0-999, then 1e-03 (a reasonable between-gene recomb rate) between 999 and 1000 (each gene), then is 1e-8 through next gene, and so on.
+	// making 5000 independent blocks.
+	rates=c(rep(c(1e-08,1e-3),g));
+	ends=NULL;
+	for (index in 0:(g-1))
+	{
+	ends=c(ends,index*geneLength+(geneLength-1),index*geneLength+geneLength);
+	}
+	initializeRecombinationRate(rates,ends);
+
+
+}
+
+// create a population of variable v_NANC individuals
+1 {
+	sim.addSubpop("p1", 4000);
+}
+
+// output generation number so I can track progress
+// I used to do it every eneration but that made too large output
+//late() {
+//cat(paste(c("generation:",sim.generation,"\n")));
+//}
+// now just do it every 10K
+10000 {
+	cat(paste(c("generation:",sim.generation,"\n")));
+	}
+20000 {
+	cat(paste(c("generation:",sim.generation,"\n")));
+	}
+30000 {
+	cat(paste(c("generation:",sim.generation,"\n")));
+	}
+40000 {
+	cat(paste(c("generation:",sim.generation,"\n")));
+	}
+	
+// after 50K generation burn in, sample 7 individuals
+50000 late() {
+p1.outputVCFSample(v_SS, F,filePath=paste(c(v_OUTFILE,"/slim.output.",chunk,".vcf"),sep=""));
+cat("#"+"synCountPerIndividual: "+p1.individuals.countOfMutationsOfType(m1)); //can actually just get this from the VCF file with S=0 or not values in INFO field.
+cat("#"+"non-synCountPerIndividual: "+p1.individuals.countOfMutationsOfType(m2)); //can actually just get this from the VCF file with S=0 or not values in INFO field.
+}
+
+
+
+
+
+
