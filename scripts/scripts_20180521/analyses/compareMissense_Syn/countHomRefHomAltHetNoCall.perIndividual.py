@@ -63,7 +63,7 @@ HomAltCount=dict.fromkeys(samples,0)
 HomRefCount=dict.fromkeys(samples,0)
 HetCount=dict.fromkeys(samples,0)
 noCallCount=dict.fromkeys(samples,0)
-linesProcessed=0
+#linesProcessed=0
 # so for each individual, am going to count the 1/1 0/0 and 0/1 values
 ###### READ THROUGH VCF AND EXTRACT INFO LINE BY LINE #######
 # first read the header lines ("#") 
@@ -82,20 +82,20 @@ for line0 in inVCF:
     for sample in allCallsSamples.keys():
         if allCallsSamples[sample]=="0/0" or allCallsSamples[sample]=="0|0":
             HomRefCount[sample]+=1
-            linesProcessed+=1
-            print(linesProcessed)
+            #linesProcessed+=1
+            #print(linesProcessed)
         elif allCallsSamples[sample]=="1/1" or allCallsSamples[sample]=="1|1":
             HomAltCount[sample]+=1
-            linesProcessed+=1
-            print(linesProcessed)
+            #linesProcessed+=1
+            #print(linesProcessed)
         elif allCallsSamples[sample]=="0/1" or allCallsSamples[sample]=="1/0" or allCallsSamples[sample]=="1|0" or allCallsSamples[sample]=="0|1":
             HetCount[sample]+=1
-            linesProcessed+=1
-            print(linesProcessed)
+            #linesProcessed+=1
+            #print(linesProcessed)
         elif allCallsSamples[sample]=="./.":
             noCallCount[sample]+=1
-            linesProcessed+=1
-            print(linesProcessed)
+            #linesProcessed+=1
+            #print(linesProcessed)
         else:
             sys.exit("There are weird genotypes present!")
 
