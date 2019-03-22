@@ -1,8 +1,6 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=50:00:00,h_data=2G
-#$ -o /u/flashscratch/a/ab08028/captures/reports/slim
-#$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
 #$ -t 2-2
