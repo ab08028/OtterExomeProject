@@ -1,3 +1,4 @@
+parameters are based on 20190110 dadi results (2epoch for CA AK AL KUR and 3Epoch for COM)
 For each model and/or each population, make a "make script" file that has the populatoin/model specific parameters.
 this script will make a slim script
 
