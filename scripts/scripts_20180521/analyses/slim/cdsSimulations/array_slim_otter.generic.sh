@@ -3,7 +3,7 @@
 #$ -l h_rt=2:00:00,h_data=2G
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-14
+#$ -t 1-1
 # note: this array can be used for any slim model
 # going to simulate 1.5MB X 14 (=21MB)
 # each 1.5Mb 'chromosome' will have 1000 genes
