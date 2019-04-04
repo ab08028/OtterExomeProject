@@ -1,19 +1,67 @@
+# Script to make SLIM job script
+# USAGE: ./make_slim_wolf_101517.job.sh [g] [t] [h] [j]
+pop=COM
+model=1D.3Epoch.1.5Mb.cds
+gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$pop/$model
+mkdir -p $scriptdir # set script dir
+todaysdate=`date +%Y%m%d`
+########## population specific parameters ########
+# set sample size for vcf (should match empirical for AK)
+# can set manually or pull from a table
+ss=17 # in diploids # will depend on population, note you can find these in projectionValues.txt file
+#population	ProjectionValueHaploids Diploids
+#KUR	12	6
+#CA	12	6
+#COM	34	17
+#AK	14	7
+#AL	20	10
+# variables:
+nanc=4987
+nu=171 # contraction size was 1 for CA, but can't sample that, so going to set it to sample size (?) 
+nrec=9804 # recovery size
+botdur=30 
+trec=300 # contraction duration before you sample; this is kind of weird, not sure what to do with the CA params
+## note I found some other parts of the lhood space that work with older/milder bneck in dadi -- could also try that one
+# starting with this one
+######### general parameters ##########
+# Set g, number of genes (exons)
+g=1000
+# Set gLen, the length of exons
+gLen=1500
+# Set t, number of burn-in generations
+t=50000
+# set mutation rate
+mu=8.64e-9 # mutation rate
+# Set h, dominance coefficient
+h=0  # can loop through h's -- start with 0 for now
+# Set j, the chunk number (for 14 chunks?)
+
+#rep=$1 # use a submitter to submit multiple replicates (figure this out later)
+# Make script
+# chunk gets set when you run slim (based on SGE task id) # or something?? how to do this part? I don't really want to make a separte slim script each time? have it be a -d thing maybe?
+# have to figure out the chunks/replicates situation.
+
+cat > $scriptdir/slim_elut_${model}_${pop}_h${h}.job << EOM
+
 // changes to make: apparently 1e-03 is reasonable between-gene recomb rate
 // and then want to make separate chromosomes with 0.5 between them (or just simulate them separately)
 // okay I think I am going to model 1.5Mb stretches of seqeunce, each containing 1000 genes of size 1500bp
 // recomb w/in each gene will be 1e-08, between genes will be 1e-3
 // will either do 14x1.5mb so they are independent, or will simulate them all together if want to think about overall genetic load (then would have to set up chromosomes within the simulation)
 initialize() {
-	defineConstant("g",1000); //number of genes; starting with 1000 (AB)
-	defineConstant("geneLength", 1500); // length of each gene
+	defineConstant("g",$g); //number of genes; starting with 1000 (AB)
+	defineConstant("geneLength", $gLen); // length of each gene
 	defineConstant("seqLength", g*geneLength); // total sequence length starting with 1.5Mb (AB)
-	defineConstant("outdir","/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/slim/");
-	defineConstant("v_CHUNK",1); // portion of genome
-	defineConstant("v_REP",1); // overall replicate number
-	defineConstant("v_h",0);
-	defineConstant("v_SS",7); // sample size
-	defineConstant("v_MU",8.64e-09);
-	defineConstant("v_NU",30); // contraction size
+	//defineConstant("outdir",\"$outdir\"); -- set in command line
+	//defineConstant("v_CHUNK",$chunk); // portion of genome  -- set in command line
+	//defineConstant("v_REP",$rep); // overall replicate number -- set in command line
+	defineConstant("v_h",$h); // dominance coefficient
+	defineConstant("v_SS",$ss); // sample size
+	defineConstant("v_MU",$mu);
+	defineConstant("v_NANC",$nanc); // ancestral size
+	defineConstant("v_NU",$nu); // contraction size
+	defineConstant("v_NREC",$nrec); // recovery size
 
 	//cat("Exome portion length:"+seqLength+"\n");
 	initializeMutationRate(v_MU);
@@ -50,22 +98,20 @@ initialize() {
 
 // create a population of variable v_NANC individuals
 1 {
-	sim.addSubpop("p1", 4000);
+	sim.addSubpop("p1", v_NANC);
 }
 
 // output generation number so I can track progress
-// I used to do it every eneration but that made too large output
-//late() {
-//cat(paste(c("generation:",sim.generation,"\n")));
-//}
-// output where I'm at every 1000 generations 
-1:500 late() {
-	if (sim.generation % 10 == 0){
+
+1:${t} late() {
+	if (sim.generation % 1000 == 0){
 		cat(sim.generation+"\n");
 	}
 }
-// after 50K generation burn in, sample 7 individuals and output counts across whole population as well (from JAR script) ; then do this again after the contraction -- then only need to simulate once instead of doing 1 and 2 epoch separately. 
-500 late() {
+
+// after t generation burn in, sample individuals and output counts across whole population as well (from JAR script) ;
+// then do this again after the contraction -- then only need to simulate once instead of doing 1 and 2 epoch separately. 
+${t} late() {
 	p1.outputVCFSample(v_SS, F,filePath=paste(c(outdir,"/slim.output.PreContraction.",v_CHUNK,".vcf"),sep=""));
 	//file header
 	//mutation id
@@ -79,63 +125,7 @@ initialize() {
 	//number of homozygote derived in p2
 	//these are genotype counts not allele counts
 	// set up outfile: 
-	writeFile(paste(c(outdir,"/slim.output.PreContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom\n",append=F); // open fresh file
-	
-	//for every mutation in the simulation
-	for (mut in sim.mutations){
-		id = mut.id;
-		s = mut.selectionCoeff;
-		subpop = mut.subpopID;
-		age = sim.generation - mut.originGeneration;
-		type = mut.mutationType;
-		
-		//initialize genotype counts
-		p1numhet = 0;
-		p1numhom = 0;
-		
-		//count hom and het derived in p1
-		for (p1i in p1.individuals){
-			gt = sum(c(p1i.genomes[1].containsMutations(mut), p1i.genomes[0].containsMutations(mut)));
-			if (gt == 1){
-				p1numhet = p1numhet + 1;
-			} else if (gt == 2){
-				p1numhom = p1numhom + 1;
-			}
-		}
-		
-	
-		// string for mutation type. add m3, m4, etc. if you have multiple types
-		if (type == m1){
-			type = "m1";
-		} else if (type == m2){
-			type = "m2";
-		}
-		
-		//print results
-		writeFile(paste(c(outdir,"/slim.output.PreContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom),sep=","),append=T);
-	}
-}
-
-// contract the population
-501 {
-	p1.setSubpopulationSize(v_NU);
-	}
-// Then contract it and let it run and THEN sample again:
-505 late() {
-	p1.outputVCFSample(v_SS, F,filePath=paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".vcf"),sep=""));
-	//file header
-	//mutation id
-	//mutation type
-	//selection coefficient
-	//age of mutation in generations
-	//subpopulation it arose in
-	//number of heterozygote derived in p1
-	//number of homozygote derived in p1
-	//number of heterozygote derived in p2
-	//number of homozygote derived in p2
-	//these are genotype counts not allele counts
-	// set up outfile: 
-	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom,totalDiploidsIndividualsInPop\n",append=F); // open fresh file
+	writeFile(paste(c(outdir,"/slim.output.PreContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom,popsizeDIP\n",append=F); // open fresh file
 	
 	//for every mutation in the simulation
 	for (mut in sim.mutations){
@@ -168,12 +158,69 @@ initialize() {
 		}
 		
 		//print results
-		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom,popsize),sep=","),append=T);
+		writeFile(paste(c(outdir,"/slim.output.PreContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom,popsize),sep=","),append=T);
+	}
+}
+
+// contract the population 1 gen after burn in:
+$((${t} + 1)) {
+	p1.setSubpopulationSize(v_NU);
+	}
+// pop recovers after 30 generations the population 1 gen after burn in:
+$((${t} + 1 +${botdur})) {
+	p1.setSubpopulationSize(v_NREC);
+	}
+// Then keep it at nrec until sampling time (after tcontract)
+$((${t} + 1+ +${botdur}+${trec})) late() {
+	p1.outputVCFSample(v_SS, F,filePath=paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".vcf"),sep=""));
+	//file header
+	//mutation id
+	//mutation type
+	//selection coefficient
+	//age of mutation in generations
+	//subpopulation it arose in
+	//number of heterozygote derived in p1
+	//number of homozygote derived in p1
+	//number of heterozygote derived in p2
+	//number of homozygote derived in p2
+	//these are genotype counts not allele counts
+	// set up outfile: 
+	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom\n",append=F); // open fresh file
+	
+	//for every mutation in the simulation
+	for (mut in sim.mutations){
+		id = mut.id;
+		s = mut.selectionCoeff;
+		subpop = mut.subpopID;
+		age = sim.generation - mut.originGeneration;
+		type = mut.mutationType;
+		
+		//initialize genotype counts
+		p1numhet = 0;
+		p1numhom = 0;
+		
+		//count hom and het derived in p1
+		for (p1i in p1.individuals){
+			gt = sum(c(p1i.genomes[1].containsMutations(mut), p1i.genomes[0].containsMutations(mut)));
+			if (gt == 1){
+				p1numhet = p1numhet + 1;
+			} else if (gt == 2){
+				p1numhom = p1numhom + 1;
+			}
+		}
+		
+	
+		// string for mutation type. add m3, m4, etc. if you have multiple types
+		if (type == m1){
+			type = "m1";
+		} else if (type == m2){
+			type = "m2";
+		}
+		
+		//print results
+		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom),sep=","),append=T);
 	}
 }
 
 
-
-
-
-
+EOM
