@@ -1,0 +1,24 @@
+# something like
+# okay so my submitter/array situation isn't too crazy
+# just have to revise it a bit
+
+# where 25 is number of reps I want 
+for i in {1..25}
+do
+qsub slim.submitter.sh $i # where slim.submitter array file (maybe use my array file?) sets 14 chunks going with internal sge task id
+done
+
+
+# then within slim submitter it does something like:
+-t 1-14
+rep=$1 # gets from loop
+chunk=$SGE_TASK_ID
+$slim script.slim -d "v_REP=$rep" -d "v_CHUNK=$chunk" slimscript.slim 
+
+
+# my array file basically already does this
+
+# so just make my array work with the new files ! i think i mostly have it set up
+# try to minimize changes that need to be made to files
+
+# need to make a different make-slim file for each otter population (note that COM should be 3epoch)
