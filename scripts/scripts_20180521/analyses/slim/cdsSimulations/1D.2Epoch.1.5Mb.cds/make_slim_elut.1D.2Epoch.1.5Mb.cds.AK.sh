@@ -1,12 +1,12 @@
 # Script to make SLIM job script
 # USAGE: ./make_slim_wolf_101517.job.sh [g] [t] [h] [j]
+pop=AK
 model=1D.2Epoch.1.5Mb.cds
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
-scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$model
-#mkdir -p $scriptdir # set script dir
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$pop/$model
+mkdir -p $scriptdir # set script dir
 todaysdate=`date +%Y%m%d`
 ########## population specific parameters ########
-pop=AK
 # set sample size for vcf (should match empirical for AK)
 # can set manually or pull from a table
 ss=7 # in diploids # will depend on population, note you can find these in projectionValues.txt file

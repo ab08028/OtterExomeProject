@@ -23,7 +23,7 @@ rep=$3 # doing one replicate, then will set from command line from submission sc
 rundate=$4 # date arrays are submitted; set in submitter so as not to have jobs on different days
 # submitter usage: qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 
-wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$model/$rundate/
+wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/$rundate/
 outdir=$wd/replicate_${rep} # set this in submission script 
 mkdir -p $outdir
 ######### programs #########
@@ -34,7 +34,7 @@ slim=/u/home/a/ab08028/klohmueldata/annabel_data/bin/SLiM/slim_build/slim # loca
 
 ############## files and dirs ############
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # project github location
-scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$model # location of slim scripts
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$pop/$model # location of slim scripts
 # this seed will account for runs run on differet days, and if they start during the same second there will also be adjustments for the run number/task id
 # it is not perfectly random, but in general few runs will set the seed at the exact time and the exactness is pretty good (598928/600000 seeds were unique when tested with a for loop)
 # in real life, the array jobs will be starting at lots of different times, so mostly it isn't an issue. just a small percentage might start at exact same time
@@ -45,7 +45,7 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 for h in 0 #0.5
 do
 slimscript=slim_elut_${model}_${pop}_h${h}.job # specific slim script 
-cp $scriptdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run
+cp $scriptdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run; this is inefficient, copies it for each task in the array
 ######## parameters #############
 $slim \
 -long \
