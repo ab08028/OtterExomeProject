@@ -5,23 +5,20 @@ populations="AK"
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 
+todaysdate=`date +%Y%m%d`
+for pop in $populations
+do
 for model in $models
 do
-todaysdate=`date +%Y%m%d` # don't want to use todays date because then different time starting arrays could get messed up
-# send error files to wd
-wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$model/$todaysdate/
-
+# make the slim script from the maker script:
+wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/$todaysdate/
 mkdir -p $wd
 # make a dir to put logs in:
 logdir=$wd/logs
 mkdir -p $logdir
-# want slim reports go to into the output directory 
-# starting with 1s
-#for pop in AK AL CA COM KUR
-for pop in $populations
-do
-# make the slim script from the maker script:
-sh $scriptdir/$model/make_slim_elut.1D.2Epoch.1.5Mb.cds.${pop}.sh
+# make the slim script:
+sh $scriptdir/$model/make_slim_elut.${model}.${pop}.sh
+
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
