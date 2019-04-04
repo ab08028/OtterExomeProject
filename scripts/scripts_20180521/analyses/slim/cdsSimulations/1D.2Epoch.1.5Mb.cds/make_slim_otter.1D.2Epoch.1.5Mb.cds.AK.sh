@@ -3,10 +3,8 @@
 model=1D.2Epoch.1.5Mb.cds
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$model
-mkdir -p $scriptdir # set script dir
+#mkdir -p $scriptdir # set script dir
 todaysdate=`date +%Y%m%d`
-#outdir=$SCRATCH/captures/analyses/slim/cdsSimulations/${model}/${todaysdate} # set outdir
-mkdir -p $outdir
 ########## population specific parameters ########
 pop=AK
 # set sample size for vcf (should match empirical for AK)
