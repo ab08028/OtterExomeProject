@@ -41,10 +41,13 @@ sfssuffix=plusMonomorphic.sfs
 # run multiple models for multiple popuations?
 #scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
 #scripts='1D.2Epoch.dadi.py 1D.1Bottleneck.TB20gen.dadi.py'
+# want to run with new starting parameters
+#scripts='1D.2Epoch.newStartValues.dadi.py 1D.2Epoch.LargeFoldChange.dadi.py'
+#scripts='1D.1Epoch.dadi.py' # just this one for now
+#for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 scripts='1D.Decline.dadi.py'
 for pop in CA AK AL COM KUR
-#for pop in MED BER
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
 L=`grep $pop $sfsdir/$pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`

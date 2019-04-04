@@ -1,0 +1,7 @@
+For each model and/or each population, make a "make script" file that has the populatoin/model specific parameters.
+this script will make a slim script
+
+Then the array will run however many chunks you need to run to make a whole exome (e.g. 20 reps for 1.5Mb chunks)
+(or 1 replicate if you're doing whole exome in one simulation)
+
+And then you can run that array x times to carry out replicates (e.g. 25 replicates)

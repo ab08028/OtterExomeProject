@@ -4,6 +4,7 @@
 #$ -m abe
 #$ -M ab08028
 #$ -t 1-1
+# eventually do 1-20 (1.5Mb * 20 = 30Mb, ~ an exome)
 # note: this array can be used for any slim model
 # going to simulate 1.5MB X 14 (=21MB)
 # each 1.5Mb 'chromosome' will have 1000 genes
