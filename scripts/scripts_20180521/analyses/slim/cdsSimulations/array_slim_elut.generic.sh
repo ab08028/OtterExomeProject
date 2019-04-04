@@ -45,14 +45,14 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 for h in 0 #0.5
 do
 slimscript=slim_elut_${model}_${pop}_h${h}.job # specific slim script 
-cp $slimdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run
+cp $scriptdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run
 ######## parameters #############
 $slim \
 -long \
 -seed $seed \
 -d outdir="'$outdir'" \
 -d v_CHUNK=${SGE_TASK_ID} \
--d v_REP=${rep}
+-d v_REP=${rep} \
 $scriptdir/$slimscript
 # script comes at end
 # long prints out what vars are set as 

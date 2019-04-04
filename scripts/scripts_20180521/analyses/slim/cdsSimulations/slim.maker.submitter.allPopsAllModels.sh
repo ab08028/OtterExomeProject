@@ -10,7 +10,11 @@ do
 todaysdate=`date +%Y%m%d` # don't want to use todays date because then different time starting arrays could get messed up
 # send error files to wd
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$model/$todaysdate/
+
 mkdir -p $wd
+# make a dir to put logs in:
+logdir=$wd/logs
+mkdir -p $logdir
 # want slim reports go to into the output directory 
 # starting with 1s
 #for pop in AK AL CA COM KUR
@@ -21,7 +25,7 @@ sh $scriptdir/$model/make_slim_elut.1D.2Epoch.1.5Mb.cds.${pop}.sh
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
-qsub -N slimRep$i -o $wd -e $wd $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
+qsub -N slimRep$i -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
 done
 done
 done
