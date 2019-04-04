@@ -45,8 +45,8 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 
 for h in 0 #0.5
 do
-slimscript=$scriptdir/slim_elut_${model}_${pop}_h${h}.job # specific slim script 
-cp $slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run
+slimscript=slim_elut_${model}_${pop}_h${h}.job # specific slim script 
+cp $slimdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run
 ######## parameters #############
 $slim \
 -long \

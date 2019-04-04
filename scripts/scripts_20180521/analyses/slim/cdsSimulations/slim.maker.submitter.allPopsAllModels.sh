@@ -17,11 +17,11 @@ mkdir -p $wd
 for pop in $populations
 do
 # make the slim script from the maker script:
-sh $scriptdir/$model/make_slim_otter.1D.2Epoch.1.5Mb.cds.${pop}.sh
+sh $scriptdir/$model/make_slim_elut.1D.2Epoch.1.5Mb.cds.${pop}.sh
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
-qsub -N slimRep$i -o $wd -e $wd $scriptdir/array_slim_otter.generic.sh $pop $model $i $todaysdate
+qsub -N slimRep$i -o $wd -e $wd $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
 done
 done
 done
