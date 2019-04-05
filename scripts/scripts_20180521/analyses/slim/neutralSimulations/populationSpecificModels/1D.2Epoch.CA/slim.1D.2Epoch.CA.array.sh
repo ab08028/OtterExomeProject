@@ -41,7 +41,9 @@ r=1e-8
 ss=6 # sample size in individuals
 nanc=3585 # ancestral size from dadi for CA
 nu=$ss # CA nu is 1, but that makes sampling impossible, so am setting contraction size to sample size
-
+# keeping track of which sript was run to make sure no mixups are made --> 
+echo "script run on $todaysdate: $slimscript" > $outdir/parameters.txt
+echo "pop: $pop; ss: $ss ; nu=$nu ; nanc= $nanc ; mu: $mu ; r: $r ; seed: $seed" >> $outdir/parameters.txt
 #t=10 # time before present that contraction occured
 #burnin=$((nanc*10)) # burn in time (nanc *10)
 #toutput=$((burnin+contractdur)) # burnin + generations bp that contraction occurs; simulation ends at toutput

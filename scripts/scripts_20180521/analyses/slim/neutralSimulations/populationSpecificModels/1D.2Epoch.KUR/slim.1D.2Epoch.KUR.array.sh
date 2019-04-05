@@ -41,6 +41,8 @@ r=1e-8
 ss=7 # sample size in individuals
 nanc=4349 # ancestral size from dadi for KUR
 nu=$ss # KUR nu is 2, but that makes sampling impossible, so am setting contraction size to sample size
+echo "script run on $todaysdate: $slimscript" > $outdir/parameters.txt
+echo "pop: $pop; ss: $ss ; nu=$nu ; nanc= $nanc ; mu: $mu ; r: $r ; seed: $seed" >> $outdir/parameters.txt
 
 #t=10 # time before present that contraction occured
 #burnin=$((nanc*10)) # burn in time (nanc *10)
