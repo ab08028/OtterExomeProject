@@ -5,12 +5,13 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/slim
 #$ -m abe
 #$ -M ab08028
-#$ -t 1-60
+#$ -t 2-60
 
 
 ######### 2 Epoch script generates 100 x 1kb independent blocks ###########
 # want a total of 6000 blocks. so 60 instances of this script for one replicate.
-model=1D.2Epoch.CA
+pop=CA
+model=1D.2Epoch.${pop}
 rep=$1 # doing one replicate, then will set from command line from submission script
 rundate=$2 # date arrays are submitted; set in submitter so as not to have jobs on different days
 outdir=$SCRATCH/captures/analyses/slim/neutralSimulations/$model/$rundate/replicate_${rep} # set this in submission script 
@@ -24,7 +25,7 @@ slim=/u/home/a/ab08028/klohmueldata/annabel_data/bin/SLiM/slim_build/slim # loca
 ############## files and dirs ############
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # project github location
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/neutralSimulations/populationSpecificModels/$model # location of slim scripts
-slimscript=generic.1D.2Epoch.100kb.CA.slim # specific slim script
+slimscript=generic.1D.2Epoch.100kb.${pop}.slim # specific slim script
 
 
 ######## parameters #############
@@ -37,7 +38,7 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 # so if two tasks with the same task id across different reps start in the same second (get same random), then they will still be different because of 10*rep 
 mu=8.64e-9
 r=1e-8
-ss=7 # sample size in individuals
+ss=6 # sample size in individuals
 nanc=3585 # ancestral size from dadi for CA
 nu=$ss # CA nu is 1, but that makes sampling impossible, so am setting contraction size to sample size
 
