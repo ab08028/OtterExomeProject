@@ -22,13 +22,13 @@ source /u/home/a/ab08028/env_python2.7.13/bin/activate # activate virtual enviro
 
 
 # do 2epoch and 1 epoch inference on the 2epoch model
-slimModel=1D.4Epoch # model SLIM was simulated under 
+slimModel=1D.2Epoch # model SLIM was simulated under 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scripts=$gitdir/scripts/scripts_20180521/analyses
 slimscriptdir=$scripts/slim/neutralSimulations/${slimModel}
 dadiscriptdir=$scripts/dadi_inference/
 
-rundate=20190313 # date slim was run
+rundate=20190125 # date slim was run
 pop=generic
 
 mu=8.64411385098638e-09
@@ -39,9 +39,10 @@ wd=$captures/analyses/slim/neutralSimulations/${slimModel}/${rundate}/
 #repdir=$wd/replicate_${SGE_TASK_ID}
 sfsdir=$wd/allSFSes
 mkdir -p $wd/dadiInfBasedOnSlim/allDadiResultsConcatted
-#scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py 1D.4Epoch.fixedParams.dadi.py'
-scripts=1D.4Epoch.fixedParams.dadi.py
-
+# adding dadi script that has T fixed at 0.0001 (10gen/(4000*2))
+#scripts='1D.1Epoch.dadi.py 1D.2Epoch.dadi.py 1D.1Bottleneck.TB10gen.dadi.py'
+#scripts=1D.1Bottleneck.TB10gen.dadi.py
+scripts='1D.2Epoch.LargeFoldChange.dadi.py 1D.2Epoch.newStartValues.dadi.py'
 for script in $scripts
 do
 dadimodel=${script%.dadi.py}
@@ -51,18 +52,18 @@ concatdir=$wd/dadiInfBasedOnSlim/allDadiResultsConcatted/dadiInfModel_$dadimodel
 mkdir -p $outdir
 mkdir -p $concatdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..50}
-do
-echo "carrying out inference $i for model $dadimodel for pop $pop" 
+#for i in {1..50}
+#do
+#echo "carrying out inference $i for model $dadimodel for pop $pop" 
 # [0-9] indicates that it's a number, but not specific about proj value
-python $dadiscriptdir/$script \
---runNum $i \
---pop $pop \
---mu $mu \
---L $L \
---sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
---outdir $outdir
-done
+#python $dadiscriptdir/$script \
+#--runNum $i \
+#--pop $pop \
+#--mu $mu \
+#--L $L \
+#--sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
+#--outdir $outdir
+#done
 # note the date on the sfs is the date it was made ; not super helpful. can I fix that in the python script?
 
 

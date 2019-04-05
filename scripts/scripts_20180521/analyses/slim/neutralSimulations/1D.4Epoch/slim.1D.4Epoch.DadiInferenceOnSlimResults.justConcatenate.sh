@@ -51,18 +51,18 @@ concatdir=$wd/dadiInfBasedOnSlim/allDadiResultsConcatted/dadiInfModel_$dadimodel
 mkdir -p $outdir
 mkdir -p $concatdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..50}
-do
-echo "carrying out inference $i for model $dadimodel for pop $pop" 
+#for i in {1..50}
+#do
+#echo "carrying out inference $i for model $dadimodel for pop $pop" 
 # [0-9] indicates that it's a number, but not specific about proj value
-python $dadiscriptdir/$script \
---runNum $i \
---pop $pop \
---mu $mu \
---L $L \
---sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
---outdir $outdir
-done
+#python $dadiscriptdir/$script \
+#--runNum $i \
+#--pop $pop \
+#--mu $mu \
+#--L $L \
+#--sfs $sfsdir/${pop}.rep.${SGE_TASK_ID}.${slimModel}.slim.output.unfolded.sfs.dadi.format.txt \
+#--outdir $outdir
+#done
 # note the date on the sfs is the date it was made ; not super helpful. can I fix that in the python script?
 
 
