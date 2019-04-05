@@ -22,7 +22,7 @@ sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
-qsub -N slimRep$i -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
+qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
 done
 done
 done
@@ -44,7 +44,7 @@ sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
-qsub -N slimRep$i -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
+qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
 done
 done
 done

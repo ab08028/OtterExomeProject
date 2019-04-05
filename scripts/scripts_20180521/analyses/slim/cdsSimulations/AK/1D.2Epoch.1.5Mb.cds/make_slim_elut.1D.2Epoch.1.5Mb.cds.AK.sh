@@ -130,7 +130,7 @@ ${t} late() {
 		subpop = mut.subpopID;
 		age = sim.generation - mut.originGeneration;
 		type = mut.mutationType;
-		popsize=size(p1.individuals)
+		popsize=size(p1.individuals);
 		//initialize genotype counts
 		p1numhet = 0;
 		p1numhom = 0;
