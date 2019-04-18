@@ -20,7 +20,7 @@ header=$1 # input header into file
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-paleomixOutput=$wd/paleomix/testMapping/${header} # for now staying in the testMapping dir; eventually going to be in a different dir! 
+paleomixOutput=$wd/paleomix/testMapping/${header}/ # for now staying in the testMapping dir; eventually going to be in a different dir! 
 outdir=$wd/coveredIntervals
 mkdir -p $outdir
 # programs
