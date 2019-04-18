@@ -71,7 +71,7 @@ awk -F [:-] '{OFS=""; print $1,":",$2,"-",$3}' $outdir/${header}.${REFPREFIX}.co
 
 ################ then elut ######################
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
-REFPREFIX=sea_otter_23May2016_bS9RH.deduped.99.fasta
+REFPREFIX=sea_otter_23May2016_bS9RH.deduped.99
 
 # going to be more lax on coverage requirements (10 --> 1) to account for ancient DNA.
 # can always filter out later.
