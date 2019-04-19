@@ -42,7 +42,7 @@ sed -i'' "s/NAME_OF_LIBRARY:/${header}_1a:/g" $newMake
 sed -i'' "s/NAME_OF_LANE:/Lane_1:/g" $newMake
 # use different delims (|) to avoid filepath slash confusion:
 sed -i'' 's|: PATH_WITH_WILDCARDS|: '${fastqs}\/${header}_S*_R{Pair}_*fastq.gz'|g' $newMake
-done 
+
 # clear variables
 newMake=''
 done

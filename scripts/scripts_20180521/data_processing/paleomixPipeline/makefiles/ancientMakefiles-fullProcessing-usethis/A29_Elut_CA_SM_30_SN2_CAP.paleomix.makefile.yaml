@@ -166,6 +166,6 @@ A29_Elut_CA_SM_30_SN2_CAP:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A29_Elut_CA_SM_30_SN2_CAP_S*_L*_R{Pair}_*fastq.gz
+      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A29_Elut_CA_SM_30_SN2_CAP_S*_R{Pair}_*fastq.gz
 
 
