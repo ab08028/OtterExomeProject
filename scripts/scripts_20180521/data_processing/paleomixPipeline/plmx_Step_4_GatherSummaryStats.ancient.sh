@@ -1,13 +1,13 @@
 ###### Gather up summary stats
 # I want the fraction of aligned (hits) reads out of total retained reads
 wd=/u/flashscratch/a/ab08028/captures/paleomix/testMapping
-headers=$SCRATCH/captures/samples/ancientSamples.txt
+headers=$SCRATCH/captures/samples//aDNA.Screens.2.txt
 
 outdir=$SCRATCH/captures/paleomix/summaryStats
 mkdir $outdir
 outfile=$outdir/plmx.aDNA.summary.stats.txt
 REF=sea_otter_23May2016_bS9RH.deduped.99 # note that you'll collect ALL ref genomes for most stats; you're
-just setting the REF here for the MD coverage stats, which you're only collecting for the sea otter
+#just setting the REF here for the MD coverage stats, which you're only collecting for the sea otter
 # This script will still collect all other stats for all other ref genomes beause you aren't specifying 
 # when you grep; so it'll grep all instances of seq_retained_reads for every genome from the summary file.
 echo "sample statistic reference value" > $outfile

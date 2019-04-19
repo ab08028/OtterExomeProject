@@ -38,6 +38,7 @@ echo -e "BAIT_SET\tGENOME_SIZE\tBAIT_TERRITORY\tTARGET_TERRITORY\tBAIT_DESIGN_EF
 
 
 cat $headers | while read header
+
 do
 echo $header
 plmxBam=$plmxDir/$header/${header}.${refPrefix}.bam

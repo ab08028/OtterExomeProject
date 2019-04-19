@@ -114,7 +114,7 @@ Options:
     # Generate BAM without realignment around indels (yes / no)
     RawBAM: yes
     # Generate indel-realigned BAM using the GATK Indel realigner (yes / no)
-    RealignedBAM: no
+    RealignedBAM: yes
     # To disable mapDamage, write 'no'; to generate basic mapDamage plots,
     # write 'plot'; to build post-mortem damage models, write 'model',
     # and to produce rescaled BAMs, write 'rescale'. The 'model' option
@@ -155,9 +155,6 @@ Prefixes:
     # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
     # should be named 'Human_g1k_v37').
     Path: /u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
-  # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
-  # is used in summary statistics and as part of output filenames.
- 
 
 # Mapping targets are specified using the following structure. Uncomment and
 # replace 'NAME_OF_TARGET' with the desired prefix for filenames.
@@ -169,6 +166,6 @@ A29_Elut_CA_SM_30_SN2_CAP:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A29_Elut_CA_SM_30_SN2_CAP_S*_R{Pair}_*fastq.gz
+      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A29_Elut_CA_SM_30_SN2_CAP_S*_L*_R{Pair}_*fastq.gz
 
 

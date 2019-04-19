@@ -83,7 +83,7 @@ Options:
   # 'no', the reads are assumed to not have been amplified. Collapsed reads
   # are filtered using the command 'paleomix rmdup_duplicates', while "normal"
   # reads are filtered using Picard MarkDuplicates.
-  PCRDuplicates: filter
+  PCRDuplicates: mark
 
   # Command-line options for mapDamage; note that the long-form
   # options are expected; --length, not -l, etc. Uncomment the
@@ -157,18 +157,40 @@ Prefixes:
     Path: /u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
   # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
   # is used in summary statistics and as part of output filenames.
- 
+  ucsc.hg19:
+    # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
+    # references against which reads are to be mapped. Using the same name
+    # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
+    # should be named 'Human_g1k_v37').
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/human_genome/ucsc.hg19.fasta
+  # Replace 'NAME_OF_PREFIX' with name of the prefix; this name
+  # is used in summary statistics and as part of output filenames.
+  canFam3:
+    # Replace 'PATH_TO_PREFIX' with the path to .fasta file containing the
+    # references against which reads are to be mapped. Using the same name
+    # as filename is strongly recommended (e.g. /path/to/Human_g1k_v37.fasta
+    # should be named 'Human_g1k_v37').
+    Path: /u/home/a/ab08028/klohmueldata/annabel_data/dog_genome/canFam3.fasta
+
+    # (Optional) Uncomment and replace 'PATH_TO_BEDFILE' with the path to a
+    # .bed file listing extra regions for which coverage / depth statistics
+    # should be calculated; if no names are specified for the BED records,
+    # results are named after the chromosome / contig. Change 'NAME' to the
+    # name to be used in summary statistics and output filenames.
+#    RegionsOfInterest:
+#      NAME: PATH_TO_BEDFILE
+
 
 # Mapping targets are specified using the following structure. Uncomment and
 # replace 'NAME_OF_TARGET' with the desired prefix for filenames.
-A29_Elut_CA_SM_30_SN2_CAP:
+A30_Elut_CA_SM_35_SN1_CAP:
    #  Uncomment and replace 'NAME_OF_SAMPLE' with the name of this sample.
-  A29_Elut_CA_SM_30_SN2_CAP:
+  A30_Elut_CA_SM_35_SN1_CAP:
      #  Uncomment and replace 'NAME_OF_LIBRARY' with the name of this sample.
-    A29_Elut_CA_SM_30_SN2_CAP_1a:
+    A30_Elut_CA_SM_35_SN1_CAP_1a:
        # Uncomment and replace 'NAME_OF_LANE' with the name of this lane,
        # and replace 'PATH_WITH_WILDCARDS' with the path to the FASTQ files
        # to be trimmed and mapped for this lane (may include wildcards).
-      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A29_Elut_CA_SM_30_SN2_CAP_S*_R{Pair}_*fastq.gz
+      Lane_1: /u/flashscratch/a/ab08028/captures/fastqs/A30_Elut_CA_SM_35_SN1_CAP_S*_R{Pair}_*fastq.gz
 
 

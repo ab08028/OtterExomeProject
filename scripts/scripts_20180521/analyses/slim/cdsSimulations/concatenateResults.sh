@@ -4,8 +4,8 @@ models='1D.2Epoch.1.5Mb.cds'
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 modelsRundates='1D.2Epoch.1.5Mb.cds/20190404' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
 #populations='AK AL CA COM KUR'
-#populations="AK AL CA KUR" # do COM separately below
-populations="AK"
+populations="AK AL CA KUR" # do COM separately below
+#populations="AK"
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 

@@ -7,7 +7,7 @@ REFPREFIX=sea_otter_23May2016_bS9RH.deduped.99
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-ancHeaders=$wd/samples/ancientLibs.Screen.txt
+ancHeaders=$wd/samples/aDNA.Screens.2.txt
 #modHeaders=$wd/samples/modernSamples.txt
 
 mkdir $wd/transfers # files to transfer to laptop

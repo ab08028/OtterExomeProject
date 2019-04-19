@@ -33,13 +33,13 @@ user=ab08028 # where emails are sent
 # usage; qsub script [makefile, full path] [outdir]
 
 #cat $headers | while read header
-header=A29_Elut_CA_SM_30_SN2_CAP
+header=A30_Elut_CA_SM_35_SN1_CAP
 #do
 errorLocation=/u/flashscratch/a/ab08028/captures/reports/paleomix/testMapping/${header} # report location
 mkdir -p $errorLocation
 mkdir -p $outdir/${header}
 $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
-$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir/${header}
+$scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.mark.yaml $outdir/${header}
 # clear variables:
 errorLocation=""
 sleep 5m

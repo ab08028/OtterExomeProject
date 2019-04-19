@@ -12,10 +12,11 @@ initialize() {
 	//defineConstant("v_CHUNK",); // portion of genome  -- set in command line
 	//defineConstant("v_REP",); // overall replicate number -- set in command line
 	defineConstant("v_h",0); // dominance coefficient
-	defineConstant("v_SS",7); // sample size
+	defineConstant("v_SS",17); // sample size
 	defineConstant("v_MU",8.64e-9);
-	defineConstant("v_NANC",4381); // ancestral size
-	defineConstant("v_NU",30); // contraction size
+	defineConstant("v_NANC",4987); // ancestral size
+	defineConstant("v_NU",171); // contraction size
+	defineConstant("v_NREC",9804); // recovery size
 
 	//cat("Exome portion length:"+seqLength+"\n");
 	initializeMutationRate(v_MU);
@@ -120,8 +121,12 @@ initialize() {
 50001 {
 	p1.setSubpopulationSize(v_NU);
 	}
-// Then keep it contracted for an additional +tContract
-50005 late() {
+// pop recovers after 30 generations the population 1 gen after burn in:
+50031 {
+	p1.setSubpopulationSize(v_NREC);
+	}
+// Then keep it at nrec until sampling time (after tcontract)
+50331 late() {
 	p1.outputVCFSample(v_SS, F,filePath=paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".vcf"),sep=""));
 	//file header
 	//mutation id
