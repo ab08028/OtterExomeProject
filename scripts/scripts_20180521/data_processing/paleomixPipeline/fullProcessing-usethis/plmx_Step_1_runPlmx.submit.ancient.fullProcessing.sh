@@ -38,7 +38,7 @@ $QSUB -e $errorLocation -o $errorLocation -M $user -N plmx.${header} \
 $scriptDir/$scriptname $makefileDir/${header}.paleomix.makefile.yaml $outdir/${header}
 # clear variables:
 errorLocation=""
-sleep 5m
+sleep 10s
 done
 
 
