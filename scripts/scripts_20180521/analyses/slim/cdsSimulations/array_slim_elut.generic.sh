@@ -43,7 +43,7 @@ todaysdate=`date +%Y%m%d`
 seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus random , plus the replicate and SGE task id. so no task should be the same, and no jobs run on different days should be the same, even if they have same task id
 # so if two tasks with the same task id across different reps start in the same second (get same random), then they will still be different because of 10*rep 
 
-for h in 0 #0.5
+for h in 0.5 #0 
 do
 slimscript=slim_elut_${model}_${pop}_h${h}.job # specific slim script 
 cp $scriptdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run; this is inefficient, copies it for each task in the array
