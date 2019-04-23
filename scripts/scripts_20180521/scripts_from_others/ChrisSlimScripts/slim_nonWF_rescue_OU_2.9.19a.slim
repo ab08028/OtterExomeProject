@@ -1,0 +1,303 @@
+initialize() {
+	
+	initializeSLiMModelType("nonWF");
+	defineConstant("K1", 10000);
+	defineConstant("K2", 10000);
+	defineConstant("K3", 35);
+	defineConstant("K4", 50);
+	defineConstant("phi", 0.9);
+	defineConstant("sampleSize", 30);
+	defineConstant("numMigrants", 1); // make sure to check which pop the migrants are being taken from
+	defineConstant("g",20000); //number of genes
+	defineConstant("ROHcutoff", 1000000);
+	defineConstant("geneLength", 1500);
+	defineConstant("seqLength", g*geneLength);
+	cat("Genome length:"+seqLength+"\n");
+	
+	defineConstant("printFreq",1); //how often to print stats after bottleneck
+	
+	
+	initializeMutationRate(1e-8);
+	initializeMutationType("m1", 0.0, "g",-0.01314833, 0.186);
+	initializeMutationType("m2", 0.5, "f", 0.0); 
+	
+	initializeGenomicElementType("g1", c(m1,m2), c(2.31,1.0));
+	
+	gene_nums=c(56,39,42,40,40,35,37,34,28,31,34,33,29,28,29,27,29,25,24,26,23,28,24,21,23,18,21,19,19,18,18,18,14,19,12,14,14,11);
+	gene_nums = gene_nums*g/1000; //scale according to number of genes desired
+	//cat("Number of genes:"+sum(gene_nums));
+	
+	
+	for (i in 1:g){
+		initializeGenomicElement(g1, ((i-1)*geneLength)+(i-1), (i*geneLength)+(i-2) );
+	}
+	
+	// # of genes per chromosome for 1000 genes:
+	
+	
+	rates=NULL;
+	
+	// Multiple chromosomes:
+	for (i in 1:(size(gene_nums)-1)){
+		rates=c(rates, 0, rep(c(1e-3, 0), asInteger(gene_nums[i-1]-1)), 0.5);
+	}
+	rates=c(rates, 0, rep(c(1e-3, 0), asInteger(gene_nums[size(gene_nums)-1]-1)));
+	
+	ends=NULL;
+	for (i in 1:g){
+		ends=c(ends, (i*geneLength)+(i-2), (i*geneLength)+(i-1));
+	}
+	ends=ends[0:(size(ends)-2)];
+	
+	initializeRecombinationRate(rates, ends);
+	//cat("RATES"+ rates +"\n");
+	//cat("ENDS" + ends +"\n");
+
+}
+
+
+reproduction() {
+	subpop.addCrossed(individual, subpop.sampleIndividuals(1));
+}
+
+
+1 early() {
+	cat("gen,K,popSize,avgStrDel,avgModDel,avgWkDel" + "\n");
+	sim.addSubpop("p1", 10);
+
+}
+1:50000 early() {
+	p1.fitnessScaling = K1 / p1.individualCount;
+}
+
+//track statistics pre-bottleneck every 500 generations
+1:50000 late() {
+	if (sim.generation % 1000 == 0) {
+		
+		// Sample scale statistics
+		i = sample(p1.individuals, sampleSize, F);
+		
+		Num_strDel_muts = c();
+		Num_modDel_muts = c();
+		Num_wkDel_muts = c();
+		
+		for (individual in i) {
+			s = individual.genomes.mutations.selectionCoeff;
+			
+			Num_strDel_muts = c(Num_strDel_muts, sum(s<=-0.01));
+			Num_modDel_muts = c(Num_modDel_muts, sum(s<=-0.001 & s > -0.01));
+			Num_wkDel_muts = c(Num_wkDel_muts, sum(s<=-0.00001 & s > -0.001));
+		
+		}
+		
+		cat(sim.generation + "," + K1 + "," + p1.individuals.size() + "," + sum(Num_strDel_muts)/i.size() + "," + sum(Num_modDel_muts)/i.size() + "," + sum(Num_wkDel_muts)/i.size() + ","+ "\n");
+	
+	}
+}
+
+
+// split population into two
+50001 early(){
+	sim.addSubpop("p2",0);
+	migrants = sample(p1.individuals, 100);
+	p2.takeMigrants(migrants);
+	cat("gen,K1,K2,popSize1,popSize2,avgStrDel1,avgModDel1,avgWkDel1,avgStrDel2,avgModDel2,avgWkDel2" + "\n");
+
+}
+
+
+
+50001:52000 early() {
+	p1.fitnessScaling = K1 / p1.individualCount;
+	p2.fitnessScaling = K2 / p2.individualCount;
+
+}
+
+
+// track pop size, carrying capacity, and average number of strDelMuts for each population
+50001:52000 late() {
+	if (sim.generation % 100 == 0) {
+		
+		cat(sim.generation + "," + K1 + "," + K2 + "," + p1.individuals.size() + "," + p2.individuals.size() + ",");
+		
+		
+		for (pop in sim.subpopulations) {
+			
+			i = sample(pop.individuals, sampleSize, F);
+			
+			Num_strDel_muts = c();
+			Num_modDel_muts = c();
+			Num_wkDel_muts = c();
+			
+			for (individual in i) {
+				s = individual.genomes.mutations.selectionCoeff;
+				
+				Num_strDel_muts = c(Num_strDel_muts, sum(s<=-0.01));
+				Num_modDel_muts = c(Num_modDel_muts, sum(s<=-0.001 & s > -0.01));
+				Num_wkDel_muts = c(Num_wkDel_muts, sum(s<=-0.00001 & s > -0.001));
+			
+			}
+			cat(sum(Num_strDel_muts)/i.size() + "," + sum(Num_modDel_muts)/i.size() + "," + sum(Num_wkDel_muts)/i.size() + ",");
+		
+		}
+		cat("\n");
+	}
+}
+
+
+
+
+
+//add small isolated population p3
+
+52001 early(){
+	sim.addSubpop("p3",0);
+	migrants = sample(p1.individuals, 30);
+	p3.takeMigrants(migrants);
+	cat("gen,K3,K4,p_death,popSizeP1,meanHetP1,FROHP1,meanDelMutP1,avgStrDelP1,avgModDelP1,avgWkDelP1,popSizeP3,meanHetP3,FROHP3,meanDelMutP3,avgStrDelP3,avgModDelP3,avgWkDelP3," + "\n");
+	sim.tag = K3;
+}
+
+
+
+// add migrant(s) to p3
+52050 early(){
+	migrants = sample(p1.individuals, numMigrants);
+	p3.takeMigrants(migrants);
+}
+
+
+
+// fitness scaling for all three populations 
+
+52001:55000 early() {
+	p1.fitnessScaling = K4 / p1.individualCount;
+	
+	p2.fitnessScaling = 0.0;
+	
+	
+	
+	// kill off individuals at random - not sure if I should then adjust the individualCount
+	inds = p3.individuals;
+	
+	//simulate beta distribution
+	alpha = 1;
+	beta = 8;
+	x1 = rgamma(1, mean = alpha, shape=alpha);
+	x2 = rgamma(1, mean = beta, shape=beta);
+	beta = x1/(x1+x2); //probability of stochastic mortality this generation
+	
+	
+	//set probability of death for each generation equal to outcome of beta 	
+	for(i in inds){
+		kill = rbinom(1,1,beta);
+		if(kill==1){
+			i.fitnessScaling = 0.0;
+		}
+	}
+	
+	
+	sim.tag = asInteger(exp((1-phi)*log(K3)+phi*log(sim.tag)+rnorm(n = 1, mean = 0, sd = log10(1.3))));
+	p3.fitnessScaling = sim.tag / p3.individualCount;
+	
+	cat(sim.generation + "," + sim.tag + "," + K4 + "," + beta + ",");
+
+}
+
+
+
+
+// track statistics for P3 every generation
+52001:55000 late() {
+	
+	if (sim.generation % printFreq == 0 & p3.individuals.size() > 1){
+		
+		pops = c(p1,p3);
+		
+		for (pop in pops){
+			
+			i=pop.individuals;
+			
+			m = sortBy(i.genomes.mutations, "position"); //get all mutations in sample
+			m_uniq = unique(m); // get rid of redundant muts
+			DAF = sapply(m_uniq, "sum(m == applyValue);"); // count number of each mut in pop
+			m_uniq_polym = m_uniq[DAF != i.genomes.size()]; //remove fixed mutations??
+			
+			
+			//initialize vectors
+			ROH_length_sumPerInd = c();
+			
+			Num_strDel_muts = c();
+			Num_modDel_muts = c();
+			Num_wkDel_muts = c();
+			
+			ind_heteroz = c();
+			
+			for (individual in i) {
+				
+				indm = sortBy(individual.genomes.mutations, "position");
+				indm = indm[match(indm, m_uniq_polym) >= 0];   // Check that individual mutations are not fixed 
+				indm_uniq = unique(indm);
+				
+				genotype = sapply(indm_uniq, "sum(indm == applyValue);");
+				
+				
+				
+				s = individual.genomes.mutations.selectionCoeff;
+				
+				Num_strDel_muts = c(Num_strDel_muts, sum(s<=-0.01));
+				Num_modDel_muts = c(Num_modDel_muts, sum(s<=-0.001 & s > -0.01));
+				Num_wkDel_muts = c(Num_wkDel_muts, sum(s<=-0.00001 & s > -0.001));
+				
+				
+				
+				if (isNULL(genotype)) {
+					ind_heteroz = c(ind_heteroz, 0); //putting this here to avoid error when trying to sum null vector
+					next;
+				}
+				ind_heteroz = c(ind_heteroz, sum(genotype==1)/(seqLength));
+				
+				
+				
+				//code for getting ROHs
+				
+				ID_het = (genotype == 1); //outputs T/F for genotypes if they are het or homDer
+				ID_homDer = (genotype == 2);
+				pos_het = indm_uniq.position[ID_het]; //outputs positions of heterozgoys genotypes
+				
+				startpos = c(0, pos_het); //adds 0 to beggining of vector of hets
+				endpos = c(pos_het, sim.chromosome.lastPosition); //adds last position in genome to vector of hets
+				pos_het_diff = endpos - startpos;
+				ROH_startpos = startpos[pos_het_diff > ROHcutoff]; //filter out startpos that dont correspond to ROH > 1Mb
+				ROH_endpos = endpos[pos_het_diff > ROHcutoff];
+				ROH_length = pos_het_diff[pos_het_diff > ROHcutoff]; //vector of ROHs for each individual	
+				ROH_length_sum = sum(ROH_length);
+				ROH_length_sumPerInd = c(ROH_length_sumPerInd, ROH_length_sum); // add sum of ROHs for each individual to vector of ROHs for all individuals
+			
+			
+			}
+			
+			cat(pop.individuals.size() + "," + mean(ind_heteroz) + "," + mean(ROH_length_sumPerInd)/seqLength + ","  +  mean(pop.individuals.sumOfMutationsOfType(m1)) + "," + sum(Num_strDel_muts)/i.size() + "," + sum(Num_modDel_muts)/i.size() + "," + sum(Num_wkDel_muts)/i.size() + ",");
+		}
+	
+	}
+	cat("\n");
+
+
+	 if(p3.individuals.size() < 2){
+                sim.simulationFinished();
+                cat("The population has gone extinct");
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,26 +4,24 @@ models='1D.2Epoch.1.5Mb.cds'
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
 #popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/ AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-#populations='AK AL CA COM KUR'
-#populations="AK AL CA KUR" 
-#populations="AK"
+popsModelsRundates='AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
+# not ready yet: COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 
 rundate=`date +%Y%m%d`
 
-#for pop in $populations
-#do
-#echo $pop
 for popsModelsRundate in $popsModelsRundates
 do
 echo $popsModelsRundate
+#pull out the population name for when you make sfses (note that if you change how you label popmodelsrundates you'll have to change how to do this)
+pop=${popsModelsRundate%/*/*/*/*} #
+
 # make the slim script from the maker script:
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/ # combine model and rundate
-vcfOutDir=$wd/concattedVCFs/$popsModelsRundate
-summaryOutDir=$wd/concattedSummaries/$popsModelsRundate
-sfsDir=$wd/SFSes/$popsModelsRundate
+vcfOutDir=$wd/concattedVCFs/$popsModelsRundate/
+summaryOutDir=$wd/concattedSummaries/$popsModelsRundate/
+sfsDir=$wd/SFSes/$popsModelsRundate/
 sfsScriptDir=$gitdir/scripts/scripts_20180521/analyses/generate_sfs/make_sfs_without_easySFS
 
 mkdir -p $vcfOutDir
@@ -82,7 +80,6 @@ gzip -f $mut1VCF
 gzip -f $mut2VCF
 # make SFSes: mut type 1
 # to just get population name, not whole model date etc do
-pop=${popsModelsRundate%/*/*}
 echo "making SFSes"
 python $sfsScriptDir/generate1DSFS.py \
 --vcf ${mut1VCF}.gz \
