@@ -101,7 +101,8 @@ for(pop in pops){
 ####### empirical sfses are now in: all.empirical.sfs.folded.noMono are folded and have no monomorphic counts ###########
 ################################## get simulated ###############################
 sim.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/cdsSimulations/SFSes/"
-popmodels=c("COM/1D.3Epoch.1.5Mb.cds/20190404/","AK/1D.2Epoch.1.5Mb.cds/20190404/","AL/1D.2Epoch.1.5Mb.cds/20190404/") # skipping CA and KUR for now 
+popmodels=c("COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/","AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/","AL/1D.2Epoch.1.5Mb.cds/20190404/h_0/", "AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/") # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?) # skipping CA and KUR for now 
+#not ready yet: "COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/"
 numreps=1 # number of reps 
 # go through pre and post 
 # empty df for count sfses
@@ -125,6 +126,7 @@ for(pm in popmodels){ # go through each population-model dir
     sfs.folded.noMono$population <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",1))
     sfs.folded.noMono$model <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",2))
     sfs.folded.noMono$modelDate <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",3))
+    sfs.folded.noMono$dominance_h <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",4))
     sfs.folded.noMono$state <- paste("simulated: ",state,"-Contraction",sep="")
     sfs.folded.noMono$category <- "simulated"
     # also get proportions: 
