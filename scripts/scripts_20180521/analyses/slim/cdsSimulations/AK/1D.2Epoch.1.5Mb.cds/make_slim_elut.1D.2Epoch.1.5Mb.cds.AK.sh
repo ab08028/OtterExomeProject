@@ -34,7 +34,6 @@ mu=8.64e-9 # mutation rate
 h=$1  # loop through hs
 # Set j, the chunk number (for 14 chunks?)
 
-#rep=$1 # use a submitter to submit multiple replicates (figure this out later)
 # Make script
 # chunk gets set when you run slim (based on SGE task id) # or something?? how to do this part? I don't really want to make a separte slim script each time? have it be a -d thing maybe?
 # have to figure out the chunks/replicates situation.
@@ -177,7 +176,7 @@ $((${t} + 1+ ${tcontract})) late() {
 	//number of homozygote derived in p2
 	//these are genotype counts not allele counts
 	// set up outfile: 
-	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom\n",append=F); // open fresh file
+	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom,popsizeDIP\n",append=F); // open fresh file
 	
 	//for every mutation in the simulation
 	for (mut in sim.mutations){
@@ -188,6 +187,7 @@ $((${t} + 1+ ${tcontract})) late() {
 		type = mut.mutationType;
 		
 		//initialize genotype counts
+		popsize=size(p1.individuals);
 		p1numhet = 0;
 		p1numhom = 0;
 		
@@ -210,7 +210,7 @@ $((${t} + 1+ ${tcontract})) late() {
 		}
 		
 		//print results
-		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom),sep=","),append=T);
+		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom,popsize),sep=","),append=T);
 	}
 }
 

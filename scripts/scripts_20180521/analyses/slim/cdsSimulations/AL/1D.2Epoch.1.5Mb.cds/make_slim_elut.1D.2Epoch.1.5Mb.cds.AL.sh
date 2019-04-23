@@ -178,7 +178,7 @@ $((${t} + 1+ ${tcontract})) late() {
 	//number of homozygote derived in p2
 	//these are genotype counts not allele counts
 	// set up outfile: 
-	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom\n",append=F); // open fresh file
+	writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),"replicate,chunk,mutid,type,s,age,subpop,p1numhet,p1numhom,popsizeDIP\n",append=F); // open fresh file
 	
 	//for every mutation in the simulation
 	for (mut in sim.mutations){
@@ -189,6 +189,7 @@ $((${t} + 1+ ${tcontract})) late() {
 		type = mut.mutationType;
 		
 		//initialize genotype counts
+		popsize=size(p1.individuals);
 		p1numhet = 0;
 		p1numhom = 0;
 		
@@ -211,7 +212,7 @@ $((${t} + 1+ ${tcontract})) late() {
 		}
 		
 		//print results
-		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom),sep=","),append=T);
+		writeFile(paste(c(outdir,"/slim.output.PostContraction.",v_CHUNK,".summary.txt"),sep=""),paste(c(v_REP,v_CHUNK,id,type,s,age,subpop,p1numhet,p1numhom,popsize),sep=","),append=T);
 	}
 }
 
