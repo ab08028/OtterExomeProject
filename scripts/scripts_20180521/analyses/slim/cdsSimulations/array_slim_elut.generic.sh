@@ -25,8 +25,6 @@ rundate=$4 # date arrays are submitted; set in submitter so as not to have jobs 
 # submitter usage: qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 
 #wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/h_$h/$rundate/
-outdir=$wd/replicate_${rep} # set this in submission script 
-mkdir -p $outdir
 ######### programs #########
 # load the proper gcc 
 source /u/local/Modules/default/init/modules.sh
@@ -46,7 +44,9 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 for h in 0.5 #0 
 do
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/$rundate/h_$h
+outdir=$wd/replicate_${rep} # set this in submission script 
 mkdir -p $wd
+mkdir -p $outdir
 slimscript=slim_elut_${model}_${pop}_h${h}.job # specific slim script 
 cp $scriptdir/$slimscript $wd/$slimscript.AsRunOn.$todaysdate # make a record of the script as it was run; this is inefficient, copies it for each task in the array
 ######## parameters #############
