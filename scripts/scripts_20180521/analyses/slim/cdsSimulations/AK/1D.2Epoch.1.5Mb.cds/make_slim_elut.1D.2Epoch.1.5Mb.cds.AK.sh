@@ -1,5 +1,5 @@
 # Script to make SLIM job script
-# USAGE: ./make_slim_wolf_101517.job.sh [g] [t] [h] [j]
+# USAGE: ./make_slim_wolf_101517.job.sh [h]
 pop=AK
 model=1D.2Epoch.1.5Mb.cds
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
@@ -21,7 +21,7 @@ nanc=4381
 nu=30 # contraction size 
 tcontract=4 # contraction duration before you sample
 
-######### general parameters ##########
+######### general parameters ; can set here or in command line ##########
 # Set g, number of genes (exons)
 g=1000
 # Set gLen, the length of exons
@@ -31,7 +31,7 @@ t=50000
 # set mutation rate
 mu=8.64e-9 # mutation rate
 # Set h, dominance coefficient
-h=0  # can loop through h's -- start with 0 for now
+h=$1  # loop through hs
 # Set j, the chunk number (for 14 chunks?)
 
 #rep=$1 # use a submitter to submit multiple replicates (figure this out later)

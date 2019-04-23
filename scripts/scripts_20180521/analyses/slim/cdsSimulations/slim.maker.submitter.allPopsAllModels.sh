@@ -17,7 +17,10 @@ mkdir -p $wd
 logdir=$wd/logs
 mkdir -p $logdir
 # make the slim script:
-sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh
+for h in 0.5 #0
+do
+sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh $h
+done
 
 for i in {1..1}
 do
