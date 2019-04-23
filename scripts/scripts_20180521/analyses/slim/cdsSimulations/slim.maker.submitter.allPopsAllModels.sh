@@ -35,6 +35,8 @@ for pop in COM
 do
 for model in '1D.3Epoch.1.5Mb.cds'
 do
+for h in 0.5 # 0
+do
 # make the slim script from the maker script:
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/$todaysdate/
 mkdir -p $wd
@@ -42,8 +44,8 @@ mkdir -p $wd
 logdir=$wd/logs
 mkdir -p $logdir
 # make the slim script:
-sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh
-
+sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh $h
+done
 for i in {1..1}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
@@ -51,3 +53,4 @@ qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.gene
 done
 done
 done
+

@@ -3,8 +3,9 @@ gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 models='1D.2Epoch.1.5Mb.cds'
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
-#popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/ AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
+popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
+
+
 #populations='AK AL CA COM KUR'
 #populations="AK AL CA KUR" 
 #populations="AK"
