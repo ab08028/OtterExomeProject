@@ -1,17 +1,17 @@
 require(ggplot2)
 require(gridExtra)
 ####### sandbox trying to plot dadi results 
-slimmodel="1D.2Epoch.70gen.500dip" # model you simulated under
-slimdate=20190313 # date you ran slim
+slimmodel="1D.2Epoch" # model you simulated under
+slimdate=20190125 # date you ran slim
 pop="generic" # what you named population in slim simulation
 Nanc_true=4000 # nanc you simulated
-nu_true=500 # nu you simulated
-T_true=70 # gen you simulated
+nu_true=30 # nu you simulated
+T_true=10 # gen you simulated
 # need to show a couple things
 # 1) whether 1Epoch or 2Epoch fits better for the same replicate
 # 2) if parameters converge for 2Epoch
 # 3) what the range of those parameter estimates are 
-dadimodel="1D.2Epoch" # model you inferred in dadi
+dadimodel="1D.2Epoch.newStartValues" # model you inferred in dadi
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/neutralSimulations/",slimmodel,"/",slimdate,"/dadiInfBasedOnSlim/allDadiResultsConcatted/dadiInfModel_",dadimodel,"/",sep = "")
 data.dir
 
@@ -22,7 +22,6 @@ for(rep in seq(1,11)){
   # select best LL
   best <- results[results$LL==max(results$LL),]
   best$rep=as.character(rep)
-  best$deltaLL <- best$LL - best$LL_data
   # add to allbest:
   allbest <- rbind(allbest,best)
 }
@@ -31,7 +30,7 @@ allresults <- NULL
 for(rep in seq(1,11)){
   results <- read.table(paste(data.dir,pop,".rep.",rep,".dadi.inf.",dadimodel,".all.output.concatted.txt",sep=""),sep = "\t",header=T,stringsAsFactors = F)
   results$rep=as.character(rep)
-  results$deltaLL <- results$LL - results$LL_data
+  results$deltaLL =results$LL - results$LL_data
   # add to allresults:
   allresults <- rbind(allresults,results)
 }
@@ -67,20 +66,20 @@ p1
 p2 <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=deltaLL))+
   geom_point()+
   geom_hline(yintercept = T_true)+
-  geom_hline(yintercept = 10,linetype="dashed")+
   scale_color_gradientn(colours=rainbow(6))+
   scale_y_log10()+
   ylab("T\n(time of contraction)")+
-  xlab("Replicate")
+  xlab("Replicate")+
+  geom_hline(yintercept = 70,linetype="dashed") # dashed lines shows approx what fsc infers
 p2 
 p3 <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=deltaLL))+
   geom_point()+
   geom_hline(yintercept = nu_true)+
-  geom_hline(yintercept = 30,linetype="dashed")+
-    scale_color_gradientn(colours=rainbow(6))+
+  scale_color_gradientn(colours=rainbow(6))+
   scale_y_log10()+
   ylab("nu\n(contraction size)")+
-  xlab("Replicate")
+  xlab("Replicate")+
+  geom_hline(yintercept = 500,linetype="dashed") # dashed lines shows approx what fsc infers
 p3
 
 allP <- grid.arrange(p1,p3,p2)
@@ -90,7 +89,7 @@ ggsave(paste(data.dir,"comparingDadiReplicates.pdf",sep=""),allP,width=9,height=
 
 
 ################## without log scaling ##########
-p2b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=LL))+
+p2b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=deltaLL))+
   geom_point()+
   geom_hline(yintercept = T_true)+
   scale_color_gradientn(colours=rainbow(6))+
@@ -98,7 +97,7 @@ p2b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_ge
   ylab("T\n(time of contraction)")+
   xlab("Replicate")
 p2b 
-p3b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=LL))+
+p3b <- ggplot(allresults,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=deltaLL))+
   geom_point()+
   geom_hline(yintercept = nu_true)+
   scale_color_gradientn(colours=rainbow(6))+
@@ -135,39 +134,3 @@ p4
 ##### gather them all together
 #grid.arrange(p1,p3,p2,p4,ncol=1)
 ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/neutralSimulations/",slimmodel,"/",slimdate,"/dadiInfBasedOnSlim/allDadiResultsConcatted/","comparing.1Epoch.2Epoch.DadiLLs.perReplicate.pdf",sep=""),p4,width=8.5,height=3)
-
-
-############################## Plot just best estimates #######
-################  plot all 2 Epoch results #############
-
-p1b <- ggplot(allbest,aes(x=reorder(rep, sort(as.numeric(rep))),y=Nanc_FromTheta_scaled_dip,color=deltaLL))+
-  geom_point()+
-  geom_hline(yintercept = Nanc_true)+
-  scale_color_gradientn(colours=rainbow(5))+
-  ylab("Nanc\n(ancestral size)")+
-  xlab("Replicate")
-p1b
-p2b <- ggplot(allbest,aes(x=reorder(rep, sort(as.numeric(rep))),y=T_scaled_gen,color=deltaLL))+
-  geom_point()+
-  geom_hline(yintercept = T_true)+
-  geom_hline(yintercept = 10,linetype="dashed")+
-  scale_color_gradientn(colours=rainbow(6))+
-  #scale_y_log10()+
-  ylab("T\n(time of contraction)")+
-  xlab("Replicate")
-p2b
-p3b <- ggplot(allbest,aes(x=reorder(rep, sort(as.numeric(rep))),y=nu_scaled_dip,color=deltaLL))+
-  geom_point()+
-  geom_hline(yintercept = nu_true)+
-  geom_hline(yintercept = 30,linetype="dashed")+
-  scale_color_gradientn(colours=rainbow(6))+
-  #scale_y_log10()+
-  ylab("nu\n(contraction size)")+
-  xlab("Replicate")
-p3b
-
-allP <- grid.arrange(p1b,p3b,p2b)
-
-
-ggsave(paste(data.dir,"comparingDadiReplicates.JustBestEstimates.pdf",sep=""),allP,width=9,height=6)
-

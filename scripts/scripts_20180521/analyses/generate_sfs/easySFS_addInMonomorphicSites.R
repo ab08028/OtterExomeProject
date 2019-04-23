@@ -78,6 +78,7 @@ for(pop in popOrder) {
 # fsc files are numbered by pop0_1 where pop numbers are from my pop order (check this carefully)
 # order should be CA,AK,AL,COM,KUR  for my project (0,1,2,3,4)
 #combos = combn(seq(0,length(popOrder)-1),2)
+# 20190415: I think the labels may be backward for pop 0 and pop 1 , check it out!
 for(i in seq(0,length(popOrder)-1)) {
   for(j in seq(0,length(popOrder)-1)){
   # note counts are zero based in filename (eg CA is 0), but 1 based in R

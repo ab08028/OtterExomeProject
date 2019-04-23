@@ -29,6 +29,7 @@ prefix=str(args.outPREFIX)
 
 # dummy files for testing:
 #vcfFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz"
+vcfFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/cdsSimulations/sandbox/replicate_1/slim.output.1.vcf"
 #outdir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/troubleshooting/gettingNS_SynCounts"
 #prefix="test"
 #### OPEN VCF TO READ ######### 
@@ -43,6 +44,7 @@ def file_test(vcf_file):
            return open, 'rb'
            
 open_func, mode = file_test(vcf_file=vcfFile)
+
 #inVCF = gzip.open(vcfFile, 'r')
 # open the VCF using the appropriate function (open for not gzipped; gzip.open for gzipped)
 inVCF=open_func(vcfFile,mode)
@@ -58,11 +60,16 @@ for line in inVCF:
 	else:
 		for i in line.split()[9:]: samples.append(i)
 		break
+
+
 ######### set up empty dicts with samples as the keys and 0 as starting values ############
-HomAltCount=dict.fromkeys(samples,0)
-HomRefCount=dict.fromkeys(samples,0)
-HetCount=dict.fromkeys(samples,0)
+SYN_HomAltCount=dict.fromkeys(samples,0)
+SYN_HomRefCount=dict.fromkeys(samples,0)
+SYN_HetCount=dict.fromkeys(samples,0)
 noCallCount=dict.fromkeys(samples,0)
+MIS_HomAltCount=dict.fromkeys(samples,0)
+MIS_HomRefCount=dict.fromkeys(samples,0)
+MIS_HetCount=dict.fromkeys(samples,0)
 #linesProcessed=0
 # so for each individual, am going to count the 1/1 0/0 and 0/1 values
 ###### READ THROUGH VCF AND EXTRACT INFO LINE BY LINE #######
@@ -79,17 +86,28 @@ for line0 in inVCF:
     allCalls=[i.split(":")[0] for i in mygenoinfo] # get genotype calls
 # Get the counts of HomozygousREference, Heterozygous and Homozygous Alternate alleles (for now has all combos of genotypes; though if unphased most likely will only see 0/0 0/1 and 1/1)
     allCallsSamples=dict(zip(samples,allCalls))
+    # also want to extrac thte S value
+    siteInfo=line[7].split(";")
+    for i in siteInfo:
+        isep=i.split("=")
+        if isep[0]=="S":
+            S=float(isep[1])
     for sample in allCallsSamples.keys():
         if allCallsSamples[sample]=="0/0" or allCallsSamples[sample]=="0|0":
-            HomRefCount[sample]+=1
-            #linesProcessed+=1
-            #print(linesProcessed)
+            if S==0:
+                SYN_HomRefCount[sample]+=1
+            elif S<0:
+                MIS_HomRefCount[sample]+=1
         elif allCallsSamples[sample]=="1/1" or allCallsSamples[sample]=="1|1":
-            HomAltCount[sample]+=1
-            #linesProcessed+=1
-            #print(linesProcessed)
+            if S==0:
+                SYN_HomAltCount[sample]+=1
+            elif S<0:
+                MIS_HomAltCount[sample]+=1
         elif allCallsSamples[sample]=="0/1" or allCallsSamples[sample]=="1/0" or allCallsSamples[sample]=="1|0" or allCallsSamples[sample]=="0|1":
-            HetCount[sample]+=1
+            if S==0:
+                SYN_HetCount[sample]+=1
+            elif S<0:
+                MIS_HetCount[sample]+=1
             #linesProcessed+=1
             #print(linesProcessed)
         elif allCallsSamples[sample]=="./.":
@@ -102,10 +120,11 @@ for line0 in inVCF:
 ############################ Write out a table of counts ################
 
 outputFile=open(str(outdir)+"/"+prefix+".countOfHomAltRefHet.txt","w")
-outputFile.write("individual\tHomRefCount\tHomAltCount\tHetCount\tNoCallCount\n")
+outputFile.write("individual\tSYN_HomRefCount\tSYN_HomAltCount\tSYN_HetCount\tMIS_HomRefCount\tMIS_HomAltCount\tMIS_HetCount\tNoCallCount\n")
     
 for ind in samples:
-    dataLine=('\t'.join(str(x) for x in (ind,HomRefCount[ind],HomAltCount[ind],HetCount[ind],noCallCount[ind])))
+    dataLine=('\t'.join(str(x) for x in (ind,SYN_HomRefCount[ind],SYN_HomAltCount[ind],SYN_HetCount[ind],MIS_HomRefCount[ind],MIS_HomAltCount[ind],MIS_HetCount[ind],noCallCount[ind])))
     outputFile.write(dataLine + "\n")
+
 outputFile.close()
 sys.exit()
