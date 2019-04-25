@@ -17,12 +17,12 @@ mkdir -p $wd
 logdir=$wd/logs
 mkdir -p $logdir
 # make the slim script:
-for h in 0.5 #0
+for h in 0.5 0
 do
 sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh $h
 done
 
-for i in {1..1}
+for i in {2..25}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.sh $pop $model $i $todaysdate
