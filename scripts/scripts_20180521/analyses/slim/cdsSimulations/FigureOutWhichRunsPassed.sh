@@ -1,0 +1,50 @@
+### Come up with a way to detect / deal with failures
+
+# Did 25 replicates
+# pick the first 20 complete replicates, leave the rest behind
+# to be complete need to have 2x the number of chunks
+
+
+# put this in more context 
+popModel=$1 # in format pop/model/h_$h
+
+
+numReps=25
+DesiredReps=20 # how many you'll take
+numChunks=20 #
+numStates=2 #
+checkNumber=$((numChunks*numStates))
+
+
+wd=/u/flashscratch/a/ab08028/captures/analyses/slim/cdsSimulations/$popModel/
+> $wd/passingReps.txt
+> $wd/failingReps.txt
+for i in {1..25}
+do
+vcfCount=0 # restart it each time so that it's never null
+vcfCount=`ls $wd/replicate_${i}/*vcf | wc -l`
+echo $vcfCount
+# eq is equal
+if [ $vcfCount -eq $checkNumber ]
+then
+echo replicate_$i >> $wd/passingReps.txt
+passing=$((passing+1))
+# ne is not equal
+elif [ $vcfCount -ne $checkNumber ]
+then
+echo $replicate_$i >> $wd/failingReps.txt
+fi
+done
+
+# then get the top DesiredReps passing reps 
+head -n$DesiredReps $wd/passingReps.txt > $wd/passingReps.FIRST.$DesiredReps.usethis.txt
+
+# make sure 20 made it through:
+
+lineCount=`wc -l passingReps.FIRST.$DesiredReps.usethis.txt | awk '{print $1}'`
+if [ $lineCount -ne $DesiredReps ]
+then
+echo "$wd: FEWER THAN $DesiredReps FINISHED --- REDO SIMULATION"
+mv $wd/passingReps.FIRST.$DesiredReps.usethis.txt $wd/NOT.ENOUGH.PASSED.txt
+fi
+done

@@ -1,6 +1,12 @@
+# gather up replicates:
+DesiredReps=20 # how many you'll take out of the 25 (some randomly fail, so picking 20 / 25 for all)
+numChunks=20 #
+numStates=2 #
+checkNumber=$((numChunks*numStates))
+
+
 # process output of slim 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-models='1D.2Epoch.1.5Mb.cds'
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
 #popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
@@ -8,8 +14,11 @@ popsModelsRundates='AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cd
 # not ready yet: COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
+wd=$SCRATCH/captures/analyses/slim/cdsSimulations/ 
 
 rundate=`date +%Y%m%d`
+
+################### first get lists of which runs worked #################
 
 for popsModelsRundate in $popsModelsRundates
 do
@@ -17,8 +26,24 @@ echo $popsModelsRundate
 #pull out the population name for when you make sfses (note that if you change how you label popmodelsrundates you'll have to change how to do this)
 pop=${popsModelsRundate%/*/*/*/*} #
 
+############### get top passing runs ############################
+# use a little script I made to detect the ones that passed and make lists
+# usage script.sh [popModel] [Desired replicates to pull out] [numChunks per replicate to check for completeness] [number of states per replicate (e.g. pre and post contraction)]
+
+$scriptdir/FigureOutWhichRunsPassed.sh $popsModelsRundate $DesiredReps $numChunks $numStates # this will make files of the ones that passed 
+passingFile=passingReps.FIRST.20.usethis.txt 
+# make sure the file exists and is $DesiredReps long 
+if [ -e $wd/$popsModelsRundate/$passingFile ]
+then
+continue
+else
+then 
+echo "$popsModelsRundate : DID NOT PASS THRESHOLD OF SUCCESSFUL SIMULATIONS -- REDO"
+break
+fi
+
+##################################################################
 # make the slim script from the maker script:
-wd=$SCRATCH/captures/analyses/slim/cdsSimulations/ # combine model and rundate
 vcfOutDir=$wd/concattedVCFs/$popsModelsRundate/
 summaryOutDir=$wd/concattedSummaries/$popsModelsRundate/
 sfsDir=$wd/SFSes/$popsModelsRundate/
@@ -30,8 +55,8 @@ mkdir -p $sfsDir
 
 for state in Pre Post # pre and post contraction
 do
-for i in {1..1}
-do
+cat $wd/$popsModelsRundate/$passingFile | while read i # instead of a for loop, going to read through my passing file 
+do 
 echo "rep $i ${state}Contraction"
 repdir=$SCRATCH/captures/analyses/slim/cdsSimulations/$popsModelsRundate/replicate_${i}
 
