@@ -11,7 +11,7 @@ initialize() {
 	//defineConstant("outdir",\"\"); -- set in command line
 	//defineConstant("v_CHUNK",); // portion of genome  -- set in command line
 	//defineConstant("v_REP",); // overall replicate number -- set in command line
-	defineConstant("v_h",0); // dominance coefficient
+	defineConstant("v_h",0.5); // dominance coefficient
 	defineConstant("v_SS",7); // sample size
 	defineConstant("v_MU",8.64e-9);
 	defineConstant("v_NANC",4381); // ancestral size
