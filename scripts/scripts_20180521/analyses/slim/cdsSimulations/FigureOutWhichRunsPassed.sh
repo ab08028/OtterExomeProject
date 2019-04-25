@@ -46,4 +46,4 @@ then
 echo "$wd: FEWER THAN $DesiredReps FINISHED --- REDO SIMULATION"
 mv $wd/passingReps.FIRST.$DesiredReps.usethis.txt $wd/NOT.ENOUGH.PASSED.txt
 fi
-done
+

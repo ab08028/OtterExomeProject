@@ -38,7 +38,7 @@ for popsModelsRundate in $popsModelsRundates
 do
 echo $popsModelsRundate
 #pull out the population name for when you make sfses (note that if you change how you label popmodelsrundates you'll have to change how to do this)
-pop=${popsModelsRundate%/*/*/*/*} #
+pop=${popsModelsRundate%/*/*/*} #
 
 ############### get top passing runs ############################
 # use a little script I made to detect the ones that passed and make lists
@@ -65,20 +65,20 @@ mkdir -p $sfsDir
 
 for state in Pre Post # pre and post contraction
 do
-cat $wd/$popsModelsRundate/$passingFile | while read i # instead of a for loop, going to read through my passing file 
+cat $wd/$popsModelsRundate/$passingFile | while read i # instead of a for loop, going to read through my passing file. i is replicate_x not just a number 
 do 
-echo "rep $i ${state}Contraction"
-repdir=$SCRATCH/captures/analyses/slim/cdsSimulations/$popsModelsRundate/replicate_${i}
+echo "$i ${state}Contraction"
+repdir=$SCRATCH/captures/analyses/slim/cdsSimulations/$popsModelsRundate/${i}
 
-outSummary=$summaryOutDir/rep.${i}.slim.output.${state}Contraction.allConcatted.summary.txt
+outSummary=$summaryOutDir/${i}.slim.output.${state}Contraction.allConcatted.summary.txt
 
 # vcf with all mutations together:
-outVCF=$vcfOutDir/rep.${i}.slim.output.${state}Contraction.allConcatted.vcf
+outVCF=$vcfOutDir/${i}.slim.output.${state}Contraction.allConcatted.vcf
 
 # mutation subtypes vcfs:
-mut1VCF=$vcfOutDir/rep.${i}.slim.output.${state}Contraction.allConcatted.mutType1.vcf
+mut1VCF=$vcfOutDir/${i}.slim.output.${state}Contraction.allConcatted.mutType1.vcf
 # mutation subtypes vcfs:
-mut2VCF=$vcfOutDir/rep.${i}.slim.output.${state}Contraction.allConcatted.mutType2.vcf
+mut2VCF=$vcfOutDir/${i}.slim.output.${state}Contraction.allConcatted.mutType2.vcf
 
 #vcf headers:
 grep "#" $repdir/slim.output.${state}Contraction.1.vcf > $outVCF
