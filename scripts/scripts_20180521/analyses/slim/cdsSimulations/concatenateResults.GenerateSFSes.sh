@@ -128,7 +128,7 @@ python $sfsScriptDir/generate1DSFS.py \
 --vcf ${mut1VCF}.gz \
 --pop ${pop}_sim \
 --outdir $sfsDir \
---outPREFIX rep.$i.${state}Contraction.slim.mutType1
+--outPREFIX $i.${state}Contraction.slim.mutType1
 
 # make SFSes: mut type 2
 
@@ -136,7 +136,7 @@ python $sfsScriptDir/generate1DSFS.py \
 --vcf ${mut2VCF}.gz \
 --pop ${pop}_sim \
 --outdir $sfsDir \
---outPREFIX rep.$i.${state}Contraction.slim.mutType2
+--outPREFIX $i.${state}Contraction.slim.mutType2
 done
 done
 done
