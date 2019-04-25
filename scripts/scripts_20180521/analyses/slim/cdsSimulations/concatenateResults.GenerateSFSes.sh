@@ -1,22 +1,36 @@
 # gather up replicates:
+numReps=25 # total number of reps you ran 
 DesiredReps=20 # how many you'll take out of the 25 (some randomly fail, so picking 20 / 25 for all)
 numChunks=20 #
 numStates=2 #
 checkNumber=$((numChunks*numStates))
-
 
 # process output of slim 
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
 #popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-popsModelsRundates='AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
+
+rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
+hs="0 0.5" # set of hs you're interested in
+popMods="AL/1D.2Epoch.1.5Mb.cds AK/1D.2Epoch.1.5Mb.cds" # population and corresponding models you're interested in
+
+# you can have multiple models per population just list as: AK/1D.2Epoch.1.5Mb.cds AK/OtherModel in the popMods variable
+for i in $popMods
+do
+for h in $hs
+do
+popsModelsRundates=`echo $popsModelsRundates $i/$rundate/h_$h`
+done
+done # this sets up your list of pops, models, rundates and Hs in a list that looks like:
+# AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/
+
+# or you can set it up manually if you are using an odd mixture of models/dates --> 
+# popsModelsRundates='AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
 # not ready yet: COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/ 
-
-rundate=`date +%Y%m%d`
 
 ################### first get lists of which runs worked #################
 
@@ -28,17 +42,13 @@ pop=${popsModelsRundate%/*/*/*/*} #
 
 ############### get top passing runs ############################
 # use a little script I made to detect the ones that passed and make lists
-# usage script.sh [popModel] [Desired replicates to pull out] [numChunks per replicate to check for completeness] [number of states per replicate (e.g. pre and post contraction)]
-
-$scriptdir/FigureOutWhichRunsPassed.sh $popsModelsRundate $DesiredReps $numChunks $numStates # this will make files of the ones that passed 
+# usage script.sh [popModel] [total reps run] [Desired replicates to pull out] [numChunks per replicate to check for completeness] [number of states per replicate (e.g. pre and post contraction)]
+chmod +x $scriptdir/FigureOutWhichRunsPassed.sh # make sure it's executable
+$scriptdir/FigureOutWhichRunsPassed.sh $popsModelsRundate $numReps $DesiredReps $numChunks $numStates # this will make files of the ones that passed 
 passingFile=passingReps.FIRST.20.usethis.txt 
 # make sure the file exists and is $DesiredReps long 
-if [ -e $wd/$popsModelsRundate/$passingFile ]
+if [ ! -f $wd/$popsModelsRundate/$passingFile ]
 then
-continue
-else
-then 
-echo "$popsModelsRundate : DID NOT PASS THRESHOLD OF SUCCESSFUL SIMULATIONS -- REDO"
 break
 fi
 
@@ -78,7 +88,7 @@ grep "#" $repdir/slim.output.${state}Contraction.1.vcf > $mut2VCF
 grep "replicate" $repdir/slim.output.${state}Contraction.1.summary.txt > $outSummary
 
 # then loop over all chunks
-for j in {1..20}
+for j in $(seq 1 $numChunks)
 do
 # concat summaries and gzip
 #echo "concatenating summaries"
