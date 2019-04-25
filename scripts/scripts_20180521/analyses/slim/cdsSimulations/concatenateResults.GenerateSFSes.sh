@@ -10,14 +10,6 @@ gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
 
-
-#popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/ AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/ AL/1D.2Epoch.1.5Mb.cds/20190404/h_0 CA/1D.2Epoch.1.5Mb.cds/20190404/h_0 KUR/1D.2Epoch.1.5Mb.cds/20190404/h_0' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-<<<<<<< HEAD
-popsModelsRundates='COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/ AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
-
-
-=======
-
 rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
 hs="0 0.5" # set of hs you're interested in
 popMods="AL/1D.2Epoch.1.5Mb.cds AK/1D.2Epoch.1.5Mb.cds" # population and corresponding models you're interested in
@@ -35,7 +27,6 @@ done # this sets up your list of pops, models, rundates and Hs in a list that lo
 # or you can set it up manually if you are using an odd mixture of models/dates --> 
 # popsModelsRundates='AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/' # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?
 # not ready yet: COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/
->>>>>>> 1ab7ac2296fc35eeff0f566a27239236046f524e
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/ 
