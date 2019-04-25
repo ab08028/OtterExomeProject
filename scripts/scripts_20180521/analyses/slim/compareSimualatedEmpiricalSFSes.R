@@ -2,7 +2,19 @@ require(ggplot2)
 require(dplyr)
 require(reshape2)
 # Lets start with one population then can figure out how to generalize
-############### fold SFS function ##########
+
+
+######## initial set up #######
+plot.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/cdsSimulations/SFSes/plots/"
+pops=c("CA","AK","AL","COM","KUR")
+
+todaysdate=format(Sys.Date(),format="%Y%m%d")
+genotypeDate=20181119
+projection.date=20181221
+hetFilter=0.75 # level that hets were filtered
+dir.create(plot.dir,recursive = T)
+
+############ functions ###################
 # ####################### fold sfs function ###############
 foldSFS <- function(sfs){
   foldedSFS <- data.frame()
@@ -22,16 +34,7 @@ foldSFS <- function(sfs){
   return(foldedSFS)
 }
 
-######## get empirical #######
-
-pops=c("CA","AK","AL","COM","KUR")
-
-todaysdate=format(Sys.Date(),format="%Y%m%d")
-genotypeDate=20181119
-projection.date=20181221
-hetFilter=0.75 # level that hets were filtered
-plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",genotypeDate,"/easySFS_projection/projection-",projection.date,"/hetFilter-",hetFilter,"/",sep="")
-dir.create(plot.dir,recursive = T)
+############## get empirical ###########
 syn.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/cds/synonymous/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2/",sep="")
 mis.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/cds/missense/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2/",sep="")
 neut.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/neutral/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2-plusMonomorphic/",sep="")
@@ -152,34 +155,64 @@ all.sim.sfs.folded.noMono[all.sim.sfs.folded.noMono$mutType=="2",]$mutLabel <- "
 colsIWant <- intersect(names(all.empirical.sfs.folded.noMono),names(all.sim.sfs.folded.noMono))
 # and want to exclude some pops:
 popsIWant <- c("AK","AL") # skip COM for now -- it's weird
-
-combo.cds <- rbind(all.empirical.sfs.folded.noMono[all.empirical.sfs.folded.noMono$population %in% popsIWant,colsIWant],all.sim.sfs.folded.noMono[all.sim.sfs.folded.noMono$population %in% popsIWant,colsIWant])
+# SEPARATE by h = 0 , h = 0.5:
+# h = 0
+combo.cds.h_0 <- rbind(all.empirical.sfs.folded.noMono[all.empirical.sfs.folded.noMono$population %in% popsIWant,colsIWant],all.sim.sfs.folded.noMono[all.sim.sfs.folded.noMono$population %in% popsIWant & all.sim.sfs.folded.noMono$dominance_h=="h_0",colsIWant])
+# h = 0.5
+combo.cds.h_0.5 <- rbind(all.empirical.sfs.folded.noMono[all.empirical.sfs.folded.noMono$population %in% popsIWant,colsIWant],all.sim.sfs.folded.noMono[all.sim.sfs.folded.noMono$population %in% popsIWant & all.sim.sfs.folded.noMono$dominance_h=="h_0.5",colsIWant])
 # exclude neutral for now --> 
 # order factors
 ####### order factors: #########
-combo.cds$state <- factor(combo.cds$state, levels=c("empirical","simulated: Pre-Contraction","simulated: Post-Contraction"))
-
-p1 <- ggplot(combo.cds[combo.cds$mutLabel!="neutral",],aes(x=as.numeric(frequency),y=proportion,fill=state))+
+combo.cds.h_0$state <- factor(combo.cds.h_0$state, levels=c("empirical","simulated: Pre-Contraction","simulated: Post-Contraction"))
+combo.cds.h_0.5$state <- factor(combo.cds.h_0.5$state, levels=c("empirical","simulated: Pre-Contraction","simulated: Post-Contraction"))
+########## plot recessive ##########
+p1a <- ggplot(combo.cds.h_0[combo.cds.h_0$mutLabel!="neutral",],aes(x=as.numeric(frequency),y=proportion,fill=state))+
   geom_bar(position='dodge',stat="identity")+
   facet_grid(mutLabel~as.factor(population),scales="free")+
   theme_bw()+
   scale_fill_manual(values=c("darkgray","blue","darkred"))+
   xlab("Frequency")+
   ylab("Proportion")+
-  scale_x_continuous(breaks=c(seq(1,max(as.numeric(combo.cds$frequency)))))
-p1
+  scale_x_continuous(breaks=c(seq(1,max(as.numeric(combo.cds$frequency)))))+
+  ggtitle("Dominance Coefficient (h): 0")
+p1a
 # makea  better output dir: 
-ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/compareSimulatedEmpiricalSFSes/test.ComparingSimulatedEmpiricalCDS.SFSes.AK.AL.COM.",todaysdate,".pdf",sep=""),p1,device="pdf",width=11,height=5)
+ggsave(paste(plot.dir,"ComparingSimulatedEmpiricalCDS.SFSes.h_0.",todaysdate,".pdf",sep=""),p1a,device="pdf",width=11,height=5)
 
+######## plot additive  #############
+p1b <- ggplot(combo.cds.h_0.5[combo.cds.h_0.5$mutLabel!="neutral",],aes(x=as.numeric(frequency),y=proportion,fill=state))+
+  geom_bar(position='dodge',stat="identity")+
+  facet_grid(mutLabel~as.factor(population),scales="free")+
+  theme_bw()+
+  scale_fill_manual(values=c("darkgray","blue","darkred"))+
+  xlab("Frequency")+
+  ylab("Proportion")+
+  scale_x_continuous(breaks=c(seq(1,max(as.numeric(combo.cds$frequency)))))+
+  ggtitle("Dominance Coefficient (h): 0.5")
+p1b
+# makea  better output dir: 
+ggsave(paste(plot.dir,"ComparingSimulatedEmpiricalCDS.SFSes.h_0.5.",todaysdate,".pdf",sep=""),p1b,device="pdf",width=11,height=5)
 
 # plot ratio of NS and S 
-NS_S_Ratio <- combo.cds %>%
+NS_S_Ratio.h_0.5 <- combo.cds.h_0.5 %>%
   group_by(state,population,mutLabel) %>%
   tally(sum(count)) %>%
   summarise(Ratio = n[mutLabel == "missense"] / n[mutLabel == "synonymous"])
-ggplot(NS_S_Ratio,aes(x=population,y=Ratio,fill=state))+
+
+NS_S_Ratio.h_0 <- combo.cds.h_0 %>%
+  group_by(state,population,mutLabel) %>%
+  tally(sum(count)) %>%
+  summarise(Ratio = n[mutLabel == "missense"] / n[mutLabel == "synonymous"])
+
+NS_S_Ratio.h_0.5$dominance_h <- "h_0.5"
+NS_S_Ratio.h_0$dominance_h <- "h_0"
+
+NS_S_Ratio = rbind(NS_S_Ratio.h_0.5,NS_S_Ratio.h_0)
+p2 <- ggplot(NS_S_Ratio,aes(x=population,y=Ratio,fill=state))+
   geom_bar(stat="identity", position="dodge")+
   ylab("Ratio of Missense / Synonymous SNPs")+
   theme_bw()+
+  facet_wrap(~dominance_h)+
   scale_fill_manual(values=c("darkgray","blue","darkred"))
-# bad DFE? 
+p2
+ggsave(paste(plot.dir,"Ratio_NS_S.",todaysdate,".pdf",sep=""),p2,device="pdf",width=11,height=5)

@@ -1,3 +1,10 @@
+########### this script will gather up simulation replicates within a single rundate (run again for different rundates)
+# for the populations and models you specify
+# you can also modify for differnent run dates by supplying the popsModelsRundates list  manually 
+# it will gather up summaries of the simulations (one line per mutation) and will concanenate VCF files and make SFSes from them
+##### SOMETHING TO LOOK INTO: Jacqueline found that the VCF files from SLIM were kind of weird, which is why she does summaries
+# Make sure they are concordant!
+
 # gather up replicates:
 numReps=25 # total number of reps you ran 
 DesiredReps=20 # how many you'll take out of the 25 (some randomly fail, so picking 20 / 25 for all)
@@ -15,11 +22,13 @@ hs="0 0.5" # set of hs you're interested in
 popMods="AL/1D.2Epoch.1.5Mb.cds AK/1D.2Epoch.1.5Mb.cds" # population and corresponding models you're interested in
 
 # you can have multiple models per population just list as: AK/1D.2Epoch.1.5Mb.cds AK/OtherModel in the popMods variable
+popsModelsRundates=""
 for i in $popMods
 do
 for h in $hs
 do
-popsModelsRundates=`echo $popsModelsRundates $i/$rundate/h_$h`
+pm=$i/$rundate/h_$h
+popsModelsRundates=`echo $popsModelsRundates $pm`
 done
 done # this sets up your list of pops, models, rundates and Hs in a list that looks like:
 # AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/ KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/

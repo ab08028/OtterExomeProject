@@ -3,18 +3,32 @@
 require(dplyr)
 require(ggplot2)
 sim.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/cdsSimulations/concattedSummaries/"
-plot.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/slim"
+plot.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/slim/"
 # ignore for now: "COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/","AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/","AL/1D.2Epoch.1.5Mb.cds/20190404/h_0/"
-popmodels=c("AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/")
+rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
+hs=c("0","0.5") # set of hs you're interested in
+popMods=c("AL/1D.2Epoch.1.5Mb.cds", "AK/1D.2Epoch.1.5Mb.cds") # population and corresponding models you're interested in
+popmodels=list()
+for(i in popMods){
+  for(h in hs){
+    pm=paste(i,"/",rundate,"/h_",h,"/",sep="")
+    popmodels=c(popmodels,pm)
+  }
+}
+
+#popmodels=c("AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/")
 # weird bottleneck model -- not sure what to make of it "COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/"
-numreps=1 # number of reps 
+#numreps=20 # number of reps 
 # go through pre and post 
 allSummaries = data.frame()
 # this will work once bot pre and post have pop size column
 for(pm in popmodels){ # go through each population-model dir
   for(state in c("Post","Pre")){  # do separtely for pre and post contraction 
-    for(rep in seq(1,numreps)){ # go through each replicate
-      input <- read.table(paste(sim.dir,pm,"rep.",rep,".slim.output.",state,"Contraction.allConcatted.summary.txt.gz",sep=""),sep=",",header=T)
+    #for(rep in seq(1,numreps)){ # don't go through each replicate because rep numbers differ between replicates now that I select the first passing 20 replicates
+    replicates = list.files(paste(sim.dir,pm,sep = ""),pattern=paste("replicate_*",state,sep=""),full.names = T)
+    for(infile in replicates) {
+      input <- read.table(infile,header=T,sep=",")
+      cat(paste(sim.dir,pm,"replicate_",rep,".slim.output.",state,"Contraction.allConcatted.summary.txt.gz\n",sep=""))
       input$state <- state
       input$popModel <- pm
       input$population <- unlist(lapply(strsplit(input$popModel,"/"),"[",1))
@@ -27,6 +41,8 @@ for(pm in popmodels){ # go through each population-model dir
     }
   }
 }
+
+
 allSummaries$mutLabel <- NA
 allSummaries[allSummaries$type=="m1",]$mutLabel <- "synonymous"
 allSummaries[allSummaries$type=="m2",]$mutLabel <- "missense"
@@ -61,4 +77,6 @@ p1 <- ggplot(totalDerivedAlleles,aes(x=interaction(population),y=meanDerivedAlle
   ggtitle("note: this is a single simulation replicate\nand the CA and KUR models are dubious (crash to ~6 for 1 gen which isn't v. plausible)")
 
 p1
+ggsave(paste(plot.dir,"meanDerivedAllelesPerIndividual.Jacqueline-like.pdf",sep=""),p1,device="pdf",height=7,width=9)
+
 
