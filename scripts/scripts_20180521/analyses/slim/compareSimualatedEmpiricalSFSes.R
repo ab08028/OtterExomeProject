@@ -104,41 +104,53 @@ for(pop in pops){
 ####### empirical sfses are now in: all.empirical.sfs.folded.noMono are folded and have no monomorphic counts ###########
 ################################## get simulated ###############################
 sim.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/slim/cdsSimulations/SFSes/"
-popmodels=c("COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/","AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/","AL/1D.2Epoch.1.5Mb.cds/20190404/h_0/", "AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "CA/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/") # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?) # skipping CA and KUR for now 
+rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
+hs=c("0.5","0") # set of hs you're interested in
+popMods=c("AL/1D.2Epoch.1.5Mb.cds", "AK/1D.2Epoch.1.5Mb.cds") # population and corresponding models you're interested in
+popmodels=list()
+for(i in popMods){
+  for(h in hs){
+    pm=paste(i,"/",rundate,"/h_",h,"/",sep="")
+    popmodels=c(popmodels,pm)
+  }
+}
+#popmodels=c("COM/1D.3Epoch.1.5Mb.cds/20190404/h_0/","AK/1D.2Epoch.1.5Mb.cds/20190404/h_0/","AL/1D.2Epoch.1.5Mb.cds/20190404/h_0/", "AK/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "AL/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/", "CA/1D.2Epoch.1.5Mb.cds/20190424/h_0.5/", "KUR/1D.2Epoch.1.5Mb.cds/20190423/h_0.5/") # maybe? -- this is kind of awkward, maybe have to deal with diff populations differently?) # skipping CA and KUR for now 
 #not ready yet: "COM/1D.3Epoch.1.5Mb.cds/20190423/h_0.5/"
 numreps=1 # number of reps 
 # go through pre and post 
 # empty df for count sfses
 all.sim.sfs.folded.noMono <- data.frame()
-
+########### STUCK HERE --- figure out how to show multiple rep SFSes -- take an average?!?!?!? ####
+ ### THIS CURRENTKY DOESN"T WORK -- deal with multiple reps ####
 for(pm in popmodels){ # go through each population-model dir
   for(state in c("Post","Pre")){  # do separtely for pre and post contraction 
-    for(rep in seq(1,numreps)){ # go through each replicate
-      for(mutType in c(1,2)){ # go through each mutation type
-    # mutation type 1 
-    sim.file <- list.files(paste(sim.dir,pm,sep=""),pattern=paste("*rep.",rep,".",state,"Contraction.slim.mutType",as.character(mutType),".unfolded.sfs.R.format",sep=""),full.names = T) # this is for one rep, but could potentially do all reps and average here by turning rep into *
-    # Fill in info: 
-    ################## mutation type 1 ####################
-    sfs <- read.table(sim.file,header=T)
-    sfs.folded <- foldSFS(sfs) #### the input SFS from slim is UNFOLDED, fold here ***
-    # get rid of monomorphic sites
-    sfs.folded.noMono <- sfs.folded[sfs.folded$frequency!=0,]
-    sfs.folded.noMono
-    sfs.folded.noMono$mutType <- mutType
-    sfs.folded.noMono$popModel <- pm
-    sfs.folded.noMono$population <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",1))
-    sfs.folded.noMono$model <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",2))
-    sfs.folded.noMono$modelDate <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",3))
-    sfs.folded.noMono$dominance_h <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",4))
-    sfs.folded.noMono$state <- paste("simulated: ",state,"-Contraction",sep="")
-    sfs.folded.noMono$category <- "simulated"
-    # also get proportions: 
-    sfs.folded.noMono <- sfs.folded.noMono %>%
-      mutate(proportion=count/sum(count))
-    all.sim.sfs.folded.noMono <- rbind(all.sim.sfs.folded.noMono, sfs.folded.noMono)
+    #for(rep in seq(1,numreps)){ # go through each replicate
+    for(mutType in c(1,2)){ # go through each mutation type
+      # mutation type 1 
+      # for all reps
+      sim.files <- list.files(paste(sim.dir,pm,sep=""),pattern=paste("*rep.*.",state,"Contraction.slim.mutType",as.character(mutType),".unfolded.sfs.R.format",sep=""),full.names = T) # this is for one rep, but could potentially do all reps and average here by turning rep into *
+      # Fill in info: 
+      for(sim.file in sim.files){
+        ################## mutation type 1 ####################
+        sfs <- read.table(sim.file,header=T)
+        sfs.folded <- foldSFS(sfs) #### the input SFS from slim is UNFOLDED, fold here ***
+        # get rid of monomorphic sites
+        sfs.folded.noMono <- sfs.folded[sfs.folded$frequency!=0,]
+        sfs.folded.noMono$mutType <- mutType
+        sfs.folded.noMono$popModel <- as.character(pm)
+        sfs.folded.noMono$population <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",1))
+        sfs.folded.noMono$model <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",2))
+        sfs.folded.noMono$modelDate <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",3))
+        sfs.folded.noMono$dominance_h <- unlist(lapply(strsplit(sfs.folded.noMono$popModel,"/"),"[",4))
+        sfs.folded.noMono$state <- paste("simulated: ",state,"-Contraction",sep="")
+        sfs.folded.noMono$category <- "simulated"
+        # also get proportions: 
+        sfs.folded.noMono <- sfs.folded.noMono %>%
+          mutate(proportion=count/sum(count))
+        all.sim.sfs.folded.noMono <- rbind(all.sim.sfs.folded.noMono, sfs.folded.noMono)
+      }
     }
   }
-}
 }
 
 ####### simulated sfses are now in: all.sim.sfs.folded.noMono and are folded and have no monomorphic counts ###########
