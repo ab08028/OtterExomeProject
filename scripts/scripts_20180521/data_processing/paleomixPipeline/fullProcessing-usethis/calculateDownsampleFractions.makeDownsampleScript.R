@@ -70,7 +70,7 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 #   # make a header
 #   cat("echo \"count downsampled reads\"\n\n" )
 #   cat("echo downsampledReadCounts > $downsampledir/downsampledReadCounts.txt\n")
-#   cat(paste("samtools flagstat ","$downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".bam | head -n1 | awk '{cat $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep=""))
+#   cat(paste("samtools flagstat ","$downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep=""))
 # }
 # sink()
 
@@ -78,6 +78,7 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 # need to make pairs where a CA and AK modern sample is matched to a specific ancient sample
 # now want to match number of mapped unique reads between pairs
 sink(paste(script.dir,"downsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
+cat("module load samtools\n")
 cat("# Downsample modern bam files to match the number unique reads mapped to sea otter and ferret genomes in the best 3 ancient samples (in pairs -- each ancient sample matches 1 CA and 1 AK sample)\n")
 cat("# note: the -s value has the replicate number as the integer which is the seed and the decimal part is the fraction. So 1.006 is replicate 1, fraction 0.006")
 cat("\n")
@@ -100,10 +101,10 @@ for(rep in seq(1,numReps)){
       cat("# downsample ",modernID," to equal ancient sample ",ancID,"\n" ,sep="")
       cat("# ",modernID," (modern) starting reads: ",modernCount,"\n",sep="")
       cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\"\n\n",sep="")
-      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".frac.",round(downSampleFrac,4),".bam\n",sep=""))
+      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
-      cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".frac.",round(downSampleFrac,4),".bam | head -n1 | awk '{cat $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
+      cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("\n\n")
     }
   }
