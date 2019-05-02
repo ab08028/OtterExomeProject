@@ -116,6 +116,8 @@ for(rep in seq(1,numReps)){
       cat("# Rename sample\n\n")
       # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
       cat("samtools view -H $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam  | sed \"s/SM:[^\\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.realigned.bam\n",sep="")
+      cat("# index the bam file:\n")
+      cat("samtools index $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.realigned.bam $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.realigned.bai",sep="")
       cat("\n\n")
     }
   }
