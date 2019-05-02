@@ -78,7 +78,7 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 # need to make pairs where a CA and AK modern sample is matched to a specific ancient sample
 # now want to match number of mapped unique reads between pairs
 sink(paste(script.dir,"downsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
-cat("#! /bin/bash\n#$ -l h_rt=5:00:00,h_data=6G\n#$ -m abe\n#$ -M ab08028\n#$ -N downsample\n")
+cat("#! /bin/bash\n#$ -l h_rt=5:00:00,h_data=6G\n#$ -m abe\n#$ -M ab08028\n#$ -N downsample\n#$ -cwd\n")
 cat("source /u/local/Modules/default/init/modules.sh\n")
 cat("module load samtools\n")
 cat("# Downsample modern bam files to match the number unique reads mapped to sea otter and ferret genomes in the best 3 ancient samples (in pairs -- each ancient sample matches 1 CA and 1 AK sample)\n")
