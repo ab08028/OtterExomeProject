@@ -43,7 +43,6 @@ angsd \
 -trim 4 \
 -nThreads 16 \
 -bam $elutBamList \
-#-r $testRegion \
 -minQ 20 -minMapQ 30 \
 -skipTriallelic 1 \
 -doMajorMinor 4 -ref $elutRef \
@@ -59,14 +58,13 @@ angsd \
 -trim 4 \
 -nThreads 16 \
 -bam $mfurBamList \
-#-r $testRegion \
 -minQ 20 -minMapQ 30 \
 -skipTriallelic 1 \
 -doMajorMinor 4 -ref $mfurRef \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/angsdOut.mappedToMfur
+-out angsdOut.mappedToMfur
 
 
 
