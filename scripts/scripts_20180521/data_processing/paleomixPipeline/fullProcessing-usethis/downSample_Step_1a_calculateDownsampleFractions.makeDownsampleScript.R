@@ -78,7 +78,7 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 ############################### Make a script to downsample to 1:1 match the ancient samples ######################
 # need to make pairs where a CA and AK modern sample is matched to a specific ancient sample
 # now want to match number of mapped unique reads between pairs
-sink(paste(script.dir,"downsample_Step_1b_DownsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
+sink(paste(script.dir,"downSample_Step_1b_DownsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
 cat("#! /bin/bash\n#$ -l h_rt=5:00:00,h_data=6G\n#$ -m abe\n#$ -M ab08028\n#$ -N downsample\n#$ -cwd\n")
 cat("source /u/local/Modules/default/init/modules.sh\n")
 cat("module load samtools\n")
@@ -112,7 +112,7 @@ for(rep in seq(1,numReps)){
       cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,".",ref,".realigned.bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
-      cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
+      cat("samtools flagstat ","$downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("# Rename sample\n\n")
       # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
       cat("samtools view -H $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam  | sed \"s/SM:[^\\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.realigned.bam\n",sep="")
