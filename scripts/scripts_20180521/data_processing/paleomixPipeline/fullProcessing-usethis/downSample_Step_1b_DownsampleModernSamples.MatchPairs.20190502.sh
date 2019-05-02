@@ -22,7 +22,7 @@ echo downsampledReadCounts > $downsampledir/downsampledReadCounts.txt
 
 samtools view -s 1.0661 -b $wd/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "140_Elut_CA_403" >> $downsampledir/downsampledReadCounts.txt
+echo "140_Elut_CA_403 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -35,7 +35,7 @@ samtools view -H $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_putor
 
 samtools view -s 1.0701 -b $wd/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "141_Elut_CA_419" >> $downsampledir/downsampledReadCounts.txt
+echo "141_Elut_CA_419 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -48,7 +48,7 @@ samtools view -H $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_putor
 
 samtools view -s 1.029 -b $wd/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "116_Elut_CA_307" >> $downsampledir/downsampledReadCounts.txt
+echo "116_Elut_CA_307 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -61,7 +61,7 @@ samtools view -H $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_putor
 
 samtools view -s 1.1035 -b $wd/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "126_Elut_AK_AF3394" >> $downsampledir/downsampledReadCounts.txt
+echo "126_Elut_AK_AF3394 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -74,7 +74,7 @@ samtools view -H $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_pu
 
 samtools view -s 1.054 -b $wd/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "55_Elut_AK_AF3736" >> $downsampledir/downsampledReadCounts.txt
+echo "55_Elut_AK_AF3736 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -87,7 +87,7 @@ samtools view -H $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_put
 
 samtools view -s 1.0276 -b $wd/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam > $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "129_Elut_AK_AL4660" >> $downsampledir/downsampledReadCounts.txt
+echo "129_Elut_AK_AL4660 Mustela_putorius_furo.MusPutFur1.0.dna.toplevel" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -100,7 +100,7 @@ samtools view -H $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_pu
 
 samtools view -s 1.1176 -b $wd/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "140_Elut_CA_403" >> $downsampledir/downsampledReadCounts.txt
+echo "140_Elut_CA_403 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -113,7 +113,7 @@ samtools view -H $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23M
 
 samtools view -s 1.1149 -b $wd/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "141_Elut_CA_419" >> $downsampledir/downsampledReadCounts.txt
+echo "141_Elut_CA_419 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -126,7 +126,7 @@ samtools view -H $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23M
 
 samtools view -s 1.0547 -b $wd/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "116_Elut_CA_307" >> $downsampledir/downsampledReadCounts.txt
+echo "116_Elut_CA_307 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -139,7 +139,7 @@ samtools view -H $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23M
 
 samtools view -s 1.187 -b $wd/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "126_Elut_AK_AF3394" >> $downsampledir/downsampledReadCounts.txt
+echo "126_Elut_AK_AF3394 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -152,7 +152,7 @@ samtools view -H $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter_
 
 samtools view -s 1.091 -b $wd/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "55_Elut_AK_AF3736" >> $downsampledir/downsampledReadCounts.txt
+echo "55_Elut_AK_AF3736 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
@@ -165,7 +165,7 @@ samtools view -H $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_2
 
 samtools view -s 1.0536 -b $wd/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam > $downsampledir/originalSampleName/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam
 # Count the resulting reads to make sure it downsampled properly
-echo "129_Elut_AK_AL4660" >> $downsampledir/downsampledReadCounts.txt
+echo "129_Elut_AK_AL4660 sea_otter_23May2016_bS9RH.deduped.99" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/originalSampleName/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 

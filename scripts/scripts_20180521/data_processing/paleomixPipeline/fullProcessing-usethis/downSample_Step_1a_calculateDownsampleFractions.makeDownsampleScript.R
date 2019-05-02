@@ -111,7 +111,7 @@ for(rep in seq(1,numReps)){
       cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\n\n",sep="")
       cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,".",ref,".realigned.bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
-      cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
+      cat("echo \"",modernID," ",ref,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("samtools flagstat ","$downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("# Rename sample\n\n")
       # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
