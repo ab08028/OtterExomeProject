@@ -1,5 +1,6 @@
 require(dplyr)
 numReps = 1 # how many times you want to resample the bam file (with replacement)
+# if you want to boostrap the data you can set this to a higher number 
 ### Want to make a script that calculates the downsampling fraction for my modern samples
 data.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/QC_Reports/plmx_mappingStats/aDNA.modern.Comparison.SummaryStats-9samples-usethis/"
 script.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/paleomixPipeline/fullProcessing-usethis/"
@@ -77,15 +78,17 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 ############################### Make a script to downsample to 1:1 match the ancient samples ######################
 # need to make pairs where a CA and AK modern sample is matched to a specific ancient sample
 # now want to match number of mapped unique reads between pairs
-sink(paste(script.dir,"downsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
+sink(paste(script.dir,"downsample_Step_1b_DownsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
 cat("#! /bin/bash\n#$ -l h_rt=5:00:00,h_data=6G\n#$ -m abe\n#$ -M ab08028\n#$ -N downsample\n#$ -cwd\n")
 cat("source /u/local/Modules/default/init/modules.sh\n")
 cat("module load samtools\n")
 cat("# Downsample modern bam files to match the number unique reads mapped to sea otter and ferret genomes in the best 3 ancient samples (in pairs -- each ancient sample matches 1 CA and 1 AK sample)\n")
+cat("# Bams have been moved into the aDNA-compareModern dir\n")
 cat("# note: the -s value has the replicate number as the integer which is the seed and the decimal part is the fraction. So 1.006 is replicate 1, fraction 0.006")
 cat("\n")
-cat("wd=/u/flashscratch/a/ab08028/captures/paleomix/fullProcessing/\n")
-cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/\n\n") 
+cat("### have moved bams away from here: wd=/u/flashscratch/a/ab08028/captures/paleomix/fullProcessing/ and into aDNA-ModernComparison ### \n")
+cat("wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams\n")
+cat("downsampledir=$wd/downsampledBams/downsample_Pairs/\n\n") 
 cat("mkdir -p $downsampledir\n") 
 cat("mkdir -p $downsampledir/originalSampleName\n") 
 
@@ -105,8 +108,8 @@ for(rep in seq(1,numReps)){
       downSampleFrac = ancientCount/modernCount
       cat("# downsample ",modernID," to equal ancient sample ",ancID,"\n" ,sep="")
       cat("# ",modernID," (modern) starting reads: ",modernCount,"\n",sep="")
-      cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\"\n\n",sep="")
-      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".realigned.bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,"realigned.bam\n",sep=""))
+      cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\n\n",sep="")
+      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,".",ref,".realigned.bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
