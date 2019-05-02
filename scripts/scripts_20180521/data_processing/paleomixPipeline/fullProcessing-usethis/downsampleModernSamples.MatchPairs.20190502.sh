@@ -21,7 +21,7 @@ echo "140_Elut_CA_403" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 141_Elut_CA_419 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
@@ -34,7 +34,7 @@ echo "141_Elut_CA_419" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 116_Elut_CA_307 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
@@ -47,7 +47,7 @@ echo "116_Elut_CA_307" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 126_Elut_AK_AF3394 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
@@ -60,7 +60,7 @@ echo "126_Elut_AK_AF3394" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 55_Elut_AK_AF3736 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
@@ -73,7 +73,7 @@ echo "55_Elut_AK_AF3736" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 129_Elut_AK_AL4660 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
@@ -86,7 +86,7 @@ echo "129_Elut_AK_AL4660" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.bam > $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.bam
 
 
 # downsample 140_Elut_CA_403 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
@@ -99,7 +99,7 @@ echo "140_Elut_CA_403" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
 # downsample 141_Elut_CA_419 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
@@ -112,7 +112,7 @@ echo "141_Elut_CA_419" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
 # downsample 116_Elut_CA_307 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
@@ -125,7 +125,7 @@ echo "116_Elut_CA_307" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
 # downsample 126_Elut_AK_AF3394 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
@@ -138,7 +138,7 @@ echo "126_Elut_AK_AF3394" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
 # downsample 55_Elut_AK_AF3736 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
@@ -151,7 +151,7 @@ echo "55_Elut_AK_AF3736" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
 # downsample 129_Elut_AK_AL4660 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
@@ -164,6 +164,6 @@ echo "129_Elut_AK_AL4660" >> $downsampledir/downsampledReadCounts.txt
 samtools flagstat $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt
 # Rename sample
 
-samtools view -H $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^	]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
+samtools view -H $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam  | sed "s/SM:[^\t]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.bam > $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.bam
 
 
