@@ -86,6 +86,9 @@ cat("# note: the -s value has the replicate number as the integer which is the s
 cat("\n")
 cat("wd=/u/flashscratch/a/ab08028/captures/paleomix/fullProcessing/\n")
 cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/downsampledBams/downsample_Pairs/\n\n") 
+cat("mkdir -p $downsampledir\n") 
+cat("mkdir -p $downsampledir/originalSampleName\n") 
+
 # go through replicates if you want to resample
 cat("echo downsampledReadCounts > $downsampledir/downsampledReadCounts.txt\n")
 for(rep in seq(1,numReps)){
@@ -103,13 +106,13 @@ for(rep in seq(1,numReps)){
       cat("# downsample ",modernID," to equal ancient sample ",ancID,"\n" ,sep="")
       cat("# ",modernID," (modern) starting reads: ",modernCount,"\n",sep="")
       cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\"\n\n",sep="")
-      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam\n",sep=""))
+      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("# Rename sample\n\n")
       # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
-      cat("samtools view -H $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam  | sed \"s/SM:[^\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.bam\n",sep="")
+      cat("samtools view -H $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam  | sed \"s/SM:[^\\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.bam\n",sep="")
       cat("\n\n")
     }
   }
