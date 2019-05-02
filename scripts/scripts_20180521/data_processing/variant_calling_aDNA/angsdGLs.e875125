@@ -1,0 +1,25 @@
+	-> angsd version: 0.923 (htslib: 1.9) build(Oct 20 2018 08:03:38)
+	-> No '-out' argument given, output files will be called 'angsdput'
+	-> Parsing 15 number of samples 
+
+	-> Allocated ~ 10 million nodes to the nodepool, this is not an estimate of the memory usage
+	-> Printing at chr: ScbS9RH_195381 pos:112486 chunknumber 100 contains 956 sites
+	-> Printing at chr: ScbS9RH_195381 pos:848142 chunknumber 200 contains 251 sites
+	-> Printing at chr: ScbS9RH_195381 pos:2331701 chunknumber 300 contains 305 sites
+
+	-> Allocated ~ 20 million nodes to the nodepool, this is not an estimate of the memory usage
+	-> Printing at chr: ScbS9RH_195381 pos:4335756 chunknumber 400 contains 261 sites
+	-> Printing at chr: ScbS9RH_195381 pos:5560146 chunknumber 500 contains 251 sites
+	-> Printing at chr: ScbS9RH_195381 pos:6303573 chunknumber 600 contains 3987 sites
+	-> Printing at chr: ScbS9RH_161787 pos:727820 chunknumber 700 contains 11038 sites
+	-> Printing at chr: ScbS9RH_161787 pos:1432910 chunknumber 800 contains 979 sites
+	-> Printing at chr: ScbS9RH_161787 pos:1686876 chunknumber 900 contains 622 sites
+	-> Printing at chr: ScbS9RH_161787 pos:2443292 chunknumber 1000 contains 261 sites
+	-> Printing at chr: ScbS9RH_161787 pos:2577118 chunknumber 1100 contains 793 sites
+	-> Printing at chr: ScbS9RH_161787 pos:2774561 chunknumber 1200 contains 256 sites
+	-> Printing at chr: ScbS9RH_161787 pos:3002382 chunknumber 1300 contains 9964 sites
+	-> Printing at chr: ScbS9RH_161787 pos:3468280 chunknumber 1400 contains 252 sites
+	-> Printing at chr: ScbS9RH_161787 pos:3743503 chunknumber 1500 contains 1855 sites
+	-> Printing at chr: ScbS9RH_161787 pos:4004430 chunknumber 1600 contains 3697 sites
+	-> Printing at chr: ScbS9RH_52957 pos:1275270 chunknumber 1700 contains 817 sites
+	-> Printing at chr: ScbS9RH_52957 pos:2279313 chunknumber 1800 contains 993 sites
