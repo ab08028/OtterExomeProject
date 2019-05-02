@@ -3,7 +3,7 @@
 #$ -l h_rt=100:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
-#$ -pe 16
+#$ -pe shared 16
 #$ -N angsdGLs
 #### ANGSD ####
 source /u/local/Modules/default/init/modules.sh
