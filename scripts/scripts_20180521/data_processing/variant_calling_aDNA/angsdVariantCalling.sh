@@ -66,7 +66,7 @@ angsd \
 -doMaf 2 \
 -out $GLdir/$todaysdate/angsdOutput
 
-deactivate
+source deactivate
 
 sleep 10m
 ############ info on flags: ##########
