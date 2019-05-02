@@ -78,6 +78,7 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 # need to make pairs where a CA and AK modern sample is matched to a specific ancient sample
 # now want to match number of mapped unique reads between pairs
 sink(paste(script.dir,"downsampleModernSamples.MatchPairs.",todaysdate,".sh",sep=""))
+cat("#! /bin/bash\n#$ -l h_rt=5:00:00,h_data=6G\n#$ -m abe\n#$ -M ab08028\n#$ -N downsample")
 cat("source /u/local/Modules/default/init/modules.sh\n")
 cat("module load samtools\n")
 cat("# Downsample modern bam files to match the number unique reads mapped to sea otter and ferret genomes in the best 3 ancient samples (in pairs -- each ancient sample matches 1 CA and 1 AK sample)\n")
@@ -106,9 +107,14 @@ for(rep in seq(1,numReps)){
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
+      cat("# Rename sample\n\n")
+      # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
+      cat("samtools view -H $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam  | sed \"s/SM:[^\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.bam\n",sep="")
       cat("\n\n")
     }
   }
 }
 
 sink()
+
+# want to also rename sample 
