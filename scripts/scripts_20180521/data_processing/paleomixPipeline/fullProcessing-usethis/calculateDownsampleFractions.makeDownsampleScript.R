@@ -59,18 +59,18 @@ ancient_unique_hits <- unique_hits[unique_hits$label=="ancient",]
 # cat("# Mean reads mapped to ferret: ",unique(unique_hits[unique_hits$reference==mfurref,]$meanAncient))
 # cat("\n")
 # cat("wd=/u/flashscratch/a/ab08028/captures/paleomix/fullProcessing/\n")
-# cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/downsampledBams/downsample_allEven/\n\n") 
+# cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_allEven/\n\n") 
 # # go through replicates if you want to resample
 # for(rep in seq(1,numReps)){
 #  # making them all even 
 #   cat("echo \"downsample to equal mean ancient\"\n\n" )
-#   cat(paste("samtools view -s ",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4)," -b $wd/",modern_unique_hits$sample,"/",modern_unique_hits$sample,".",modern_unique_hits$reference,".bam > $downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".bam\n",sep=""))
+#   cat(paste("samtools view -s ",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4)," -b $wd/",modern_unique_hits$sample,"/",modern_unique_hits$sample,".",modern_unique_hits$reference,".realigned.bam > $downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".realigned.bam\n",sep=""))
 #   cat("\n")
 #   # and then count downsampled reads:
 #   # make a header
 #   cat("echo \"count downsampled reads\"\n\n" )
 #   cat("echo downsampledReadCounts > $downsampledir/downsampledReadCounts.txt\n")
-#   cat(paste("samtools flagstat ","$downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep=""))
+#   cat(paste("samtools flagstat ","$downsampledir/",modern_unique_hits$sample,".",modern_unique_hits$reference,".downsamp.",rep+round(modern_unique_hits$downSampleFrac_meanAncient,4),".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep=""))
 # }
 # sink()
 
@@ -85,7 +85,7 @@ cat("# Downsample modern bam files to match the number unique reads mapped to se
 cat("# note: the -s value has the replicate number as the integer which is the seed and the decimal part is the fraction. So 1.006 is replicate 1, fraction 0.006")
 cat("\n")
 cat("wd=/u/flashscratch/a/ab08028/captures/paleomix/fullProcessing/\n")
-cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/downsampledBams/downsample_Pairs/\n\n") 
+cat("downsampledir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/\n\n") 
 cat("mkdir -p $downsampledir\n") 
 cat("mkdir -p $downsampledir/originalSampleName\n") 
 
@@ -106,13 +106,13 @@ for(rep in seq(1,numReps)){
       cat("# downsample ",modernID," to equal ancient sample ",ancID,"\n" ,sep="")
       cat("# ",modernID," (modern) starting reads: ",modernCount,"\n",sep="")
       cat("# ",ancID," (ancient) starting reads: ",ancientCount,"\"\n\n",sep="")
-      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam\n",sep=""))
+      cat(paste("samtools view -s ",rep+round(downSampleFrac,4)," -b $wd/",modernID,"/",modernID,".",ref,".realigned.bam > $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,"realigned.bam\n",sep=""))
       cat("# Count the resulting reads to make sure it downsampled properly\n")
       cat("echo \"",modernID,"\" >> $downsampledir/downsampledReadCounts.txt\n",sep="")
-      cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
+      cat("samtools flagstat ","$downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam | head -n1 | awk '{print $1}' >> $downsampledir/downsampledReadCounts.txt\n",sep="")
       cat("# Rename sample\n\n")
       # samtools header looks like @RG	ID:116_Elut_CA_307_1a	SM:116_Elut_CA_307	LB:116_Elut_CA_307_1a	PU:Lane_1	PL:ILLUMINA	PG:bwa so SM is what you want to change
-      cat("samtools view -H $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam  | sed \"s/SM:[^\\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.bam\n",sep="")
+      cat("samtools view -H $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam  | sed \"s/SM:[^\\t]*/SM:",modernID,"_downsamp/g\" | samtools reheader - $downsampledir/originalSampleName/",modernID,".",ref,".downsamp.rep.",rep,".realigned.bam > $downsampledir/",modernID,".",ref,".downsamp.rep.",rep,".newSampName.realigned.bam\n",sep="")
       cat("\n\n")
     }
   }
