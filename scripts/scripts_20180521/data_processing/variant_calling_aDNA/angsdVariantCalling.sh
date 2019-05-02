@@ -5,6 +5,9 @@
 #$ -M ab08028
 #$ -pe shared 16
 #$ -N angsdGLs
+#$ -e /u/flashscratch/a/ab08028/captures/reports
+#$ -o /u/flashscratch/a/ab08028/captures/reports
+
 #### ANGSD ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -17,6 +20,7 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
+mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
 # then maybe want to call genome-wide whereever we can?
 # or restrict to called regions 
@@ -45,10 +49,10 @@ angsd \
 -minQ 20 -minMapQ 30 \
 -skipTriallelic 1 \
 -doMajorMinor 4 -ref $elutRef \
--doGlf 4 \
+-doGlf 4 \ # try in beagle format 
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOutput
+-out $GLdir/$todaysdate/angsdOut.mappedToElut
 # not sure: -only_proper_pairs if I should use or not... 
 
 ####### Mfur mapped bams ############
@@ -64,11 +68,32 @@ angsd \
 -doGlf 4 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOutput
+-out $GLdir/$todaysdate/angsdOut.mappedToMfur
+
+
+
+
+########### testing: #####################
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $elutBamList \
+-r $testRegion \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $elutRef \
+-doGlf 2 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out testBeagle
+# not sure: -only_proper_pairs if I should use or not... 
+
 
 source deactivate
 
 sleep 10m
+
 ############ info on flags: ##########
 # doMaf 2 -- fixed major and unknown minor  "Known major, Unknown minor. Here the major allele is assumed to be known (inferred or given by user) however the minor allele is not determined. Instead we sum over the 3 possible minor alleles weighted by their probabilities. T"
 #uniqueOnly -- removes reads with more than 1 best hit
