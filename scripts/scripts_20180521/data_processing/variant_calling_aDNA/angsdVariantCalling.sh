@@ -5,8 +5,8 @@
 #$ -M ab08028
 #$ -pe shared 16
 #$ -N angsdGLs
-#$ -e /u/flashscratch/a/ab08028/captures/reports
-#$ -o /u/flashscratch/a/ab08028/captures/reports
+#$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
+#$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
 #### ANGSD ####
 source /u/local/Modules/default/init/modules.sh
