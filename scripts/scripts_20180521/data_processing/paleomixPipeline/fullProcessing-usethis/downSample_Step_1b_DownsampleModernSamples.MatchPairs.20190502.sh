@@ -27,7 +27,8 @@ samtools flagstat $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_puto
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/140_Elut_CA_403.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 141_Elut_CA_419 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
 # 141_Elut_CA_419 (modern) starting reads: 12818602
@@ -40,7 +41,8 @@ samtools flagstat $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_puto
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/141_Elut_CA_419.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 116_Elut_CA_307 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
 # 116_Elut_CA_307 (modern) starting reads: 17463663
@@ -53,7 +55,8 @@ samtools flagstat $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_puto
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/116_Elut_CA_307.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 126_Elut_AK_AF3394 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
 # 126_Elut_AK_AF3394 (modern) starting reads: 11547167
@@ -66,7 +69,8 @@ samtools flagstat $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_p
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/126_Elut_AK_AF3394.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 55_Elut_AK_AF3736 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
 # 55_Elut_AK_AF3736 (modern) starting reads: 16637734
@@ -79,7 +83,8 @@ samtools flagstat $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_pu
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/55_Elut_AK_AF3736.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 129_Elut_AK_AL4660 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
 # 129_Elut_AK_AL4660 (modern) starting reads: 18345387
@@ -92,7 +97,8 @@ samtools flagstat $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_p
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.realigned.bam > $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bam $downsampledir/129_Elut_AK_AL4660.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 140_Elut_CA_403 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
 # 140_Elut_CA_403 (modern) starting reads: 18221144
@@ -105,7 +111,8 @@ samtools flagstat $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:140_Elut_CA_403_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 141_Elut_CA_419 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
 # 141_Elut_CA_419 (modern) starting reads: 13106833
@@ -118,7 +125,8 @@ samtools flagstat $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:141_Elut_CA_419_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 116_Elut_CA_307 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
 # 116_Elut_CA_307 (modern) starting reads: 17696897
@@ -131,7 +139,8 @@ samtools flagstat $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:116_Elut_CA_307_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 126_Elut_AK_AF3394 to equal ancient sample A30_Elut_CA_SM_35_SN1_CAP
 # 126_Elut_AK_AF3394 (modern) starting reads: 11454425
@@ -144,7 +153,8 @@ samtools flagstat $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:126_Elut_AK_AF3394_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 55_Elut_AK_AF3736 to equal ancient sample A29_Elut_CA_SM_30_SN2_CAP
 # 55_Elut_AK_AF3736 (modern) starting reads: 16561142
@@ -157,7 +167,8 @@ samtools flagstat $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:55_Elut_AK_AF3736_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 
 # downsample 129_Elut_AK_AL4660 to equal ancient sample A13_Elut_CA_AN_388_SN1_2CAP_screen
 # 129_Elut_AK_AL4660 (modern) starting reads: 18052751
@@ -170,5 +181,6 @@ samtools flagstat $downsampledir/originalSampleName/129_Elut_AK_AL4660.sea_otter
 # Rename sample
 
 samtools view -H $downsampledir/originalSampleName/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam  | sed "s/SM:[^\t]*/SM:129_Elut_AK_AL4660_downsamp/g" | samtools reheader - $downsampledir/originalSampleName/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.realigned.bam > $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
-
+# index the bam file:
+samtools index $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam $downsampledir/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bai
 

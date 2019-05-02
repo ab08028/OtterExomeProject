@@ -6,22 +6,27 @@
 #$ -pe 16
 #$ -N angsdGLs
 #### ANGSD ####
-
+source /u/local/Modules/default/init/modules.sh
+module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
+gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
+scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA/
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
-
+todaysdate=`date +%Y%m%d`
+# this is temporary -- just calling in one region to make sure angsd works
+# then maybe want to call genome-wide whereever we can?
+# or restrict to called regions 
 testRegion="ScbS9RH_100661:10009-11075"
-testBamList=$testwd/test.Bam.list
 
 # gather bams from paleomix using script gatherBamsForDownsampling.sh
 # and make lists of the relevant bams: 
 
-elutBamList= # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList= # list of bam files mapped to ferret, including downsampled AND non-downsampled
+elutBamList=$scriptDir/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+mfurBamList=$scriptDir/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # references:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
@@ -31,15 +36,42 @@ mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putori
 
 
 ########### Elut mapped bams #####################
-angsd -GL 2 -trim 4 -nThreads 16 -bam $elutBamList -r $testRegion -minQ 20 -minMapQ 30 -skipTriallelic 1 -doMajorMinor 4 -ref $elutRef -doGlf 4
-
-
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $elutBamList \
+#-r $testRegion \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $elutRef \
+-doGlf 4 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out $GLdir/$todaysdate/angsdOutput
+# not sure: -only_proper_pairs if I should use or not... 
 
 ####### Mfur mapped bams ############
-angsd -GL 2 -trim 4 -nThreads 16 -bam $mfurBamList -r $testRegion -minQ 20 -minMapQ 30 -skipTriallelic 1 -doMajorMinor 4 -ref $mfurRef -doGlf 4
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $mfurBamList \
+#-r $testRegion \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $mfurRef \
+-doGlf 4 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out $GLdir/$todaysdate/angsdOutput
 
+deactivate
 
-
+sleep 10m
+############ info on flags: ##########
+# doMaf 2 -- fixed major and unknown minor  "Known major, Unknown minor. Here the major allele is assumed to be known (inferred or given by user) however the minor allele is not determined. Instead we sum over the 3 possible minor alleles weighted by their probabilities. T"
+#uniqueOnly -- removes reads with more than 1 best hit
 # doGlf is how to do output. 4 is gzipped text
 # -doMajorMinor 4 -ref $elutRef sets the major and minor alleles based on the reference (like GATK); makes less sense for elut-mapped bc california isn't ancestral. makes more sense for ferret
 # Major Minor is weird You can force the major allele according to the reference states if you have defined those -ref. The minor allele will be inferred based on the genotype likelihood (see do major minor 1). This is the approach used by both GATK and Samtools

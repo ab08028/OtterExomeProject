@@ -16,8 +16,8 @@ do
 for ref in $refs
 do
 ####### very important to use REALIGNED bam file!!!! otherwise it hasn't gone through indel realignment #####
-cp $plmxDir/$header/$header.$ref.realigned.bam $wd/bams
-
+cp $plmxDir/$header/$header.$ref.realigned.ba* $wd/bams
+# using *ba* to get the bam indices
 done
 done
 
