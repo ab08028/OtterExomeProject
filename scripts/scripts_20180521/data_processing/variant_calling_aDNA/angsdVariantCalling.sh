@@ -1,5 +1,5 @@
 #! /bin/bash
-#$ -cwd
+#$ -wd /u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs
 #$ -l h_rt=100:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
@@ -18,9 +18,9 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
-mkdir -p $GLdir
+#mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
-mkdir -p $GLdir/$todaysdate
+#mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
 # then maybe want to call genome-wide whereever we can?
 # or restrict to called regions 
@@ -50,7 +50,7 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut
+-out angsdOut.mappedToElut
 # not sure: -only_proper_pairs if I should use or not... 
 
 ####### Mfur mapped bams ############
@@ -66,7 +66,7 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToMfur
+-out $GLdir/angsdOut.mappedToMfur
 
 
 
