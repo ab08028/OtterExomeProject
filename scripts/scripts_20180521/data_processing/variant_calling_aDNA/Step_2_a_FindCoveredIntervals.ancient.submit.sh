@@ -22,7 +22,7 @@ scriptname=Step_2_a_FindCoveredIntervals.ancient.sh # change this to final scrip
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
 # for now just do ancient since they're done
-headers=$wd/samples/bestAncientHeaders.txt # 3 ancient samples I'm processing further 
+headers=$wd/samples/ancient.modern.comparison.txt # 3 ancient samples I'm processing further 
 
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
