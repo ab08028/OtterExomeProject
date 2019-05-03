@@ -52,18 +52,18 @@ angsd \
 -out $GLdir/$todaysdate/angsdOut.mappedToMfur.allSites
 
 ########### Elut mapped bams #####################
-angsd \
--GL 2 \
--trim 4 \
--nThreads 16 \
--bam $elutBamList \
--minQ 20 -minMapQ 30 \
--skipTriallelic 1 \
--doMajorMinor 4 -ref $elutRef \
--doGlf 2 \
--uniqueOnly 1 \
--doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut.allSites
+#angsd \
+#-GL 2 \
+#-trim 4 \
+#-nThreads 16 \
+#-bam $elutBamList \
+#-minQ 20 -minMapQ 30 \
+#-skipTriallelic 1 \
+#-doMajorMinor 4 -ref $elutRef \
+#-doGlf 2 \
+#-uniqueOnly 1 \
+#-doMaf 2 \
+#-out $GLdir/$todaysdate/angsdOut.mappedToElut.allSites
 # not sure: -only_proper_pairs if I should use or not... 
 
 
