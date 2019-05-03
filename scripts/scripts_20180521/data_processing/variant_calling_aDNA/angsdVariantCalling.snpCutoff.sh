@@ -20,6 +20,7 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
+snpCutoff=1e-6
 #mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
 # then maybe want to call genome-wide whereever we can?
@@ -37,24 +38,6 @@ elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_in
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 # trying output in beagle format  doGlf 2
-########### Elut mapped bams #####################
-angsd \
--GL 2 \
--trim 4 \
--nThreads 16 \
--bam $elutBamList \
--minQ 20 -minMapQ 30 \
--skipTriallelic 1 \
--doMajorMinor 4 -ref $elutRef \
--doGlf 2 \
--uniqueOnly 1 \
--doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut \
--SNP_pval 1e-6 
-
-# only snps passing 1e-6 confidence. this should be good for mfur, but have to think about what this might exclude for elut
-# trying it bothways
-# not sure: -only_proper_pairs if I should use or not... 
 
 ####### Mfur mapped bams ############
 angsd \
@@ -68,8 +51,29 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut \
+-out $GLdir/$todaysdate/angsdOut.mappedToMfur.${snpCutoff}.snpsOnly \
 -SNP_pval 1e-6
+
+
+########### Elut mapped bams #####################
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $elutBamList \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $elutRef \
+-doGlf 2 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out $GLdir/$todaysdate/angsdOut.mappedToElut.${snpCutoff}.snpsOnly \
+-SNP_pval 1e-6 
+
+# only snps passing 1e-6 confidence. this should be good for mfur, but have to think about what this might exclude for elut
+# trying it bothways
+# not sure: -only_proper_pairs if I should use or not... 
+
 
 
 
