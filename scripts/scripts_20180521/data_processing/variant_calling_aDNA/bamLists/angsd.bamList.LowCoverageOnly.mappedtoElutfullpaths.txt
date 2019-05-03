@@ -1,0 +1,9 @@
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A13_Elut_CA_AN_388_SN1_2CAP_screen.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A29_Elut_CA_SM_30_SN2_CAP.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A30_Elut_CA_SM_35_SN1_CAP.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/116_Elut_CA_307.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/141_Elut_CA_419.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam
