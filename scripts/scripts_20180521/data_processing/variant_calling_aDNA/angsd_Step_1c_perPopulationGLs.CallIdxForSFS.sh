@@ -96,6 +96,50 @@ realSFS $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.${snpCutoff}.
 done
 
 
+for elutBamList in $elutBams
+do
+####### Elut mapped bams ############
+##### First want to get GLF file for each set of populations (as opposed to previous variant calling that is based on all individuals for PCA)
+# this command should be EXACTLY the same as what was used in angsdVariantCalling.snpCutoff1e-6.sh
+# except for: doGlf is 1 (binary glf file)
+
+
+nInd=`wc -l $scriptDir/bamLists/$elutBamList`
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $scriptDir/bamLists/$elutBamList \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $elutRef \
+-doGlf 1 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out $GLdir/$todaysdate/perPopulation/${elutBamList%.bamList.*}.mappedToElut.${snpCutoff}.snpsOnly \
+-SNP_pval 1e-6 \
+-remove_bads 1 \
+-C 50 
+
+
+angsd \
+-dosaf 1 \
+-fold 1 \
+-noTrans 1 \
+-anc $elutRef \
+-ref $elutRef \
+-fai $elutRef.fai \
+-glf $GLdir/$todaysdate/perPopulation/${elutBamList%.bamList.*}.mappedToElut.${snpCutoff}.snpsOnly.glf.gz \
+-out $SFSdir/$todaysdate/${elutBamList%.bamList.*}.mappedToElut.${snpCutoff}.snpsOnly \
+-nInd $nInd 
+
+# note here nInd is 3!! not 15!!!
+
+realSFS $SFSdir/$todaysdate/${elutBamList%.bamList.*}.mappedToElut.${snpCutoff}.snpsOnly.saf.idx > $SFSdir/$todaysdate/${elutBamList%.bamList.*}.mappedToElut.${snpCutoff}.snpsOnly.saf.SFS.txt
+# evnetually want to use -r to make SFSes for different regions from this idx file
+
+done
+
 # can make neutral/cds sfses using the -r regions
 # need to get my mfur regions in angsd format (hold off for now) 
 # realSFS $GLdir/$todaysdate/angsdOut.mappedToMfur.${snpCutoff}.snpsOnly.saf.idx -r $regions
