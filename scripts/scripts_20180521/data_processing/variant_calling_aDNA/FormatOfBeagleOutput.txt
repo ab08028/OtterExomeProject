@@ -1,0 +1,28 @@
+# Format of BEAGLE: 
+column 1 (marker)
+
+the chromosome and position
+
+column 2 (allele 1)
+
+the major allele codes as 0=A, 1=C, 2=G, 3=T
+
+column 3 (allele 2)
+
+the minor allele codes as 0=A, 1=C, 2=G, 3=T
+
+column 4 (Ind0)
+
+Genotype likelihood for the major/major genotype for the first individual
+
+column 5 (Ind0)
+
+Genotype likelihood for the major/minor genotype for the first individual
+
+column 6 (Ind0)
+
+Genotype likelihood for the minor/minor genotype for the first individual
+
+column 7 (Ind1)
+
+Genotype likelihood for the major/major genotype for the second individual ... 

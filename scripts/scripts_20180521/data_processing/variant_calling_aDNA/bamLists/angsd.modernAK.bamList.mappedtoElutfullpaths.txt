@@ -1,0 +1,3 @@
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/126_Elut_AK_AF3394.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/129_Elut_AK_AL4660.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/55_Elut_AK_AF3736.sea_otter_23May2016_bS9RH.deduped.99.realigned.bam

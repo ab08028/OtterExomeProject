@@ -1,0 +1,3 @@
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A13_Elut_CA_AN_388_SN1_2CAP_screen.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A29_Elut_CA_SM_30_SN2_CAP.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/A30_Elut_CA_SM_35_SN1_CAP.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.realigned.bam
