@@ -19,8 +19,7 @@ wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
-#todaysdate=`date +%Y%m%d`
-todaysdate=20190502
+todaysdate=`date +%Y%m%d`
 snpCutoff=1e-6
 mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
@@ -31,8 +30,8 @@ testRegion="ScbS9RH_100661:10009-11075"
 # gather bams from paleomix using script gatherBamsForDownsampling.sh
 # and make lists of the relevant bams: 
 
-elutBamList=$scriptDir/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList=$scriptDir/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # references:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
@@ -53,23 +52,37 @@ angsd \
 -uniqueOnly 1 \
 -doMaf 2 \
 -out $GLdir/$todaysdate/angsdOut.mappedToMfur.${snpCutoff}.snpsOnly \
--SNP_pval 1e-6
+-SNP_pval 1e-6 \
+-remove_bads 1 \
+-C 50
+
+# 20190502 -- was run without doDepth or doCount
+# 201090503 -- going to add more things: doDepth/doCount to get depth per sample
+# Adding more filtering :
+# remove_bads and -C50
 
 
 ########### Elut mapped bams #####################
-#angsd \
-#-GL 2 \
-#-trim 4 \
-#-nThreads 16 \
-#-bam $elutBamList \
-#-minQ 20 -minMapQ 30 \
-#-skipTriallelic 1 \
-#-doMajorMinor 4 -ref $elutRef \
-#-doGlf 2 \
-#-uniqueOnly 1 \
-#-doMaf 2 \
-#-out $GLdir/$todaysdate/angsdOut.mappedToElut.${snpCutoff}.snpsOnly \
-#-SNP_pval 1e-6 
+angsd \
+-GL 2 \
+-trim 4 \
+-nThreads 16 \
+-bam $elutBamList \
+-minQ 20 -minMapQ 30 \
+-skipTriallelic 1 \
+-doMajorMinor 4 -ref $elutRef \
+-doGlf 2 \
+-uniqueOnly 1 \
+-doMaf 2 \
+-out $GLdir/$todaysdate/angsdOut.mappedToElut.${snpCutoff}.snpsOnly \
+-SNP_pval 1e-6 \
+-remove_bads 1 \
+-C 50
+
+# 20190502 -- was run without doDepth or doCount
+# 201090503 -- going to add more things: doDepth/doCount to get depth per sample
+# Adding more filtering :
+# remove_bads and -C50
 
 # only snps passing 1e-6 confidence. this should be good for mfur, but have to think about what this might exclude for elut
 # trying it bothways
@@ -77,29 +90,14 @@ angsd \
 
 
 
-
-######## testing: #####################
-# angsd \
-# -GL 2 \
-# -trim 4 \
-# -nThreads 16 \
-# -bam $elutBamList \
-# -r $testRegion \
-# -minQ 20 -minMapQ 30 \
-# -skipTriallelic 1 \
-# -doMajorMinor 4 -ref $elutRef \
-# -doGlf 6 \
-# -uniqueOnly 1 \
-# -doMaf 2 \
-# -out testMultOutputs
-# not sure: -only_proper_pairs if I should use or not... 
-
-
 source deactivate
 
 sleep 10m
 
 ############ info on flags: ##########
+# rescale when there are lots of mismatches: -C50
+# remove_bads -- remove bad reads (should be gone already)
+# Daly doesn't use -baq or only_proper_pairs. I don't know if only proper pairs makes sense with aDNA. Not doing it. 
 # doMaf 2 -- fixed major and unknown minor  "Known major, Unknown minor. Here the major allele is assumed to be known (inferred or given by user) however the minor allele is not determined. Instead we sum over the 3 possible minor alleles weighted by their probabilities. T"
 #uniqueOnly -- removes reads with more than 1 best hit
 # doGlf is how to do output. 4 is gzipped text
