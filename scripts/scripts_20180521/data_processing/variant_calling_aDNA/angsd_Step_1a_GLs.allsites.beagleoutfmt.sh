@@ -50,8 +50,6 @@ angsd \
 -uniqueOnly 1 \
 -doMaf 2 \
 -out $GLdir/$todaysdate/angsdOut.mappedToMfur.allSites \
--doDepth 1 \
--doCount 1 \
 -remove_bads 1 \
 -C 50
 
@@ -73,8 +71,6 @@ angsd \
 -uniqueOnly 1 \
 -doMaf 2 \
 -out $GLdir/$todaysdate/angsdOut.mappedToElut.allSites \
--doDepth 1 \
--doCount 1 \
 -remove_bads 1 \
 -C 50
 # not sure: -only_proper_pairs if I should use or not... 
