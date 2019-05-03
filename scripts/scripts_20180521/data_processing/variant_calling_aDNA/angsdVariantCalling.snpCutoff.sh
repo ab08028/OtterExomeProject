@@ -4,7 +4,7 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdGLs
+#$ -N angsdGLsSNPCUT
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
@@ -49,7 +49,11 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut
+-out $GLdir/$todaysdate/angsdOut.mappedToElut \
+-SNP_pval 1e-6 
+
+# only snps passing 1e-6 confidence. this should be good for mfur, but have to think about what this might exclude for elut
+# trying it bothways
 # not sure: -only_proper_pairs if I should use or not... 
 
 ####### Mfur mapped bams ############
@@ -64,7 +68,8 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut
+-out $GLdir/$todaysdate/angsdOut.mappedToElut \
+-SNP_pval 1e-6
 
 
 
