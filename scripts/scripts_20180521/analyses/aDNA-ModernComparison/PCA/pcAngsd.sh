@@ -19,15 +19,18 @@ module load python
 pcangsddir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/pcangsd
 wd=$SCRATCH/captures/aDNA-ModernComparison
 angsdDate=20190502 # date GLs were called
-#GLdir=$wd/angsd-GLs/$angsdDate # eventually
+GLdir=$wd/angsd-GLs/$angsdDate # eventually
 # for now
-GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs #temporary!
+#GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs #temporary!
 PCAdir=$wd/pca/covarianceMatrices
 mkdir -p $PCAdir
-for ref in Elut Mfur
+
+#for ref in Elut Mfur
+ref=Elut
+for state in 1e-6.snpsOnly allSites
 do
 python $pcangsddir/pcangsd.py \
--beagle $GLdir/angsdOut.mappedToElut.beagle.gz \
+-beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
 -o $PCAdir/pcAngsd.$ref \
 -minMaf 0.05 \
 -threads 10
@@ -36,6 +39,9 @@ python $pcangsddir/pcangsd.py \
 done
 
 
+
+
 # then have to move to python or R to deal with this
 # using a modification of:
 # https://github.com/mfumagalli/ngsPopGen/blob/master/scripts/plotPCA.R
+source deactivate

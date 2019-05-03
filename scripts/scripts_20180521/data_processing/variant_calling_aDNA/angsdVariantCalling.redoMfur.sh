@@ -19,8 +19,9 @@ wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
-todaysdate=`date +%Y%m%d`
-#mkdir -p $GLdir/$todaysdate
+#todaysdate=`date +%Y%m%d`
+todaysdate=20190502
+mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
 # then maybe want to call genome-wide whereever we can?
 # or restrict to called regions 
