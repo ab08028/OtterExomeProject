@@ -17,7 +17,7 @@ module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
 pcangsddir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/pcangsd
 wd=$SCRATCH/captures/aDNA-ModernComparison
-angsdDate=20190502 # date GLs were called
+angsdDate=20190503 # date GLs were called
 GLdir=$wd/angsd-GLs/$angsdDate # eventually
 # for now
 #GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs #temporary!

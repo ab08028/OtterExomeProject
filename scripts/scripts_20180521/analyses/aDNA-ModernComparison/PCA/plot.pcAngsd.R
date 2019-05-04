@@ -1,6 +1,6 @@
 library(RcppCNPy)
 #comp=c(1,2) # set which two PCs you want to plot ; for now let's go with 1 and 2
-angsddate=20190502
+angsddate=20190503
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/PCA/",angsddate,"/",sep="")
 refs=c("Elut") # set what reference you mapped to 
 states=c("1e-6.snpsOnly", "1e-6.snpsOnly.transversionsOnly") # with and without transversions
