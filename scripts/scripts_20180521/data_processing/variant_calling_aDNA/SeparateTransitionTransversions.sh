@@ -13,10 +13,14 @@
 # and these appear in columns 2 and 3 of the beagle file
 # So if there's 0 <-> 2 and 1 <-> 3
 
-angsdDate=20190502
+angsdDate=20190503
 wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate
 
-input=$wd/angsdOut.mappedToElut.1e-6.snpsOnly.beagle.gz
+for ref in Elut Mfur
+do
+for state in 1e-6.snpsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 allSites
+do
+input=$wd/angsdOut.mappedTo${ref}.${state}.beagle.gz
  
 # Want to exclude  0 <-> 2 and 1 <-> 3
 # So want to *KEEP* 
@@ -41,7 +45,7 @@ zcat $input | awk '{
 if(($2==0 && $3==1) || ($2==1 && $3==0) || ($2==0 && $3==3) || ($2==3 && $3==0) || ($2==1 && $3==2) || ($2==2 && $3==1) || ($2==2 && $3==3) || ($2==3 && $3==2)) print}' | gzip -f > ${input%.beagle.gz}.transversionsOnly.beagle.gz
 # 128662 transversions 
 # checking:
-zcat $input | grep -c -v marker 
+#zcat $input | grep -c -v marker 
 # 379972 sites in the 1e-6.snpsOnly
 
 # get transitions
@@ -53,3 +57,7 @@ if(($2==0 && $3==2) || ($2==2 && $3==0) || ($2==1 && $3==3) || ($2==3 && $3==1))
 # number of transitions: 251310
 
 # they add up: 128662 (Transversions)+ 251310 (transitions) = 379972 total 
+done
+done
+
+
