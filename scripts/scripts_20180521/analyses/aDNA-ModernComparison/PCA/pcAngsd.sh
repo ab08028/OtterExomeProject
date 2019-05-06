@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=100:00:00,h_data=2G,highp
+#$ -l h_rt=4:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 10
@@ -28,9 +28,7 @@ do
 for ref in Elut Mfur
 do
 ## is there something I can do here to get minIndividuals? maybe has to be from angsd itself 
-angsd \
--beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
--minInd 
+
 python $pcangsddir/pcangsd.py \
 -beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
 -o $PCAdir/pcAngsd.$ref.$state \
