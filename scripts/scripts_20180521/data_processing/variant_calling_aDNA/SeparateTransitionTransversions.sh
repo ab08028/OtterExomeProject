@@ -18,7 +18,7 @@ wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate
 
 for ref in Elut Mfur
 do
-for state in 1e-6.snpsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 allSites
+for state in 1e-6.snpsOnly 1e-6.snpsOnly.downSampOnly.minInd.5
 do
 input=$wd/angsdOut.mappedTo${ref}.${state}.beagle.gz
  

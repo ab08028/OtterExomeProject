@@ -4,11 +4,11 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdGLs
+#$ -N angsdGLsDownOnly
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-#### ANGSD v 0.923 ####
+#### ANGSD ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
@@ -20,6 +20,7 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
+snpCutoff=1e-6 # snp confidence
 mkdir -p $GLdir/$todaysdate
 # this is temporary -- just calling in one region to make sure angsd works
 # then maybe want to call genome-wide whereever we can?
@@ -28,15 +29,16 @@ testRegion="ScbS9RH_100661:10009-11075"
 
 # gather bams from paleomix using script gatherBamsForDownsampling.sh
 # and make lists of the relevant bams: 
-
-elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+# DOWNSAMPLED+Ancient ONLY; no high coverage! 
+elutBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+mfurBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # references:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 # trying output in beagle format  doGlf 2
+
 ####### Mfur mapped bams ############
 angsd \
 -GL 2 \
@@ -49,7 +51,8 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToMfur.allSites \
+-out $GLdir/$todaysdate/angsdOut.mappedToMfur.${snpCutoff}.snpsOnly.downSampOnly \
+-SNP_pval 1e-6 \
 -remove_bads 1 \
 -C 50
 
@@ -57,6 +60,7 @@ angsd \
 # 201090503 -- going to add more things: doDepth/doCount to get depth per sample
 # Adding more filtering :
 # remove_bads and -C50
+
 
 ########### Elut mapped bams #####################
 angsd \
@@ -70,15 +74,20 @@ angsd \
 -doGlf 2 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/angsdOut.mappedToElut.allSites \
+-out $GLdir/$todaysdate/angsdOut.mappedToElut.${snpCutoff}.snpsOnly.downSampOnly \
+-SNP_pval 1e-6 \
 -remove_bads 1 \
 -C 50
-# not sure: -only_proper_pairs if I should use or not... 
 
 # 20190502 -- was run without doDepth or doCount
 # 201090503 -- going to add more things: doDepth/doCount to get depth per sample
 # Adding more filtering :
 # remove_bads and -C50
+
+# only snps passing 1e-6 confidence. this should be good for mfur, but have to think about what this might exclude for elut
+# trying it bothways
+# not sure: -only_proper_pairs if I should use or not... 
+
 
 
 source deactivate
@@ -86,6 +95,9 @@ source deactivate
 sleep 10m
 
 ############ info on flags: ##########
+# rescale when there are lots of mismatches: -C50
+# remove_bads -- remove bad reads (should be gone already)
+# Daly doesn't use -baq or only_proper_pairs. I don't know if only proper pairs makes sense with aDNA. Not doing it. 
 # doMaf 2 -- fixed major and unknown minor  "Known major, Unknown minor. Here the major allele is assumed to be known (inferred or given by user) however the minor allele is not determined. Instead we sum over the 3 possible minor alleles weighted by their probabilities. T"
 #uniqueOnly -- removes reads with more than 1 best hit
 # doGlf is how to do output. 4 is gzipped text

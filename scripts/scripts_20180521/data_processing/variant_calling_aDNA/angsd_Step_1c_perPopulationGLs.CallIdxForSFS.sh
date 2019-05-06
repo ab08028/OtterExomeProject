@@ -8,7 +8,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-#### ANGSD ####
+#### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
@@ -58,8 +58,8 @@ do
 # this command should be EXACTLY the same as what was used in angsdVariantCalling.snpCutoff1e-6.sh
 # except for: doGlf is 1 (binary glf file)
 # 
-
-nInd=`wc -l $scriptDir/bamLists/$mfurBamList`
+# aha! problem with this nInd: 
+nInd=`wc -l $scriptDir/bamLists/$mfurBamList | awk '{print $1}'`
 angsd \
 -GL 2 \
 -trim 4 \
@@ -83,10 +83,10 @@ angsd \
 -noTrans 1 \
 -anc $mfurRef \
 -ref $mfurRef \
--fai $mfurRef.fai \
+-fai ${mfurRef}.fai \
 -glf $GLdir/$todaysdate/perPopulation/${mfurBamList%.bamList.*}.mappedToMfur.${snpCutoff}.snpsOnly.glf.gz \
 -out $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.${snpCutoff}.snpsOnly \
--nInd $nInd 
+-nInd $nInd
 
 # note here nInd is 3!! not 15!!!
 
@@ -104,7 +104,7 @@ do
 # except for: doGlf is 1 (binary glf file)
 
 
-nInd=`wc -l $scriptDir/bamLists/$elutBamList`
+nInd=`wc -l $scriptDir/bamLists/$elutBamList | awk '{print $1}'`
 angsd \
 -GL 2 \
 -trim 4 \
