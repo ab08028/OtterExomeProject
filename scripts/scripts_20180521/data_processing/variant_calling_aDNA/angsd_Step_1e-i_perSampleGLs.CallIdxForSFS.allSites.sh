@@ -45,7 +45,7 @@ angsd \
 -doGlf 1 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/perIndividual/${bam%.bam}.mappedTo${refPrefix}.allSites \
+-out $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites \
 -remove_bads 1 \
 -C 50 
 # removed : -SNP_pval 1e-6 \
@@ -58,8 +58,8 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perPopulation/${bam%.bam}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly \
+-glf $GLdir/$todaysdate/perPopulation/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly \
 -nInd 1
 
 # get it with transitions+transversions (better for pi estimate?): 
@@ -69,12 +69,12 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perPopulation/${bam%.bam}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites \
+-glf $GLdir/$todaysdate/perPopulation/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.saf.SFS.txt
 
 done
 
