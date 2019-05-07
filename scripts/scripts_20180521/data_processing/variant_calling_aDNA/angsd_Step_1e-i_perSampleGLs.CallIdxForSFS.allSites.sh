@@ -1,9 +1,9 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=10:00:00,h_data=2G,highp
+#$ -l h_rt=4:00:00,h_data=2G
 #$ -m abe
 #$ -M ab08028
-#$ -pe shared 8
+#$ -pe shared 4
 #$ -N angsdSFSPerInd
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd

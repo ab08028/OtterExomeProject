@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=4:00:00,h_data=2G
+#$ -l h_rt=10:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 10
@@ -17,21 +17,23 @@ module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
 pcangsddir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/pcangsd
 wd=$SCRATCH/captures/aDNA-ModernComparison
-#angsdDate=20190503 # date GLs were called
-angsdDate=20190506
+angsdDate=20190503 # date GLs were called
 GLdir=$wd/angsd-GLs/$angsdDate # eventually
 # for now
 #GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs #temporary!
 PCAdir=$wd/pca/covarianceMatrices/$angsdDate
 mkdir -p $PCAdir
+for state in 1e-6.snpsOnly.downSampOnly.minInd.5.transversionsOnly
 #for state in 1e-6.snpsOnly 1e-6.snpsOnly.transversionsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 1e-6.snpsOnly.downSampOnly.minInd.5.transversionsOnly  # allSites don't use allSites for PCA, just use SNPs. use with and without transversions
-for state in 1e-6.snpsOnly.downSampOnly 1e-6.snpsOnly.downSampOnly.minInd.9
 do
-for ref in Elut Mfur
+for ref in Mfur
+#for ref in Elut Mfur
 
 do
 ## is there something I can do here to get minIndividuals? maybe has to be from angsd itself 
-
+angsd \
+-beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
+-minInd 
 python $pcangsddir/pcangsd.py \
 -beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
 -o $PCAdir/pcAngsd.$ref.$state \
