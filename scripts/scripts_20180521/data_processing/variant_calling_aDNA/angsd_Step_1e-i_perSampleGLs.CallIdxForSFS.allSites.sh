@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=30:00:00,h_data=2G,highp
+#$ -l h_rt=10:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 8
@@ -18,7 +18,7 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
-SFSdir=$wd/angsd-SFS
+SFSdir=$wd/angsd-SFS/perIndividual
 mkdir -p $SFSdir
 mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
