@@ -13,16 +13,21 @@ elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_in
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 # script usage:
-# qsub script [ path to bam file ] [ref prefix (Mfur or Elut)] [ path to reference genome ]
+# qsub script [ path to bam file ] [sampleID] [ref prefix (Mfur or Elut)] [ path to reference genome ]
 refPrefix=Mfur
 cat $mfurBamList | while read bam
 do
-qsub ${script} $bam $refPrefix $mfurRef
+# get sample name from bam using basename:
+filename=`basename $bam`
+sampleID=${filename%Mustela*}
+qsub ${script} $bam $sampleID $refPrefix $mfurRef
 done
 
 # elut-mapped:
 refPrefix=Elut
 cat $elutBamList | while read bam
 do
-qsub ${script} $bam $refPrefix $elutRef
+filename=`basename $bam`
+sampleID=${filename%sea_otter*}
+qsub ${script} $bam $sampleID $refPrefix $elutRef
 done

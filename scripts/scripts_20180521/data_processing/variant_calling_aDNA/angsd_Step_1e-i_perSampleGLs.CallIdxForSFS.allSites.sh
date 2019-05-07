@@ -18,21 +18,22 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
-SFSdir=$wd/angsd-SFS/perIndividual
+SFSdir=$wd/angsd-SFS
 mkdir -p $SFSdir
 mkdir -p $GLdir
 todaysdate=`date +%Y%m%d`
 snpCutoff=1e-6
 mkdir -p $GLdir/$todaysdate
-mkdir -p $SFSdir/$todaysdate
+mkdir -p $SFSdir/$todaysdate/perIndividual
 mkdir -p $GLdir/$todaysdate/perIndividual
 
 ######## info from command line : # ##
 
 bam=$1
-refPrefix=$2
-reference=$3
-
+sampleID=$2
+refPrefix=$3
+reference=$4
+### basename pulls the file name out of the bath so you can use that 
 angsd \
 -GL 2 \
 -trim 4 \
@@ -72,8 +73,8 @@ angsd \
 -out $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${bam%.bam}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${bam%.bam}.mappedTo${refPrefix}.allSites.saf.SFS.txt
 
 done
 
