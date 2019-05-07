@@ -19,7 +19,7 @@ cat $mfurBamList | while read bam
 do
 # get sample name from bam using basename:
 filename=`basename $bam`
-sampleID=${filename%Mustela*}
+sampleID=${filename%.Mustela*}
 qsub ${script} $bam $sampleID $refPrefix $mfurRef
 done
 
@@ -28,6 +28,6 @@ refPrefix=Elut
 cat $elutBamList | while read bam
 do
 filename=`basename $bam`
-sampleID=${filename%sea_otter*}
+sampleID=${filename%.sea_otter*}
 qsub ${script} $bam $sampleID $refPrefix $elutRef
 done
