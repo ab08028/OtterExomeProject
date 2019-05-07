@@ -1,3 +1,5 @@
+########### something went wrong with ELUT and zero filters --- need to troubleshoot ########
+
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=30:00:00,h_data=2G,highp
@@ -22,8 +24,7 @@ GLdir=$wd/angsd-GLs
 SFSdir=$wd/angsd-SFS
 mkdir -p $SFSdir
 mkdir -p $GLdir
-#todaysdate=`date +%Y%m%d`
-todaysdate=20190506 # temporarily making date later to make sure it doesn't overwrite my c-ii results
+todaysdate=`date +%Y%m%d`
 snpCutoff=1e-6
 mkdir -p $GLdir/$todaysdate
 mkdir -p $SFSdir/$todaysdate
@@ -35,7 +36,6 @@ testRegion="ScbS9RH_100661:10009-11075"
 
 # gather bams from paleomix using script gatherBamsForDownsampling.sh
 # and make lists of the relevant bams: 
-
 elutBams="angsd.ancient.bamList.mappedtoElutfullpaths.txt
 angsd.modernAK-downsampled.bamList.mappedtoElutfullpaths.txt
 angsd.modernAK.bamList.mappedtoElutfullpaths.txt
@@ -51,16 +51,13 @@ angsd.modernCA.bamList.mappedtoMfurfullpaths.txt"  # lists of bam files mapped t
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-# trying output in beagle format  doGlf 2
-
 for mfurBamList in $mfurBams
 do
 ####### Mfur mapped bams ############
 ##### First want to get GLF file for each set of populations (as opposed to previous variant calling that is based on all individuals for PCA)
 # this command should be EXACTLY the same as what was used in angsdVariantCalling.snpCutoff1e-6.sh
 # except for: doGlf is 1 (binary glf file)
-# 
-# aha! problem with this nInd: 
+
 nInd=`wc -l $scriptDir/bamLists/$mfurBamList | awk '{print $1}'`
 angsd \
 -GL 2 \

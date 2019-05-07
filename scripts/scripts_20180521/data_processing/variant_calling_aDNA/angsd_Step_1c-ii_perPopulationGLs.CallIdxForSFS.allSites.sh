@@ -50,8 +50,6 @@ angsd.modernCA.bamList.mappedtoMfurfullpaths.txt"  # lists of bam files mapped t
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-# trying output in beagle format  doGlf 2
-
 for mfurBamList in $mfurBams
 do
 ####### Mfur mapped bams ############
@@ -101,7 +99,6 @@ angsd \
 -nInd $nInd
 
 
-# note here nInd is 3!! not 15!!!
 
 realSFS $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.allSites.TransversionsOnly.saf.SFS.txt
 realSFS $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.allSites.saf.idx > $SFSdir/$todaysdate/${mfurBamList%.bamList.*}.mappedToMfur.allSites.saf.SFS.txt
