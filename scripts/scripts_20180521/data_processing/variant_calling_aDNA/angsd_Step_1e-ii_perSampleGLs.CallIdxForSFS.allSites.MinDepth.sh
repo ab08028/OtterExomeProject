@@ -33,6 +33,7 @@ label=$2 # ID.ref.downsample.rep#
 refPrefix=$3
 reference=$4
 minDepth=$5
+maxDepth=$6
 ### basename pulls the file name out of the bath so you can use that 
 angsd \
 -GL 2 \
@@ -45,11 +46,12 @@ angsd \
 -doGlf 1 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth \
+-out $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth \
 -remove_bads 1 \
 -C 50 \
 -doCount \
--SetMinDepth $minDepth
+-SetMinDepth $minDepth \
+-SetMaxDepth $maxDepth
 
 
 # removed : -SNP_pval 1e-6 \
@@ -62,8 +64,8 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.glf.gz \
--out $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.TransversionsOnly \
+-glf $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.glf.gz \
+-out $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.TransversionsOnly \
 -nInd 1
 
 # get it with transitions+transversions (better for pi estimate?): 
@@ -73,12 +75,12 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.glf.gz \
--out $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth \
+-glf $GLdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.glf.gz \
+-out $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepthmaxDepth.$maxDepth \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.saf.idx > $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.saf.idx > $SFSdir/$todaysdate/perIndividual-minDepth/${label}.mappedTo${refPrefix}.allSites.minDepth.$minDepth.maxDepth.$maxDepth.saf.SFS.txt
 
 source deactivate
 
