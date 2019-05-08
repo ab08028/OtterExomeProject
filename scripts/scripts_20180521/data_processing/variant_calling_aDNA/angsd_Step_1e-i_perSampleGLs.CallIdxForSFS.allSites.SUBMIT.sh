@@ -20,7 +20,7 @@ cat $mfurBamList | while read bam
 do
 # get sample name from bam using basename:
 filename=`basename $bam`
-#sampleID=${filename%.Mustela*}
+sampleID=${filename%.Mustela*}
 label=${filename%.newSampName.*} # gets info from filename 
 ### need to get downsampled label
 echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
