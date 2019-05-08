@@ -59,7 +59,7 @@ angsd \
 -ref $reference \
 -fai ${reference}.fai \
 -glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly \
+-out $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly \
 -nInd 1
 
 # get it with transitions+transversions (better for pi estimate?): 
@@ -70,11 +70,11 @@ angsd \
 -ref $reference \
 -fai ${reference}.fai \
 -glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites \
+-out $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.SFS.txt
 
 source deactivate
 
