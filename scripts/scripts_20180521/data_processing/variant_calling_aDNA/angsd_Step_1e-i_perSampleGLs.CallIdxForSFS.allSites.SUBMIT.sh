@@ -20,9 +20,16 @@ cat $mfurBamList | while read bam
 do
 # get sample name from bam using basename:
 filename=`basename $bam`
+status=""
+if [ grep "downsamp" $filename ]
+then
+status="downsamp"
+fi
 sampleID=${filename%.Mustela*}
+### need to get downsampled label
+
 echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
-qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $sampleID $refPrefix $mfurRef
+qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $sampleID $refPrefix $mfurRef $status
 done
 
 # elut-mapped:
@@ -30,7 +37,12 @@ refPrefix=Elut
 cat $elutBamList | while read bam
 do
 filename=`basename $bam`
+status=""
+if [ grep "downsamp" $filename ]
+then
+status="downsamp"
+fi
 sampleID=${filename%.sea_otter*}
 echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
-qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $sampleID $refPrefix $elutRef
+qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $sampleID $refPrefix $elutRef $status
 done
