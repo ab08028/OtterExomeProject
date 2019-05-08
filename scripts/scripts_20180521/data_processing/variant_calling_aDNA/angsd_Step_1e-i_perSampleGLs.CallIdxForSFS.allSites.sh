@@ -28,7 +28,6 @@ mkdir -p $SFSdir/$todaysdate/perIndividual
 mkdir -p $GLdir/$todaysdate/perIndividual
 
 ######## info from command line : # ##
-
 bam=$1
 sampleID=$2
 refPrefix=$3
@@ -47,7 +46,8 @@ angsd \
 -doMaf 2 \
 -out $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites \
 -remove_bads 1 \
--C 50 
+-C 50
+
 # removed : -SNP_pval 1e-6 \
 
 # get it without transitions: 
@@ -58,7 +58,7 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perPopulation/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-glf $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
 -out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly \
 -nInd 1
 
@@ -69,14 +69,12 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perPopulation/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-glf $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
 -out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
 realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
 realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.saf.SFS.txt
-
-done
 
 source deactivate
 
