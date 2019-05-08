@@ -29,10 +29,9 @@ mkdir -p $GLdir/$todaysdate/perIndividual
 
 ######## info from command line : # ##
 bam=$1
-sampleID=$2
+label=$2 # ID.ref.downsample.rep#
 refPrefix=$3
 reference=$4
-status=$5 # whether it was downsampled or not
 ### basename pulls the file name out of the bath so you can use that 
 angsd \
 -GL 2 \
@@ -45,7 +44,7 @@ angsd \
 -doGlf 1 \
 -uniqueOnly 1 \
 -doMaf 2 \
--out $GLdir/$todaysdate/perIndividual/${sampleID}${status}.mappedTo${refPrefix}.allSites \
+-out $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites \
 -remove_bads 1 \
 -C 50
 
@@ -59,8 +58,8 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual/${sampleID}${status}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${sampleID}${status}.mappedTo${refPrefix}.allSites.TransversionsOnly \
+-glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly \
 -nInd 1
 
 # get it with transitions+transversions (better for pi estimate?): 
@@ -70,12 +69,12 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual/${sampleID}${status}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/${sampleID}${status}.mappedTo${refPrefix}.allSites \
+-glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/${sampleID}${status}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}${status}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/${sampleID}${status}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}${status}.mappedTo${refPrefix}.allSites.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${label}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.SFS.txt
 
 source deactivate
 
