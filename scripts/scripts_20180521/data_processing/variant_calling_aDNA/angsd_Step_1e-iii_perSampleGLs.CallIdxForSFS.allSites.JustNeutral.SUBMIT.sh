@@ -5,11 +5,13 @@ wd=$SCRATCH/captures/aDNA-ModernComparison
 
 script=angsd_Step_1e-iii_perSampleGLs.CallIdxForSFS.allSites.JustNeutral.sh
 # step 1e-i submitter
-elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+#elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+#mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+#for now: just aDNA
+mfurBamList=$scriptDir/bamLists/angsd.ancient.bamList.mappedtoMfurfullpaths.txt
 
 # references:
-elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
+#elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 minDepth=4 # min global depth for a site to be included (across all individuals)
@@ -28,13 +30,14 @@ echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
 qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $label $refPrefix $mfurRef
 done
 
+# for now skipping elut
 # elut-mapped:
-refPrefix=Elut
-cat $elutBamList | while read bam
-do
-filename=`basename $bam`
-sampleID=${filename%.sea_otter*}
-label=${filename%.newSampName.*} # gets info from filename 
-echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
-qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $label $refPrefix $elutRef
-done
+# refPrefix=Elut
+# cat $elutBamList | while read bam
+# do
+# filename=`basename $bam`
+# sampleID=${filename%.sea_otter*}
+# label=${filename%.newSampName.*} # gets info from filename 
+# echo $bam > $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt
+# qsub $scriptDir/${script} $scriptDir/bamLists/$sampleID.$refPrefix.bamList.txt $label $refPrefix $elutRef
+# done
