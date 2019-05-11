@@ -1,0 +1,1 @@
+/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/bams/downsampledBams/downsample_Pairs/140_Elut_CA_403.sea_otter_23May2016_bS9RH.deduped.99.downsamp.rep.1.newSampName.realigned.bam

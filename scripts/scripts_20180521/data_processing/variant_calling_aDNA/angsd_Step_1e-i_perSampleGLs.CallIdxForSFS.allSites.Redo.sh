@@ -3,7 +3,6 @@
 #$ -l h_rt=4:00:00,h_data=2G
 #$ -m abe
 #$ -M ab08028
-#$ -pe shared 4
 #$ -N angsdSFSPerInd
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
@@ -29,24 +28,24 @@ mkdir -p $GLdir/$todaysdate/perIndividual
 
 ######## info from command line : # ##
 bam=$1
-label=$2 # ID.ref.downsample.rep#
+sampleID=$2
 refPrefix=$3
 reference=$4
 ### basename pulls the file name out of the bath so you can use that 
-angsd \
--GL 2 \
--trim 4 \
--nThreads 8 \
--bam $bam \
--minQ 20 -minMapQ 30 \
--skipTriallelic 1 \
--doMajorMinor 4 -ref $reference \
--doGlf 1 \
--uniqueOnly 1 \
--doMaf 2 \
--out $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites \
--remove_bads 1 \
--C 50
+#angsd \
+#-GL 2 \
+#-trim 4 \
+#-nThreads 8 \
+#-bam $bam \
+#-minQ 20 -minMapQ 30 \
+#-skipTriallelic 1 \
+#-doMajorMinor 4 -ref $reference \
+#-doGlf 1 \
+#-uniqueOnly 1 \
+#-doMaf 2 \
+#-out $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites \
+#-remove_bads 1 \
+#-C 50
 
 # removed : -SNP_pval 1e-6 \
 
@@ -58,8 +57,8 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly \
+-glf $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly \
 -nInd 1
 
 # get it with transitions+transversions (better for pi estimate?): 
@@ -69,12 +68,12 @@ angsd \
 -anc $reference \
 -ref $reference \
 -fai ${reference}.fai \
--glf $GLdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.glf.gz \
--out $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites \
+-glf $GLdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.glf.gz \
+-out $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites \
 -nInd 1
 
-realSFS $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
-realSFS $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.txt
+realSFS $SFSdir/$todaysdate/${sampleID}.mappedTo${refPrefix}.allSites.saf.idx > $SFSdir/$todaysdate/perIndividual/${sampleID}.mappedTo${refPrefix}.allSites.saf.SFS.txt
 
 source deactivate
 

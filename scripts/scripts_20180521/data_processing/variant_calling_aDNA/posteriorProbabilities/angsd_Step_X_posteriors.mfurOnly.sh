@@ -4,7 +4,7 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdOrlando
+#$ -N angsdOrlandoMfur
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
@@ -31,7 +31,7 @@ outdir=$GLdir/$todaysdate/posteriorProbabilities
 # doMajorMinor 1: Infer major and minor from GL
 # doMaf 1: Frequency (fixed major and minor) (gets them from GLs from doMajorMinor above)
 # beagleProb 1: Dump beagle style postprobs
-# doPost 1: estimate the posterior genotype probability based on the allele frequency as a prior  ; ASSUMES HWE
+# doPost 1: estimate the posterior genotype probability based on the allele frequency as a prior 
 # GL 2: 
 # minQ 20 : base quality 
 # mapQ 25 : mapping quality I was previously using minMapQ of 30 ; drop down to 25
@@ -48,9 +48,6 @@ outdir=$GLdir/$todaysdate/posteriorProbabilities
 # and make lists of the relevant bams: 
 # DOWNSAMPLED+Ancient ONLY; no high coverage! 
 
-###### dopost1 assumes hWE
-
-
 elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
 mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
@@ -59,6 +56,7 @@ elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_in
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 # trying output in beagle format  doGlf 2
+
 ####### Mfur mapped bams ############
 spp="mfur"
 ref=$mfurRef
@@ -76,19 +74,19 @@ angsd -nThreads 16 \
 
 
 ####### Elut mapped bams ############
-spp="elut"
-ref=$elutRef
-bamList=$elutBamList
+#spp="elut"
+#ref=$elutRef
+#bamList=$elutBamList
 
-angsd -nThreads 16 \
--ref $ref \
--bam $bamList \
--GL 2 \
--doMajorMinor 1 -doMaf 1 \
--beagleProb 1 -doPost 1 \
--remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
--out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
+#angsd -nThreads 16 \
+#-ref $ref \
+#-bam $bamList \
+#-GL 2 \
+#-doMajorMinor 1 -doMaf 1 \
+#-beagleProb 1 -doPost 1 \
+#-remove_bads 1 -uniqueOnly 1 \
+#-C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+#-out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
 
 
 
