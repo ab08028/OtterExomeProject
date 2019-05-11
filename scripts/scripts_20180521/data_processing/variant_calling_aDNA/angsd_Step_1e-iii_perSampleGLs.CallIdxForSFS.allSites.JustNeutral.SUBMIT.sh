@@ -11,7 +11,7 @@ script=angsd_Step_1e-iii_perSampleGLs.CallIdxForSFS.allSites.JustNeutral.sh
 mfurBamList=$scriptDir/bamLists/angsd.ancient.bamList.mappedtoMfurfullpaths.txt
 
 # references:
-#elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
+elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 minDepth=4 # min global depth for a site to be included (across all individuals)

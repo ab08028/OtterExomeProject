@@ -6,7 +6,6 @@
 require(ggplot2)
 angsdDate=20190508
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/SFS/",angsdDate,"/perIndividual/",sep="")
-
 sfses <- list.files(data.dir,full.names = T)
 
 allPis <- data.frame()
