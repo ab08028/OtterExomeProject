@@ -4,7 +4,7 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdOrlando
+#$ -N angsdOrlandoElut
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
@@ -58,19 +58,19 @@ mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putori
 # trying output in beagle format  doGlf 2
 
 ####### Mfur mapped bams ############
-spp="mfur"
-ref=$mfurRef
-bamList=$mfurBamList
+#spp="mfur"
+#ref=$mfurRef
+#bamList=$mfurBamList
 
-angsd -nThreads 16 \
--ref $ref \
--bam $bamList \
--GL 2 \
--doMajorMinor 1 -doMaf 1 \
--beagleProb 1 -doPost 1 \
--remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
--out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
+#angsd -nThreads 16 \
+#-ref $ref \
+#-bam $bamList \
+#-GL 2 \
+#-doMajorMinor 1 -doMaf 1 \
+#-beagleProb 1 -doPost 1 \
+#-remove_bads 1 -uniqueOnly 1 \
+#-C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+#-out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
 
 
 ####### Elut mapped bams ############
