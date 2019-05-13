@@ -11,6 +11,12 @@
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 
+angsdDate=20190511 # date you ran angsd that you're interested in 
+maxProbCutoff=0.5 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
+# than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
+# this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
+
+
 # directories: 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA/
@@ -20,13 +26,6 @@ GLdir=$wd/angsd-GLs
 postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/
 mkdir -p $outdir
-
-
-angsdDate=20190511 # date you ran angsd that you're interested in 
-maxProbCutoff=0.5 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
-# than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
-# this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
-
 
 #### CAUTION CAUTION CAUTION ####
 sampleIDs=$scriptDir/bamLists/SampleIDsInOrder.BeCarefulOfOrder.txt ## BE VERY CAREFUL OF THE ORDER HERE
