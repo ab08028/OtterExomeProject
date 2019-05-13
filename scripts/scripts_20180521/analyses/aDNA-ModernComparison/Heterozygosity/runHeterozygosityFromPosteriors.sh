@@ -38,7 +38,7 @@ sampleIDs=$scriptDir/bamLists/SampleIDsInOrder.BeCarefulOfOrder.txt ## BE VERY C
 ######### mfur:
 ref=mfur
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.txt
+output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
 python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 
@@ -46,6 +46,6 @@ python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 ######### elut: 
 ref=elut
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.txt
+output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
 python $script $postDir/$input $sampleIDs $output $maxProbCutoff
