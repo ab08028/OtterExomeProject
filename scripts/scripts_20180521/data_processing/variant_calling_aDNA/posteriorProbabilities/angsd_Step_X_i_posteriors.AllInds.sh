@@ -8,6 +8,10 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
+
+# alt version i : this uses all 15 inds (modern + downsampled counterparts)
+# but this might skew MAFs due to doubling up of modern samples
+# so see ii and iii for alterantives
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -46,7 +50,6 @@ outdir=$GLdir/$todaysdate/posteriorProbabilities
 # for each individual
 # gather bams from paleomix using script gatherBamsForDownsampling.sh
 # and make lists of the relevant bams: 
-# DOWNSAMPLED+Ancient ONLY; no high coverage! 
 
 ###### dopost1 assumes hWE
 
@@ -72,7 +75,9 @@ angsd -nThreads 16 \
 -beagleProb 1 -doPost 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
--out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
+-out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
+-doGlf 4 
+# update on 20190513 to output GLs in addition to GPs (doGlf 4)
 
 
 ####### Elut mapped bams ############
@@ -89,6 +94,8 @@ angsd -nThreads 16 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings
+
+# update on 20190513 to output GLs in addition to GPs (doGlf 4)
 
 
 
