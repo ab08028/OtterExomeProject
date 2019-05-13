@@ -19,7 +19,8 @@ maxProbCutoff=0.5 # this is the cutoff for the max posterior probability. If the
 
 # directories: 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA/
+scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity
+script=parseBeaglePosteriors.py
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 GLdir=$wd/angsd-GLs
@@ -39,7 +40,7 @@ ref=mfur
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
 output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
-python $script $postDir/$input $sampleIDs $output $maxProbCutoff
+python $scriptDir/$script $postDir/$input $sampleIDs $output $maxProbCutoff
 
 
 ######### elut: 
@@ -47,4 +48,4 @@ ref=elut
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
 output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
-python $script $postDir/$input $sampleIDs $output $maxProbCutoff
+python $scriptDir/$script $postDir/$input $sampleIDs $output $maxProbCutoff
