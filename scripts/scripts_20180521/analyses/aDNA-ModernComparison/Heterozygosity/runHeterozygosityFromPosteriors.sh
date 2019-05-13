@@ -19,8 +19,8 @@ maxProbCutoff=0.5 # this is the cutoff for the max posterior probability. If the
 
 # directories: 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity
-script=parseBeaglePosteriors.py
+scriptDir=$gitDir/scripts/scripts_20180521/
+script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.py
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 GLdir=$wd/angsd-GLs
@@ -29,7 +29,7 @@ outdir=$wd/heterozygosityFromPosteriors/
 mkdir -p $outdir
 
 #### CAUTION CAUTION CAUTION ####
-sampleIDs=$scriptDir/bamLists/SampleIDsInOrder.BeCarefulOfOrder.txt ## BE VERY CAREFUL OF THE ORDER HERE
+sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.BeCarefulOfOrder.txt ## BE VERY CAREFUL OF THE ORDER HERE
 # make sure it's IDENTICAL ORDER to the bam list you used in ANGSD, otherwise you will use the wrong individuals
 # beagle files are completely order-dependent 
 # can use same sample ID file for mfur and elut (bamLists were in same order )
@@ -40,7 +40,7 @@ ref=mfur
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
 output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
-python $scriptDir/$script $postDir/$input $sampleIDs $output $maxProbCutoff
+python /$script $postDir/$input $sampleIDs $output $maxProbCutoff
 
 
 ######### elut: 
@@ -48,4 +48,4 @@ ref=elut
 input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
 output=$wd/heterozygosityFromPosteriors/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.txt
 ## submit parsing of beagle file:
-python $scriptDir/$script $postDir/$input $sampleIDs $output $maxProbCutoff
+python /$script $postDir/$input $sampleIDs $output $maxProbCutoff
