@@ -25,7 +25,7 @@ todaysdate="20190521-highcov-neutOnly"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
 
-neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsFmt.txt
+neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsdFmt.txt
 coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordinates/fromModernFullDataSet/angsd-format
 
 #mkdir -p $coordsDir/angsd-format

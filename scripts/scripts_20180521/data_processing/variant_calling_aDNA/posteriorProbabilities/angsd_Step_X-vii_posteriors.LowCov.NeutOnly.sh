@@ -51,7 +51,7 @@ outdir=$GLdir/$todaysdate/posteriorProbabilities
 # and make lists of the relevant bams: 
 
 ###### dopost1 assumes hWE
-neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsFmt.txt
+neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsdFmt.txt
 coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordinates/fromModernFullDataSet/angsd-format
 
 
