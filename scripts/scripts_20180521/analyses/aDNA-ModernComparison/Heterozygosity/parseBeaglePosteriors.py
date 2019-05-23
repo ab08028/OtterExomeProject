@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri May 10 12:14:23 2019
 
@@ -80,7 +79,7 @@ TransvOnly_HetProbSumDict=dict()
 for sample in sampList:
     TransvOnly_HetProbSumDict[sample]=0
 ########### Open beagle GL posteriors file #############
-beagle = gzip.open(filepath,"r")
+beagle = gzip.open(filepath,"rb")
 
 # get beagle header:
 header=[]
