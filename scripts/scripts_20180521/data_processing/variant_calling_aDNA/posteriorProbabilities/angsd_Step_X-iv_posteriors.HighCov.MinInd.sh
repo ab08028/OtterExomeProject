@@ -21,11 +21,12 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 #todaysdate=`date +%Y%m%d`
-todaysdate="20190513-highcov-minInd"
+todaysdate="20190523-highcov-minInd"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
 ######### ANGSD: get posteriors ##############
-
+# 20190513: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
+# which I then use in my heterozygosity calculations
 
 # settings from Orlando cell paper Fages et al 2019, Cell (TAR Methods page  e14-15):
 # -doMajorMinor 1 -doMaf 1 -beagleProb 1 -doPost 1 -GL 2 -minQ 20 -minMapQ 25 -remove_bads 1 -uniqueOnly 1 -baq 1 -C 50
@@ -76,7 +77,8 @@ angsd -nThreads 16 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
 -doGlf 4 \
--minInd $minInd
+-minInd $minInd \
+-doCounts 1 -dumpCounts 2
 
 
 ####### Elut mapped bams ############
@@ -94,7 +96,8 @@ angsd -nThreads 16 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
 -doGlf 4 \
--minInd $minInd
+-minInd $minInd \
+-doCounts 1 -dumpCounts 2
 
 
 
