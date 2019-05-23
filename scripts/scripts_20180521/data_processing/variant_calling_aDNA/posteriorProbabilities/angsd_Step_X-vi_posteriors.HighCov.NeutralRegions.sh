@@ -9,6 +9,8 @@
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
 ####### want to do full coverage modern + aDNA ######
+# 20190513: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
+# which I then use in my heterozygosity calculations
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -21,7 +23,7 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 #todaysdate=`date +%Y%m%d`
-todaysdate="20190521-highcov-neutOnly"
+todaysdate="20190523-highcov-neutOnly"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
 
@@ -33,7 +35,7 @@ coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordin
 # convert neutBed into angsd format 
 # angsd format is 1-based Chr1:40-80
 # so from bed file want to do:
-#awk '{OFS="";print $1,":",$2+1,"-",$3}' $coordsDir/bedCoords/$neutBed > $coordsDir/angsd-format/$neutBed%.bed}.angsFmt.txt
+#awk '{OFS="";print $1,":",$2+1,"-",$3}' $coordsDir/bedCoords/$neutBed > $coordsDir/angsd-format/${neutBed%.bed}.angsdFmt.txt
 
 ######### ANGSD: get posteriors ##############
 
@@ -89,7 +91,8 @@ angsd -nThreads 16 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
 -doGlf 4 \
--rf $coordsDir/$neutCoords
+-rf $coordsDir/$neutCoords \
+-doCounts 1 -dumpCounts 2
 
 
 ####### Elut mapped bams ############

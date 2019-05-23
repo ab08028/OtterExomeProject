@@ -42,7 +42,7 @@ neutBed=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndivi
 # convert neutBed into angsd format 
 # angsd format is 1-based Chr1:40-80
 # so from bed file want to do:
-awk '{OFS="";print $1,":",$2+1,"-",$3}' $coordsDir/bedCoords/$neutBed > $coordsDir/angsd-format/$neutBed%.bed}.angsFmt.txt
+awk '{OFS="";print $1,":",$2+1,"-",$3}' $coordsDir/bedCoords/$neutBed > $coordsDir/angsd-format/${neutBed%.bed}.angsdFmt.txt
 
 
 realSFS $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.idx -rf $neutBed > $SFSdir/$todaysdate/perIndividual/${label}.mappedTo${refPrefix}.allSites.TransversionsOnly.saf.SFS.NEUTRAL.txt
