@@ -18,17 +18,18 @@ If it is, it adds the heterozygosity posterior probabilty into that individual's
 # and then reports the total sites passing the threshold per individual, the total het probabilities, and divides the two (hets/total sites) for all hets or just transversions
 
 
-usage: python script.py inputFilepath sampleIDFile outputFile PosteriorProbThreshold
+usage: python script.py inputFilepath countsFile sampleIDFile outputFile MaxProbCutoff PerIndividualDepthMinimum
 """
 import gzip
 import sys
+from itertools import izip
 
-filepath = sys.argv[1] #path to input file, beagle posterior GLs ; should contain transitions and transversions 
-sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
-outname= sys.argv[3] # output file
-MissingnessMaxProbCutoff=sys.argv[4] # this is fraction of no-call genotypes you'll permit per 
-
-
+filepath = sys.argv[1] #path to input file, beagle posterior GLs from angsd; should contain transitions and transversions (.gprobs.gz)
+countsFile=[2] ## path to counts file from angsd; sites should be in exact same order as beagle posterior grobs file (results of -doCount 1 -dumpCounts 2)
+sampleIDFile=sys.argv[3] # path to file with list of names in SAME ORDER as bamList you used for angsd
+outname= sys.argv[4] # output file
+MaxProbCutoff=sys.argv[5] # this is fraction of no-call genotypes you'll permit per 
+PerIndividualDepthMinimum=sys.argv[6]
 
 ################# list of possible transversions ###############
 # In beagle format, nucleotides are labeled as numbers
@@ -52,6 +53,15 @@ transversions=[('0','1'),('1','0'),('0','3'),('3','0'),('1','2'),('2','1'),('2',
 
 #outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseBeagleFile/testout.txt"
 #MissingnessMaxProbCutoff=0.5 # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
+
+# new files to test:
+#filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/Heterozygosity/experiments/compareGL-GP-MAF/20190523-experiment-GLvsGP-highcov/posteriorProbabilities/angsdOut.mappedTomfur.OrlandoSettings.beagle.gprobs.gz"
+#sampleIDFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt"
+#outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseBeagleFile/testout.CheckForMissing.txt"
+#MissingnessMaxProbCutoff=0.5
+#CountsFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/Heterozygosity/experiments/compareGL-GP-MAF/20190523-experiment-GLvsGP-highcov/posteriorProbabilities/angsdOut.mappedTomfur.OrlandoSettings.counts.gz"
+# from dumpCounts 2 (gives per individual counts per site)
+
 
 ######################################################
 
@@ -79,8 +89,13 @@ TransvOnly_HetProbSumDict=dict()
 for sample in sampList:
     TransvOnly_HetProbSumDict[sample]=0
 ########### Open beagle GL posteriors file #############
+<<<<<<< HEAD:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.py
 beagle = gzip.open(filepath,"rb")
 
+=======
+beagle = gzip.open(filepath,"r")
+counts = gzip.open(countsFile,"r")
+>>>>>>> 3f1124e759c734c08e7cb528fd568183399eb6cf:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.CheckForMissingData.py
 # get beagle header:
 header=[]
 for line in beagle:
@@ -91,17 +106,24 @@ for line in beagle:
         break
 # reset file:
 beagle.seek(0)
-
-for line0 in beagle:
+counts.seek(0) # reset for good measure
+# reading through the beagle and counts files at the same time; they are the same number of lines in the same order, which is why this works:
+# using izip to zip together each line of each file into a pair 
+# so that the two files can be read simultaneously
+# https://stackoverflow.com/questions/8461154/use-izip-to-read-lines-from-two-files-simultaneously-in-python
+for beagleline0,countline0 in izip(beagle,counts):
     # skip header and process things directly
-    if line0.startswith("marker"):
+    if beagleline0.startswith("marker"):
         continue
-    # split by tabs:
-    line=line0.strip().split('\t')
-    scaff=line[0] # scaffold name
-    allele1=line[1] # allele 1 (reference)
-    allele2=line[2] # allele 2 alternate
-    GT_Probs=line[3:] # genotype posterior probabilities for all GTs/ inds
+    if countline0.startswith("ind"):
+        continue
+
+    # process beagle line, split by tabs:
+    beagleline=beagleline0.strip().split('\t')
+    scaff=beagleline[0] # scaffold name
+    allele1=beagleline[1] # allele 1 (reference)
+    allele2=beagleline[2] # allele 2 alternate
+    GT_Probs=beagleline[3:] # genotype posterior probabilities for all GTs/ inds
     # Split GTs into per-individual ; note that the second [1] of each set is the het GT
     GTs_perInd = [GT_Probs[i:i+3] for i in range(0,len(GT_Probs),3)] # groups together every set of three GTs (3 per individual) # be careful here; checked it carefully
 
@@ -109,22 +131,34 @@ for line0 in beagle:
     GTs_perInd_Dict = dict(zip(sampList,GTs_perInd)) # note that zip maintains the respective orders, but then dict orders alphabetically. this is okay as long as zip happens before dict 
     # iterate through the individuals
     # get max per set:
+    # process count line, split by tabs:
+    countline=countline0.strip().split('\t')
+   # make a dictionary of the read counts per individual:
+    counts_perInd_Dict = dict(zip(sampList,countline))
     for sample in sampList:
-        GTs=GTs_perInd_Dict[sample]
+        # first check if there isn't missing data, otherwise skip it
+        # careful, was treating counts as strings for some reason
+        if float(counts_perInd_Dict[sample]) < float(PerIndividualDepthMinimum):
+            missingDict[sample]+=1 # add to the missing count 
+        # but if it's greater than 1 (non missing data),
+            # first check to see if it passes missingness threshold,
+            # and if it does, keep and add to het sum, if not, discard.
+        elif float(counts_perInd_Dict[sample])>= float(PerIndividualDepthMinimum):
+            GTs=GTs_perInd_Dict[sample]
         # first check if the maximum post prob in the GT is >= cutoff (e.g. 50%)
         # If not, then call genotype as missing
-        if max(GTs) >= MissingnessMaxProbCutoff:
-            hetProb=GTs[1] # the middle value is the heterozygosity posterior value
-            hetProbSumDict[sample]+=float(hetProb) # add it to the total probability 
+            if float(max(GTs)) >= float(MaxProbCutoff):
+                hetProb=GTs[1] # the middle value is the heterozygosity posterior value
+                hetProbSumDict[sample]+=float(hetProb) # add it to the total probability 
             # then add 1 to the called site dictionary for that individual:
-            calledDict[sample]+=1 
+                calledDict[sample]+=1 
             # check if it's a transversion, if yes, add to the transvHetDict, if not don't
-            if (allele1,allele2) in transversions:
-                TransvOnly_HetProbSumDict[sample]+=float(hetProb)
+                if (allele1,allele2) in transversions:
+                    TransvOnly_HetProbSumDict[sample]+=float(hetProb)
             
-        elif max(GTs) > MissingnessMaxProbCutoff:
+            elif float(max(GTs)) < float(MaxProbCutoff):
             # if it doesn't pass the cutoff, skip it and add a 1 to the missing dict for bookkeeping purposes
-            missingDict[sample]+=1
+                missingDict[sample]+=1
 
 heterozygosityDict=dict()
 for sample in sampList:
@@ -139,10 +173,10 @@ for sample in sampList:
 
 # missingDict, calledDict, hetProbDict, heterozygosityDict
 outfile=open(outname, "w")
-outheader="sample\tuncallableSites\tcallableSites\tsumHetProb\tsumHetProb_TransversionsOnly\tHetPerSite\tHetPerSite_transversionsOnly\tProbThresholdForCallableSite\n"
+outheader="sample\tuncallableSites\tcallableSites\tsumHetProb\tsumHetProb_TransversionsOnly\tHetPerSite\tHetPerSite_transversionsOnly\tPerIndividualDepthMinimum\tProbThresholdForCallableSite\n"
 outfile.write(outheader)
 for sample in sampList:
-    out=[sample,str(missingDict[sample]),str(calledDict[sample]),str(hetProbSumDict[sample]),str(TransvOnly_HetProbSumDict[sample]),str(heterozygosityDict[sample]),str(TransvOnly_heterozygosityDict[sample]),str(MissingnessMaxProbCutoff)]
+    out=[sample,str(missingDict[sample]),str(calledDict[sample]),str(hetProbSumDict[sample]),str(TransvOnly_HetProbSumDict[sample]),str(heterozygosityDict[sample]),str(TransvOnly_heterozygosityDict[sample]),str(PerIndividualDepthMinimum),str(MaxProbCutoff)]
     outfile.write("\t".join(out))
     outfile.write("\n")
 outfile.close()
