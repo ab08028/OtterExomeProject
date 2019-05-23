@@ -9,7 +9,7 @@
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
 ####### want to do full coverage modern + aDNA ######
-# 20190513: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
+# 20190523: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
 # which I then use in my heterozygosity calculations
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
