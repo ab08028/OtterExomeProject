@@ -25,7 +25,7 @@ todaysdate="20190523-lowcov-minInd"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
 ######### ANGSD: get posteriors ##############
-# 20190513: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
+# 20190523: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
 # which I then use in my heterozygosity calculations
 
 # settings from Orlando cell paper Fages et al 2019, Cell (TAR Methods page  e14-15):
