@@ -13,6 +13,23 @@
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
 todaysdate=`date +%Y%m%d`'-highcov-AFprior'
+
+#### ANGSD v 0.923 ####
+source /u/local/Modules/default/init/modules.sh
+module load anaconda # load anaconda
+source activate angsd-conda-env # activate conda env
+
+######### dirs and files ###########
+gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
+scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
+SCRATCH=/u/flashscratch/a/ab08028
+wd=$SCRATCH/captures/aDNA-ModernComparison
+bamdir=$wd/bams/
+GLdir=$wd/angsd-GLs
+mkdir -p $GLdir
+mkdir -p $GLdir/$todaysdate
+outdir=$GLdir/$todaysdate
+
 ### list of bam files to include: high coverage modern + aDNA:
 elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.HighCovPlusADNAOnly.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
 mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
@@ -23,19 +40,6 @@ mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putori
 
 echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.txt
 
-#### ANGSD v 0.923 ####
-source /u/local/Modules/default/init/modules.sh
-module load anaconda # load anaconda
-source activate angsd-conda-env # activate conda env
-gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
-SCRATCH=/u/flashscratch/a/ab08028
-wd=$SCRATCH/captures/aDNA-ModernComparison
-bamdir=$wd/bams/
-GLdir=$wd/angsd-GLs
-mkdir -p $GLdir
-mkdir -p $GLdir/$todaysdate
-outdir=$GLdir/$todaysdate
 
 ######### ANGSD settings:##############
 
