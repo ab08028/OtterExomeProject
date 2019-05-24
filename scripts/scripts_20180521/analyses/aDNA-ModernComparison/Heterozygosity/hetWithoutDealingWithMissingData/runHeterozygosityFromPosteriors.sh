@@ -19,7 +19,7 @@ maxProbCutoff=0.5 # this is the cutoff for the max posterior probability. If the
 # directories: 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
-script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.py
+script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/hetWithoutDealingWithMissingData/parseBeaglePosteriors.py
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 GLdir=$wd/angsd-GLs
@@ -55,7 +55,9 @@ GLdir=$wd/angsd-GLs
 ############# high coverage +aDNA only (with and wihtout minind 5) #######################
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt
 
-for angsdDate in 20190513-highcov-minInd 20190513-highcov
+#for angsdDate in 20190513-highcov-minInd 20190513-highcov
+# try the neut-only (first run, didn't have the Counts file)
+for angsdDate in 20190521-highcov-neutOnly
 do
 postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
@@ -77,7 +79,8 @@ done
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt
 
 
-for angsdDate in 20190513-lowcov-minInd 20190513-lowcov
+#for angsdDate in 20190513-lowcov-minInd 20190513-lowcov
+for angsdDate in 20190521-lowcov-neutOnly
 do
 postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
