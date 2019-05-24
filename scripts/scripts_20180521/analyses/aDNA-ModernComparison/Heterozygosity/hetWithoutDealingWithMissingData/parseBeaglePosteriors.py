@@ -114,7 +114,8 @@ for line0 in beagle:
         GTs=GTs_perInd_Dict[sample]
         # first check if the maximum post prob in the GT is >= cutoff (e.g. 50%)
         # If not, then call genotype as missing
-        if max(GTs) >= MissingnessMaxProbCutoff:
+        #print(max(GTs))
+        if max(GTs) >= float(MissingnessMaxProbCutoff):
             hetProb=GTs[1] # the middle value is the heterozygosity posterior value
             hetProbSumDict[sample]+=float(hetProb) # add it to the total probability 
             # then add 1 to the called site dictionary for that individual:
@@ -123,7 +124,7 @@ for line0 in beagle:
             if (allele1,allele2) in transversions:
                 TransvOnly_HetProbSumDict[sample]+=float(hetProb)
             
-        elif max(GTs) < MissingnessMaxProbCutoff:
+        elif max(GTs) < float(MissingnessMaxProbCutoff):
             # if it doesn't pass the cutoff, skip it and add a 1 to the missing dict for bookkeeping purposes
             missingDict[sample]+=1
 

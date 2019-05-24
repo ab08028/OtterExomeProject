@@ -83,8 +83,9 @@ done
 ########## low coverage only ###########
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt
 
-
-for angsdDate in QQ ZZ # fill in high cov dates
+# 20190521-lowcov-neutOnly: low coverage neutral sites only (but doesn't have counts file so won't work -- have to use old heterozygosity scripts unfortunately )
+# or wait for the redo to finish. did it finish?
+for angsdDate in 20190523-lowcov # fill in high cov dates
 do
 postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
