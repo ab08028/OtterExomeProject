@@ -4,13 +4,14 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdOrlandoFullCov
+#$ -N angsdOrlando
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-####### want to do full coverage modern + aDNA ######
-# 20190523: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
-# which I then use in my heterozygosity calculations
+
+# alt version i : this uses all 15 inds (modern + downsampled counterparts)
+# but this might skew MAFs due to doubling up of modern samples
+# so see ii and iii for alterantives
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -23,22 +24,13 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 #todaysdate=`date +%Y%m%d`
-todaysdate="20190523-highcov-neutOnly"
+todaysdate="20190523-allind"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
-
-neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsdFmt.txt
-coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordinates/fromModernFullDataSet/angsd-format
-
-#mkdir -p $coordsDir/angsd-format
-# this is based on my full modern dataset; could probably redo based on specific coords in ancient data, but for now this is good
-# convert neutBed into angsd format 
-# angsd format is 1-based Chr1:40-80
-# so from bed file want to do:
-#awk '{OFS="";print $1,":",$2+1,"-",$3}' $coordsDir/bedCoords/$neutBed > $coordsDir/angsd-format/${neutBed%.bed}.angsdFmt.txt
-
 ######### ANGSD: get posteriors ##############
 
+# 20190523: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
+# which I then use in my heterozygosity calculations
 
 # settings from Orlando cell paper Fages et al 2019, Cell (TAR Methods page  e14-15):
 # -doMajorMinor 1 -doMaf 1 -beagleProb 1 -doPost 1 -GL 2 -minQ 20 -minMapQ 25 -remove_bads 1 -uniqueOnly 1 -baq 1 -C 50
@@ -64,17 +56,13 @@ coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordin
 
 ###### dopost1 assumes hWE
 
-
-#elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-#mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
-elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.HighCovPlusADNAOnly.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # references:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-echo "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY, only neutral regions" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.NEUTONLY.txt
 # trying output in beagle format  doGlf 2
 ####### Mfur mapped bams ############
 spp="mfur"
@@ -90,26 +78,28 @@ angsd -nThreads 16 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
--doGlf 4 \
--rf $coordsDir/$neutCoords \
+-doGlf 2 \
 -doCounts 1 -dumpCounts 2
-
+# update on 20190513 to output GLs in addition to GPs (doGlf 4) -- but actually want them in beagle fmt so doGlf 2 
 
 ####### Elut mapped bams ############
-# spp="elut"
-# ref=$elutRef
-# bamList=$elutBamList
-# 
-# angsd -nThreads 16 \
-# -ref $ref \
-# -bam $bamList \
-# -GL 2 \
-# -doMajorMinor 1 -doMaf 1 \
-# -beagleProb 1 -doPost 1 \
-# -remove_bads 1 -uniqueOnly 1 \
-# -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
-# -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
-# -doGlf 4 
+spp="elut"
+ref=$elutRef
+bamList=$elutBamList
+
+angsd -nThreads 16 \
+-ref $ref \
+-bam $bamList \
+-GL 2 \
+-doMajorMinor 1 -doMaf 1 \
+-beagleProb 1 -doPost 1 \
+-remove_bads 1 -uniqueOnly 1 \
+-C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+-out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
+-doGlf 2 \
+-doCounts 1 -dumpCounts 2
+
+# update on 20190513 to output GLs in addition to GPs (doGlf 4)
 
 
 

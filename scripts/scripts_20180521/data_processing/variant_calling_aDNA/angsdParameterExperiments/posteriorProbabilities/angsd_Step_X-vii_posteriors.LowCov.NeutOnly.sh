@@ -4,15 +4,13 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdOrlando
+#$ -N angsdOrlandoLowCov
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-
-# alt version i : this uses all 15 inds (modern + downsampled counterparts)
-# but this might skew MAFs due to doubling up of modern samples
-# so see ii and iii for alterantives
 #### ANGSD v 0.923 ####
+# Trying this just on down-sampled modern + ancient # 
+# Also am going to output GLs in addition to GPs # 
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
@@ -24,11 +22,10 @@ bamdir=$wd/bams/
 GLdir=$wd/angsd-GLs
 mkdir -p $GLdir
 #todaysdate=`date +%Y%m%d`
-todaysdate="20190523-allind"
+todaysdate="20190523-lowcov-neutOnly"
 mkdir -p $GLdir/$todaysdate/posteriorProbabilities
 outdir=$GLdir/$todaysdate/posteriorProbabilities
 ######### ANGSD: get posteriors ##############
-
 # 20190523: adding -doCounts 1 -dumpCounts 2 to all; this puts out counts per individual per site (incorporating filters)
 # which I then use in my heterozygosity calculations
 
@@ -55,9 +52,17 @@ outdir=$GLdir/$todaysdate/posteriorProbabilities
 # and make lists of the relevant bams: 
 
 ###### dopost1 assumes hWE
+neutCoords=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.useThis.angsdFmt.txt
+coordsDir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordinates/fromModernFullDataSet/angsd-format
 
-elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
-mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+
+#elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+#mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
+
+# Try low coverage only:
+elutBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoElutfullpaths.txt
+mfurBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoMfurfullpaths.txt
+echo "THIS USES LOW COVERAGE + ANCIENT ONLY" > $GLdir/$todaysdate/LOWCOVERAGEONLY.txt
 
 # references:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
@@ -78,28 +83,27 @@ angsd -nThreads 16 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
--doGlf 4 \
+-doGlf 2 \
+-rf $coordsDir/$neutCoords \
 -doCounts 1 -dumpCounts 2
-# update on 20190513 to output GLs in addition to GPs (doGlf 4)
+# addition to doGLF output as well as posteriors (so I can compare GL to GP for same sites)
 
 
-####### Elut mapped bams ############
-spp="elut"
-ref=$elutRef
-bamList=$elutBamList
-
-angsd -nThreads 16 \
--ref $ref \
--bam $bamList \
--GL 2 \
--doMajorMinor 1 -doMaf 1 \
--beagleProb 1 -doPost 1 \
--remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
--out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
--doCounts 1 -dumpCounts 2
-
-# update on 20190513 to output GLs in addition to GPs (doGlf 4)
+##### Elut mapped bams ############
+# spp="elut"
+# ref=$elutRef
+# bamList=$elutBamList
+# 
+# angsd -nThreads 16 \
+# -ref $ref \
+# -bam $bamList \
+# -GL 2 \
+# -doMajorMinor 1 -doMaf 1 \
+# -beagleProb 1 -doPost 1 \
+# -remove_bads 1 -uniqueOnly 1 \
+# -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+# -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
+# -doGlf 4
 
 
 
