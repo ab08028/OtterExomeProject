@@ -4,7 +4,7 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdStep1a
+#$ -N angsdStep1aii
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
