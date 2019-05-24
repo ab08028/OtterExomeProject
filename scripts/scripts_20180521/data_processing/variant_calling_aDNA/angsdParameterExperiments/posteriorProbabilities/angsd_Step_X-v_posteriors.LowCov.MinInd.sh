@@ -79,7 +79,7 @@ angsd -nThreads 16 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
--doGlf 4 \
+-doGlf 2 \
 -minInd $minInd \
 -doCounts 1 -dumpCounts 2
 
@@ -98,7 +98,7 @@ angsd -nThreads 16 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim 4 -minQ 20 -minMapQ 25 -skipTriallelic 1 \
 -out $outdir/angsdOut.mappedTo${spp}.OrlandoSettings \
--doGlf 4 \
+-doGlf 2 \
 -minInd $minInd \
 -doCounts 1 -dumpCounts 2
 
