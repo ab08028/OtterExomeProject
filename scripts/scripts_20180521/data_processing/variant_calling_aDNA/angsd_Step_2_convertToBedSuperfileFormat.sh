@@ -54,7 +54,7 @@ GLoutput=$indir/${basename}.superfile.GLs.mafs.counts.0based.bed
 paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | gzip > $GPoutput # go into awk and rearrange to make it bed format with extra columns 
 # need to get rid of extra tab at end of line, where's that coming from?
 # GLs: 
-paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | > $GLoutput # go into awk and rearrange to make it bed format with extra columns 
+paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | gzip > $GLoutput # go into awk and rearrange to make it bed format with extra columns 
 
 done
 done
