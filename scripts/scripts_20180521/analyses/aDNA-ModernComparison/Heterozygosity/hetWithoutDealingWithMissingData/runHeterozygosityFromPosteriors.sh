@@ -68,10 +68,10 @@ input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
 python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 
-ref=elut
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
-python $script $postDir/$input $sampleIDs $output $maxProbCutoff
+#ref=elut
+#input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
+#output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
+#python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 done
 
 
@@ -91,8 +91,8 @@ input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
 python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 
-ref=elut
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
-python $script $postDir/$input $sampleIDs $output $maxProbCutoff
+#ref=elut
+#input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
+#output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.${angsdDate}.txt
+#python $script $postDir/$input $sampleIDs $output $maxProbCutoff
 done
