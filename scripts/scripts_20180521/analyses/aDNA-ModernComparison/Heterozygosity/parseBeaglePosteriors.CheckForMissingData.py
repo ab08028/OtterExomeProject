@@ -89,13 +89,9 @@ TransvOnly_HetProbSumDict=dict()
 for sample in sampList:
     TransvOnly_HetProbSumDict[sample]=0
 ########### Open beagle GL posteriors file #############
-<<<<<<< HEAD:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.py
-beagle = gzip.open(filepath,"rb")
-
-=======
 beagle = gzip.open(filepath,"r")
 counts = gzip.open(countsFile,"r")
->>>>>>> 3f1124e759c734c08e7cb528fd568183399eb6cf:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.CheckForMissingData.py
+
 # get beagle header:
 header=[]
 for line in beagle:
