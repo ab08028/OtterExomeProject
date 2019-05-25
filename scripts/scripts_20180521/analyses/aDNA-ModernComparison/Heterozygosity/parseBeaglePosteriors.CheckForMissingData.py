@@ -89,8 +89,8 @@ TransvOnly_HetProbSumDict=dict()
 for sample in sampList:
     TransvOnly_HetProbSumDict[sample]=0
 ########### Open beagle GL posteriors file #############
-beagle = gzip.open(filepath,"r")
-counts = gzip.open(countsFile,"r")
+beagle = gzip.open(filepath,"rb")
+counts = gzip.open(countsFile,"rb")
 
 # get beagle header:
 header=[]
