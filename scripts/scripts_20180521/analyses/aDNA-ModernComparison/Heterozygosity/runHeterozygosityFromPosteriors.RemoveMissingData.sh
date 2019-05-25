@@ -28,7 +28,7 @@ GLdir=$wd/angsd-GLs
 
 ############# all samples #######################
 # angsdDate=20190511 # date you ran angsd that you're interested in 
-# postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
+# postDir=$GLdir/$angsdDate # location of your posterior probs
 # outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 # mkdir -p $outdir
 # #### CAUTION CAUTION CAUTION ####
@@ -57,15 +57,15 @@ GLdir=$wd/angsd-GLs
 ############# high coverage +aDNA only (with and wihtout minind 5) #######################
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt
 
-for angsdDate in XX YY # fill in high cov dates
+for angsdDate in 20190524-highcov-AFprior 20190524-highcov-UNIFprior # fill in high cov dates
 do
-postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
+postDir=$GLdir/$angsdDate # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 mkdir -p $outdir
 
 ref=mfur
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-counts=angsdOut.mappedTo${ref}.OrlandoSettings.counts.gz
+input=angsdOut.mappedTo${ref}.beagle.gprobs.gz # input file 
+counts=angsdOut.mappedTo${ref}.counts.gz
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.${angsdDate}.txt
 
 # new usage: 
@@ -73,8 +73,8 @@ output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff
 python $script $postDir/$input $postDir/$counts $sampleIDs $output $maxProbCutoff $minDepthCutoff
 
 ref=elut
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-counts=angsdOut.mappedTo${ref}.OrlandoSettings.counts.gz
+input=angsdOut.mappedTo${ref}.beagle.gprobs.gz # input file 
+counts=angsdOut.mappedTo${ref}.counts.gz
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.${angsdDate}.txt
 python $script $postDir/$input $postDir/$counts $sampleIDs $output $maxProbCutoff $minDepthCutoff
 done
@@ -85,15 +85,15 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 
 # 20190521-lowcov-neutOnly: low coverage neutral sites only (but doesn't have counts file so won't work -- have to use old heterozygosity scripts unfortunately )
 # or wait for the redo to finish. did it finish?
-for angsdDate in 20190523-lowcov # fill in high cov dates
+for angsdDate in 20190524-lowcov-AFprior 20190524-lowcov-UNIFprior # fill in high cov dates
 do
-postDir=$GLdir/$angsdDate/posteriorProbabilities # location of your posterior probs
+postDir=$GLdir/$angsdDate # location of your posterior probs
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 mkdir -p $outdir
 
 ref=mfur
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-counts=angsdOut.mappedTo${ref}.OrlandoSettings.counts.gz
+input=angsdOut.mappedTo${ref}.beagle.gprobs.gz # input file 
+counts=angsdOut.mappedTo${ref}.counts.gz
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.${angsdDate}.txt
 
 # new usage: 
@@ -101,8 +101,8 @@ output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff
 python $script $postDir/$input $postDir/$counts $sampleIDs $output $maxProbCutoff $minDepthCutoff
 
 ref=elut
-input=angsdOut.mappedTo${ref}.OrlandoSettings.beagle.gprobs.gz # input file 
-counts=angsdOut.mappedTo${ref}.OrlandoSettings.counts.gz
+input=angsdOut.mappedTo${ref}.beagle.gprobs.gz # input file 
+counts=angsdOut.mappedTo${ref}.counts.gz
 output=$outdir/${input%.beagle.gprobs.gz}.hetFromPost.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.${angsdDate}.txt
 python $script $postDir/$input $postDir/$counts $sampleIDs $output $maxProbCutoff $minDepthCutoff
 done

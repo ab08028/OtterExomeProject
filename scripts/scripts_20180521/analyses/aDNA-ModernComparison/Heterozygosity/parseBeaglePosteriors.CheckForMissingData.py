@@ -25,7 +25,7 @@ import sys
 from itertools import izip
 
 filepath = sys.argv[1] #path to input file, beagle posterior GLs from angsd; should contain transitions and transversions (.gprobs.gz)
-countsFile=[2] ## path to counts file from angsd; sites should be in exact same order as beagle posterior grobs file (results of -doCount 1 -dumpCounts 2)
+countsFile=sys.argv[2] ## path to counts file from angsd; sites should be in exact same order as beagle posterior grobs file (results of -doCount 1 -dumpCounts 2)
 sampleIDFile=sys.argv[3] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[4] # output file
 MaxProbCutoff=sys.argv[5] # this is fraction of no-call genotypes you'll permit per 
@@ -89,13 +89,8 @@ TransvOnly_HetProbSumDict=dict()
 for sample in sampList:
     TransvOnly_HetProbSumDict[sample]=0
 ########### Open beagle GL posteriors file #############
-<<<<<<< HEAD:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.py
 beagle = gzip.open(filepath,"rb")
-
-=======
-beagle = gzip.open(filepath,"r")
-counts = gzip.open(countsFile,"r")
->>>>>>> 3f1124e759c734c08e7cb528fd568183399eb6cf:scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/parseBeaglePosteriors.CheckForMissingData.py
+counts = gzip.open(countsFile,"rb")
 # get beagle header:
 header=[]
 for line in beagle:
