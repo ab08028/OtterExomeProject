@@ -51,11 +51,19 @@ GLoutput=$indir/${basename}.superfile.GLs.mafs.counts.0based.bed
 # GL896898.1	752354	752355	GL896898.1_19406	.	.	.	.	.	.	.	1	0	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000	0.999992	0.000008	0.000000	0.999984	0.000016	0.000000	0.999984	0.000016	0.000000
 
 # GPs:
-paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | gzip > $GPoutput # go into awk and rearrange to make it bed format with extra columns 
-# need to get rid of extra tab at end of line, where's that coming from?
+# Want to have the header starting with a "#" in bed file 
+# note don't have to do for GPs and GLs separately; have same header
+angsdheaders=`paste <(zcat $mafs | head -n1) <(zcat $GPs | head -n1) <(zcat $counts | head -n1)` # this is the headers of all the files pasted together
+# so want to add a bed header too, which will be 
+bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
+comboheader=`echo -e "$bedhead\t$angsdheaders"` # need the "" and -e to get the tabs in
+echo -e "$comboheader" >  ${GPoutput} 
+paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GPoutput} # go into awk and rearrange to make it bed format with extra columns 
+gzip -f ${GPoutput}
 # GLs: 
-paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | gzip > $GLoutput # go into awk and rearrange to make it bed format with extra columns 
-
+echo -e "$comboheader" >  ${GLoutput} 
+paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' | gzip >> ${GLoutput} # go into awk and rearrange to make it bed format with extra columns 
+gzip -f ${GLoutput} 
 done
 done
 
