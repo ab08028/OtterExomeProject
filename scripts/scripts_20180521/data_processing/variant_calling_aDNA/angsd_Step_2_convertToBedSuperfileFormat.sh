@@ -6,6 +6,7 @@
 #$ -N angsdStep2SuperFile
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
+########## this is very slow -- make run in parallel instead of in a loop #######
 
 ####### make a super angsd output file ##########
 # this script takes about 16 hours to run  -- could submit each date separately to speed it up #
