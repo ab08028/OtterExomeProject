@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G
+#$ -l h_rt=100:00:00,h_data=8G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -N angsdStep2SuperFile
