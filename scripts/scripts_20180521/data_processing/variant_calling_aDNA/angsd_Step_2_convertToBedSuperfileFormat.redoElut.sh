@@ -63,10 +63,10 @@ comboheader=`echo -e "$bedhead\t$angsdheaders"` # need the "" and -e to get the 
 echo -e "$comboheader" >  ${GPoutput} 
 paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GPoutput} # go into awk and rearrange to make it bed format with extra columns 
 gzip -f ${GPoutput}
-# GLs: 
-echo -e "$comboheader" >  ${GLoutput} 
-paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GLoutput} # go into awk and rearrange to make it bed format with extra columns 
-gzip -f ${GLoutput} 
+# GLs: Gls getting redone in a separate script
+#echo -e "$comboheader" >  ${GLoutput} 
+#paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GLoutput} # go into awk and rearrange to make it bed format with extra columns 
+#gzip -f ${GLoutput} 
 done
 done
 
