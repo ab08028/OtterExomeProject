@@ -37,11 +37,11 @@ bedtools intersect -a $GPSuperfile -wa -header -b $neutBed | gzip > ${GPSuperfil
 bedtools intersect -a $GPSuperfile -wa -header -b $cdsBed | gzip > ${GPSuperfile%.0based.bed.gz}.cdsOnly.0based.bed.gz
 
 ### GLs: 
-echo "starting GLs"
+#echo "starting GLs"
 
-bedtools intersect -a $GLSuperfile -wa -header -b $neutBed | gzip > ${GLSuperfile%.0based.bed.gz}.neutralOnly.0based.bed.gz
+#bedtools intersect -a $GLSuperfile -wa -header -b $neutBed | gzip > ${GLSuperfile%.0based.bed.gz}.neutralOnly.0based.bed.gz
 
-bedtools intersect -a $GLSuperfile -wa -header -b $cdsBed | gzip > ${GLSuperfile%.0based.bed.gz}.cdsOnly.0based.bed.gz
+#bedtools intersect -a $GLSuperfile -wa -header -b $cdsBed | gzip > ${GLSuperfile%.0based.bed.gz}.cdsOnly.0based.bed.gz
 
 
 done
