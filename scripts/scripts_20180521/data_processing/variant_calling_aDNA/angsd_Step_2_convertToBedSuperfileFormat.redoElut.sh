@@ -17,8 +17,10 @@
 ######### dirs and files ###########
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
-for ref in mfur elut
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+# two dates didn't finish for elut:
+dates="20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior"
+for ref in elut # elut only needs to be redone
 do
 echo $ref
 for angsdDate in $dates
@@ -58,9 +60,9 @@ angsdheaders=`paste <(zcat $mafs | head -n1) <(zcat $GPs | head -n1) <(zcat $cou
 # so want to add a bed header too, which will be 
 bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
 comboheader=`echo -e "$bedhead\t$angsdheaders"` # need the "" and -e to get the tabs in
-#echo -e "$comboheader" >  ${GPoutput} 
-#paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GPoutput} # go into awk and rearrange to make it bed format with extra columns 
-#gzip -f ${GPoutput}
+echo -e "$comboheader" >  ${GPoutput} 
+paste <(zcat $mafs) <(zcat $GPs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GPoutput} # go into awk and rearrange to make it bed format with extra columns 
+gzip -f ${GPoutput}
 # GLs: 
 echo -e "$comboheader" >  ${GLoutput} 
 paste <(zcat $mafs) <(zcat $GLs) <(zcat $counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> ${GLoutput} # go into awk and rearrange to make it bed format with extra columns 
