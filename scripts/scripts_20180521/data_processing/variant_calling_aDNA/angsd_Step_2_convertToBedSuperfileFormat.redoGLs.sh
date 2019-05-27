@@ -18,7 +18,8 @@
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
-for ref in mfur elut
+
+for ref in mfur # elut : redo elut in separate script
 do
 echo $ref
 for angsdDate in $dates
