@@ -4,8 +4,8 @@
 #$ -pe shared 3
 #$ -cwd
 #$ -m bea
-#$ -o /u/flashscratch/a/ab08028/otters/reports
-#$ -e /u/flashscratch/a/ab08028/otters/reports
+#$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
+#$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -M ab08028
 ################# Run VEP on cds input from angsd #############
 ### then have to figure out a way to 
@@ -45,6 +45,7 @@ $vepdir/vep -v -i ${indir}/$vepinput --fork 3 \
 --cache --force_overwrite --species mustela_putorius_furo \
 --numbers --domains --variant_class --canonical \
 -o $indir/${vepinput%.txt.gz}.VEP.output.tbl
+# note if you use a gzipped file you'll get the error "gzip: stdout: Broken pipe" but it doesn't actually break anything
 
 ### will have to figure out how to merge this back with my angsd cds super file (maybe based on the "marker" column>)
 # MAKE SURE TO DEAL WITH NON UNIQUE ENTRIES CAREFULLY
