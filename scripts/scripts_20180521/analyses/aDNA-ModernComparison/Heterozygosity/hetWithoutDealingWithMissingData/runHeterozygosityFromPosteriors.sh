@@ -3,7 +3,7 @@
 #$ -l h_rt=100:00:00,h_data=8G,highp
 #$ -m abe
 #$ -M ab08028
-#$ -N parseBeagleHets
+#$ -N hetPerIndMissingData
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
