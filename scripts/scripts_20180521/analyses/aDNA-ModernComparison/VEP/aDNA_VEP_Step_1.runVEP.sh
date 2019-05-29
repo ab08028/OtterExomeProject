@@ -45,9 +45,12 @@ $vepdir/vep -v -i ${indir}/$vepinput --fork 3 \
 --cache --force_overwrite --species mustela_putorius_furo \
 --numbers --domains --variant_class --canonical \
 -o $indir/${vepinput%.txt.gz}.VEP.output.tbl
-# note if you use a gzipped file you'll get the error "gzip: stdout: Broken pipe" but it doesn't actually break anything
 
+# gzip output:
+gzip -f $indir/${vepinput%.txt.gz}.VEP.output.tbl
+# note if you use a gzipped file you'll get the error "gzip: stdout: Broken pipe" but it doesn't actually break anything
+done
 ### will have to figure out how to merge this back with my angsd cds super file (maybe based on the "marker" column>)
 # MAKE SURE TO DEAL WITH NON UNIQUE ENTRIES CAREFULLY
 # LOOK AT MY OLD FILTERING VEP RESULTS SCRIPTS FOR INSPIRATION : /Users/annabelbeichman/Documents/UCLA/Otters/otterScriptsGithub/OtterGenomeProject/DiversityAnalyses/northernSeaOtterAnalyses/VEP/VEP.GeneticLoad.Scripts
-sleep 5
+#sleep 5m
