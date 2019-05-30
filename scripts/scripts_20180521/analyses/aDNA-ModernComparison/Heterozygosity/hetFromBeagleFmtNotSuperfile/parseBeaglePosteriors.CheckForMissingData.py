@@ -28,8 +28,8 @@ filepath = sys.argv[1] #path to input file, beagle posterior GLs from angsd; sho
 countsFile=sys.argv[2] ## path to counts file from angsd; sites should be in exact same order as beagle posterior grobs file (results of -doCount 1 -dumpCounts 2)
 sampleIDFile=sys.argv[3] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[4] # output file
-MaxProbCutoff=sys.argv[5] # this is fraction of no-call genotypes you'll permit per 
-PerIndividualDepthMinimum=sys.argv[6]
+MaxProbCutoff=sys.argv[5] # this the cutoff for a genotype to be considered callable
+PerIndividualDepthMinimum=sys.argv[6] # per individual min depth
 
 ################# list of possible transversions ###############
 # In beagle format, nucleotides are labeled as numbers
@@ -177,4 +177,5 @@ for sample in sampList:
     outfile.write("\t".join(out))
     outfile.write("\n")
 outfile.close()
-    
+beagle.close()
+counts.close()
