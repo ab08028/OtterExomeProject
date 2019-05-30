@@ -41,7 +41,7 @@ indir=$GLdir/$angsdDate
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
-qsub -N parseHC${ref}${type}${minInd} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
 
 ######### low coverage ##############
@@ -49,7 +49,7 @@ for date in lcDates
 do
 # these are the downsampled low coverage sample IDs:
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt
-qsub -N parseLC${ref}${type}${minInd} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
 
 done

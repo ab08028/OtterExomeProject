@@ -33,3 +33,5 @@ minInds=$7# e.g. 2 # min number of individuals for a site to be worked on overal
 # usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerIndividualDepthMinimum minIndsPerSite
 # be careful of order, though python script will output the filters used as part of the output so you can see if anything went wrong.
 python $script $input $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
+
+sleep 10m
