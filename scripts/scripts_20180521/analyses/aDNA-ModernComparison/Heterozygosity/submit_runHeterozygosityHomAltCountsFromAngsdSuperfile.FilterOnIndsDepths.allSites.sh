@@ -14,9 +14,8 @@ maxProbCutoff=0.95 # this is the cutoff for the max posterior probability. If th
 # this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
 minDepthCutoff=1 # sites that are < this threshold will not be counted toward an individuals heterozygosity
 # want to try a range minInds
-#minIndsOptions="2 3 5 9" # options for minInds 
-minIndsOptions="2"
-#minInds=2 # min number of individuals for a site to be worked on overall; because the prior is based on allele frequency, we don't want it to just be one individual
+#minIndsOptions="2 3 5 9" # options for minInds ; can try multiple combinations to see how you lose sites
+minIndsOptions=2 # min number of individuals for a site to be worked on overall; because the prior is based on allele frequency, we don't want it to just be one individual
 # note that this minInd is not just the nInd in the maf file which shows how many inds had at least 1 read. instead it's how many inds have at least minDepthCutoff reads
 # which in this case is 1, but you can alter it (sites with < minInds will not be counted for ANY individuals even if they have data.)
 hcDates="20190524-highcov-AFprior" # high cov dates ; skipping UNIF prior because it is garbage: 20190524-highcov-UNIFprior
@@ -41,7 +40,8 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
-
+# order is
+# qsub -N name script inputsuperfile sampleID file outputFile referenceCode maxProbCutoff minDepthCutoff minIndCutoff
 qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
 done
