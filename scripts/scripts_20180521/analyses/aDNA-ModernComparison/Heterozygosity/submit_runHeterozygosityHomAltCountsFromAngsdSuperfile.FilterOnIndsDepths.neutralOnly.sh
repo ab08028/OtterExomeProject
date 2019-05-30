@@ -40,8 +40,8 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
-
-qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
+ls $indir/$superfile
+qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 done
 
@@ -60,7 +60,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 
-qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 
 done
