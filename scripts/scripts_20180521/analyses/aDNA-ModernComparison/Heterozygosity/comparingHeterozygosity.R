@@ -2,28 +2,38 @@
 # this is only based on 200K sites
 require(ggplot2)
 require(reshape2)
-dates=c("20190511","20190513-highcov","20190513-lowcov","20190513-highcov-minInd","20190513-lowcov-minInd")
+#dates=c("20190511","20190513-highcov","20190513-lowcov","20190513-highcov-minInd","20190513-lowcov-minInd")
+dates=c("20190524-highcov","20190524-lowcov","20190524-highcov","20190524-lowcov")
+priors=c("AFprior","UNIFprior")
 overallDir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/Heterozygosity/"
-probCutoff=0.5
+probCutoffs=c(0.5,0.95)
+depthCutoff=1
+
 allInputs=data.frame()
+
 for(angsdDate in dates) {
-  data.dir=paste(overallDir,angsdDate,"/",sep="")
-  for(ref in c("mfur","elut")){
-    input <- read.table(paste(data.dir,"angsdOut.mappedTo",ref,".OrlandoSettings.hetFromPost.ProbCutoff.",probCutoff,".",angsdDate,".txt",sep=""),header=T,sep="\t")
-    input$date <- angsdDate
-    input$label <- "modern"
-    input[grep("^A",input$sample),]$label <- "ancient"
-    # check if any of the sample IDs contain "downsamp":
-    if(any(grepl("downsamp",input$sample))){
-    input[grep("downsamp",input$sample),]$label <- "modern-downsampled"
+  for(prior in priors){
+    angsdDatePrior=paste(angsdDate,prior,sep="-")
+    data.dir=paste(overallDir,angsdDatePrior,"/",sep="")
+    for(ref in c("mfur","elut")){
+      for(probCutoff in probCutoffs){
+        input <- read.table(paste(data.dir,"angsdOut.mappedTo",ref,".hetFromPost.ProbCutoff.",probCutoff,".DepthCutoff.",depthCutoff,".",angsdDatePrior,".txt",sep=""),header=T,sep="\t")
+        input$date <- angsdDate
+        input$prior <- prior
+        input$label <- "modern"
+        input[grep("^A",input$sample),]$label <- "ancient"
+        # check if any of the sample IDs contain "downsamp":
+        if(any(grepl("downsamp",input$sample))){
+          input[grep("downsamp",input$sample),]$label <- "modern-downsampled"
+        }
+        input$reference <- ref
+        allInputs = rbind(allInputs,input)
+      }
     }
-    input$reference <- ref
-    allInputs = rbind(allInputs,input)
   }
 }
 
-
-input_melt <- melt(allInputs,measure.vars = c("HetPerSite","HetPerSite_transversionsOnly"),id.vars = c("sample","label","reference","date"))
+input_melt <- melt(allInputs,measure.vars = c("HetPerSite","HetPerSite_transversionsOnly"),id.vars = c("sample","label","reference","date","prior","PerIndividualDepthMinimum","ProbThresholdForCallableSite"))
 
 # label transitions+transv vs transv only
 input_melt$label2 <- "Transitions+Transversions"
@@ -33,18 +43,21 @@ p0 <- ggplot(input_melt,aes(x=sample,y=value,fill=label2))+
   geom_bar(stat="identity",position="dodge")+
   coord_flip()+
   theme_bw()+
-  facet_wrap(~reference~date)+
+  facet_grid(reference~ProbThresholdForCallableSite~date~prior)+
   theme(legend.title=element_blank())
 p0
+
 ggsave(paste(overallDir,"perIndividualHets.allInds.pdf"),device="pdf",height=5,width=9)
-p1 <- ggplot(input_melt,aes(x=label,y=value,fill=label2))+
+# Based on this, UNIF distribution way overestimates things. Don't use. Stick to AF, but maybe use a more perind filter.
+####### AF prior only: 
+p1 <- ggplot(input_melt[input_melt$prior=="AFprior",],aes(x=label,y=value,fill=label))+
   geom_violin(position=position_dodge(.5))+
   geom_point(position=position_dodge(.5),size = 1)+
   theme_bw()+
   ggtitle("Comparing Heterozygosity")+
   theme(legend.title = element_blank(),axis.text = element_text(size=14),legend.text = element_text(size=14),legend.background = element_rect(fill = "transparent"))+
   xlab("")+
-  facet_wrap(~reference~date,scales="free")
+  facet_grid(ProbThresholdForCallableSite~reference~label2~date,scales="free")
 p1
 ggsave(paste(overallDir,"ancientVsModernHets.allInds.pdf"),p1,device="pdf",height=5,width=11)
 
