@@ -42,6 +42,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 # order is
 # qsub -N name script inputsuperfile sampleID file outputFile referenceCode maxProbCutoff minDepthCutoff minIndCutoff
+echo "$scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
 qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 done
