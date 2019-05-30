@@ -19,8 +19,8 @@ scriptDir=$gitDir/scripts/scripts_20180521/
 script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeagleSuperfile.ManyFilters.py # 20190531, this works from super file and filters on multiple things
 
 input=$1 # path to desired superfile
-output=$2 # path to output file
-sampleIDs=$3
+sampleIDs=$2
+output=$3 # path to output file
 ref=$4
 maxProbCutoff=$5 # e.g. 0.95 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
 # than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
