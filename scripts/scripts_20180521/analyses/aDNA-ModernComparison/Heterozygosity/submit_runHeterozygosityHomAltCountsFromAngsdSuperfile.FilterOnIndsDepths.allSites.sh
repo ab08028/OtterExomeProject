@@ -43,12 +43,23 @@ output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.$
 
 qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
+done
 
 ######### low coverage ##############
-for date in lcDates
+for angsdDate in $lcDates
+do
+for minInds in $minIndsOptions
 do
 # these are the downsampled low coverage sample IDs:
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt
+
+
+# get dirs:
+indir=$GLdir/$angsdDate 
+outdir=$wd/heterozygosityFromPosteriors/$angsdDate
+output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
+
+
 qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
 
