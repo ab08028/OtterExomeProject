@@ -26,7 +26,7 @@ maxProbCutoff=$5 # e.g. 0.95 # this is the cutoff for the max posterior probabil
 # than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
 # this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
 minDepthCutoff=$6 # e.g. 1 # sites that are < this threshold will not be counted toward an individuals heterozygosity
-minInds=$7# e.g. 2 # min number of individuals for a site to be worked on overall; because the prior is based on allele frequency, we don't want it to just be one individual
+minInds=$7 # e.g. 2 # min number of individuals for a site to be worked on overall; because the prior is based on allele frequency, we don't want it to just be one individual
 # note that this minInd is not just the nInd in the maf file which shows how many inds had at least 1 read. instead it's how many inds have at least minDepthCutoff reads
 # which in this case is 1, but you can alter it
 # new usage: 
