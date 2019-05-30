@@ -27,8 +27,7 @@ refs="mfur elut"
 type="GPs"
 for ref in $refs
 do
-superfile=angsdOut.mappedTo${ref}.superfile.${type}.mafs.counts.0based.bed.gz # name of superfile; can be GLs or GPs; can be whole genome, cds, neutral, etc. as long as it's in superfile format (bed fmt + maf file + GP or GL + counts)
-
+superfile=angsdOut.mappedTo${ref}.superfile.${type}.mafs.counts.neutralOnly.0based.bed.gz # name of superfile; can be GLs or GPs; can be whole genome, cds, neutral, etc. as long as it's in superfile format (bed fmt + maf file + GP or GL + counts)
 ######### high coverage: #########
 for angsdDate in $hcDates
 do
@@ -40,7 +39,7 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 # get dirs:
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
-output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
+output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 qsub -N parseHC${ref}${type}${minInd} $scriptDir/$script $indir/$superfile $sampleIDs $output $ref $maxProbCutoff $minDepthCutoff $minInds
 done
