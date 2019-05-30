@@ -26,6 +26,7 @@ import gzip
 import sys
 
 filepath = sys.argv[0] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
+print(filepath)
 sampleIDFile=sys.argv[1] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[2] # output file
 MaxProbCutoff=sys.argv[3] # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
