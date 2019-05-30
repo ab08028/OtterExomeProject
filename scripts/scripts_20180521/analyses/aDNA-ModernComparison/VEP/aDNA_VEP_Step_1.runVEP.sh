@@ -48,6 +48,7 @@ $vepdir/vep -v -i ${indir}/$vepinput --fork 3 \
 
 # gzip output:
 gzip -f $indir/${vepinput%.txt.gz}.VEP.output.tbl
+
 # note if you use a gzipped file you'll get the error "gzip: stdout: Broken pipe" but it doesn't actually break anything
 done
 ### will have to figure out how to merge this back with my angsd cds super file (maybe based on the "marker" column>)
