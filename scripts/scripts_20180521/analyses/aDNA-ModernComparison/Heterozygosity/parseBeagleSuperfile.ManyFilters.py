@@ -25,12 +25,12 @@ usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerI
 import gzip
 import sys
 
-filepath = sys.argv[1] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
-sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
-outname= sys.argv[3] # output file
-MaxProbCutoff=sys.argv[4] # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
-PerIndividualDepthMinimum=sys.argv[5]
-minIndsPerSite=sys.argv[6] # min number of individuals that have data at a site (note: won't be counted unless they also pass the PerIndividualDepthMinimum; so if you require 2 inds at 2 read depth (not recommended, just an example) then if you had an individual with 1 read, and an individual with 2 reads, it wouldn't pass.)
+filepath = sys.argv[0] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
+sampleIDFile=sys.argv[1] # path to file with list of names in SAME ORDER as bamList you used for angsd
+outname= sys.argv[2] # output file
+MaxProbCutoff=sys.argv[3] # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
+PerIndividualDepthMinimum=sys.argv[4]
+minIndsPerSite=sys.argv[5] # min number of individuals that have data at a site (note: won't be counted unless they also pass the PerIndividualDepthMinimum; so if you require 2 inds at 2 read depth (not recommended, just an example) then if you had an individual with 1 read, and an individual with 2 reads, it wouldn't pass.)
 ################# list of possible transversions ###############
 # In beagle format, nucleotides are labeled as numbers
 # # Beagle codes: the allele codes as 0=A, 1=C, 2=G, 3=T
