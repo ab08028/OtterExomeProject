@@ -41,7 +41,7 @@ indir=$GLdir/$angsdDate
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 ls $indir/$superfile
-qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseHC${ref}${type}${minInds} $scriptDir/$script -F "$indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
 done
 done
 
@@ -60,7 +60,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 
-qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script -F "$indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
 done
 
 done
