@@ -24,9 +24,7 @@ usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerI
 """
 import gzip
 import sys
-print("starting python portion")
 filepath = sys.argv[1] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
-print(filepath)
 sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[3] # output file
 MaxProbCutoff=float(sys.argv[4]) # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
@@ -104,6 +102,7 @@ for line in superfile:
         # check that length of header is numInd*3 + 3 (marker allele1 allele2):
         #len(header)==(numInd*3) + 3 # should be TRUE
         break
+print(header)
 # need to figure out positions within the header of certain things
 # know header 0-11 will be bed fmt stuff
 # and 12-18 (?) will be mafs
