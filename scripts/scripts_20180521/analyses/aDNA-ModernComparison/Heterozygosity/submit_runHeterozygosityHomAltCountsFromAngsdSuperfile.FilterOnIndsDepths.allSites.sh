@@ -22,7 +22,8 @@ hcDates="20190524-highcov-AFprior" # high cov dates ; skipping UNIF prior becaus
 lcDates="20190524-lowcov-AFprior"  # low cov dates
 # high coverage:
 # for ref in $refs
-refs="mfur elut" 
+#refs="mfur elut" 
+refs="mfur" #CHANGE BACK!
 ################################ GPs #########################
 type="GPs"
 for ref in $refs
