@@ -34,6 +34,7 @@ minInds=$6 # e.g. 2 # min number of individuals for a site to be worked on overa
 # new usage: 
 # usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerIndividualDepthMinimum minIndsPerSite
 # be careful of order, though python script will output the filters used as part of the output so you can see if anything went wrong.
+echo "submitting python script"
 python $script $input $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
-
+echo "python script submitted"
 sleep 10m

@@ -5,8 +5,8 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 GLdir=$wd/angsd-GLs
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/Heterozygosity/
-script=runHeterozygosityHomAltCountsFromAngsdSuperfile.FilterOnIndsDepths.sh
+scriptDir=$gitDir/scripts/scripts_20180521/
+script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/runHeterozygosityHomAltCountsFromAngsdSuperfile.FilterOnIndsDepths.sh
 # three filters:
 # I like this more stringent maxProbCutoff filter; it doesn't affect that many sites for GPs;
 maxProbCutoff=0.95 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
@@ -42,7 +42,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 # order is
 # qsub -N name script -v "inputsuperfile sampleIDFile outputFile maxProbCutoff minDepthCutoff minIndCutoff" # use -F "" to pass variables to pass into runHeterozygosityHomAltCountsFromAngsdSuperfile.FilterOnIndsDepths.sh
-qsub $scriptDir/$script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
+qsub -N parseLC${ref}${type}${minInds} $script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 done
 # -N parseHC${ref}${type}${minInds} 
@@ -61,7 +61,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 
-qsub -N parseLC${ref}${type}${minInds} $scriptDir/$script -F "$indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
+qsub -N parseLC${ref}${type}${minInds} $script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 
 done

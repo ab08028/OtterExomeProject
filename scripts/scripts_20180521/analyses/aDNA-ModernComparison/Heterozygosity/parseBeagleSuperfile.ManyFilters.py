@@ -24,7 +24,7 @@ usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerI
 """
 import gzip
 import sys
-
+print("starting python portion")
 filepath = sys.argv[1] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
 print(filepath)
 sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
