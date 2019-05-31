@@ -18,7 +18,7 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
 script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeagleSuperfile.ManyFilters.py # 20190531, this works from super file and filters on multiple things
 
-echo $1 $2 $3 $4 $5 $6
+#echo $1 $2 $3 $4 $5 $6
 input=$1 # path to desired superfile
 
 sampleIDs=$2

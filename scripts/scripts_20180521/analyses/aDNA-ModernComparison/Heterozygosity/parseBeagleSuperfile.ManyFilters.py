@@ -30,7 +30,7 @@ outname= sys.argv[3] # output file
 MaxProbCutoff=float(sys.argv[4]) # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
 PerIndividualDepthMinimum=float(sys.argv[5])
 minIndsPerSite=float(sys.argv[6]) # min number of individuals that have data at a site (note: won't be counted unless they also pass the PerIndividualDepthMinimum; so if you require 2 inds at 2 read depth (not recommended, just an example) then if you had an individual with 1 read, and an individual with 2 reads, it wouldn't pass.)
-sys.stdout.write("helloworld")
+#sys.stdout.write("helloworld")
 ################# list of possible transversions ###############
 # In beagle format, nucleotides are labeled as numbers
 # # Beagle codes: the allele codes as 0=A, 1=C, 2=G, 3=T
@@ -102,7 +102,7 @@ for line in superfile:
         # check that length of header is numInd*3 + 3 (marker allele1 allele2):
         #len(header)==(numInd*3) + 3 # should be TRUE
         break
-print(header)
+#print(header)
 # need to figure out positions within the header of certain things
 # know header 0-11 will be bed fmt stuff
 # and 12-18 (?) will be mafs
