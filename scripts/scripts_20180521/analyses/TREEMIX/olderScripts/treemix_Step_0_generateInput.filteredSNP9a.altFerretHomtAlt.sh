@@ -99,7 +99,7 @@ zcat $treeFileDir/$infile | head -n1 | awk '{OFS="";print $0,"FERRET"}' > $treeF
 
 # then add the 0,2 count to the end of each line
 # going to exclude the header line using grep -v BAJ (doesn't have anything to do with Baja specifically, that's just the start of the header line)
-zcat $treeFileDir/$infile | grep -v BAJ | awk '{OFS="";print $0,"0,1"}' >> $treeFileDir/$outfile
+zcat $treeFileDir/$infile | grep -v BAJ | awk '{OFS="";print $0,"0,2"}' >> $treeFileDir/$outfile
 
 
 # then gzip this file to be ready for Treemix

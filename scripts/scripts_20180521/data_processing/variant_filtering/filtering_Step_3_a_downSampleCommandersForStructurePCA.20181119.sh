@@ -13,7 +13,7 @@ module load java
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 
 #### parameters:
-rundate=20181109 # date genotypes were called (vcf_20180806 includes capture 02)
+rundate=20181119 # date genotypes were called (vcf_20180806 includes capture 02)
 noCallFrac=0.2 # maximum fraction of genotypes that can be "no call" (./.) # note that genotypes can still "PASS" if 
 
 

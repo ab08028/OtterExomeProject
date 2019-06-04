@@ -10,6 +10,8 @@ script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/runHeterozygosit
 # three filters:
 # I like this more stringent maxProbCutoff filter; it doesn't affect that many sites for GPs;
 maxProbCutoff=0.95 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
+# also trying:
+#maxProbCutoff=0.5 
 # than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
 # this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
 minDepthCutoff=1 # sites that are < this threshold will not be counted toward an individuals heterozygosity
@@ -40,8 +42,8 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
-ls $indir/$superfile
-qsub -N parseHC${ref}${type}${minInds} $script -F "$indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
+#ls $indir/$superfile
+qsub -N parseHCNeut${ref}${type}${minInds} $script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 done
 
@@ -60,7 +62,7 @@ outdir=$wd/heterozygosityFromPosteriors/$angsdDate
 output=$outdir/${superfile%.mafs.counts.neutralOnly.0based.bed.gz}.neutralOnly.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 
-qsub -N parseLC${ref}${type}${minInds} $script -F "$indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds"
+qsub -N parseLCNeut${ref}${type}${minInds} $script $indir/$superfile $sampleIDs $output $maxProbCutoff $minDepthCutoff $minInds
 done
 
 done
