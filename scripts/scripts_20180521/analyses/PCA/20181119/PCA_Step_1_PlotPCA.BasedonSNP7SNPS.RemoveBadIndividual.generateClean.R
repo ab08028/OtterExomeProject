@@ -18,9 +18,9 @@ calldate=20181119 # date gt's were called in format YYYYMMDD
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 # file locations:
 
-indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/snps_gds/",calldate,"/",sep="") # this is where your snp vcf file is and where you will save your gds file (downloaded from hoffman)
-plotoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/PCA/",calldate,"/",sep="")
-fileoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PCA/",calldate,"/",sep="")
+indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/snps_gds/",calldate,"/snp7/",sep="") # this is where your snp vcf file is and where you will save your gds file (downloaded from hoffman)
+plotoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/PCA/",calldate,"/snp7/",sep="")
+fileoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PCA/",calldate,"/snp7/",sep="")
 dir.create(plotoutdir,recursive = T)
 dir.create(fileoutdir,recursive = T)
 
