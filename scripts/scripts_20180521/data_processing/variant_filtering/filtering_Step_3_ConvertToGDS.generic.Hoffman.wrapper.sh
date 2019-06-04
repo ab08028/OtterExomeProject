@@ -14,7 +14,14 @@ mkdir -p $outdir
 # list of gzipped vcfs you want to convert (can be any VCFs)
 #vcfs2gds='downsampledVCFs/downsampled.COM.snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz downsampledVCFs/downsampled.COM.snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz snp_8_rmRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz snp_8_rmRelativesAdmixed_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz'
 # also want to make it with downsampled commanders vcf:
-vcfs2gds='snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz'
+# this script gets run multiple times; first time is for snp_7 because that lets you do an initial PCA
+# to figure out which individuals to exclude; then can do it on snp_9a after all filtering for a final gds file
+# based on the final set of individuals passing
+# May also want to downsample populations, etc. which you can actually do in R as part of running your PCA --
+# so don't have to downsample the COMs here, but will want to in R.
+#vcfs2gds='snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz' # round 1
+vcfs2gds="snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz" # round 2
+
 for vcf in $vcfs2gds
 do
 Rscript $scriptdir/${script} --vcf $vcfdir/$vcf --outdir $outdir
