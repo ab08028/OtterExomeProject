@@ -3,7 +3,7 @@
 # isn't there some issue with chromosomes?
 # need to make sure it's only SNPs not invariant sites
 # so want to convert my final SNP file
-
+# note: this script isn't clear about how it assigns ref/alt alleles, so be careful that you don't trust them in the output
 source /u/local/Modules/default/init/modules.sh
 module load plink
 
@@ -18,5 +18,5 @@ outdir=$SCRATCH/captures/vcf_filtering/${calldate}_filtered/plinkFormat/
 mkdir -p $outdir
 # you need to use const-fid 0 otherwise it thinks that family name_sample name is structure of ID and tries to split it (and fails)
 # allow extra chromosomes: to get it to get over the fact that chr names are non standard (make sure these wont get ignored?)
-plink --vcf $indir/$infile --make-bed --keep-allele-order --const-fid 0 --allow-extra-chr --maf 0.05 --a2-allele --real-ref-alleles -out $outdir/${infile%.vcf.gz}
+plink --vcf $indir/$infile --make-bed --keep-allele-order --const-fid 0 --allow-extra-chr --maf 0.05 -out $outdir/${infile%.vcf.gz}
 ### note for faststructure to work you have to filter on maf 0.05
