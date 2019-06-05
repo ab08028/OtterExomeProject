@@ -3,7 +3,8 @@
 
 source("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/TREEMIX/plotting_funcs.R") 
 genotypeDate="20181119"
-pops="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TREEMIX/20181119/poporder.2.higherOrder.txt" # for plotting residuals
+#pops="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TREEMIX/20181119/poporder.2.higherOrder.txt" # for plotting residuals
+pops="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TREEMIX/20181119/poporder.4.comboCA-BAJ.txt" # for plotting residuals
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/TREEMIX/",genotypeDate,"/snp7/",sep="")
 #models=c("ferretOutgroup.noMig.treemix") # can specify by hand or get from list files in the dir
 models=list.files(data.dir,pattern = "treemix")
@@ -42,3 +43,11 @@ for(modelName in models){
   dev.off()
   
 }
+
+########## Plot llik hood increments: ##########
+#for(modelName in models){
+  # go to wd of that model
+#  setwd(paste(data.dir,modelName,sep=""))
+
+  
+#}

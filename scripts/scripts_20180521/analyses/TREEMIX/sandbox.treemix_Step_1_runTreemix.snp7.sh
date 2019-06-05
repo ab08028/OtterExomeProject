@@ -108,14 +108,51 @@ done
 
 
 
-# try using a sample size correction:
-infile=${header}.frq.strat.InclFerret2-0.TEST.treemixFormat
+# try reversing order of ferret genotype ... Hmmm maybe this is better? 
+# I wonder if I'm really properly doing ref-alt ...
+# maybe try from earlier format... 
+infile=${header}.frq.strat.InclFerret2-0.TEST.treemixFormat.gz
 for i in {1..5}
 do
-outdir=ferretOutgroup.migration.m${i}.SSCorrection.global.Gaunitz.treemix
+outdir=ferretOutgroup.TESTREVGENOTYPE.migration.m${i}.SSCorrection.global.Gaunitz.treemix
 mkdir -p $wd/$outdir
-echo "model: migration, with k=500 ld pruning,m=$i; Gaunitz params ( global) " > $wd/$outdir/modelInfo.txt
-treemix -i $treeFileDir/$infile -m $i -root FERRET -k 500 -global -o $wd/$outdir/ferretOutgroup.migration.m${i}.SSCorrection.global.Gaunitz.treemix # change out stem to something more intelligent
+echo "model: migration, with k=500 ld pruning,m=$i; Gaunitz params (global) EXPERIMENTING WITH REVERSING FERRET MIG" > $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m $i -root FERRET -k 500 -global -o $wd/$outdir/ferretOutgroup.TESTREVGENOTYPE.migration.m${i}.SSCorrection.global.Gaunitz.treemix # change out stem to something more intelligent
+done
+
+# try without ferret, only CA as outgroup:
+
+infile=${header}.frq.strat.treemixFormat.gz
+for i in {0..5}
+do
+outdir=ferretOutgroup.noFERRET.migration.m${i}.SSCorrection.global.Gaunitz.treemix
+mkdir -p $wd/$outdir
+echo "model: migration, with k=500 ld pruning,m=$i; --global) NO FERRET" > $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m $i -root CA -k 500 -global -o $wd/$outdir/$outdir
+done
+
+##### Trying a new setting with no RWAB -- want to redo all the above
+
+infile=${header}.frq.strat.InclFerret.NewRefFmt.treemixFormat.gz
+for i in {0..10}
+do
+outdir=ferretOutgroup.newFERRET.migration.m${i}.SSCorrection.global.Gaunitz.treemix
+mkdir -p $wd/$outdir
+#echo "model: migration, with k=500 ld pruning,m=$i; --global) NO FERRET" > $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m $i -root FERRET -k 500 -global -o $wd/$outdir/$outdir
+done
+
+
+###### Try without ferret:
+####################### THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DO THIS!!!!!!!!!!!!
+
+infile=${header}.frq.strat.treemixFormat.gz
+for i in {0..10}
+do
+outdir=CAOutgroup.migration.m${i}.SSCorrection.global.Gaunitz.treemix
+mkdir -p $wd/$outdir
+#echo "model: migration, with k=500 ld pruning,m=$i; --global) NO FERRET" > $wd/$outdir/modelInfo.txt
+treemix -i $treeFileDir/$infile -m $i -root CA-BAJ -k 500 -global -o $wd/$outdir/$outdir
 done
 
 
