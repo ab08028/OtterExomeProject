@@ -40,14 +40,16 @@ indir=$wd/VEP/$angsdDate
 # I am using GPs, but again, could be either:
 vepinput=${basename}.superfile.GPs.mafs.counts.cdsOnly.1based.VEPInput.txt.gz # may not work when gzipped -- expt and see.
 
-### adding CANONICAL field so I can filter on that 
+### adding CANONICAL field so I can filter on that
+# 20190611: adding --pick so that it only picks one annotation per variant
+# this is what I thought filter-vep was doing, but on rare occasions it was still outputting a couple annotations per variant; don't want that. So for now, I'm just picking based on the VEP criteria (severity and validtity hierarchy)
 $vepdir/vep -v -i ${indir}/$vepinput --fork 3 \
 --cache --force_overwrite --species mustela_putorius_furo \
---numbers --domains --variant_class --canonical \
--o $indir/${vepinput%.txt.gz}.VEP.output.tbl
+--numbers --domains --variant_class --canonical --pick \
+-o $indir/${vepinput%.txt.gz}.VEP.output.pick.tbl
 
 # gzip output:
-gzip -f $indir/${vepinput%.txt.gz}.VEP.output.tbl
+gzip -f $indir/${vepinput%.txt.gz}.VEP.output.pick.tbl
 
 # note if you use a gzipped file you'll get the error "gzip: stdout: Broken pipe" but it doesn't actually break anything
 done
