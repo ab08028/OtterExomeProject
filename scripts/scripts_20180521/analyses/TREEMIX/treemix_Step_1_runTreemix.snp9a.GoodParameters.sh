@@ -13,34 +13,16 @@ scriptdir=$gitdir/analyses/TREEMIX/
 genotypeDate=20181119
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/
 treeFileDir=$vcfdir/treemixFormat/
-header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
-### using snp7 because it contains admixed individuals
-### and I want those migration edges to show up
-### it does also contain relatives which isn't amazing but shouldn't make a huge difference 
-### can also do with snp9a and see the difference
+#header=snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
+header=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
 
-
-#header=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants
-wd=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/$genotypeDate/snp7 # update if using snp7 8 etc 
+wd=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/$genotypeDate/snp9a # update if using snp7 8 etc 
 mkdir -p $wd
 
-######### With BAJA (no relatives) #############
+######### With BAJA (note relatives already excluded athis is snp9a) #############
 k=500
-marker="sepCA-BAJ.exclRelatives"
+marker="sepCA-BAJ"
 infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ combined 
-root='CA,BAJ'# root is both
-for m in {0..10}
-do
-outdir="root.${root}.mig.${m}.k.${k}.global.${marker}.treemix"
-mkdir -p $wd/$outdir
-treemix -i $treeFileDir/$infile -m ${m} -root ${root} -k ${k} -global -o $wd/$outdir/$outdir
-done
-
-
-######### CA Only (no Baja, no relatives) #############
-k=500
-marker="noBAJA.exclRelatives"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ separated 
 root='CA'
 for m in {0..10}
 do
@@ -49,19 +31,15 @@ mkdir -p $wd/$outdir
 treemix -i $treeFileDir/$infile -m ${m} -root ${root} -k ${k} -global -o $wd/$outdir/$outdir
 done
 
-################ Experiments #######################
-###### expt: try with AK as root : #########
+
 ######### CA Only (no Baja, no relatives) #############
 k=500
-marker="noBAJA.exclRelatives"
+marker="noBAJA"
 infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ separated 
-root='AK'
-for m in {0..3}
+root='CA'
+for m in {0..10}
 do
 outdir="root.${root}.mig.${m}.k.${k}.global.${marker}.treemix"
 mkdir -p $wd/$outdir
 treemix -i $treeFileDir/$infile -m ${m} -root ${root} -k ${k} -global -o $wd/$outdir/$outdir
 done
-
-
-## try removing any site with missing data:

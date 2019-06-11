@@ -1,8 +1,6 @@
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
-models='1D.2Epoch.1.5Mb.cds'
-#populations='AK AL CA COM KUR'
-#populations="AK AL CA KUR" # do COM separately below
-populations="genericPop.LongerContract"
+models='1D.2Epoch.1.5Mb.cds.20KAncSize'
+populations="genericPop" # do COM separately below
 # loop through models, populations and 25 replicates
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/
 
@@ -30,6 +28,3 @@ qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.gene
 done
 done
 done
-
-
-

@@ -1,3 +1,5 @@
+####### get outgroup into vcf file 
+
 # can be run in the shell on an interactive node (takes ~ 1min)
 ###### Need to convert vcf file to plink bed format 
 # isn't there some issue with chromosomes?
@@ -20,11 +22,3 @@ mkdir -p $outdir
 # allow extra chromosomes: to get it to get over the fact that chr names are non standard (make sure these wont get ignored?)
 plink --vcf $indir/$infile --make-bed --keep-allele-order --const-fid 0 --allow-extra-chr --maf 0.05 -out $outdir/${infile%.vcf.gz}
 ### note for faststructure to work you have to filter on maf 0.05
-
-
-# and generate a ref-allele file from the vcf so you can know which is which : 
-# marker ID is Scaff:Pos
-# file format is marker \t refAllele 
-zcat $indir/$infile | grep -v "#" | awk '{print $1":"$2,$4}' >  $outdir/${infile%.vcf.gz}.ReferenceAllelesToSetAsA1.txt
-
-## USE THIS TO ASSIGN REF ALLELES TO A1!

@@ -1,7 +1,7 @@
 # Script to make SLIM job script
 # USAGE: ./make_slim_wolf_101517.job.sh [h]
-pop=genericPop.LongerContract
-model=1D.2Epoch.1.5Mb.cds
+pop=AK
+model=1D.2Epoch.1.5Mb.cds.LongerContract
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/slim/cdsSimulations/$pop/$model
 mkdir -p $scriptdir # set script dir

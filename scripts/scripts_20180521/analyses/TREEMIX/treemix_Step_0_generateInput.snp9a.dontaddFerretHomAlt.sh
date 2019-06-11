@@ -40,14 +40,13 @@ awk '{$2 = $1":"$4; print}' $plinkFileDir/${header}.original.bim >  $plinkFileDi
 awk '{print $1,$2}' $plinkFileDir/$header.fam > $plinkFileDir/$header.samples
 /bin/cp $plinkFileDir/$header.samples $plinkFileDir/$header.population.clusters 
 clusters=$plinkFileDir/$header.population.clusters # 3 columns: 0 sampleID popID
-# make a back up once you've added populations
+# ########## MANUALLY ADD POP ASSIGNMENTS HERE ################
 /bin/cp $clusters $clusters.backup
 
 
 ##################################### With separate CA/BAJA  ##############################
 ############# don't need to remove relatives, they are already gone from snp9a file. ######################
 
-clusters=$plinkFileDir/$header.population.clusters.sepCA-BAJ # 3 columns: 0 sampleID popID
 marker="sepCA-BAJ"
 plink --bfile $plinkFileDir/$header \
 --freq \
@@ -74,13 +73,11 @@ python $scriptdir/plink2treemix.py $plinkFileDir/${header}.${marker}.frq.strat.g
 awk '{print $1,$2,1}' $plinkFileDir/$header.fam > $plinkFileDir/$header.exclList.allIndsIncluded
 # 168_Elut_BAJ_TS2
 # 169_Elut_BAJ_R1
-echo " YOU MUST MANUALLY EXCLUDE THE RELATIVES + BAJA  HERE" #### 
+echo " YOU MUST MANUALLY EXCLUDE BAJA  HERE" #### 
 
 ###### MANUALLY edit and rename as : $plinkFileDir/$header.exclList.rmBAJA
 # then manually edit the file to set individuals you want to exclude to "0"
-clusters=$plinkFileDir/$header.population.clusters.sepCA-BAJ # 3 columns: 0 sampleID popID
-# but it's confusing. the distinction between minor and non-ref is not well documented
-marker=noBAJA.exclRelatives
+marker=noBAJA
 plink --bfile $plinkFileDir/$header \
 --freq \
 --missing \
@@ -89,7 +86,7 @@ plink --bfile $plinkFileDir/$header \
 --out $plinkFileDir/$header.${marker} \
 --nonfounders \
 --keep-allele-order \
---filter $plinkFileDir/$header.rmRelatives.rmBAJA 1
+--filter $plinkFileDir/$header.exclList.rmBAJA 1
 
 gzip -f $plinkFileDir/${header}.${marker}.frq.strat
 
