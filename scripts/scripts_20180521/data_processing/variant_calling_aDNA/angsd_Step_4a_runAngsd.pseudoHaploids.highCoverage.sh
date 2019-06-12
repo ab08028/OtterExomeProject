@@ -1,14 +1,14 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=200:00:00,h_data=2G,highp
+#$ -l h_rt=100:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdStep4ai
+#$ -N angsdStep4a
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-######### Step 4 a-i: calls pseudohaploids by randomly sampling a single read at each site per individual (after applying all filters)
+######### Step 4 a: calls pseudohaploids by randomly sampling a single read at each site per individual (after applying all filters)
 # based on full coverage modern + aDNA mapped to elut/mfur ######
 #### run specific settings ####
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
