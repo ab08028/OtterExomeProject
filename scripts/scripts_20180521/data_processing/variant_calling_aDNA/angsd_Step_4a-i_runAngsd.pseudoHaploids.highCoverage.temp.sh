@@ -26,11 +26,12 @@ scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 bamdir=$wd/bams/
-GLdir=$wd/angsd-GLs
-mkdir -p $GLdir
-mkdir -p $GLdir/$todaysdate
-outdir=$GLdir/$todaysdate
+HAPdir=$wd/angsd-pseudoHaps
+mkdir -p $HAPdir
+mkdir -p $HAPdir/$todaysdate
+outdir=$HAPdir/$todaysdate
 
+hap2plink=/u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink # script to convert haplo file to pseudodiploid plink file
 ### list of bam files to include: high coverage modern + aDNA:
 elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.HighCovPlusADNAOnly.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
 mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
@@ -39,7 +40,7 @@ mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusA
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.txt
+echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\nPSEUDOHAPLOIDS SAMPLING ONE RANDOM READ" > $HAPdir/$todaysdate/HIGHCOVERAGEONLY.txt
 
 
 ######### ANGSD settings:##############
@@ -71,27 +72,26 @@ spp="mfur"
 ref=$mfurRef
 bamList=$mfurBamList
 
-# angsd -nThreads 2 \
-# -ref $ref \
-# -bam $bamList \
-# -GL 2 \
-# -doMajorMinor 1 -doMaf 1 \
-# -beagleProb 1 -doPost $posterior \
-# -remove_bads 1 -uniqueOnly 1 \
-# -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 -skipTriallelic 1 \
-# -out $outdir/angsdOut.mappedTo${spp} \
-# -doGlf 2 \
-# -doCounts 1 -dumpCounts 2
-angsd -nThreads 16 \
+# note skipTriallelic isn't relevant here
+angsd -nThreads 2 \
 -ref $ref \
 -bam $bamList \
 -doHaploCall 1 \
 -remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+-C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp} \
--doPlink 2 \
 -doCounts 1 -dumpCounts 2 
 
+# convert to tped format: 
+$hap2plink $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}
+
+# separately from the anaconda install of angsd that I have, I also have the github version
+# okay this works
+# need to convert: this is from the angsd git hub, not the anaconda version:
+# /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
+# you could also use ANGSD
+# have to take out skipTriallelic
+# have to take out doPlink and convert afterward
 # not doing minMinor or maxMis because I can do that in plink when I do pca
 # OPTIONS: 
 # minMinor 1 -- excludes singletons ala Fages; or should I exclude this in plink?
@@ -136,9 +136,11 @@ angsd -nThreads 16 \
 -bam $bamList \
 -doHaploCall 1 \
 -remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 -skipTriallelic 1 \
+-C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp} \
--doPlink 2 \
 -doCounts 1 -dumpCounts 2 
+
+# convert to tped format: 
+$hap2plink $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}
 
 

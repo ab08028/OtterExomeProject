@@ -1,6 +1,6 @@
 #!/bin/bash
-#$ -l h_rt=40:00:00,h_data=3G,highp
-#$ -N filer_vep
+#$ -l h_rt=24:00:00,h_data=3G
+#$ -N filter_vep
 #$ -cwd
 #$ -m bea
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
