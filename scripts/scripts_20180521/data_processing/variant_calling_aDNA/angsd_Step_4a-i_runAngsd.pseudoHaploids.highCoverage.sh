@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=200:00:00,h_data=2G,highp
+#$ -l h_rt=5:00:00,h_data=2G
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16

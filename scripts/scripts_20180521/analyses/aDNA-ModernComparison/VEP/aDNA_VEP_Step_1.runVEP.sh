@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -l h_rt=40:00:00,h_data=3G,highp
+#$ -l h_rt=24:00:00,h_data=3G
 #$ -N aDNA_VEP
 #$ -pe shared 3
 #$ -cwd
