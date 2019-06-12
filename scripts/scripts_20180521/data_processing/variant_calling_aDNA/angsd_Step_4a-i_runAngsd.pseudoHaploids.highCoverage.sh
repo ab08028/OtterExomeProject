@@ -19,7 +19,7 @@ todaysdate=`date +%Y%m%d`'-highcov-pseudoHaps'
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
-
+module load plink
 ######### dirs and files ###########
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
@@ -31,7 +31,10 @@ mkdir -p $HAPdir
 mkdir -p $HAPdir/$todaysdate
 outdir=$HAPdir/$todaysdate
 
+### auxiliary scripts: 
+filterHaplo=$scriptDir/filter.pseudoHaploidFile.BiallelicTransversionsOnly.py
 hap2plink=/u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink # script to convert haplo file to pseudodiploid plink file
+
 ### list of bam files to include: high coverage modern + aDNA:
 elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.HighCovPlusADNAOnly.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
 mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
@@ -72,75 +75,76 @@ spp="mfur"
 ref=$mfurRef
 bamList=$mfurBamList
 
-# note skipTriallelic isn't relevant here
+
+####### 1. get pseudo haploids ############
 angsd -nThreads 16 \
 -ref $ref \
 -bam $bamList \
 -doHaploCall 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
--doCounts 1 -dumpCounts 2 
+-out $outdir/angsdOut.mappedTo${spp}
+# note skipTriallelic doesn't work in angsd here, so I do it with a custom script
+#-doCounts 1 -dumpCounts 2
+# don't really want the counts from this stage, it's not useful
+# I want to exclude triallelic sites and filter transversions:
 
-# convert to tped format: 
-$hap2plink $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}
+echo "done with angsd for $spp"
+####### 2. filter so that you only have transversions (not monomorphic, or transitions) ############
+# python $filterHaplo [input haplo file ] [path to output file]
+# I am noting that "noRefInfo" went into calling biallelic and transversions since there could be a small number of triallelic sites slipping through
+# but Fages doesn't even deal with triallelic, so I am ahead of the game already, it's fine to not exclude them with such fine resolution.
+# Just note that it's just calculating biallelic and transversions on the basis of the otter sample, not based on ref genome
+python $filterHaplo $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo
 
-# separately from the anaconda install of angsd that I have, I also have the github version
-# okay this works
-# need to convert: this is from the angsd git hub, not the anaconda version:
+gzip -f $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo
+echo "done with filtering haplotype file"
+####### 3. convert to tped format ############
+# this is from the angsd git hub, not the anaconda version:
 # /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
-# you could also use ANGSD
-# have to take out skipTriallelic
-# have to take out doPlink and convert afterward
-# not doing minMinor or maxMis because I can do that in plink when I do pca
-# OPTIONS: 
-# minMinor 1 -- excludes singletons ala Fages; or should I exclude this in plink?
-
-# Options:
-#-doHaploCall [int]
-
-#1; sample a random base 2; most frequent base. Random base for ties
-
-#-doCounts 1
-
-#use -doCounts 1 in order to count the bases at each sites after filters.
-
-#-minMinor [int]
-
-#Minimum observed minor alleles; only prints sites with more than minMinor sampled alleles (across individuals).
-
-#-maxMis [int]
-
-#maximum allowed missing alleles (accross individuals). -maxMis 0 means only sites without missing alleles are printed
- # doPlink 2 outputs plink fmt
-
+$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
+echo "done with converting to tped"
+####### 4. convert to tped format ############
+plink --tfile $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --recode --allow-extra-chr
+# and then use plink to convert tped to ped. 
+echo "done with converting to ped"
 
 ####### Elut mapped bams ############
 spp="elut"
 ref=$elutRef
 bamList=$elutBamList
 
-# angsd -nThreads 16 \
-# -ref $ref \
-# -bam $bamList \
-# -GL 2 \
-# -doMajorMinor 1 -doMaf 1 \
-# -beagleProb 1 -doPost $posterior \
-# -remove_bads 1 -uniqueOnly 1 \
-# -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 -skipTriallelic 1 \
-# -out $outdir/angsdOut.mappedTo${spp} \
-# -doGlf 2 \
-# -doCounts 1 -dumpCounts 2
+####### 1. get pseudo haploids ############
 angsd -nThreads 16 \
 -ref $ref \
 -bam $bamList \
 -doHaploCall 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
--doCounts 1 -dumpCounts 2 
+-out $outdir/angsdOut.mappedTo${spp}
+# note skipTriallelic doesn't work in angsd here, so I do it with a custom script
+# skipping counts: -doCounts 1 -dumpCounts 2
+# don't really want the counts from this stage, it's not useful
+# I want to exclude triallelic sites and filter transversions:
 
-# convert to tped format: 
-$hap2plink $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}
+echo "done with angsd for $spp"
+####### 2. filter so that you only have transversions (not monomorphic, or transitions) ############
+# python $filterHaplo [input haplo file ] [path to output file]
+# I am noting that "noRefInfo" went into calling biallelic and transversions since there could be a small number of triallelic sites slipping through
+# but Fages doesn't even deal with triallelic, so I am ahead of the game already, it's fine to not exclude them with such fine resolution.
+# Just note that it's just calculating biallelic and transversions on the basis of the otter sample, not based on ref genome
+python $filterHaplo $outdir/angsdOut.mappedTo${spp}.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo
+
+gzip -f $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo
+echo "done with filtering haplotype file"
+####### 3. convert to tped format ############
+# this is from the angsd git hub, not the anaconda version:
+# /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
+$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
+echo "done with converting to tped"
+####### 4. convert to tped format ############
+plink --tfile $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --recode --allow-extra-chr
+# and then use plink to convert tped to ped. 
+echo "done with converting to ped"
 
 
