@@ -1,0 +1,12 @@
+used to try to add ferret as an outgroup
+but A1 and A2 in plink (even with keep-allele-order)
+don't correspond to ref/alt or alt/ref
+it's all major minor
+
+have to tangle with a2allele setting, but that requires refIDs to be in the vcf, etc. lots of formatting
+
+too much hassle
+
+Especially since the ferret outgroup squishes the rest of the tree too much
+
+Just have CA be the root -- it is the most separated. Try with different roots to make sure
