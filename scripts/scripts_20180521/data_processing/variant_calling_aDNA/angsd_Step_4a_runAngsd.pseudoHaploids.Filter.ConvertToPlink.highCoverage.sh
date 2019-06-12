@@ -80,12 +80,12 @@ bamList=$mfurBamList
 angsd -nThreads 16 \
 -ref $ref \
 -bam $bamList \
--doHaploCall 1 \
+-doHaploCall 1 -doCounts 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp}
 # note skipTriallelic doesn't work in angsd here, so I do it with a custom script
-#-doCounts 1 -dumpCounts 2
+# you have to do doCounts for it to work, but I'm skipping -dumpCounts 2
 # don't really want the counts from this stage, it's not useful
 # I want to exclude triallelic sites and filter transversions:
 
@@ -118,12 +118,12 @@ bamList=$elutBamList
 angsd -nThreads 16 \
 -ref $ref \
 -bam $bamList \
--doHaploCall 1 \
+-doHaploCall 1 -doCounts 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp}
 # note skipTriallelic doesn't work in angsd here, so I do it with a custom script
-# skipping counts: -doCounts 1 -dumpCounts 2
+# you have to do doCounts for it to work, but I'm skipping -dumpCounts 2
 # don't really want the counts from this stage, it's not useful
 # I want to exclude triallelic sites and filter transversions:
 
