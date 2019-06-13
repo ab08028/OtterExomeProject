@@ -21,6 +21,7 @@ module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
 module load plink
 module load python/2.7
+module load R
 ######### dirs and files ###########
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
@@ -113,7 +114,7 @@ plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransv
 echo "done with converting to ped"
 
 ############## 5. convert bed to gds format ##########
-
+Rscript $scriptDir/Convert.PlinkBedToGDS.R -PlinkBed $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.bed -o $outdir/gdsFormat
 ####### Elut mapped bams ############
 spp="elut"
 ref=$elutRef
