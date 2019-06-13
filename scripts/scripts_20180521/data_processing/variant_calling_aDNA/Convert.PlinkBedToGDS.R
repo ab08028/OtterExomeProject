@@ -33,7 +33,7 @@ fam.fn=paste(plink,".fam",sep="")
 bim.fn=paste(plink,".bim",sep="")
 
 # took ~ 5 mins (only need to do once -- in future can just open the gds file)
-snpgdsBED2GDS(bed.fn = bed.fn, fam.fn=fam.fn, bim.fn = bim.fn,outfile, method="biallelic.only")
+snpgdsBED2GDS(bed.fn = bed.fn, fam.fn=fam.fn, bim.fn = bim.fn,outfile)
 
 #summary -- write it out
 # Open an output file
