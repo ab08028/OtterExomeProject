@@ -45,6 +45,10 @@ outfile=open(outname,"w")
 transversions=[('A','C'),('C','A'),('A','T'),('T','A'),('C','G'),('G','C'),('G','T'),('T','G')]
 
 for line0 in haploFile:
+    # write out header:
+    if 'major' in line0:
+        outfile.write(line0)
+        continue
     line=line0.strip().split('\t')
     scaff=line[0]
     pos=line[1]

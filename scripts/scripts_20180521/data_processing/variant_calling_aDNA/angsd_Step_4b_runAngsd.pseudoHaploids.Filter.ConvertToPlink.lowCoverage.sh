@@ -104,9 +104,11 @@ echo "done with filtering haplotype file"
 ####### 3. convert to tped format ############
 # this is from the angsd git hub, not the anaconda version:
 # /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
+# need to make sure the input file has a header, otherwise will lose a site (my python script outputs header now)
 $hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
 echo "done with converting to tped"
 ####### 4. convert to tped format ############
+
 plink --tfile $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --recode --allow-extra-chr
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
