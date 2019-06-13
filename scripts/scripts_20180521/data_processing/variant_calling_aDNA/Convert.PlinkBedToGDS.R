@@ -24,7 +24,7 @@ opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
 outdir=opt$outdir
-plink=opt$PlinkBed
+plink=opt$PlinkPrefixPath
 # note that basename will get you just the file name from a path ; dirname will get you just the dir
 #bed.fn.prefix=strsplit(basename(bed.fn),".bed") # strip off end 
 outfile=paste(outdir,"/",bed.fn.prefix,".gds",sep="")
