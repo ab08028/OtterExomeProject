@@ -7,7 +7,7 @@
 #biocLite("SNPRelate")
 # usage:
 # module load R
-# Rscript filtering_Step_4_ConvertToGDS.Hoffman.R
+# Rscript script [path to plink files and prefix] [outdir]
 # input: plink bed (binary ped) file; NOTE this is not a UCSC coordidate bed file, no relation 
 # can be run in the shell (will take ~ 10 min)
 #load R packages
@@ -33,7 +33,7 @@ fam.fn=paste(plink,".fam",sep="")
 bim.fn=paste(plink,".bim",sep="")
 
 # took ~ 5 mins (only need to do once -- in future can just open the gds file)
-snpgdsBED2GDS(bed.fn = bed.fn, fam.fn=fam.fn, bim.fn = bim.fn,outfile)
+snpgdsBED2GDS(bed.fn = bed.fn, fam.fn=fam.fn, bim.fn = bim.fn,outfile,autosome.only=FALSE)
 
 #summary -- write it out
 # Open an output file

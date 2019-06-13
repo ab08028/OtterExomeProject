@@ -114,7 +114,9 @@ plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransv
 echo "done with converting to ped"
 
 ############## 5. convert bed to gds format ##########
-Rscript $scriptDir/Convert.PlinkBedToGDS.R -PlinkBed $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.bed -o $outdir/gdsFormat
+# custom R script using snpRelate's snpgdsBED2GDS
+# usage: Rscript [path to plink bed,bim,fam files and prefix  [outdir]
+Rscript $scriptDir/Convert.PlinkBedToGDS.R --PlinkPrefixPath $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --outdir $outdir/gdsFormat
 ####### Elut mapped bams ############
 spp="elut"
 ref=$elutRef
