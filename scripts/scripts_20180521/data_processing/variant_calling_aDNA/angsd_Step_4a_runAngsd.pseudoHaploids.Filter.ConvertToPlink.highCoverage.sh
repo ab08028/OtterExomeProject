@@ -31,6 +31,8 @@ HAPdir=$wd/angsd-pseudoHaps
 mkdir -p $HAPdir
 mkdir -p $HAPdir/$todaysdate
 outdir=$HAPdir/$todaysdate
+mkdir -p $outdir/plinkTpedPedFormat
+mkdir -p $outdir/gdsFormat
 
 ### auxiliary scripts: 
 filterHaplo=$scriptDir/filter.pseudoHaploidFile.BiallelicTransversionsOnly.py
@@ -103,12 +105,14 @@ echo "done with filtering haplotype file"
 ####### 3. convert to tped format ############
 # this is from the angsd git hub, not the anaconda version:
 # /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
-$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
+$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
 echo "done with converting to tped"
-####### 4. convert to tped format ############
-plink --tfile $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --recode --allow-extra-chr
+####### 4. convert to bed format ############
+plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --make-bed --allow-extra-chr --missing-genotype N --out $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
+
+############## 5. convert bed to gds format ##########
 
 ####### Elut mapped bams ############
 spp="elut"
@@ -141,10 +145,10 @@ echo "done with filtering haplotype file"
 ####### 3. convert to tped format ############
 # this is from the angsd git hub, not the anaconda version:
 # /u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink input.haplo.gz outputname
-$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
+$hap2plink $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo.haplo.gz $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
 echo "done with converting to tped"
 ####### 4. convert to tped format ############
-plink --tfile $outdir/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --recode --allow-extra-chr
+plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --make-bed --allow-extra-chr --missing-genotype N --out $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
 
