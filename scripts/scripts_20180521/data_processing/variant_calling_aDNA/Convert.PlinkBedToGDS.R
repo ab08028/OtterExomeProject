@@ -13,7 +13,7 @@
 #load R packages
 require(gdsfmt)
 require(SNPRelate)
-library("optparse")
+require("optparse")
 option_list = list(
   make_option(c("-PlinkBed", "--PlinkBed"), type="character", default=NULL, 
               help="path to bed file from plink", metavar="character"),
