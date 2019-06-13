@@ -30,7 +30,7 @@ outname= sys.argv[2] # output file
 #filepath='/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseHaploFile/dummy.haplo.gz'
 #outname='/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/testout.txt'
 #badOut='/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/badout.txt'
-haploFile =gzip.open(filepath,"rb")
+haploFile =gzip.open(filepath,"r")
 outfile=open(outname,"w")
 #badFile=open(badOut,"w")
 ############### TRANSVERSIONS #############  so the 8 possible transversions are:

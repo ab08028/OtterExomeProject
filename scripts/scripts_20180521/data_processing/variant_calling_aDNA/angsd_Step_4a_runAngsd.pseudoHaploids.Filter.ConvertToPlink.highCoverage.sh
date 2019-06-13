@@ -20,6 +20,7 @@ source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
 module load plink
+module load python/2.7
 ######### dirs and files ###########
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
