@@ -56,7 +56,7 @@ angsdheaders=`paste <(zcat $GLDir/$mafs | head -n1) <(zcat $indir/$hapFile | hea
 bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
 
 comboheader=`echo -e "$bedhead\t$angsdheaders"` # need the "" and -e to get the tabs in
-echo -e "$comboheader" >  ${hapoutput} 
+echo -e "$comboheader" >  $indir/${hapoutput} 
 
 
 paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 
@@ -98,7 +98,7 @@ angsdheaders=`paste <(zcat $GLDir/$mafs | head -n1) <(zcat $indir/$hapFile | hea
 bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
 
 comboheader=`echo -e "$bedhead\t$hapHeader"` # need the "" and -e to get the tabs in
-echo -e "$comboheader" >  ${hapoutput} 
+echo -e "$comboheader" >  $indir/${hapoutput} 
 
 
 paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 

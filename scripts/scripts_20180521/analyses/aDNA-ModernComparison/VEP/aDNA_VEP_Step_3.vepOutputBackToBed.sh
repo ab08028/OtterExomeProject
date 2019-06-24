@@ -44,7 +44,8 @@ grep -v "#" $input | awk '{OFS="\t";split($2,pos,":");print pos[1],pos[2]-1,pos[
 types="GLs GPs" # could do GPs or GLs from these coordinates.
 for type in $types
 do
-bedtools intersect -a $GLdir/${basename}.superfile.${type}.mafs.counts.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
+# redo this with the -header flag so I get headers
+bedtools intersect -a $GLdir/${basename}.superfile.${type}.mafs.counts.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
 done
 done
 done

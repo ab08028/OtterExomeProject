@@ -55,7 +55,8 @@ plink --bfile $plinkFileDir/$header \
 --allow-extra-chr \
 --out $plinkFileDir/$header.${marker} \
 --nonfounders \
---keep-allele-order
+--keep-allele-order 
+
 
 gzip -f $plinkFileDir/${header}.${marker}.frq.strat
 
