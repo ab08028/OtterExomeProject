@@ -12,15 +12,19 @@
 
 # and these appear in columns 2 and 3 of the beagle file
 # So if there's 0 <-> 2 and 1 <-> 3
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
+dates="20190524-lowcov-AFprior"
+#angsdDate=20190503
+#wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate
 
-angsdDate=20190503
+for angsdDate in $dates
+do
 wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate
-
-for ref in Elut Mfur
+for ref in elut mfur
 do
-for state in 1e-6.snpsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 # skipping allsites 
-do
-input=$wd/angsdOut.mappedTo${ref}.${state}.beagle.gz
+#for state in 1e-6.snpsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 # skipping allsites 
+#do
+input=$wd/angsdOut.mappedTo${ref}.beagle.gz
  
 # Want to exclude  0 <-> 2 and 1 <-> 3
 # So want to *KEEP* 
@@ -48,11 +52,11 @@ if(($2==0 && $3==1) || ($2==1 && $3==0) || ($2==0 && $3==3) || ($2==3 && $3==0) 
 #zcat $input | grep -c -v marker 
 # 379972 sites in the 1e-6.snpsOnly
 
-# get transitions
+#skip: get transitions
 
-zcat $input | awk '{
+#zcat $input | awk '{
 
-if(($2==0 && $3==2) || ($2==2 && $3==0) || ($2==1 && $3==3) || ($2==3 && $3==1)) print}' | gzip -f > ${input%.beagle.gz}.transitionsOnly.beagle.gz
+#if(($2==0 && $3==2) || ($2==2 && $3==0) || ($2==1 && $3==3) || ($2==3 && $3==1)) print}' | gzip -f > ${input%.beagle.gz}.transitionsOnly.beagle.gz
 
 # number of transitions: 251310
 

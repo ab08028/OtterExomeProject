@@ -17,10 +17,10 @@ gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 # choose the specific combination of populations/models/rundates you want? this is awkward... what is best way to do it?
 # com is 3epoch (differnt model) 
 
-rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
+rundate=20190611 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
 hs="0 0.5" # set of hs you're interested in
-popMods="AL/1D.2Epoch.1.5Mb.cds AK/1D.2Epoch.1.5Mb.cds" # population and corresponding models you're interested in
-
+#popMods="AL/1D.2Epoch.1.5Mb.cds AK/1D.2Epoch.1.5Mb.cds" # population and corresponding models you're interested in
+popMods="genericPop/1D.2Epoch.1.5Mb.cds.20KAncSize"
 # you can have multiple models per population just list as: AK/1D.2Epoch.1.5Mb.cds AK/OtherModel in the popMods variable
 popsModelsRundates=""
 for i in $popMods

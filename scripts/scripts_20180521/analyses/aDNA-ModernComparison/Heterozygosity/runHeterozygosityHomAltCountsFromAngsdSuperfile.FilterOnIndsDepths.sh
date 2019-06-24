@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=40:00:00,h_data=4G,highp
+#$ -l h_rt=24:00:00,h_data=4G
 #$ -m abe
 #$ -M ab08028
 #$ -N parseAngsdOutput

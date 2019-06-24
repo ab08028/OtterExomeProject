@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=100:00:00,h_data=6G,highp
+#$ -l h_rt=30:00:00,h_data=6G,highp
 #$ -m abe
 #$ -M ab08028
 #$ -t 1-20
