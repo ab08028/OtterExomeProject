@@ -7,7 +7,7 @@
 #$ -N angsdStep4a
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
-
+########### want to add doMajorMinor and counts to this to get depth and ref genome information #############
 ######### Step 4 a: calls pseudohaploids by randomly sampling a single read at each site per individual (after applying all filters)
 # based on full coverage modern + aDNA mapped to elut/mfur ######
 #### run specific settings ####
@@ -74,7 +74,9 @@ echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBam
 # So you don't want to use those; use my custom downstream scripts instead.
 
 # trying output in beagle format  doGlf 2
-####### Mfur mapped bams ############
+####################################
+####### Mfur mapped bams ###########
+####################################
 spp="mfur"
 ref=$mfurRef
 bamList=$mfurBamList
@@ -117,7 +119,14 @@ echo "done with converting to ped"
 # custom R script using snpRelate's snpgdsBED2GDS
 # usage: Rscript [path to plink bed,bim,fam files and prefix  [outdir]
 Rscript $scriptDir/Convert.PlinkBedToGDS.R --PlinkPrefixPath $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --outdir $outdir/gdsFormat
-####### Elut mapped bams ############
+echo "done converting to gds format"
+
+
+
+####################################
+####### Elut mapped bams ###########
+####################################
+
 spp="elut"
 ref=$elutRef
 bamList=$elutBamList
@@ -155,4 +164,8 @@ plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransv
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
 
-
+############## 5. convert bed to gds format ##########
+# custom R script using snpRelate's snpgdsBED2GDS
+# usage: Rscript [path to plink bed,bim,fam files and prefix  [outdir]
+Rscript $scriptDir/Convert.PlinkBedToGDS.R --PlinkPrefixPath $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --outdir $outdir/gdsFormat
+echo "done converting to gds format"

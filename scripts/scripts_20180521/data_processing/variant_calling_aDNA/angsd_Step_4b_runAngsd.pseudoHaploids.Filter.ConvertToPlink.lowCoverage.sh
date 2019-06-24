@@ -21,6 +21,7 @@ module load anaconda # load anaconda
 source activate angsd-conda-env # activate conda env
 module load plink
 module load python/2.7
+module load R
 ######### dirs and files ###########
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
@@ -32,6 +33,7 @@ mkdir -p $HAPdir
 mkdir -p $HAPdir/$todaysdate
 outdir=$HAPdir/$todaysdate
 mkdir -p $outdir/plinkTpedPedFormat
+mkdir -p $outdir/gdsFormat
 ### auxiliary scripts: 
 filterHaplo=$scriptDir/filter.pseudoHaploidFile.BiallelicTransversionsOnly.py
 hap2plink=/u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/misc/haploToPlink # script to convert haplo file to pseudodiploid plink file
@@ -72,7 +74,11 @@ echo -e "THIS USES LOW COVERAGE DOWNSAMPLED MODERN + ANCIENT ONLY\nBamLists used
 # So you don't want to use those; use my custom downstream scripts instead.
 
 # trying output in beagle format  doGlf 2
-####### Mfur mapped bams ############
+
+####################################
+####### Mfur mapped bams ###########
+####################################
+
 spp="mfur"
 ref=$mfurRef
 bamList=$mfurBamList
@@ -113,7 +119,15 @@ plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransv
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
 
+############## 5. convert bed to gds format ##########
+# custom R script using snpRelate's snpgdsBED2GDS
+# usage: Rscript [path to plink bed,bim,fam files and prefix  [outdir]
+Rscript $scriptDir/Convert.PlinkBedToGDS.R --PlinkPrefixPath $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --outdir $outdir/gdsFormat
+echo "done converting to gds format"
+
+#####################################
 ####### Elut mapped bams ############
+#####################################
 spp="elut"
 ref=$elutRef
 bamList=$elutBamList
@@ -151,4 +165,8 @@ plink --tfile $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransv
 # and then use plink to convert tped to ped. 
 echo "done with converting to ped"
 
-
+############## 5. convert bed to gds format ##########
+# custom R script using snpRelate's snpgdsBED2GDS
+# usage: Rscript [path to plink bed,bim,fam files and prefix  [outdir]
+Rscript $scriptDir/Convert.PlinkBedToGDS.R --PlinkPrefixPath $outdir/plinkTpedPedFormat/angsdOut.mappedTo${spp}.BiallelicTransvOnly.noRefInfo --outdir $outdir/gdsFormat
+echo "done converting to gds format"
