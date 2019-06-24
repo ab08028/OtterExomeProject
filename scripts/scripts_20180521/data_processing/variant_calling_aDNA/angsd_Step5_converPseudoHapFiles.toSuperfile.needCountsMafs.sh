@@ -35,16 +35,16 @@ mkdir -p $outdir
 # can use GP or GL superfile; they are in the same order and have same sites, so it doesn't matter, since GLs and GPs aren't taken along for the ride in the VEP input format
 # I am using GPs, but again, could be either:
 #cdsSuperfile=${basename}.superfile.GPs.mafs.counts.cdsOnly.0based.bed.gz
-hapFile=${basename}.BiallelicTransvOnly.noRefInfo.haplo.gz
-hapoutput=${hapFile%.haplo.gz}.superfile.0based.bed
+hapFile=${basename}.haplo.gz
+hapoutput=${hapFile%.haplo.gz}.pseudoHaps.superfile.0based.bed
 hapVEPOutput=${hapFile%.haplo.gz}.1based.VEP.input.txt
 mafs=${basename}.mafs.gz
 counts=${basename}.counts.gz
-hapSites=`zcat $hapDate/$hapFile | wc -l `
+hapSites=`zcat $indir/$hapFile | wc -l`
 mafSites=`zcat $GLDir/$mafs | wc -l`
 if [ $hapSites -eq $mafSites ]
 then
-echo "they have the same number of sites!"
+echo "they have the same number of sites"
 else 
 echo "watch out -- differing number of sites"
 fi
@@ -77,7 +77,7 @@ mkdir -p $outdir
 # can use GP or GL superfile; they are in the same order and have same sites, so it doesn't matter, since GLs and GPs aren't taken along for the ride in the VEP input format
 # I am using GPs, but again, could be either:
 #cdsSuperfile=${basename}.superfile.GPs.mafs.counts.cdsOnly.0based.bed.gz
-hapFile=${basename}.BiallelicTransvOnly.noRefInfo.haplo.gz
+hapFile=${basename}.haplo.gz
 hapoutput=${hapFile%.haplo.gz}.superfile.0based.bed
 hapVEPOutput=${hapFile%.haplo.gz}.1based.VEP.input.txt
 mafs=${basename}.mafs.gz
