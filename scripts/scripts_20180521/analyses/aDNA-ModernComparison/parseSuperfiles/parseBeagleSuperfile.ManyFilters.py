@@ -3,10 +3,21 @@ Created on Fri May 10 12:14:23 2019
 
 @author: annabelbeichman
 
-In this script, we want to parse a angsd pseudoHaploid "superfile" that I generate that has concatenated bed-format (0based) coordinates in the first 12 columns, then the angsd maf output, then pseudohaploid calls from randomly sampling reads, and finally count data per individual/per site
+In this script, we want to parse a angsd "superfile" that I generate that has concatenated bed-format (0based) coordinates in the first 12 columns, then the angsd maf output, then genotype probabilities or genotype lhoods (can be either), and finally count data per individual/per site
 
 We can parse that file and count the number of callable sites per individual that pass posterior prob threshold, depth filter, and minimum number of individuals with data at that site (affects prior)
 
+The script will calculate heterozygosity for all sites and just for transversions 
+
+It sums up heterozygosity posterior probability for each individual and divides by callable GTs (following methods of Fages et al. 2019 in Cell)
+
+Explantion: the script sets up a dictionary for your list of individuals (order of list MUST match the input bam file list in ANGSD)
+
+It then goes through the file site by site and for each individual it checks if the maximum posterior for the individual's three genotypes is >= some threshold (e.g. 0.5 or 0.95) .
+
+If it is, it adds the heterozygosity posterior probabilty into that individual's dictionary entry (heterozygosity numerator), and tallies the GT as a callable Site for that individual (heterozygosity denominator)
+# It will also calculate heterozygosity for transversions only
+# and then reports the total sites passing the threshold per individual, the total het probabilities, and divides the two (hets/total sites) for all hets or just transversions
 
 
 usage: python script.py inputFilepath sampleIDFile outputFile MaxProbCutoff PerIndividualDepthMinimum minIndsPerSite
@@ -32,16 +43,16 @@ minIndsPerSite=float(sys.argv[6]) # min number of individuals that have data at 
             # 2-1 : G-C 
             # 2-3 : G-T 
             # 3-2: T-G 
-transversions=[('A','C'),('C','A'),('A','T'),('T','A'),('C','G'),('G','C'),('G','T'),('T','G')]
+transversions=[('0','1'),('1','0'),('0','3'),('3','0'),('1','2'),('2','1'),('2','3'),('3','2')]
 
 ######### for testing only (set these as arguments eventually) #######################
-filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseHaploFile/dummy.pseudhapsuperfile.0based.bed.gz"
-
+#filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseBeagleFile/miniSample-testPosteriors.beagle.gprobs.gz"
+#filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseBeagleSuperfile/test.superfileForPythonTests.bed.gz"
 # this was drawn from high coverage, AF prior 20190524
 # list of samples   # check order super carefully!!! must be in same order as input bam list for angsd!!!!!!!
-sampleIDFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt"
+#sampleIDFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt"
 
-outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseHaploSuperFile/testout.superfile.txt"
+#outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/parseBeagleSuperfile/testout.txt"
 #MaxProbCutoff=0.95 # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
 #PerIndividualDepthMinimum=1
 #minIndsPerSite=2
@@ -55,32 +66,35 @@ numInd=len(sampList)
 # these are now in the proper order ### MAKE SURE IT'S ORDER YOUR BAMLIST WAS IN FOR ANGSD!!!!! OTHERWISE INDS WILL BE ASSIGNED INCORRECTLY
 
 ###### make empty dictionaries : ##############
-#### counts of missing sites: 
+#### counts of missing GTs: 
 missingDict=dict()
-#### counts of called sites: 
+#### counts of called GTs: 
 calledDict=dict()
-#### count of non-ref calls
-nonRefCallCountDict=dict()
-#### count of transversions non-ref calls
-nonRefCallCountDict_TvOnly=dict()
-
+#### sums of het/homAlt/homRef GPs or GLs passing filters
+hetProbSumDict=dict()
+homAltProbSumDict=dict()
+homRefProbSumDict=dict()
+####  transversions:
+TransvOnly_HetProbSumDict=dict()
+TransvOnly_HomAltProbSumDict=dict()
+TransvOnly_HomRefProbSumDict=dict()
 # populate all the dicts with sample IDs and 0s:
 for sample in sampList:
     calledDict[sample]=0
     missingDict[sample]=0
-    nonRefCallCountDict[sample]=0
-    nonRefCallCountDict_TvOnly[sample]=0
-# want to count up number of TV non-ref calls per individual from pseudohaps
-# and as a denominator want to count the total number of sites (?) 
-# Need total called cds sites per individual as a denominator, won't 
-# get that from this file
-# but need to be able to normalize
+    hetProbSumDict[sample]=0
+    homAltProbSumDict[sample]=0
+    homRefProbSumDict[sample]=0
+    TransvOnly_HetProbSumDict[sample]=0
+    TransvOnly_HomAltProbSumDict[sample]=0
+    #TransvOnly_HomRefProbSumDict[sample]=0 # don't need HomRef transversions -- they are HomRef so aren't elevated by transversions
 
 ########### Open beagle GL posteriors file #############
 
-superfile = gzip.open(filepath,"r")
+superfile = gzip.open(filepath,"rb")
+#counts = gzip.open(countsFile,"rb") # don't need counts file because it's all in super file
 
-# get header:
+# get beagle header:
 header=[]
 for line in superfile:
     if "#" in line:
@@ -89,7 +103,12 @@ for line in superfile:
         #len(header)==(numInd*3) + 3 # should be TRUE
         break
 #print(header)
-
+# need to figure out positions within the header of certain things
+# know header 0-11 will be bed fmt stuff
+# and 12-18 (?) will be mafs
+# note that .index("foo") will only return teh FIRST entry and will throw and error if it isn't there. in this case that is okay, but just be aware.
+# things I need for filtering: nInd; 
+#perSitenIndIndex=header.index("nInd") # so not really using this information from MAFs; actually just getting it from the "counts" part of the file. (counting number of inds that pass depth filter so both filters are applied together to the whole line; then again perGT am applying the depth filter)
 allele1Index=header.index("allele1")
 allele2Index=header.index("allele2")
 beagleIndex=header.index("Ind0") # where beagle GPs or GLs start
@@ -98,10 +117,7 @@ markerIndex=header.index("marker")
 # reset file:
 superfile.seek(0)
 
-# want: count up non-ref alleles 
-# need ref allele
-# want to count up Non-N                                                                                                                                                                                                               
-# so need the ref allele
+
 for line0 in superfile:
     # skip header and process things directly
     if line0.startswith("#"):
