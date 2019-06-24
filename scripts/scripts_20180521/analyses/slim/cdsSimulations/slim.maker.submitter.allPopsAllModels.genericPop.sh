@@ -21,7 +21,7 @@ do
 sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh $h
 done
 
-for i in {2..25}
+for i in {1..25}
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 # use long-run script:
