@@ -59,7 +59,7 @@ comboheader=`echo -e "$bedhead\t$angsdheaders"` # need the "" and -e to get the 
 echo -e "$comboheader" >  ${hapoutput} 
 
 
-paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 
+paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 
 gzip -f $indir/${hapoutput}
 
 ############################################### low coverage ################################################
@@ -101,7 +101,7 @@ comboheader=`echo -e "$bedhead\t$hapHeader"` # need the "" and -e to get the tab
 echo -e "$comboheader" >  ${hapoutput} 
 
 
-paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 
+paste <(zcat $GLDir/$mafs) <(zcat $indir/$hapFile) <(zcat $GLDir/$counts) | grep -v "chromo" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $indir/${hapoutput} # go into awk and rearrange to make it bed format with extra columns 
 gzip -f $indir/${hapoutput}
 
 
