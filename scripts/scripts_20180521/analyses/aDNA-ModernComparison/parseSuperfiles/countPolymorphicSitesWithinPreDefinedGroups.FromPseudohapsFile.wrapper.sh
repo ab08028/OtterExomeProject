@@ -12,7 +12,7 @@ module load python/2.7
 maxMissingInds=1 # number of missing GTs allowed for a group of 3 inds (can try with 0 as well)
 
 # directories: 
-wd=$SCRATCH/captures/aDNA-ModernComparison/angsd-pseudoHaps
+wd=$SCRATCH/captures/aDNA-ModernComparison/
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
@@ -30,18 +30,20 @@ LCSampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsIn
 mkdir -p $outdir/$LCDate
 
 ################ high coverage ##################
-indir=$wd/$HCDate
+indir=$wd/angsd-pseudoHaps/$HCDate
 for ref in mfur elut
 do
+echo "starting high coverage: $ref"
 # usage: python script input output sampleID maxMissing
 python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$HCDate/highcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $HCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
 done
 
 ################ low coverage ##################
-indir=$wd/$LCDate
+indir=$wd/angsd-pseudoHaps/$LCDate
 for ref in mfur elut
 do
+echo "starting high coverage: $ref"
 # usage: python script input output sampleID maxMissing
 python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$LCDate/lowcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $LCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
