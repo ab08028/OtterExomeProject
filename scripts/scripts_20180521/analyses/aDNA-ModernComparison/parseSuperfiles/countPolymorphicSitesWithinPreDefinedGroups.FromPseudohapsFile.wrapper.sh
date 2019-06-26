@@ -34,7 +34,7 @@ indir=$wd/$HCDate
 for ref in mfur elut
 do
 # usage: python script input output sampleID maxMissing
-python $scriptDir/$script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$HCDate/highcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $HCSampleIDs ${maxMissingInds}
+python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$HCDate/highcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $HCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
 done
 
@@ -43,6 +43,6 @@ indir=$wd/$LCDate
 for ref in mfur elut
 do
 # usage: python script input output sampleID maxMissing
-python $scriptDir/$script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$LCDate/lowcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $LCSampleIDs ${maxMissingInds}
+python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$LCDate/lowcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $LCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
 done
