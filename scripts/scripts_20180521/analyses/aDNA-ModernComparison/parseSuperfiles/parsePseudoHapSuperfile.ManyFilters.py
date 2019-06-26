@@ -16,6 +16,7 @@ import sys
 filepath = sys.argv[1] #path to input superfile file, should contain transitions and transversions (a concatenation of angsd results in bed format, then mafs, then GPs or GLs, then counts -- generated from previous script)
 sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[3] # output file
+# it's very important for these to be floats
 #MaxProbCutoff=float(sys.argv[4]) # # if the max of the 3 probs is below this, discard; keep if >= to the cutoff
 PerIndividualDepthMinimum=float(sys.argv[4])
 minIndsPerSite=float(sys.argv[5]) # min number of individuals that have data at a site (note: won't be counted unless they also pass the PerIndividualDepthMinimum; so if you require 2 inds at 2 read depth (not recommended, just an example) then if you had an individual with 1 read, and an individual with 2 reads, it wouldn't pass.)

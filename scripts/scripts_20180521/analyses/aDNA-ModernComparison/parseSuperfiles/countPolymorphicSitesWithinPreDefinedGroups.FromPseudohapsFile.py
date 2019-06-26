@@ -18,7 +18,7 @@ import sys
 filepath = sys.argv[1]  #path to input haplofile
 outname= sys.argv[2] # output file
 sampleIDFile=sys.argv[3] # path to file with list of names in SAME ORDER as bamList you used for angsd
-maxMissingInd = sys.argv[4] # max missing inds per population for a site to be considered 'called' for that population ; count of "Ns" within a popualtion must be <= this number. 
+maxMissingInd = float(sys.argv[4]) # max missing inds per population for a site to be considered 'called' for that population ; count of "Ns" within a popualtion must be <= this number. 
 # I think order of individuals is: (TEMP)
 #maxMissingInd= 1 
 sampList = [line.rstrip('\n') for line in open(sampleIDFile)]
@@ -80,7 +80,7 @@ for line0 in haploFile:
         # check if it's polymorphic within a population (?) or fixed in others?
         # must be at least 2 non-N entries
         #if popGTs.count("N") < (len(popGTs) -1): # if there are more Ns than 
-        if popGTs.count("N") <= maxMissingInd:
+        if popGTs.count("N") <= float(maxMissingInd):
             sitesCalled[pop]+=1
             # and figure out if it's polymorphic:
             GTSetList=list(set(popGTs))
