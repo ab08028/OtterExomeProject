@@ -35,11 +35,11 @@ basename=angsdOut.mappedTo${ref}
 
 for angsdDate in $dates
 do
-indir=$wd/VEP/$angsdDate 
+indir=$wd/VEP/pseudoHaps/$angsdDate 
 
 # can use GP or GL superfile; they are in the same order and have same sites, so it doesn't matter, since GLs and GPs aren't taken along for the ride in the VEP input format
 # I am using GPs, but again, could be either:
-vepinput=${basename}.pseudoHaps.superfile.cdsOnly.txt.gz # may not work when gzipped -- expt and see.
+vepinput=${basename}.pseudoHaps.superfile.cdsOnly.1based.VEPInput.txt.gz # may not work when gzipped -- expt and see.
 
 ### adding CANONICAL field so I can filter on that
 # 20190611: adding --pick so that it only picks one annotation per variant
