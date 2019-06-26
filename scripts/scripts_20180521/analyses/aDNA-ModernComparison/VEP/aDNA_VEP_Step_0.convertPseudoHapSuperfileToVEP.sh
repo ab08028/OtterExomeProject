@@ -31,8 +31,7 @@ outdir=$wd/VEP/pseudoHaps/$angsdDate
 mkdir -p $outdir
 # can use GP or GL superfile; they are in the same order and have same sites, so it doesn't matter, since GLs and GPs aren't taken along for the ride in the VEP input format
 # I am using GPs, but again, could be either:
-hapSuperfile=${basename}.BiallelicTransvOnly.noRefInfo.superfile.0based.bed.gz
-cdsSuperfile=${hapSuperfile%.0based.bed.gz}.cdsOnly.0based.bed.gz
+cdsSuperfile=${hapSuperfile%.0based.bed.gz}.pseudoHaps.superfile.cdsOnly.0based.bed.gz
 output=${cdsSuperfile%.0based.bed.gz}.1based.VEPInput.txt
 
 ########### convert to VEP input format ###############
