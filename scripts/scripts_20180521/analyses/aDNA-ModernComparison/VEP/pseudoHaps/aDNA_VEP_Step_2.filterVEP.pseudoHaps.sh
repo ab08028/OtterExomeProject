@@ -26,12 +26,13 @@ wd=$SCRATCH/captures/aDNA-ModernComparison
 #GLdir=$wd/angsd-GLs
 
 ref=mfur # only work with MFUR when going into VEP!
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+dates="20190612-highcov-pseudoHaps 20190612-lowcov-pseudoHaps"
 basename=angsdOut.mappedTo${ref}
 for angsdDate in $dates
 do
-indir=$wd/VEP/$angsdDate 
-input=${basename}.superfile.GPs.mafs.counts.cdsOnly.1based.VEPInput.VEP.output.pick.tbl.gz
+indir=$wd/VEP/pseudoHaps/$angsdDate 
+input=${basename}.pseudoHaps.superfile.cdsOnly.1based.VEPInput.VEP.output.pick.tbl.gz
 
 # 20190611: adding --pick to the initial run of VEP so that it only picks one annotation per variant
 # this is what I thought filter-vep was doing, but on rare occasions it was still outputting a couple annotations per variant; don't want that. So for now, I'm just picking based on the VEP criteria (severity and validtity hierarchy). This doesn't change anything about this filtering script except the name of the input file. 
