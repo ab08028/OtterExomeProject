@@ -16,7 +16,10 @@ wd=$SCRATCH/captures/aDNA-ModernComparison/
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
-script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.py
+# script for high cov inds
+HCscript=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.highCoverage.py
+# script for low cov inds: 
+LCscript=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.lowCoverage.py
 outdir=$wd/countPolymorphicSites
 mkdir -p $outdir
 
@@ -35,7 +38,7 @@ for ref in mfur elut
 do
 echo "starting high coverage: $ref"
 # usage: python script input output sampleID maxMissing
-python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$HCDate/highcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $HCSampleIDs ${maxMissingInds}
+python $HCscript $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$HCDate/highcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $HCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
 done
 
@@ -45,6 +48,6 @@ for ref in mfur elut
 do
 echo "starting high coverage: $ref"
 # usage: python script input output sampleID maxMissing
-python $script $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$LCDate/lowcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $LCSampleIDs ${maxMissingInds}
+python $LCscript $indir/angsdOut.mappedTo${ref}.haplo.gz $outdir/$LCDate/lowcov.PolymorphicCounts.mappedTo${ref}.maxMiss.${maxMissingInds}.txt $LCSampleIDs ${maxMissingInds}
 # the script checks for biallelic and transversions and counts up polymorphic pseudohaploid sites
 done
