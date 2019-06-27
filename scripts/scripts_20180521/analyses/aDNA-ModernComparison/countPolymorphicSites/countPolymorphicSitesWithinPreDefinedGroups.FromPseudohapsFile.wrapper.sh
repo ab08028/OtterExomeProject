@@ -17,9 +17,9 @@ wd=$SCRATCH/captures/aDNA-ModernComparison/
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
 # script for high cov inds
-HCscript=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.highCoverage.py
+HCscript=$scriptDir/analyses/aDNA-ModernComparison/countPolymorphicSites/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.highCoverage.py
 # script for low cov inds: 
-LCscript=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.lowCoverage.py
+LCscript=$scriptDir/analyses/aDNA-ModernComparison/countPolymorphicSites/countPolymorphicSitesWithinPreDefinedGroups.FromPseudohapsFile.lowCoverage.py
 outdir=$wd/countPolymorphicSites
 mkdir -p $outdir
 
