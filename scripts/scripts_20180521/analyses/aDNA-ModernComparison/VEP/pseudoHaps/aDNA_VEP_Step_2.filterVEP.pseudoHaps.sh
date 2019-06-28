@@ -58,3 +58,4 @@ $vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is 
 
 done
 
+# can consider gzipping them 

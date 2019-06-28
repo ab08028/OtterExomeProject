@@ -27,7 +27,7 @@ import sys
 filepath = sys.argv[1] #path to input file, beagle posterior GLs ; should contain transitions and transversions 
 sampleIDFile=sys.argv[2] # path to file with list of names in SAME ORDER as bamList you used for angsd
 outname= sys.argv[3] # output file
-MissingnessMaxProbCutoff=sys.argv[4] # this is fraction of no-call genotypes you'll permit per 
+MissingnessMaxProbCutoff=float(sys.argv[4]) # this is fraction of no-call genotypes you'll permit per 
 
 
 

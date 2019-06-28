@@ -19,35 +19,31 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 
 ref=mfur # only work with MFUR when going into VEP!
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
+dates="20190612-highcov-pseudoHaps 20190612-lowcov-pseudoHaps"
 categories="synonymous missense stopgained"
 
 #  20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
 basename=angsdOut.mappedTo${ref}
 for angsdDate in $dates
 do
-indir=$wd/VEP/$angsdDate 
+indir=$wd/VEP/pseudoHaps/$angsdDate 
 GLdir=$wd/angsd-GLs/$angsdDate 
 mkdir -p $GLdir/cdsPerCategoryFromVEP
 ### convert vep output back to bed coords
 # note vep is 1based, bed is 0based
-
-for angsdDate in $dates
-do
 for category in $categories
 do
 # doesn't matter whether this came from GPs or GLs, it's all about coordinates
-input=$indir/${basename}.superfile.GPs.mafs.counts.cdsOnly.1based.VEPInput.VEP.output.pick.${category}.tbl
+input=$indir/${basename}.pseudoHaps.superfile.cdsOnly.1based.VEPInput.VEP.output.pick.${category}.tbl
 grep -v "#" $input | awk '{OFS="\t";split($2,pos,":");print pos[1],pos[2]-1,pos[2],$1}' > ${input%.tbl}.0based.coordsOnly.bed
 
 #### then intersect with my superfiles #########
-types="GLs GPs" # could do GPs or GLs from these coordinates.
-for type in $types
-do
 # redo this with the -header flag so I get headers
-bedtools intersect -a $GLdir/${basename}.superfile.${type}.mafs.counts.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
+bedtools intersect -a $wd/angsd-pseudoHaps/$angsdDate/${basename}.pseudoHaps.superfile.cdsOnly.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.0based.fromVEP.pick.${category}.bed
 done
 done
-done
-done
+
+
+
 
