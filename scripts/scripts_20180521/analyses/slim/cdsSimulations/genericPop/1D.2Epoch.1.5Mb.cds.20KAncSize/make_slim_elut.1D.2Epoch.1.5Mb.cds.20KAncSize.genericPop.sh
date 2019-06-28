@@ -49,9 +49,6 @@ initialize() {
 	defineConstant("g",$g); //number of genes; starting with 1000 (AB)
 	defineConstant("geneLength", $gLen); // length of each gene
 	defineConstant("seqLength", g*geneLength); // total sequence length starting with 1.5Mb (AB)
-	//defineConstant("outdir",\"$outdir\"); -- set in command line
-	//defineConstant("v_CHUNK",$chunk); // portion of genome  -- set in command line
-	//defineConstant("v_REP",$rep); // overall replicate number -- set in command line
 	defineConstant("v_h",$h); // dominance coefficient
 	defineConstant("v_SS",$ss); // sample size
 	defineConstant("v_MU",$mu);

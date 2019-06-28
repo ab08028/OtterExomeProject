@@ -19,14 +19,15 @@ mkdir -p $logdir
 for h in 0 0.5
 do
 sh $scriptdir/$pop/$model/make_slim_elut.${model}.${pop}.sh $h
-done
+#done
 
 for i in {1..25}
 
 do
 # qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 # use long-run script:
-qsub -N slimRep${i}.${pop} -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.longRun.sh $pop $model $i $todaysdate
+qsub -N slimRep${i}.${pop}.${model}.${h} -o $logdir -e $logdir $scriptdir/array_slim_elut.generic.longRun.sh $pop $model $i $todaysdate $h
+done
 done
 done
 done

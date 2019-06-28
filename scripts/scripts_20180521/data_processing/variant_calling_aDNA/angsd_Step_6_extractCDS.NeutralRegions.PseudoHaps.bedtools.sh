@@ -31,7 +31,7 @@ hapSuperfile=$indir/${basename}.pseudoHaps.superfile.0based.bed.gz
 # -wa says to print every entry of "a" that intersects with "b"; -header says to print the header of "a" before the results
 # note that bed headers must start with "#"
 ### GPs:
-echo "starting GPs"
+echo "starting intersection"
 bedtools intersect -a $hapSuperfile -wa -header -b $neutBed | gzip > ${hapSuperfile%.0based.bed.gz}.neutralOnly.0based.bed.gz
 
 bedtools intersect -a $hapSuperfile -wa -header -b $cdsBed | gzip > ${hapSuperfile%.0based.bed.gz}.cdsOnly.0based.bed.gz

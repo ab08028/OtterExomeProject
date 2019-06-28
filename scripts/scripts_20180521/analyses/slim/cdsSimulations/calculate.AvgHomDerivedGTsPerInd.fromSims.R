@@ -84,10 +84,16 @@ allInputs[allInputs$h==0.5,]$hLabel <- "h = 0.5 (add.)"
 
 ###### tallying up the number of homozygous genotypes per category divided by the population size before and after contraction for each replicate
 # 
+#test <- allInputs %>%
+#  group_by(state,h,hLabel,population,sCat,replicate,model,popModDate,chunk)%>%
+#  mutate(avgHomDerived=sum(p1numhom)/popsizeDIP)
+#ggplot(test,aes(x=sCat,y=avgHomDerived,color=replicate))+
+#  geom_point()
+# plot per chunk
+
 avgHomPerIndPersCat <- allInputs %>%
   group_by(state,h,hLabel,population,sCat,replicate,model,popModDate) %>%
-  tally(p1numhom/popsizeDIP)
-
+  mutate(avgHomDerived=sum(p1numhom)/popsizeDIP)
 # order factors:
 avgHomPerIndPersCat$state <- factor(avgHomPerIndPersCat$state,levels=c("PreContraction","PostContraction"))
 avgHomPerIndPersCat$sCat <- factor(avgHomPerIndPersCat$sCat,levels=c("neutral","weakly deleterious","moderately deleterious","strongly deleterious"))
