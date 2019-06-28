@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -l h_rt=24:00:00,h_data=3G
+#$ -l h_rt=100:00:00,h_data=3G,highp
 #$ -N countDerivedPerCategoryFromPseudos
 #$ -cwd
 #$ -m bea
