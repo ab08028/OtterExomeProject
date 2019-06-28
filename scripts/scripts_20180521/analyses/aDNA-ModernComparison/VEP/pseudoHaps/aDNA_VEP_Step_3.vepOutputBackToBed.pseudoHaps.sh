@@ -28,8 +28,8 @@ basename=angsdOut.mappedTo${ref}
 for angsdDate in $dates
 do
 indir=$wd/VEP/pseudoHaps/$angsdDate 
-GLdir=$wd/angsd-GLs/$angsdDate 
-mkdir -p $GLdir/cdsPerCategoryFromVEP
+hapdir=$wd/angsd-pseudoHaps/$angsdDate 
+mkdir -p $hapdir/cdsPerCategoryFromVEP
 ### convert vep output back to bed coords
 # note vep is 1based, bed is 0based
 for category in $categories
@@ -40,7 +40,7 @@ grep -v "#" $input | awk '{OFS="\t";split($2,pos,":");print pos[1],pos[2]-1,pos[
 
 #### then intersect with my superfiles #########
 # redo this with the -header flag so I get headers
-bedtools intersect -a $wd/angsd-pseudoHaps/$angsdDate/${basename}.pseudoHaps.superfile.cdsOnly.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.0based.fromVEP.pick.${category}.bed
+bedtools intersect -a $wd/angsd-pseudoHaps/$angsdDate/${basename}.pseudoHaps.superfile.cdsOnly.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $hapdir/cdsPerCategoryFromVEP/${basename}.superfile.0based.fromVEP.pick.${category}.bed
 done
 done
 
