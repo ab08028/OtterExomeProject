@@ -22,6 +22,7 @@ pop=$1
 model=$2 #1D.2Epoch.1.5Mb.cds 
 rep=$3 # doing one replicate, then will set from command line from submission script
 rundate=$4 # date arrays are submitted; set in submitter so as not to have jobs on different days
+h=$5
 # submitter usage: qsub -N name -o outdir -e errordir $script $pop $model $rep $rundate
 
 #wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/h_$h/$rundate/
@@ -41,8 +42,8 @@ todaysdate=`date +%Y%m%d`
 seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus random , plus the replicate and SGE task id. so no task should be the same, and no jobs run on different days should be the same, even if they have same task id
 # so if two tasks with the same task id across different reps start in the same second (get same random), then they will still be different because of 10*rep 
 
-for h in 0 0.5 
-do
+#for h in 0 0.5
+#do
 wd=$SCRATCH/captures/analyses/slim/cdsSimulations/$pop/$model/$rundate/h_$h
 outdir=$wd/replicate_${rep} # set this in submission script 
 mkdir -p $wd
@@ -61,7 +62,7 @@ $scriptdir/$slimscript
 # long prints out what vars are set as 
 # this will output vcf and full population state.
 
-done
+#done
 sleep 10m
 
 
