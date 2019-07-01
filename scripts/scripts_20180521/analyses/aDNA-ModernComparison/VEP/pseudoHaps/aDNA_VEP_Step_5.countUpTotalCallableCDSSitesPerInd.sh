@@ -32,14 +32,13 @@ outdir=$wd/VEP/pseudoHaps/$date/countsPerCategory/
 mkdir -p $outdir
 indir=$wd/angsd-pseudoHaps/$date/
 
-for category in $categories
-do
-output=countsPerCategory.${category}.minDepth.${perIndDepthMin}.minInds.${minIndsPerSite}.txt
+
+output=totalCallableCDSSitesPerInd.minDepth.${perIndDepthMin}.minInds.${minIndsPerSite}.txt
 input=${basename}.pseudoHaps.superfile.cdsOnly.0based.bed.gz # this is all CDS sites (based on ferret coords)
 python $script $indir/$input $hcIDs $outdir/$output $perIndDepthMin $minIndsPerSite
 # want to count up how many sites there are with the perInd and depth filters that are the same as step 4
 done
-done
+
 
 ######################## low coverage ###################################
 lcIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt
@@ -51,11 +50,8 @@ outdir=$wd/VEP/pseudoHaps/$date/countsPerCategory/
 mkdir -p $outdir
 indir=$wd/angsd-pseudoHaps/$date/
 
-for category in $categories
-do
-output=countsPerCategory.${category}.minDepth.${perIndDepthMin}.minInds.${minIndsPerSite}.txt
+output=totalCallableCDSSitesPerInd.minDepth.${perIndDepthMin}.minInds.${minIndsPerSite}.txt
 input=${basename}.pseudoHaps.superfile.cdsOnly.0based.bed.gz # this is all CDS sites (based on ferret coords)
 python $script $indir/$input $lcIDs $outdir/$output $perIndDepthMin $minIndsPerSite
 
-done
 done
