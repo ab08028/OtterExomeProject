@@ -13,8 +13,8 @@
 #### run specific settings ####
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
-todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
-
+#todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
+todaysdate='20190701-highcov-AFprior-MajorMinor4'
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -45,6 +45,8 @@ echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBam
 ######### ANGSD settings:##############
 
 # settings from Orlando cell paper Fages et al 2019, Cell (TAR Methods page  e14-15):
+# ****** 20190701 fix: use doMajorMinor 4 instead of 1, otherwise you miss the hom-alt calls! ****** # 
+# *** also not skipping triallelic, will do that myself as needed *** # 
 # -doMajorMinor 1 -doMaf 1 -beagleProb 1 -doPost 1 -GL 2 -minQ 20 -minMapQ 25 -remove_bads 1 -uniqueOnly 1 -baq 1 -C 50
 # doMajorMinor 1: Infer major and minor from GL
 # doMaf 1: Frequency (fixed major and minor) (gets them from GLs from doMajorMinor above)
@@ -85,3 +87,20 @@ angsd -nThreads 16 \
 
 
 
+####################### elut ###############
+####### Elut mapped bams ############
+spp="elut"
+ref=$elutRef
+bamList=$elutBamList
+
+angsd -nThreads 16 \
+-ref $ref \
+-bam $bamList \
+-GL 2 \
+-doMajorMinor 4 -doMaf 1 \
+-beagleProb 1 -doPost $posterior \
+-remove_bads 1 -uniqueOnly 1 \
+-C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
+-out $outdir/angsdOut.mappedTo${spp} \
+-doGlf 2 \
+-doCounts 1 -dumpCounts 2
