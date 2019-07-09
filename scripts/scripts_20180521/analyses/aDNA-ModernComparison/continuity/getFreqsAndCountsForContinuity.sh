@@ -116,7 +116,7 @@ grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";prin
 # goes *way* faster if the modern DNA is -b and ancient is -a
 
 printf "$bedhead\t$angsdheaders\t$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed.gz -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
 
 ########### Alaska: get frequency information ###################
 pop=AK
@@ -136,7 +136,7 @@ grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";prin
 
 ###### combine with angsd count information: ######
 printf "$bedhead\t$angsdheaders\t$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed.gz -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
 
 
 ####### DON'T NEED ELUT FOR CONTINIUTY BECAUSE YOU NEED POLARIZED ALLELES -- DONT DO ELUT ########
