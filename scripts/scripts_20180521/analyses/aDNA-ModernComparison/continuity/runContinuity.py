@@ -35,12 +35,16 @@ print("******** filtering ancient coverage -- removing < 2.5% percentile, >97.5%
 coverage_filter(read_lists,2.5,97.5)
 
 ######## optimize #######
+print("********* beginning optimization ***********")
 num_core=2
 opts_cont_false=optimize_pop_params_error_parallel(freqs,read_lists,num_core,detail=True,continuity=False)
 opts_cont_true=optimize_pop_params_error_parallel(freqs,read_lists,num_core,detail=True,continuity=True)
+### a simple demographic model: from cont paper: "To calculate the sampling probability, we assume a simple demographic model, in which the ancient individual belongs to a population that split off from the modern population τ1 generations ago, and subsequently existed as an isolated population for τ2 generations."
+# so opts_cont_false[0][0] will be for population 0 and give t1, t2 and error for ind1, ind2, ...
 
 # from continuity docs:
 likelihood_false = np.array([-x[1] for x in opts_cont_false]) #minus sign is because scipy.optimize minimizes the negative log likelihood
 likelihood_true = np.array([-x[1] for x in opts_cont_true])
 LRT = 2*(likelihood_false - likelihood_true)
 log_p_vals = scipy.stats.chi2.logsf(LRT,1) #returns the LOG p-values
+#### need to write out parameters 
