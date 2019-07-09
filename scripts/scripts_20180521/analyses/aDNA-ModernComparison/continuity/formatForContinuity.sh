@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -l h_rt=40:00:00,h_data=2G,highp
 #$ -m abe
-#$ -pe 16
+#$ -pe shared 16
 #$ -M ab08028
 #$ -N neutralCDSBedtools
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd

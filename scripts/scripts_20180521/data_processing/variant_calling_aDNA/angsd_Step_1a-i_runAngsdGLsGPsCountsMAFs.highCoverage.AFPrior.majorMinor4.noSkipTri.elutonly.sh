@@ -4,17 +4,17 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdStep1bi
+#$ -N angsdStep1ai
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
-######### Step 1 b-i: call GLs and GPs, counts and mafs using ANGSD based on downsampled modern + aDNA mapped to elut/mfur **using allele freqs as prior for GPS** ######
+######### Step 1 a-alt-i: call GLs and GPs, counts and mafs using ANGSD based on full coverage modern + aDNA mapped to elut/mfur **using allele freqs as prior for GPS** ######
+# different because: and using domajorminor 4 and no skiptriallelic
 #### run specific settings ####
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
-todaysdate=`date +%Y%m%d`'-lowcov-AFprior'
-
-#todaysdate='20190701-lowcov-AFprior-MajorMinor4'
+#todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
+todaysdate='20190701-highcov-AFprior-MajorMinor4'
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -31,15 +31,16 @@ mkdir -p $GLdir
 mkdir -p $GLdir/$todaysdate
 outdir=$GLdir/$todaysdate
 
-### list of bam files to include: downsampled coverage modern + aDNA:
-elutBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoElutfullpaths.txt # downsampled modern + adna only
-mfurBamList=$scriptDir/bamLists/angsd.bamList.LowCoverageOnly.mappedtoMfurfullpaths.txt # downsampled modern + adna only
+### list of bam files to include: high coverage modern + aDNA:
+elutBamList=$scriptDir/bamLists/angsd.bamList.mappedtoElutfullpaths.HighCovPlusADNAOnly.txt # list of bam files mapped to sea otter, including downsampled AND non-downsampled
+mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # reference genomes:
 elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-echo -e "THIS USES LOW COVERAGE DOWNSAMPLED MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/LOWCOVERAGEONLY.txt
+echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.txt
+
 
 ######### ANGSD settings:##############
 
@@ -68,23 +69,25 @@ echo -e "THIS USES LOW COVERAGE DOWNSAMPLED MODERN + ANCIENT ONLY\nBamLists used
 
 # trying output in beagle format  doGlf 2
 ####### Mfur mapped bams ############
-spp="mfur"
-ref=$mfurRef
-bamList=$mfurBamList
+#spp="mfur"
+#ref=$mfurRef
+#bamList=$mfurBamList
+# changed Domajorminor to 4 and removed skipTriallelic -- will filter myself 
+#angsd -nThreads 16 \
+#-ref $ref \
+#-bam $bamList \
+#-GL 2 \
+#-doMajorMinor 4 -doMaf 1 \
+#-beagleProb 1 -doPost $posterior \
+#-remove_bads 1 -uniqueOnly 1 \
+#-C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
+#-out $outdir/angsdOut.mappedTo${spp} \
+#-doGlf 2 \
+#-doCounts 1 -dumpCounts 2
 
-angsd -nThreads 16 \
--ref $ref \
--bam $bamList \
--GL 2 \
--doMajorMinor 4 -doMaf 1 \
--beagleProb 1 -doPost $posterior \
--remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
--doGlf 2 \
--doCounts 1 -dumpCounts 2
 
 
+####################### elut ###############
 ####### Elut mapped bams ############
 spp="elut"
 ref=$elutRef
@@ -101,6 +104,3 @@ angsd -nThreads 16 \
 -out $outdir/angsdOut.mappedTo${spp} \
 -doGlf 2 \
 -doCounts 1 -dumpCounts 2
-
-
-

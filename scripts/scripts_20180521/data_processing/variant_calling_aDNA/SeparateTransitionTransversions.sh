@@ -13,7 +13,8 @@
 # and these appear in columns 2 and 3 of the beagle file
 # So if there's 0 <-> 2 and 1 <-> 3
 #dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
-dates="20190524-lowcov-AFprior"
+#dates="20190524-lowcov-AFprior"
+dates="20190701-highcov-AFprior-MajorMinor4 20190701-lowcov-AFprior-MajorMinor4"
 #angsdDate=20190503
 #wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate
 

@@ -13,8 +13,8 @@
 #### run specific settings ####
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
-#todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
-todaysdate='20190701-highcov-AFprior-MajorMinor4'
+todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
+#todaysdate='20190701-highcov-AFprior-MajorMinor4'
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
