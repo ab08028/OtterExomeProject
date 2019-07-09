@@ -4,14 +4,15 @@
 #$ -m abe
 #$ -M ab08028
 #$ -pe shared 16
-#$ -N angsdStep1bi
+#$ -N angsdStep1bii
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
-
+############# snps only ############
 ######### Step 1 b-i: call GLs and GPs, counts and mafs using ANGSD based on downsampled modern + aDNA mapped to elut/mfur **using allele freqs as prior for GPS** ######
 #### run specific settings ####
 trimValue=7 # set value you want to trim from either end of read (looking at mapdamage plots)
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
+snpCutoff=1e-06
 todaysdate=`date +%Y%m%d`'-lowcov-AFprior'
 
 #todaysdate='20190701-lowcov-AFprior-MajorMinor4'
@@ -80,10 +81,10 @@ angsd -nThreads 16 \
 -beagleProb 1 -doPost $posterior \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
+-out $outdir/angsdOut.mappedTo${spp}.${snpCutoff}.snpsOnly \
 -doGlf 2 \
--doCounts 1 -dumpCounts 2
-
+-doCounts 1 -dumpCounts 2 \
+-SNP_pval $snpCutoff
 
 ####### Elut mapped bams ############
 spp="elut"
@@ -98,9 +99,10 @@ angsd -nThreads 16 \
 -beagleProb 1 -doPost $posterior \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
+-out $outdir/angsdOut.mappedTo${spp}.${snpCutoff}.snpsOnly \
 -doGlf 2 \
--doCounts 1 -dumpCounts 2
+-doCounts 1 -dumpCounts 2 \
+-SNP_pval $snpCutoff
 
 
 

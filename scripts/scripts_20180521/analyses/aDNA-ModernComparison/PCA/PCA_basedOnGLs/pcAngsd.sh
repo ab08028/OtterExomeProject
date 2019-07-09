@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=4G
+#$ -l h_rt=24:00:00,h_data=2G
 #$ -m abe
 #$ -pe shared 10
 #$ -M ab08028
@@ -19,22 +19,32 @@ pcangsddir=/u/home/a/ab08028/klohmueldata/annabel_data/bin/pcangsd
 wd=$SCRATCH/captures/aDNA-ModernComparison
 #angsdDate=20190503 # date GLs were called
 #angsdDate=20190506
-angsdDate=20190524-highcov-AFprior
-minMaf=0.12
+#angsdDate=20190524-highcov-AFprior
+dates="20190701-highcov-AFprior-MajorMinor4 20190701-lowcov-AFprior-MajorMinor4"
+#angsdDate=20190701-highcov-AFprior
+minMafs="0.12 0.2 0.05"
+for angsdDate in $dates
+do
+#minMaf=0.12
 GLdir=$wd/angsd-GLs/$angsdDate 
 PCAdir=$wd/pca/covarianceMatrices/$angsdDate
+#refs="mfur elut"
+refs="mfur elut"
 mkdir -p $PCAdir
 #for state in 1e-6.snpsOnly 1e-6.snpsOnly.transversionsOnly 1e-6.snpsOnly.downSampOnly.minInd.5 1e-6.snpsOnly.downSampOnly.minInd.5.transversionsOnly  # allSites don't use allSites for PCA, just use SNPs. use with and without transversions
-#for state in 1e-6.snpsOnly.downSampOnly 1e-6.snpsOnly.downSampOnly.minInd.9
-#do
-for ref in elut mfur
+
+for state in 1e-06.snpsOnly 1e-06.snpsOnly.TransvOnly
+#for state in 1e-06.snpsOnly
+do
+for ref in $refs
 
 do
 ## is there something I can do here to get minIndividuals? maybe has to be from angsd itself 
-
+for minMaf in $minMafs
+do
 python $pcangsddir/pcangsd.py \
--beagle $GLdir/angsdOut.mappedTo${ref}.beagle.gz \
--o $PCAdir/pcAngsd.$ref \
+-beagle $GLdir/angsdOut.mappedTo${ref}.${state}.beagle.gz \
+-o $PCAdir/pcAngsd.${ref}.${state}.minMaf.${minMaf} \
 -minMaf $minMaf -threads 10 
 
 ## want to do some sort of missingness filter -- maybe sites that are called in all individuals? or in 13/15 or something, so it can't
@@ -42,9 +52,9 @@ python $pcangsddir/pcangsd.py \
 # default minMaf is 0.05
 # this generates a covariance matrix called pcAngsd.ref.state.cov.npy which is a numpy binary file
 done
-#done
-
-
+done
+done
+done
 
 source deactivate
 

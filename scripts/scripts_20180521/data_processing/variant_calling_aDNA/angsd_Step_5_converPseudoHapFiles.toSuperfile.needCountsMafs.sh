@@ -26,7 +26,9 @@ ref=mfur # only work with MFUR when going into VEP!
 # but it's okay because I check # of sites in this script, and I check that the marker IDs are the same using my python parsing script
 # so if you accidentally concat things that shouldn't, it should be caught (but don't ;) ) 
 hapDate="20190612-highcov-pseudoHaps"
-mafCountDate="20190524-highcov-AFprior"
+#mafCountDate="20190524-highcov-AFprior" # this used majorminor 1 which messes up hom-alt sites
+mafCountDate="20190701-highcov-AFprior-MajorMinor4"
+
 basename=angsdOut.mappedTo${ref}
 
 indir=$hapDir/$hapDate # location of your posterior probs
@@ -68,7 +70,8 @@ gzip -f $indir/${hapoutput}
 # but it's okay because I check # of sites in this script, and I check that the marker IDs are the same using my python parsing script
 # so if you accidentally concat things that shouldn't, it should be caught (but don't ;) ) 
 hapDate="20190612-lowcov-pseudoHaps"
-mafCountDate="20190524-lowcov-AFprior"
+#mafCountDate="20190524-lowcov-AFprior" # this used majorminor 1 whcih messes up homalt
+mafCountDate="20190701-lowcov-AFprior-MajorMinor4"
 basename=angsdOut.mappedTo${ref}
 
 indir=$hapDir/$hapDate # location of your posterior probs

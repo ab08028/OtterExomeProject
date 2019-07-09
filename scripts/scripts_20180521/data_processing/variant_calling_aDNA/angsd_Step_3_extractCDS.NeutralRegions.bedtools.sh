@@ -18,8 +18,8 @@ neutBed=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/regionCoordinat
 cdsBed=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/MusPutFuro1.0.91.cdsOnly.0based.sorted.merged.bed
 wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison
 
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
-
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+dates="20190701-highcov-AFprior-MajorMinor4 20190701-lowcov-AFprior-MajorMinor4"
 for angsdDate in $dates
 do
 echo $angsdDate
