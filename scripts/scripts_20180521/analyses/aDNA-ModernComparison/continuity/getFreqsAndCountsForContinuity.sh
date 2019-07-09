@@ -19,13 +19,13 @@ module load bedtools
 ########## script to get continuity input format ###########
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
-combodir=$wd/continuity/combinedCounts-Freqs
+wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/
+outdir=$wd/continuity
+combodir=$outdir/combinedCounts-Freqs
 mkdir -p $combodir
 countsdir='ancientOnly-counts'
 mkdir -p $outdir/$countsdir
-wd=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/
 
-mkdir -p $wd
 
 ##################################################
 ############## angsd dump counts 4 ###############
@@ -76,7 +76,6 @@ gzip -f $outdir/$countsdir/${basename}.counts.0based.bed
 vcfDate=20181119
 vcfDir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${vcfDate}_filtered
 vcf=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
-outdir=$wd/continuity
 mac=1
 
 ########### California: get frequency information ###################
