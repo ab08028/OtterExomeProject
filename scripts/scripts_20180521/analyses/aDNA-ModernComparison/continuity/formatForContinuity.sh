@@ -4,7 +4,7 @@
 #$ -m abe
 #$ -pe shared 16
 #$ -M ab08028
-#$ -N neutralCDSBedtools
+#$ -N formatForContinuity
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
@@ -34,12 +34,19 @@ mac=1
 pop=CA
 keep=/u/flashscratch/a/ab08028/captures/samples/keep.${pop}.${vcfDate}.txt # list of 7 individuals from /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt
 output=${pop}.freqs.fromModernData.${vcfDate}.mac.${mac}
-# sets that there has to be at least one copy of a minor allele (excludes freq 0 and 1)
+
+
+# pull out frequencies within the population using vcftools 
+# --mac : there has to be at least one copy of a minor allele (excludes freq 0 and 1) (continuity doesn't want 0 or 1 freqs)
+
 vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq2 --out $outdir/modernDataGATK_Freqs/$output --mac ${mac}  # 
+
+
+# convert .frq to .bed:
 bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
-frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ\n"
-comboheader1=`echo -e "$bedhead\t$frqhead"`
-echo -e $comboheader1 > $outdir/${output}.0based.bed
+frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
+#comboheader1=`printf "$bedhead\t$frqhead"`
+printf "$bedhead\t$frqhead\n" > $outdir/modernDataGATK_Freqs/${output}.0based.bed
 grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 
 # this gives output as :
@@ -60,14 +67,16 @@ grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";prin
 pop=AK
 keep=/u/flashscratch/a/ab08028/captures/samples/keep.${pop}.${vcfDate}.txt # list of 7 individuals from /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt
 output=${pop}.freqs.fromModernData.${vcfDate}.mac.${mac}
+
 vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq --out $outdir/modernDataGATK_Freqs/$output --mac ${mac} # 
 
 # convert to bed format
 # header:
-bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
-frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ\n"
-comboheader1=`echo -e "$bedhead\t$frqhead"`
-echo -e $comboheader1 > $outdir/${output}.0based.bed
+bedhead='#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12'
+frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
+#comboheader1=`printf "$bedhead\t$frqhead"`
+#comboheader1="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12\tCHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
+printf "$bedhead\t$frqhead\n"> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 
 ##################################################
@@ -75,23 +84,21 @@ grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";prin
 ##################################################
 
 # want to ONLY use aDNA samples (don't care about high/low coverage)
-# want to do elut and mfur though
+# want to do mfur only though, because continuity needs polarized alleles
 # want to not do GLs or anything, just do counts
 # so need bamList of just ancient 
 
 ### list of bam files to include: aDNA **only** ### 
-elutBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoElutfullpaths.txt # ancient only 
+#elutBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoElutfullpaths.txt # ancient only 
 mfurBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoMfurfullpaths.txt # ancient only 
 
 # reference genomes:
-elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
+#elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-snpCutoff=1E-06
-trimValue=7
 countsdir='ancientOnly-counts'
 mkdir -p $outdir/$countsdir
-# trying output in beagle format  doGlf 2
+
 ####### Mfur mapped bams ############
 spp="mfur"
 ref=$mfurRef
@@ -110,48 +117,36 @@ angsd -nThreads 16 \
 # need to combine .pos and .count 
 
 angsdheaders=`paste <(zcat $outdir/$countsdir/${basename}.pos.gz | head -n1) <(zcat $outdir/$countsdir/${basename}.counts.gz | head -n1)`
-comboheader2=`echo -e "$bedhead\t$angsdheaders"`
-echo -e $comboheader2 > $outdir/$countsdir/${basename}.counts.0based.bed
+#comboheader2=`printf "$bedhead\t$angsdheaders"`
+
+printf "$bedhead\t$angsdheaders\n" > $outdir/$countsdir/${basename}.counts.0based.bed
 paste <(zcat $outdir/$countsdir/${basename}.pos.gz) <(zcat $outdir/$countsdir/${basename}.counts.gz) | grep -v "totDepth" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $outdir/$countsdir/${basename}.counts.0based.bed # go into awk and rearrange to make it bed format with extra columns 
+
+gzip -f $outdir/$countsdir/${basename}.counts.0based.bed
 ################################## intersect #####################################################
 ############# then using bedtools intersect, want to combine the counts and frequencies ##########
 # get a header:
-comboheader3=`echo -e "$comboheader1\t$comboheader2"`
+# do California:
+pop=CA
+#comboheader3=`printf "$comboheader1\t$comboheader2"`
 combodir=$wd/continuity/combinedCounts-Freqs
 mkdir -p $combodir
-echo -e $comboheader3 > $combodir/${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed -wa -wb >> $combodir/${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+# the headers here are bedheader and then frequencies, then another bed header (for the angsd bed) and then the angsd header
+printf "$bedhead\t$frqhead\t$bedhead\t$angsdheaders\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed.gz -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
 
-####### Elut mapped bams ############
-spp="elut"
-ref=$elutRef
-bamList=$elutBamList
-basename=angsdOut.mappedTo${spp}
-# can't use rmTrans or snp value cutoff when just dumping counts. it will just dump counts for all sites
-# 
-angsd -nThreads 16 \
--ref $ref \
--bam $bamList \
--remove_bads 1 -uniqueOnly 1 \
--C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/$countsdir/$basename \
--doCounts 1 -dumpCounts 4
 
-# need to combine .pos and .count 
-
-angsdheaders=`paste <(zcat $outdir/$countsdir/${basename}.pos.gz | head -n1) <(zcat $outdir/$countsdir/${basename}.counts.gz | head -n1)`
-comboheader2=`echo -e "$bedhead\t$angsdheaders"`
-echo -e $comboheader2 > $outdir/$countsdir/${basename}.counts.0based.bed
-paste <(zcat $outdir/$countsdir/${basename}.pos.gz) <(zcat $outdir/$countsdir/${basename}.counts.gz) | grep -v "totDepth" | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' | sed 's/\t\t/\t/g' | sed 's/\t$//g' >> $outdir/$countsdir/${basename}.counts.0based.bed # go into awk and rearrange to make it bed format with extra columns 
-################################## intersect #####################################################
-############# then using bedtools intersect, want to combine the counts and frequencies ##########
-# get a header:
-comboheader3=`echo -e "$comboheader1\t$comboheader2"`
+pop=AK
+#comboheader3=`printf "$comboheader1\t$comboheader2"`
 combodir=$wd/continuity/combinedCounts-Freqs
 mkdir -p $combodir
-echo -e $comboheader3 > $combodir/${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed -wa -wb >> $combodir/${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+printf "$bedhead\t$frqhead\t$bedhead\t$angsdheaders\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/modernDataGATK_Freqs/${output}.0based.bed -b $outdir/$countsdir/${basename}.counts.0based.bed.gz -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
 
-############### convert to bed format 
+
+
+####### DON'T NEED ELUT FOR CONTINIUTY BECAUSE YOU NEED POLARIZED ALLELES -- DONT DO ELUT ########
+
+
 source deactivate
 

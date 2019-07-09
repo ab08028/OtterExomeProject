@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jul  8 15:59:52 2019
+
+@author: annabelbeichman
+"""
+import sys
+import numpy as np
+import scipy
+# path to continuity:
+sys.path.append('/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/continuity/')
+#ancient_genotypes = imp.load_source('ancient_genotypes', '/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/continuity/ancient_genotypes.py')
+
+
+from ancient_genotypes import *
+
+readsFilePath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/test.out.txt"
+indsFilePath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/ancInds.txt"
+unique_pops, inds, label, pops, freqs, read_lists = parse_reads_by_pop(readsFilePath,indsFilePath,cutoff=0)
+
+####### could filter coverage here ##########
+####### may want to do alpha and beta potentiall, but would need allele counts but can account for variable coverage #####
+
+######## optimize #######
+num_core=2
+opts_cont_false=optimize_pop_params_error_parallel(freqs,read_lists,num_core,detail=True,continuity=False)
+opts_cont_true=optimize_pop_params_error_parallel(freqs,read_lists,num_core,detail=True,continuity=True)
+
+# from continuity docs:
+likelihood_false = np.array([-x[1] for x in opts_cont_false]) #minus sign is because scipy.optimize minimizes the negative log likelihood
+likelihood_true = np.array([-x[1] for x in opts_cont_true])
+LRT = 2*(likelihood_false - likelihood_true)
+log_p_vals = scipy.stats.chi2.logsf(LRT,1) #returns the LOG p-values
