@@ -14,7 +14,7 @@ sys.path.append('/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/
 
 from ancient_genotypes import *
 
-readsFilePath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/test.out.txt"
+readsFilePath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/continuity/continuityInput/CA.angsdOut.mappedTomfur.ancient.counts.freqsFromModernGATK.superfile.1based.contInput.txt"
 indsFilePath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/ancInds.txt"
 print("******** reading in data **********")
 unique_pops, inds, label, pops, freqs, read_lists = parse_reads_by_pop(readsFilePath,indsFilePath,cutoff=0)
@@ -31,8 +31,8 @@ unique_pops, inds, label, pops, freqs, read_lists = parse_reads_by_pop(readsFile
     #max_cutoff: sites with coverage more than this percentile will be removed (default 97.5)
 # So cut off the bottom and top 2.5% percentiles -- sure, I guess. Might cut off too many sites though. Try with and without
 # This function operates on read_lists IN PLACE, meaning that read_lists will be modified. The function returns a single value, which is a list of the coverage cutoffs for each individual in each population.
-print("******** filtering ancient coverage -- removing < 2.5% percentile, >97.5% percentile. The percentiles are: **********")
-coverage_filter(read_lists,2.5,97.5)
+#print("******** filtering ancient coverage -- removing < 2.5% percentile, >97.5% percentile. The percentiles are: **********")
+#coverage_filter(read_lists,2.5,97.5)
 
 ######## optimize #######
 print("********* beginning optimization ***********")

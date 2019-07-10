@@ -20,7 +20,7 @@ outfilepathTV=sys.argv[3] # output file for transversions
 #filepath = "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/dummy.freqs.counts.gz"
 #outfilepath= "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/test.out.txt"
 #outfilepathTV= "/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/generateContinuityInput/test.out.TV.txt"
-superfile = gzip.open(filepath,"r")
+superfile = open(filepath,"r")
 outfile = open(outfilepath,"w")
 outfileTV = open(outfilepathTV,"w") # for transversions
 # get header:
@@ -28,7 +28,7 @@ outfileTV = open(outfilepathTV,"w") # for transversions
 header=[]
 for line in superfile:
     if "#" in line:
-        header=line.strip().split(' ')
+        header=line.strip().split('\t')
 
         break
 ### things we care about:
@@ -43,7 +43,9 @@ scaffIndex=header.index("chr")
 posIndex=header.index("pos")
 countIndex=header.index("ind0_A") # where counts start
 ###### 3 ancient individuals --- change this if you have more/fewer #####
-totInds=len(header[countIndex:])/4 # count up total counts columns and divide by 4 (A C T G bases) - that gives total inds. should be 3 ancient individuals
+totInds=3
+# eventually want to enter this better
+# len(header[countIndex:])/4 # count up total counts columns and divide by 4 (A C T G bases) - that gives total inds. should be 3 ancient individuals
 
 # order of bases :  'ind2_A', 'ind2_C', 'ind2_G', 'ind2_T']
 bases=['A','C','G','T'] # this is the order of bases in dumpCounts 4
