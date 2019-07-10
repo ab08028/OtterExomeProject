@@ -38,8 +38,8 @@ mkdir -p $outdir/$countsdir
 
 ### list of bam files to include: aDNA **only** ### 
 #elutBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoElutfullpaths.txt # ancient only 
-mfurBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoMfurfullpaths.txt # ancient only 
-
+#mfurBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.ancient.bamList.mappedtoMfurfullpaths.txt # ancient only 
+mfurBamList=$scriptDir/data_processing/variant_calling_aDNA/bamLists/angsd.modernCA-downsampled.bamList.mappedtoMfurfullpaths.txt
 # reference genomes:
 #elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
@@ -49,7 +49,7 @@ mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putori
 spp="mfur"
 ref=$mfurRef
 bamList=$mfurBamList
-basename=angsdOut.mappedTo${spp}
+basename=angsdOut.mappedTo${spp}.lowcovCA
 # can't use rmTrans or snp value cutoff when just dumping counts. it will just dump counts for all sites
 # 
 angsd -nThreads 16 \
@@ -78,7 +78,7 @@ vcfDir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${vcfDate}_filtered
 vcf=snp_9a_forPCAetc_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf.gz
 mac=1
 
-########### California: get frequency information ###################
+########### don't need to redo this California: get frequency information ###################
 pop=CA
 keep=/u/flashscratch/a/ab08028/captures/samples/keep.${pop}.${vcfDate}.txt # list of 7 individuals from /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt
 output=${pop}.freqs.fromModernData.${vcfDate}.mac.${mac}
@@ -87,15 +87,15 @@ output=${pop}.freqs.fromModernData.${vcfDate}.mac.${mac}
 # pull out frequencies within the population using vcftools 
 # --mac : there has to be at least one copy of a minor allele (excludes freq 0 and 1) (continuity doesn't want 0 or 1 freqs)
 
-vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq --out $outdir/modernDataGATK_Freqs/$output --mac ${mac}  # 
+#vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq --out $outdir/modernDataGATK_Freqs/$output --mac ${mac}  # 
 
 
 # convert .frq to .bed:
 bedhead="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12"
 frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
 #comboheader1=`printf "$bedhead\t$frqhead"`
-printf "$bedhead\t$frqhead\n" > $outdir/modernDataGATK_Freqs/${output}.0based.bed
-grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
+#printf "$bedhead\t$frqhead\n" > $outdir/modernDataGATK_Freqs/${output}.0based.bed
+#grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 
 # this gives output as :
 #CHROM   POS     N_ALLELES       N_CHR   {ALLELE:FREQ}
@@ -123,7 +123,7 @@ pop=AK
 keep=/u/flashscratch/a/ab08028/captures/samples/keep.${pop}.${vcfDate}.txt # list of 7 individuals from /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/information/samples/easySFSPopMapFiles/samplesPop.Headers.forEasySFS.3.20181119.txt
 output=${pop}.freqs.fromModernData.${vcfDate}.mac.${mac}
 
-vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq --out $outdir/modernDataGATK_Freqs/$output --mac ${mac} # 
+#vcftools --gzvcf $vcfDir/$vcf --keep $keep --freq --out $outdir/modernDataGATK_Freqs/$output --mac ${mac} # 
 
 # convert to bed format
 # header:
@@ -131,8 +131,8 @@ bedhead='#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\temp
 frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
 #comboheader1=`printf "$bedhead\t$frqhead"`
 #comboheader1="#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12\tCHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
-printf "$bedhead\t$frqhead\n"> $outdir/modernDataGATK_Freqs/${output}.0based.bed
-grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
+#printf "$bedhead\t$frqhead\n"> $outdir/modernDataGATK_Freqs/${output}.0based.bed
+#grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 
 ###### combine with angsd count information: ######
 printf "$bedhead\t$angsdheaders$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
