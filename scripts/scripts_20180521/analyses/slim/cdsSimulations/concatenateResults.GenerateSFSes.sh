@@ -110,9 +110,9 @@ grep -v "replicate" $repdir/slim.output.${state}Contraction.${j}.summary.txt | g
 grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | awk -v chr=$i '{OFS="\t";$1=""; print chr,$0}' >>  $outVCF
 # # separate mutation types
 # mutation type 1: 
-grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=1"  | awk -v chr=$i '{OFS="\t";$1=""; print chr,$0}' >> $mut1VCF
+grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=1"  | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' >> $mut1VCF
 # mutation type 2:
-grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=2"  | awk -v chr=$i '{OFS="\t";$1=""; print chr,$0}' >> $mut2VCF
+grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=2"  | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' >> $mut2VCF
 
 done
 # gzip the outputs:
