@@ -48,7 +48,6 @@ for(popModDate in popModDates){
             loadDF$rep <- rep
             loadDF$state <- state
             loadDF$h <- h
-            loadDF$da
             loadDF$S_allsites <- S
             loadDF$W_meanFitness <- W
             loadDF$L_mutationLoad <- L
@@ -92,7 +91,7 @@ pTalk1 <- ggplot(forTalk, aes(x=state,y=L_mutationLoad,fill=state))+
   facet_grid(~hLabel2)+
   ylab("Genetic Load")+
   xlab("") +
-  theme(legend.position = "none",text=element_text(size=14),axis.text=element_text(size=14),strip.text = element_text(size=14))+
+  theme(legend.position = "none",text=element_text(size=20),axis.text=element_text(size=20),strip.text = element_text(size=20))+
   ggtitle("Figure for talk: Simulated AK model with 250 inds for 35 gens")+
   scale_fill_manual(values=c("dodgerblue",colors$AK))
 pTalk1
@@ -122,7 +121,7 @@ pTalk2b <- ggplot(forTalk[forTalk$hLabel2=="Additive",], aes(x=state,y=L_mutatio
   facet_grid(~hLabel2)+
   ylab("Genetic Load")+
   xlab("") +
-  theme(legend.position = "none",text=element_text(size=14),axis.text=element_text(size=14),strip.text = element_text(size=14))+
+  theme(legend.position = "none",text=element_text(size=20),axis.text=element_text(size=20),strip.text = element_text(size=20))+
   ggtitle("Figure for talk: Simulated AK model with 250 inds for 35 gens")+
   scale_fill_manual(values=c("dodgerblue",colors$AK))+
   scale_y_continuous(limits=c(0.19,0.34))
@@ -138,11 +137,11 @@ pTalk3a <- ggplot(forTalk[forTalk$hLabel2=="Recessive",], aes(x=state,y=L_mutati
   facet_grid(~hLabel2)+
   ylab("Genetic Load")+
   xlab("") +
-  theme(legend.position = "none",text=element_text(size=14),axis.text=element_text(size=14),strip.text = element_text(size=14))+
+  theme(legend.position = "none",text=element_text(size=20),axis.text=element_text(size=20),strip.text = element_text(size=20))+
   ggtitle("Figure for talk: Simulated AK model with 250 inds for 35 gens")+
   scale_fill_manual(values=c("dodgerblue",colors$AK))
 pTalk3a
-ggsave(paste(plot.dir,"AK.modelLongerContract.FigureForTALKS.Load.PrePostContract.RecessiveOnly.BOXPLOT.",todaysdate,".pdf",sep=""),pTalk3a,height=6,width=4)
+ggsave(paste(plot.dir,"AK.modelLongerContract.FigureForTALKS.Load.PrePostContract.RecessiveOnly.BOXPLOT.",todaysdate,".pdf",sep=""),pTalk3a,height=8,width=6)
 
 ######## additive:
 pTalk3b <- ggplot(forTalk[forTalk$hLabel2=="Additive",], aes(x=state,y=L_mutationLoad,fill=state))+
@@ -152,8 +151,8 @@ pTalk3b <- ggplot(forTalk[forTalk$hLabel2=="Additive",], aes(x=state,y=L_mutatio
   facet_grid(~hLabel2)+
   ylab("Genetic Load")+
   xlab("") +
-  theme(legend.position = "none",text=element_text(size=14),axis.text=element_text(size=14),strip.text = element_text(size=14))+
+  theme(legend.position = "none",text=element_text(size=20),axis.text=element_text(size=20),strip.text = element_text(size=20))+
   ggtitle("Figure for talk: Simulated AK model with 250 inds for 35 gens")+
   scale_fill_manual(values=c("dodgerblue",colors$AK))
 pTalk3b
-ggsave(paste(plot.dir,"AK.modelLongerContract.FigureForTALKS.Load.PrePostContract.AdditiveOnly.BOXPLOT.",todaysdate,".pdf",sep=""),pTalk3b,height=6,width=4)
+ggsave(paste(plot.dir,"AK.modelLongerContract.FigureForTALKS.Load.PrePostContract.AdditiveOnly.BOXPLOT.",todaysdate,".pdf",sep=""),pTalk3b,height=8,width=6)

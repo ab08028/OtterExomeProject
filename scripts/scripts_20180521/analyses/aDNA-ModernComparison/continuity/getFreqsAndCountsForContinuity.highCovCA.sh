@@ -8,6 +8,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 
+######### in this script, the "ancient" samples are modern samples processed in angsd to use as a positive control #####
 
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -115,8 +116,8 @@ frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
 # the headers here are bedheader and then frequencies, then another bed header (for the angsd bed) and then the angsd header
 # goes *way* faster if the modern DNA is -b and ancient is -a
 # don't put an extra tab between angsdheaders and new bedhead; there already is one at the end of angsdheaders
-printf "$bedhead\t$angsdheaders$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+printf "$bedhead\t$angsdheaders$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.counts.freqsFromModernGATK.superfile.0based.bed
 
 ########### Alaska: get frequency information ###################
 pop=AK
@@ -135,8 +136,8 @@ frqhead="CHROM\tPOS\tN_ALLELES\tN_CHR\tREF_FREQ\tALT_FREQ"
 #grep -v "CHROM" $outdir/modernDataGATK_Freqs/${output}.frq | awk '{OFS="\t";print $1,$2-1,$2,$1"_"$2,".",".",".",".",".",".",".",".",$0}' >> $outdir/modernDataGATK_Freqs/${output}.0based.bed
 
 ###### combine with angsd count information: ######
-printf "$bedhead\t$angsdheaders$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
-bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+printf "$bedhead\t$angsdheaders$bedhead\t$frqhead\n" > $combodir/${pop}.${basename}.counts.freqsFromModernGATK.superfile.0based.bed
+bedtools intersect -a $outdir/$countsdir/${basename}.counts.0based.bed.gz -b $outdir/modernDataGATK_Freqs/${output}.0based.bed -wa -wb >> $combodir/${pop}.${basename}.counts.freqsFromModernGATK.superfile.0based.bed
 
 
 ####### DON'T NEED ELUT FOR CONTINIUTY BECAUSE YOU NEED POLARIZED ALLELES -- DONT DO ELUT ########

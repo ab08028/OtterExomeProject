@@ -79,7 +79,7 @@ for(pop in popOrder) {
     scale_x_continuous(breaks=c(seq(1,length(sfs_exclMono$frequency))))+
     ggtitle(pop)+
     scale_fill_manual(values=colors[pop])+
-    theme(panel.background = element_rect(fill = "transparent", colour = NA), plot.background = element_rect(fill = "transparent", colour = NA),text = element_text(size=14),axis.text =element_text(size=14))
+    theme(panel.background = element_rect(fill = "transparent", colour = NA), plot.background = element_rect(fill = "transparent", colour = NA),text = element_text(size=20),axis.text =element_text(size=20))
   ggsave(paste(plot.dir,pop,"folded.easySFS.proj.sfs.transparent.pdf",sep=""),device="pdf",height=5,width=7)
 }
 
