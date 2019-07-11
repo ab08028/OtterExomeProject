@@ -19,7 +19,9 @@ SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 
 ref=mfur # only work with MFUR when going into VEP!
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior"
+dates="20190701-highcov-AFprior-MajorMinor4 20190701-lowcov-AFprior-MajorMinor4"
+
 categories="synonymous missense stopgained"
 
 #  20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 

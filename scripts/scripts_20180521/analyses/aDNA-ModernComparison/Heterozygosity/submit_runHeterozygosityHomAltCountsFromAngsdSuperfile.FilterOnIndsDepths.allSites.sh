@@ -20,7 +20,7 @@ minIndsOptions=2 # min number of individuals for a site to be worked on overall;
 # note that this minInd is not just the nInd in the maf file which shows how many inds had at least 1 read. instead it's how many inds have at least minDepthCutoff reads
 # which in this case is 1, but you can alter it (sites with < minInds will not be counted for ANY individuals even if they have data.)
 hcDates="20190701-highcov-AFprior-MajorMinor4" # high cov dates ; skipping UNIF prior because it is garbage: 20190524-highcov-UNIFprior
-lcDates="20190524-lowcov-AFprior-MajorMinor4"  # low cov dates
+lcDates="20190701-lowcov-AFprior-MajorMinor4"  # low cov dates
 # high coverage:
 # for ref in $refs
 refs="mfur elut" 
@@ -41,6 +41,7 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 # get dirs:
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
+mkdir -p $outdir
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 # order is
 # qsub -N name script -v "inputsuperfile sampleIDFile outputFile maxProbCutoff minDepthCutoff minIndCutoff" # use -F "" to pass variables to pass into runHeterozygosityHomAltCountsFromAngsdSuperfile.FilterOnIndsDepths.sh
@@ -60,6 +61,7 @@ sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOr
 # get dirs:
 indir=$GLdir/$angsdDate 
 outdir=$wd/heterozygosityFromPosteriors/$angsdDate
+mkdir -p $outdir
 output=$outdir/${superfile%.mafs.counts.0based.bed.gz}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.txt
 
 

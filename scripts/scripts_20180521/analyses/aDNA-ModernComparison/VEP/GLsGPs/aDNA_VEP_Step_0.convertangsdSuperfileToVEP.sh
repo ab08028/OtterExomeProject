@@ -21,7 +21,8 @@ wd=$SCRATCH/captures/aDNA-ModernComparison
 GLdir=$wd/angsd-GLs
 
 ref=mfur # only work with MFUR when going into VEP!
-dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+#dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
+dates="20190701-highcov-AFprior-MajorMinor4 20190701-lowcov-AFprior-MajorMinor4"
 basename=angsdOut.mappedTo${ref}
 for angsdDate in $dates
 do

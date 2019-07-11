@@ -18,19 +18,24 @@ script=$scriptDir/analyses/aDNA-ModernComparison/continuity/generateContinuityIn
 ref=mfur # only mfur for continuity
 ################### alaska ###################
 pop=AK
+for category in ancient # just did ancient-AK comparison, didn't do modern AK-AK comparison yet
+do
 indir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/continuity/combinedCounts-Freqs
-input=${pop}.angsdOut.mappedTo${ref}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+input=${pop}.angsdOut.mappedTo${ref}.${category}.counts.freqsFromModernGATK.superfile.0based.bed
 outfile=${input%.0based.bed}.1based.contInput.txt
 outfileTV=${input%.0based.bed}.1based.contInput.TVOnly.txt
 
 python $script $indir/$input $indir/$outfile $indir/$outfileTV
 
-
+done
 ################### california ###################
 pop=CA
+for category in ancient lowcov$pop highcov$pop
+do
 indir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/continuity/combinedCounts-Freqs
-input=${pop}.angsdOut.mappedTo${ref}.ancient.counts.freqsFromModernGATK.superfile.0based.bed
+input=${pop}.angsdOut.mappedTo${ref}.${category}.counts.freqsFromModernGATK.superfile.0based.bed
 outfile=${input%.0based.bed}.1based.contInput.txt
 outfileTV=${input%.0based.bed}.1based.contInput.TVOnly.txt
 
 python $script $indir/$input $indir/$outfile $indir/$outfileTV
+done
