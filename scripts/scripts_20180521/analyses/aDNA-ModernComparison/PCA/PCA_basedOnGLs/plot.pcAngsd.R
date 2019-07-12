@@ -1,7 +1,12 @@
 library(RcppCNPy)
 #comp=c(1,2) # set which two PCs you want to plot ; for now let's go with 1 and 2
-
-
+require(RColorBrewer)
+colorPal=RColorBrewer::brewer.pal(n=6,name = "Dark2")
+colors=list(CA=colorPal[1],BAJ=colorPal[7],AK=colorPal[2],AL=colorPal[3],COM=colorPal[4],KUR=colorPal[5]) # your population colors
+ancShape=8
+modShape=1
+height=5
+width=7
 ###### Doing two sets: all individuals or just low coverage individuals ##########
 HCSampleList=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt")
 LCSampleList=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt")
@@ -70,30 +75,54 @@ for(angsddate in angsddates){
       y_axis = paste("PC",comp[2],sep="")
       
       title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+      xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+      ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
       
-      p12 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
+      p12a <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
         geom_point(aes(color=population,shape=category),size=8) +
         ggtitle(title)+
         theme_bw()+
+        xlab(xlab)+
+        ylab(ylab)+
         geom_text(aes(label=sampleID),stat="identity",size=3,position="jitter")+
-        scale_shape_manual(values=c(8,16,1))
-      p12
-      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC2.pdf",sep=""),p12,device="pdf",height=7, width=10)
+        scale_shape_manual(values=c(ancShape,modShape))+
+        scale_color_manual(values=unlist(colors))
+      p12a
+      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC2.pdf",sep=""),p12a,device="pdf",height=height, width=width)
+      # make a version of p12 that is for main text:
+      p12b <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
+        geom_point(aes(color=population,shape=category),size=6) +
+        ggtitle(title)+
+        theme_bw()+
+        xlab(xlab)+
+        ylab(ylab)+
+        scale_shape_manual(values=c(ancShape,modShape))+
+        scale_color_manual(values=unlist(colors))
+      p12b
+      ggsave(paste(data.dir,"FORPAPER.PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC2.NOLABELS.pdf",sep=""),p12b,device="pdf",height=height, width=width)
+      
+      
+      
       
       comp=c(1,3)
       x_axis = paste("PC",comp[1],sep="")
       y_axis = paste("PC",comp[2],sep="")
       
       title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+      xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+      ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
       
       p13 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
         geom_point(aes(color=population,shape=category),size=8) +
         ggtitle(title)+
         theme_bw()+
+        xlab(xlab)+
+        ylab(ylab)+
         geom_text(aes(label=sampleID),stat="identity",size=3)+
-        scale_shape_manual(values=c(8,16,1))
+        scale_shape_manual(values=c(ancShape,modShape))+
+        scale_color_manual(values=unlist(colors))
       p13
-      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC3.pdf",sep=""),p13,device="pdf",height=7, width=10)
+      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC3.pdf",sep=""),p13,device="pdf",height=height, width=width)
       
       
       
@@ -102,21 +131,29 @@ for(angsddate in angsddates){
       y_axis = paste("PC",comp[2],sep="")
       
       title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+      xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+      ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
       
       p23 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
         geom_point(aes(color=population,shape=category),size=8) +
         ggtitle(title)+
         theme_bw()+
+        xlab(xlab)+
+        ylab(ylab)+
         geom_text(aes(label=sampleID),stat="identity",size=3)+
-        scale_shape_manual(values=c(8,16,1))
+        scale_shape_manual(values=c(ancShape,modShape))+
+        scale_color_manual(values=unlist(colors))
       p23
-      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC2.PC3.pdf",sep=""),p23,device="pdf",height=7, width=10)
+      ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC2.PC3.pdf",sep=""),p23,device="pdf",height=height, width=width)
+
+      
     }
   }
 }
 }
 
-################################# high coverage ###############################
+
+################################# low coverage ###############################
 angsddates=c("20190701-lowcov-AFprior-MajorMinor4") # high cov only
 refs=c("elut","mfur") # set what reference you mapped to 
 states=c("1e-06.snpsOnly", "1e-06.snpsOnly.TransvOnly")
@@ -181,30 +218,40 @@ for(angsddate in angsddates){
         y_axis = paste("PC",comp[2],sep="")
         
         title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+        xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+        ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
         
         p12 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
           geom_point(aes(color=population,shape=category),size=8) +
           ggtitle(title)+
           theme_bw()+
+          xlab(xlab)+
+          ylab(ylab)+
           geom_text(aes(label=sampleID),stat="identity",size=3,position="jitter")+
-          scale_shape_manual(values=c(8,16,1))
+          scale_shape_manual(values=c(ancShape,modShape))+
+          scale_color_manual(values=unlist(colors))
         p12
-        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC2.pdf",sep=""),p12,device="pdf",height=7, width=10)
+        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC2.pdf",sep=""),p12,device="pdf",height=height, width=width)
         
         comp=c(1,3)
         x_axis = paste("PC",comp[1],sep="")
         y_axis = paste("PC",comp[2],sep="")
         
         title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+        xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+        ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
         
         p13 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
           geom_point(aes(color=population,shape=category),size=8) +
           ggtitle(title)+
           theme_bw()+
+          xlab(xlab)+
+          ylab(ylab)+
           geom_text(aes(label=sampleID),stat="identity",size=3)+
-          scale_shape_manual(values=c(8,16,1))
+          scale_shape_manual(values=c(ancShape,modShape))+
+          scale_color_manual(values=unlist(colors))
         p13
-        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC3.pdf",sep=""),p13,device="pdf",height=7, width=10)
+        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC1.PC3.pdf",sep=""),p13,device="pdf",height=height, width=width)
         
         
         
@@ -213,15 +260,24 @@ for(angsddate in angsddates){
         y_axis = paste("PC",comp[2],sep="")
         
         title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)\nMapped to ",ref,"\n",state,sep="",collapse="")
+        xlab <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)",sep="")
+        ylab <- paste("PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="")
         
         p23 <- ggplot(PC, aes_string(x=x_axis, y=y_axis)) + 
           geom_point(aes(color=population,shape=category),size=8) +
           ggtitle(title)+
           theme_bw()+
+          xlab(xlab)+
+          ylab(ylab)+
           geom_text(aes(label=sampleID),stat="identity",size=3)+
-          scale_shape_manual(values=c(8,16,1))
+          scale_shape_manual(values=c(ancShape,modShape))+
+          scale_color_manual(values=unlist(colors))
         p23
-        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC2.PC3.pdf",sep=""),p23,device="pdf",height=7, width=10)
+        ggsave(paste(data.dir,"PCA.mappedTo",ref,".",state,".minMaf",minMaf,".PC2.PC3.pdf",sep=""),p23,device="pdf",height=height, width=width)
+        
+        
+        
+        
       }
     }
   }

@@ -34,22 +34,23 @@ mkdir -p $GLdir/cdsPerCategoryFromVEP
 ### convert vep output back to bed coords
 # note vep is 1based, bed is 0based
 
-for angsdDate in $dates
-do
 for category in $categories
 do
 # doesn't matter whether this came from GPs or GLs, it's all about coordinates
 input=$indir/${basename}.superfile.GPs.mafs.counts.cdsOnly.1based.VEPInput.VEP.output.pick.${category}.tbl
 grep -v "#" $input | awk '{OFS="\t";split($2,pos,":");print pos[1],pos[2]-1,pos[2],$1}' > ${input%.tbl}.0based.coordsOnly.bed
-
+# gzip it:
+gzip -f ${input%.tbl}.0based.coordsOnly.bed
 #### then intersect with my superfiles #########
 types="GLs GPs" # could do GPs or GLs from these coordinates.
 for type in $types
 do
 # redo this with the -header flag so I get headers
-bedtools intersect -a $GLdir/${basename}.superfile.${type}.mafs.counts.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
+bedtools intersect -a $GLdir/${basename}.superfile.${type}.mafs.counts.0based.bed.gz -b ${input%.tbl}.0based.coordsOnly.bed.gz -wa -header > $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
+# gzip:
+gzip -f $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed
 done
 done
 done
-done
+
 
