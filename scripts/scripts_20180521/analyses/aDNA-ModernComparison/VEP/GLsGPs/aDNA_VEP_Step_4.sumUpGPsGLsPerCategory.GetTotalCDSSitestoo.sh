@@ -37,19 +37,19 @@ for minDepthCutoff in $minDepthCutoffs
 do
 for angsdDate in $hcdates
 do
-indir=$GLdir/$date 
-mkdir -p $outdir/$date
+indir=$GLdir/$angsdDate 
+mkdir -p $outdir/$angsdDate
 cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
 output=${basename}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
-python $script $indir/$cds $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
+python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
 for category in $categories
 do
 input=cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed.gz
 output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.${category}.txt
 
-python $script $indir/$input $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
+python $script $indir/$input $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
 done
 done
@@ -62,19 +62,19 @@ for minDepthCutoff in $minDepthCutoffs
 do
 for angsdDate in $lcdates
 do
-indir=$GLdir/$date 
-mkdir -p $outdir/$date
+indir=$GLdir/$angsdDate 
+mkdir -p $outdir/$angsdDate
 cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
 output=${basename}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
-python $script $indir/$cds $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
+python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
 for category in $categories
 do
 input=cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed.gz
 output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.${category}.txt
 
-python $script $indir/$input $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
+python $script $indir/$input $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
 done
 done
