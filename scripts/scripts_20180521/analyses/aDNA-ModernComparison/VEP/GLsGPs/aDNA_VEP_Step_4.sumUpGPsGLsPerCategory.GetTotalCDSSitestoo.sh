@@ -17,7 +17,7 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
 script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeagleSuperfile.CalculateHeterozygosity.ManyFilters.py
 GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/
-outdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/sumGPsGLsPerVEPCategory
+outdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory # moving this inside the VEP dir
 hcdates="20190701-highcov-AFprior-MajorMinor4"
 lcdates="20190701-lowcov-AFprior-MajorMinor4"
 ref=mfur #only mfur for vep stuff
@@ -35,14 +35,14 @@ minInds=1 # okay to just have one individual with sequence
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
 for minDepthCutoff in $minDepthCutoffs
 do
-for date in $hcdates
+for angsdDate in $hcdates
 do
 indir=$GLdir/$date 
 mkdir -p $outdir/$date
 cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
 output=${basename}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
-#python $script $indir/$cds $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
+python $script $indir/$cds $sampleIDs $outdir/$date/$output $maxProbCutoff $minDepthCutoff $minInds
 
 for category in $categories
 do
@@ -60,7 +60,7 @@ done
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt # low cov
 for minDepthCutoff in $minDepthCutoffs
 do
-for date in $lcdates
+for angsdDate in $lcdates
 do
 indir=$GLdir/$date 
 mkdir -p $outdir/$date
