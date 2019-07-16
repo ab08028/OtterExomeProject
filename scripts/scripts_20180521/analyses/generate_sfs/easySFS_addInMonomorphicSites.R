@@ -43,8 +43,10 @@ monomorph <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThr
 monomorph2D <- read.table(paste(data.dir,"/countsOfMonomorphicPassingProjectionThresholds.perPair.txt",sep=""),header = T)
 
 
-################################## fastsimcoal format ################################
-#### go through SFSes and write them out with the monomorphic added in: #########
+################################## 1D fastsimcoal format ################################
+print("begining 1d fsc formatting")
+
+#### go through SFSes and write them out with the monomorphic added in
 for(pop in popOrder) {
   input <- list.files(fsc.format.dir,pattern=pop,full.names = T)
   sfs <- read.table(input,skip = 1,header = T) # skip first line: "1 observation"
@@ -56,8 +58,8 @@ for(pop in popOrder) {
   sink()
 }
 
-################################## dadi format ########################################
-
+################################## 1D dadi format ########################################
+print("begining 1d dadi formatting")
 for(pop in popOrder) {
   # pattern is pop-##.sfs
   input <- list.files(dadi.format.dir,pattern=paste(pop,"-[0-9]+.sfs",sep=""),full.names = T)
@@ -79,6 +81,8 @@ for(pop in popOrder) {
 }
 
 ####################################### 2D SFS -- fastsimcoal ###################################
+print("begining 2d fsc formatting")
+
 # fsc files are numbered by pop0_1 where pop numbers are from my pop order (check this carefully)
 # order should be CA,AK,AL,COM,KUR  for my project (0,1,2,3,4)
 #combos = combn(seq(0,length(popOrder)-1),2)
@@ -98,7 +102,7 @@ for(i in seq(0,length(popOrder)-1)) { # pop i is the first pop listed will end u
     # update dx and dy to be consistent, just 0 and 1 (0 along tops, 1 down sides)
     colnames(sfs) <- paste("d0_",seq(0,ncol(sfs)-1),sep="") # subtract 1 bc is zero based
     rownames(sfs) <- paste("d1_",seq(0,nrow(sfs)-1),sep="") # subtract 1 bc is zero based
-    monoCount <- monomorph2D[monomorph2D$population1==pop1 & monomorph2D$population2==pop2,]$HomREFcountPassingBothProjThresholds
+    monoCount <- monomorph2D[(monomorph2D$population1==pop0 & monomorph2D$population2==pop1)|(monomorph2D$population1==pop1 & monomorph2D$population2==pop0),]$HomREFcountPassingBothProjThresholds
   # row and column names reflect pop numbers; first number in file name is colnames, second is rownames. so row is first and should be j, and col is second and should be i
     # 20190716: for fsc to run, you need the filename to be pop1_0.obs which pop d0  along the top and d1 down the side no matter what the pop IDs were from. Easy SFS messes up the d0 labels so I am fixing it so that it doesn't matter
     # in the easy SFS file name, it gives you the population numbers that are in the order you specified. This part is okay. The one that is listed first is down the side (row names) and the one that is listed second is along the rows. This is okay, but just need to be clear about which population is which. I want to keep the order of populations consistent with that so that the first listed population goes down the side (1) and second is along the top (0).
@@ -116,6 +120,8 @@ for(i in seq(0,length(popOrder)-1)) { # pop i is the first pop listed will end u
 
 
 ####################################### 2D SFS -- dadi ###################################
+print("begining 2d dadi formatting")
+
 # dadi files are labeled with populations, so don't need to indexing that i did for fsc above
 # first entry in sfs is 0,0 bin
 for(pop1 in popOrder){
