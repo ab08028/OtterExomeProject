@@ -40,7 +40,7 @@ do
 indir=$GLdir/$angsdDate 
 mkdir -p $outdir/$angsdDate
 cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
-output=${basename}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
+output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
 python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
@@ -65,7 +65,7 @@ do
 indir=$GLdir/$angsdDate 
 mkdir -p $outdir/$angsdDate
 cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
-output=${basename}.hetHomTotals.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
+output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
 python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
