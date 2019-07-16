@@ -62,7 +62,7 @@ for(pop in popOrder) {
 print("begining 1d dadi formatting")
 for(pop in popOrder) {
   # pattern is pop-##.sfs
-  input <- list.files(dadi.format.dir,pattern=paste(pop,"-[0-9]+.sfs",sep=""),full.names = T)
+  input <- list.files(dadi.format.dir,pattern=paste("^",pop,"-[0-9]+.sfs",sep=""),full.names = T)
   #print(input)
   header <- readLines(input,n=1) # get first line of file
   sfs <- read.table(input,skip = 1,header = F) # skip first line: "13 folded "KUR""
