@@ -48,7 +48,7 @@ print("begining 1d fsc formatting")
 
 #### go through SFSes and write them out with the monomorphic added in
 for(pop in popOrder) {
-  input <- list.files(fsc.format.dir,pattern=paste(pop,"_MAF",sep=""),full.names = T)
+  input <- list.files(fsc.format.dir,pattern=paste("^",pop,"_MAF",sep=""),full.names = T)
   sfs <- read.table(input,skip = 1,header = T) # skip first line: "1 observation"
   monoCount <- monomorph[monomorph$population==pop,]$HomREFcount
   sfs$d0_0 <- sfs$d0_0+monoCount
