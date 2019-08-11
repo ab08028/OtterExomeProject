@@ -1,3 +1,5 @@
+
+# run on home laptop or change data.dir path to hoffman
 ######## Get average called sites across all individuals: 
 data.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/sumGPsGLsPerVEPCategory/"
 dates=c("20190701-highcov-AFprior-MajorMinor4","20190701-lowcov-AFprior-MajorMinor4")
