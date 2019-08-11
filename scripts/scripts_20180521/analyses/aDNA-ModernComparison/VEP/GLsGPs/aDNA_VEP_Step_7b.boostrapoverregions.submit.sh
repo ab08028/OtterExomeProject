@@ -14,7 +14,7 @@ module load R/3.5.1
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
-script=sandbox.boostrapoverregions.R
+script=aDNA_VEP_Step_7b.boostrapoverregions.R
 
 # parameters:
 binsize=100000 # 100kb
