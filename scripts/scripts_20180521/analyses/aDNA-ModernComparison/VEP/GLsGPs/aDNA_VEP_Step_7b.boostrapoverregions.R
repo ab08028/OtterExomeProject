@@ -21,23 +21,23 @@ require(GenomicRanges)
 #out.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/"
 library("optparse")
 option_list = list(
-  make_option(c("-infile", "--infile"), type="character", default=NULL, 
+  make_option(c("--infile"), type="character", default=NULL, 
               help="path to your input file (superfile of cds sites with annotations from vep and GPs from angsd as well as depths", metavar="file"),
-  make_option(c("-chrSizes", "--chrSizes"), type="character", default=NULL, 
+  make_option(c("--chrSizes"), type="character", default=NULL, 
               help="path to file with mustela chromosome sizes", metavar="character"),
-  make_option(c("-outdir", "--outdir"), type="file", default=NULL, 
+  make_option(c("--outdir"), type="file", default=NULL, 
               help="path to outdir", metavar="character"),
-  make_option(c("-outPREFIX", "--outPREFIX"), type="character", default=NULL, 
+  make_option(c("--outPREFIX"), type="character", default=NULL, 
               help="outfilePrefix", metavar="prefix"),
-  make_option(c("-minDepth", "--minDepth"), type="numeric", default=NULL, 
+  make_option(c("--minDepth"), type="numeric", default=NULL, 
               help="min depth per individual for a site to be 'callalble'", metavar="numeric"),
-  make_option(c("-minGP", "--minGP"), type="numeric", default=NULL, 
+  make_option(c("--minGP"), type="numeric", default=NULL, 
               help="minimum value of the max. GP per site, per individual. Use 0.95.", metavar="numeric"),
-  make_option(c("-binsize", "--binsize"), type="numeric", default=NULL, 
+  make_option(c("--binsize"), type="numeric", default=NULL, 
               help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
-  make_option(c("-numBoots", "--numBoots"), type="numeric", default=NULL, 
+  make_option(c("--numBoots"), type="numeric", default=NULL, 
               help="Number of bootstraps to perform per individual", metavar="numeric"),
-  make_option(c("-avgSitesToDraw", "--avgSitesToDraw"), type="numeric", default=NULL, 
+  make_option(c("--avgSitesToDraw"), type="numeric", default=NULL, 
               help="Number of sites to draw per individual (will be approximately this many, not exactly) due to varying bin size. Based on average 'callable' cds sites calculated elsewhere.", metavar="numeric")
 ); 
 
@@ -48,11 +48,11 @@ cdsFile=opt$infile
 mustelaChrSizesFile=opt$chrSizes
 out.dir=opt$outdir
 outPREFIX=opt$outPREFIX
-minDepth=opt$minDepth # make this match whatever I used to get point estimate
-minGP=opt$minGP # make this match whatever I used to get point estimate
-binsize=opt$binsize # start with 100kb
-numBoots=opt$numBoots # do boots a number of times
-SitesToDraw=opt$avgSitesToDraw
+minDepth=as.numeric(opt$minDepth) # make this match whatever I used to get point estimate
+minGP=as.numeric(opt$minGP) # make this match whatever I used to get point estimate
+binsize=as.numeric(opt$binsize) # start with 100kb
+numBoots=as.numeric(opt$numBoots) # do boots a number of times
+SitesToDraw=as.numeric(opt$avgSitesToDraw)
 print("read in arguments:\n")
 print("cdsFile: ",cdsFile,"\n")
 print("chrSizes: ",mustelaChrSizesFile,"\n")

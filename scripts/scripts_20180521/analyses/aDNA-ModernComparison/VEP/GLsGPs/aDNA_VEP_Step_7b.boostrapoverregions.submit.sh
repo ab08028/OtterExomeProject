@@ -64,5 +64,10 @@ echo "avg sites to draw: " $avgSitesToDraw
 #   make_option(c("-avgSitesToDraw", "--avgSitesToDraw"), type="character", default=NULL, 
 #               help="Number of sites to draw per individual (will be approximately this many, not exactly) due to varying bin size. Based on average 'callable' cds sites calculated elsewhere.", metavar="character")
 # ); 
+<<<<<<< HEAD
 Rscript $scriptDir/$script -infile $infile -chrSizes $chrSizes -outdir $outdir -outPREFIX $outPREFIX -minDepth $minDepth -minGP $minGP -binsize $binsize -numBoots $numBoots -avgSitesToDraw $avgSitesToDraw
 done
+=======
+Rscript $scriptDir/$script --infile $infile --chrSizes $chrSizes --outdir $outdir --outPREFIX $outPREFIX --minDepth $minDepth --minGP $minGP --binsize $binsize --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw
+done
+>>>>>>> 904774ba045a60dbd17d7bac716a85360478e1b9
