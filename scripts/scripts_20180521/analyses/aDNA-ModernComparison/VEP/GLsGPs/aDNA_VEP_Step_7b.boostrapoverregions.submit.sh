@@ -39,7 +39,7 @@ outPREFIX=${basename}.superfile.${type}
 avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
 # get count for this date:
 avgSitesToDraw=`grep $date $avgSitesFile | awk '{print $3}'` ## need to calculate! ##  can be found in /u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory -- calculate average from across individuals (ask Kirk too)
-
+echo "avg sites to draw: " $avgSitesToDraw
 
 # parameters for R script:
 # option_list = list(

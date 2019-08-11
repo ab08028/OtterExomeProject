@@ -53,6 +53,18 @@ minGP=opt$minGP # make this match whatever I used to get point estimate
 binsize=opt$binsize # start with 100kb
 numBoots=opt$numBoots # do boots a number of times
 SitesToDraw=opt$avgSitesToDraw
+print("read in arguments:\n")
+print("cdsFile: ",cdsFile,"\n")
+print("chrSizes: ",mustelaChrSizesFile,"\n")
+print("out.dir: ",out.dir,"\n")
+print("outPREFIX: ",outPREFIX,"\n")
+print("minDepth: ",minDepth,"\n")
+print("minGP: ",minGP,"\n")
+print("binsize: ",binsize,"\n")
+print("numBoots: ",numBoots,"\n")
+print("SitesToDraw: ",SitesToDraw,"\n")
+
+
 ###############read in cds superfile ######################
 #cds=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/test.out.bed",header=T,sep="\t",strip.white = T, comment.char = "") # converts # to X. in table ### will R be able to read it in on Hoffman?
 cds=read.table(cdsFile,header=T,sep="\t",strip.white = T, comment.char = "")
