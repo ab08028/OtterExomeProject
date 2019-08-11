@@ -41,7 +41,7 @@ avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory
 avgSitesToDraw=`grep $date $avgSitesFile | awk '{print $3}'` ## need to calculate! ##  can be found in /u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory -- calculate average from across individuals (ask Kirk too)
 
 
-# parameters:
+# parameters for R script:
 # option_list = list(
 #   make_option(c("-infile", "--infile"), type="character", default=NULL, 
 #               help="path to your input file (superfile of cds sites with annotations from vep and GPs from angsd as well as depths", metavar="character"),
