@@ -23,12 +23,15 @@ minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt comp
 minGP=0.95
 minInd=1
 dates='20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4'
+avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
+# contains both dates
 ref="mfur"
 basename=angsdOut.mappedTo${ref}
 type="GPs" # for now
 # loop through dates:
 for angsdDate in $dates
 do
+echo $angsdDate
 indir=$SCRATCH/captures/aDNA-ModernComparison/angsd-GLs/$date/cdsPerCategoryFromVEP/
 infile=$indir/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed.gz # need to fix header issue
 chrSizes=$scriptDir/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.224.ChrLengths.txt # need the chr sizes to be uploaded somewhere
@@ -36,9 +39,8 @@ outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps
 mkdir -p $outdir
 outPREFIX=${basename}.superfile.${type}
 # file with avg sites to draw (depends on minDepth,minGP, minInd) and is a result of the script: /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/getAverageCalledCDSSItesAcrossAllInds.R
-avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
 # get count for this date:
-avgSitesToDraw=`grep $date $avgSitesFile | awk '{print $3}'` ## need to calculate! ##  can be found in /u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory -- calculate average from across individuals (ask Kirk too)
+avgSitesToDraw=`grep $angsdDate $avgSitesFile | awk '{print $3}'` ## need to calculate! ##  can be found in /u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory -- calculate average from across individuals (ask Kirk too)
 echo "avg sites to draw: " $avgSitesToDraw
 
 # parameters for R script:
