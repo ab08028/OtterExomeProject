@@ -7,7 +7,7 @@
 transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 #BiocManager::install("plyranges")
 require(GenomicRanges)
-require(bootstrap)
+#require(bootstrap)
 # install plyranges (dplyr to work with Granges)
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #  install.packages("BiocManager")
@@ -22,23 +22,23 @@ require(bootstrap)
 library("optparse")
 option_list = list(
   make_option(c("-infile", "--infile"), type="character", default=NULL, 
-              help="path to your input file (superfile of cds sites with annotations from vep and GPs from angsd as well as depths", metavar="character"),
+              help="path to your input file (superfile of cds sites with annotations from vep and GPs from angsd as well as depths", metavar="file"),
   make_option(c("-chrSizes", "--chrSizes"), type="character", default=NULL, 
               help="path to file with mustela chromosome sizes", metavar="character"),
-  make_option(c("-outdir", "--outdir"), type="character", default=NULL, 
+  make_option(c("-outdir", "--outdir"), type="file", default=NULL, 
               help="path to outdir", metavar="character"),
   make_option(c("-outPREFIX", "--outPREFIX"), type="character", default=NULL, 
-              help="outfilePrefix", metavar="character"),
-  make_option(c("-minDepth", "--minDepth"), type="character", default=NULL, 
-              help="min depth per individual for a site to be 'callalble'", metavar="character"),
-  make_option(c("-minGP", "--minGP"), type="character", default=NULL, 
-              help="minimum value of the max. GP per site, per individual. Use 0.95.", metavar="character"),
-  make_option(c("-binsize", "--binsize"), type="character", default=NULL, 
-              help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="character"),
-  make_option(c("-numBoots", "--numBoots"), type="character", default=NULL, 
-              help="Number of bootstraps to perform per individual", metavar="character"),
-  make_option(c("-avgSitesToDraw", "--avgSitesToDraw"), type="character", default=NULL, 
-              help="Number of sites to draw per individual (will be approximately this many, not exactly) due to varying bin size. Based on average 'callable' cds sites calculated elsewhere.", metavar="character")
+              help="outfilePrefix", metavar="prefix"),
+  make_option(c("-minDepth", "--minDepth"), type="numeric", default=NULL, 
+              help="min depth per individual for a site to be 'callalble'", metavar="numeric"),
+  make_option(c("-minGP", "--minGP"), type="numeric", default=NULL, 
+              help="minimum value of the max. GP per site, per individual. Use 0.95.", metavar="numeric"),
+  make_option(c("-binsize", "--binsize"), type="numeric", default=NULL, 
+              help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
+  make_option(c("-numBoots", "--numBoots"), type="numeric", default=NULL, 
+              help="Number of bootstraps to perform per individual", metavar="numeric"),
+  make_option(c("-avgSitesToDraw", "--avgSitesToDraw"), type="numeric", default=NULL, 
+              help="Number of sites to draw per individual (will be approximately this many, not exactly) due to varying bin size. Based on average 'callable' cds sites calculated elsewhere.", metavar="numeric")
 ); 
 
 opt_parser = OptionParser(option_list=option_list)
