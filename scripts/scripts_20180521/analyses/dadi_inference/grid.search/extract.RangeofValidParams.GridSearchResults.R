@@ -95,13 +95,21 @@ for(pop in populations){
 }
 
 
-write.table(allTops,paste(data.dir,"AllGridSearchResultsWithin1PtofMle.2Epoch.AK.CA.AL.KUR.txt",sep=""),quote=F,row.names=F)
+write.table(allTops,paste(data.dir,"AllGridSearchResultsWithin1PtofMle.2Epoch.AK.CA.AL.KUR.txt",sep=""),quote=F,row.names=F,sep="\t")
+
 
 # get min and max ranges: 
 require(dplyr)
-allTops %>%
+#allTops %>%
+#  group_by(population) %>%
+#  summarise(max(nu_scaledByNanc_from_Theta_dip))
+## summarize min max based on the theta inferred by each run:
+minMax <- allTops %>%
   group_by(population) %>%
-  summarise(max(nu_scaledByNanc_from_Theta_dip))
+  summarise(minNanc=min(Nanc_from_theta),maxNanc=max(Nanc_from_theta),minTgen=min(T_scaledByNanc_from_Theta_gen),maxTgen=max(T_scaledByNanc_from_Theta_gen),minNdip=min(nu_scaledByNanc_from_Theta_dip),maxNdip=max(nu_scaledByNanc_from_Theta_dip),minNu=min(nu),maxNu=max(nu),minT=min(T),maxT=max(T))
+
+write.table(minMax,paste(data.dir,"AllGridSearchResultsWithin1PtofMle.2Epoch.AK.CA.AL.KUR.MinMaxRanges.txt",sep=""),quote=F,row.names=F,sep="\t")
+
 # need the Nanc in there somehow
 ggplot(allTops,aes(x=nu_scaledByNanc_from_Theta_dip,y=T_scaledByNanc_from_Theta_gen,color=population))+
   geom_point()+
@@ -150,3 +158,6 @@ mlePlotZoom <- ggplot(allTops,aes(x=nu_scaledByNanc_from_Theta_dip,y=T_scaledByN
   ggtitle("Zooming in on 20-60 Generations (reasonable time frame for fur trade)\nComparing the maximum likelihood estimates of a contraction model\nThe contraction lasts for the number of generations on the y axis at the size on the x axis\nOnly points that are within 1 log-likelihood point of the MLE are shown")
 mlePlotZoom
 ggsave(paste(data.dir,"comparingPopulationsMLEs.2Epoch.ZoomedIn20-60gen.pdf",sep=""),mlePlotZoom,height=5,width=9)
+
+
+########### want min and max per population ###########
