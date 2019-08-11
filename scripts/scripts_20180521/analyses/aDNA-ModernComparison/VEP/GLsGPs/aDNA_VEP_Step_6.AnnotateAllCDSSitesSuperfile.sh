@@ -52,7 +52,7 @@ header2=`zcat $vepWholeOutput | grep -v "##" | grep "#" -m1`
 comboheader=`echo -e "${header1}\t#chrom\tstart0based\tend\tmarkerID\tempty5\tempty6\tempty7\tempty8\tempty9\tempty10\tempty11\tempty12\t${header2}\tOverlap"` # need the "" and -e to get the tabs in
 echo -e "$comboheader" | sed 's/\t\t/\t/g'>  $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed
 bedtools intersect -a $cdsSuperfile -b ${vepWholeOutput%.tbl.gz}.0based.Annotated.bed.gz -wao >> $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed
-gzip $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed
+gzip -f $GLdir/cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed
 
 done
 # use awk to pull out the stuff I want 
