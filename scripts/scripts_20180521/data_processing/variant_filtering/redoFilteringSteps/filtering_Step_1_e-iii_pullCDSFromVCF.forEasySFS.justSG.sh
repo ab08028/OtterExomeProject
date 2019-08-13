@@ -41,35 +41,35 @@ snpVCF=snp_9b_forEasySFS_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_pass
 
 # intersect cds bed with population vcf files that have all sites called in all individuals
 
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/${snpVCF} \
--o $outdir/cds_${snpVCF} \
--L $cdsBed
+#java -jar $GATK \
+#-R $REFERENCE \
+#-T SelectVariants \
+#--variant ${vcfdir}/${snpVCF} \
+#-o $outdir/cds_${snpVCF} \
+#-#L $cdsBed
 
 
 # all vcf: doing this to get the total number of cds sites (will need to do something easy-sfsy to get total number for use in projections
 # is this a big file?
 # have to think this through a little more... What will my L be? Number of sites that are at the projection level for cds per population (with a multiplier for miss/syn)
 # I think so. So will use my monomorphic python script on them. 
-java -jar $GATK \
--R $REFERENCE \
--T SelectVariants \
---variant ${vcfdir}/${allVCF} \
--o $outdir/cds_${allVCF} \
--L $cdsBed
+#java -jar $GATK \
+#-R $REFERENCE \
+#-T SelectVariants \
+#--variant ${vcfdir}/${allVCF} \
+#-o $outdir/cds_${allVCF} \
+#-L $cdsBed
 
 
 ### note: Jazlyn says vep works even with gzipped vcf (throws and error but actually works; confirm for myself)
 # only run VEP on snp vcf file because those are the only things that will be annotated anyway!
 
 # run VEP :
-$vepdir/vep -v -i $outdir/cds_${snpVCF}  \
---cache --force_overwrite --species mustela_putorius_furo \
---variant_class --vcf --canonical \
--o $outdir/vep_cds_${snpVCF%.gz} \
---pick
+## $vepdir/vep -v -i $outdir/cds_${snpVCF}  \
+#--cache --force_overwrite --species mustela_putorius_furo \
+#--variant_class --vcf --canonical \
+#-o $outdir/vep_cds_${snpVCF%.gz} \
+#--pick
 # note vep output is not gzipped.
 # Using PICK to pick one variant per site:
 # https://uswest.ensembl.org/info/docs/tools/vep/script/vep_other.html#pick_options
@@ -82,15 +82,15 @@ $vepdir/vep -v -i $outdir/cds_${snpVCF}  \
    # consequence rank according to this table
    # translated, transcript or feature length (longer preferred)
 
-$vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is YES" \
---input_file $outdir/vep_cds_${snpVCF%.gz} \
---output_file $outdir/syn_vep_cds_${snpVCF%.gz} \
---force_overwrite
+## $vepdir/filter_vep --filter "Consequence is synonymous_variant and CANONICAL is YES" \
+#--input_file $outdir/vep_cds_${snpVCF%.gz} \
+#--output_file $outdir/syn_vep_cds_${snpVCF%.gz} \
+#--force_overwrite
 
-$vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YES" \
---input_file $outdir/vep_cds_${snpVCF%.gz} \
---output_file $outdir/missense_vep_cds_${snpVCF%.gz}  \
---force_overwrite 
+## $vepdir/filter_vep --filter "Consequence is missense_variant and CANONICAL is YES" \
+#--input_file $outdir/vep_cds_${snpVCF%.gz} \
+#--output_file $outdir/missense_vep_cds_${snpVCF%.gz}  \
+#--force_overwrite 
 
 # also do stopgained (added on 20190806)
 $vepdir/filter_vep --filter "Consequence is stop_gained and CANONICAL is YES" \
@@ -115,15 +115,15 @@ $vepdir/filter_vep --filter "Consequence is stop_gained and CANONICAL is YES" \
 # okaky this works now. 
 
 # get totals:
-echo -e 'totalCalledcdsSites' >  ${vcfdir}/filteringStats/summary.cdsCallableSites.txt
+#echo -e 'totalCalledcdsSites' >  ${vcfdir}/filteringStats/summary.cdsCallableSites.txt
 
 ######### For records, get a bed file of the coords that overlap between pop vcfs and neutBed, and the total amnt of neut sequence per pop: 
 
 # for reference, want to get bed file of callable sites in cds regions : 
-bedtools intersect -a $outdir/cds_${allVCF%.gz} -b $cdsBed | awk '{OFS="\t"; print $1,$2-1,$2}' | sort -k1,1 -k2,2n | bedtools merge -i stdin > ${vcfdir}/bedCoords/cdsCallableSites/${allVCF}.cdsOnly.callableSites.0based.bed
+#bedtools intersect -a $outdir/cds_${allVCF%.gz} -b $cdsBed | awk '{OFS="\t"; print $1,$2-1,$2}' | sort -k1,1 -k2,2n | bedtools merge -i stdin > ${vcfdir}/bedCoords/cdsCallableSites/${allVCF}.cdsOnly.callableSites.0based.bed
 # and the total amount of coding sequence (cds) sequence:
-totalSeq=`awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  ${vcfdir}/bedCoords/cdsCallableSites/${allVCF}.cdsOnly.callableSites.0based.bed`
-echo -e ${pop}'\t'${totalNeut} >> ${vcfdir}/filteringStats/summary.cdsCallableSites.txt
+#totalSeq=`awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  ${vcfdir}/bedCoords/cdsCallableSites/${allVCF}.cdsOnly.callableSites.0based.bed`
+#echo -e ${pop}'\t'${totalNeut} >> ${vcfdir}/filteringStats/summary.cdsCallableSites.txt
 # at some point get syn and mis totals.
 # For CA, it's only 12 Mb called. -- 20180806
 

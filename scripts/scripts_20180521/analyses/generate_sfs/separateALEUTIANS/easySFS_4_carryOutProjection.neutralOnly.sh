@@ -92,7 +92,7 @@ python $scriptdir/getMonomorphicProjectionCounts.1D.2DSFS.py --vcf $vcfdir/neutr
 echo "done with getting monomorphic sites" 
 ############## adding monomorphic sites to fsc SFSes #####################
  # this script add monomorphic sites to 0 bin of fsc sfses. doesn't add them to dadi SFSes because those sites are masked anyway. 
-Rscript $scriptdir/easySFS_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile # will write them out in your data dir in new directories
+Rscript $scriptdir/easySFS_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile --class neutral # will write them out in your data dir in new directories
 echo "done with adding monomorphic sites in"
 # need to modify this R script so that it also adds to 2D sfses.
 ################################################################################

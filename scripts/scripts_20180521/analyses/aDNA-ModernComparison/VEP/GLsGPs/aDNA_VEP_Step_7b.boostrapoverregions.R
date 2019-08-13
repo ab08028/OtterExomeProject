@@ -53,16 +53,16 @@ minGP=as.numeric(opt$minGP) # make this match whatever I used to get point estim
 binsize=as.numeric(opt$binsize) # start with 100kb
 numBoots=as.numeric(opt$numBoots) # do boots a number of times
 SitesToDraw=as.numeric(opt$avgSitesToDraw)
-print("read in arguments:\n")
-print("cdsFile: ",cdsFile,"\n")
-print("chrSizes: ",mustelaChrSizesFile,"\n")
-print("out.dir: ",out.dir,"\n")
-print("outPREFIX: ",outPREFIX,"\n")
-print("minDepth: ",minDepth,"\n")
-print("minGP: ",minGP,"\n")
-print("binsize: ",binsize,"\n")
-print("numBoots: ",numBoots,"\n")
-print("SitesToDraw: ",SitesToDraw,"\n")
+#print("read in arguments:\n")
+#print("cdsFile: ",cdsFile,"\n")
+#print("chrSizes: ",mustelaChrSizesFile,"\n")
+#print("out.dir: ",out.dir,"\n")
+#print("outPREFIX: ",outPREFIX,"\n")
+#print("minDepth: ",minDepth,"\n")
+#print("minGP: ",minGP,"\n")
+#print("binsize: ",binsize,"\n")
+#print("numBoots: ",numBoots,"\n")
+#print("SitesToDraw: ",SitesToDraw,"\n")
 
 
 ###############read in cds superfile ######################
