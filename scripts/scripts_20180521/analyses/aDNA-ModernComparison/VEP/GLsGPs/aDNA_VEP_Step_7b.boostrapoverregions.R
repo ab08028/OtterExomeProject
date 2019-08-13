@@ -7,6 +7,7 @@
 transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 #BiocManager::install("plyranges")
 require(GenomicRanges)
+require(dplyr)
 #require(bootstrap)
 # install plyranges (dplyr to work with Granges)
 #if (!requireNamespace("BiocManager", quietly = TRUE))
