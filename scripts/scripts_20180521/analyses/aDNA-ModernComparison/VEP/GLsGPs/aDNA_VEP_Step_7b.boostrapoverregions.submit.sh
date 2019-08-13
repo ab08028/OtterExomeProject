@@ -18,7 +18,7 @@ script=aDNA_VEP_Step_7b.boostrapoverregions.R
 
 # parameters:
 binsize=100000 # 100kb
-numBoots=5 # eventually do more! 
+numBoots=100 # eventually do more! 
 minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
 minGP=0.95
 minInd=1
