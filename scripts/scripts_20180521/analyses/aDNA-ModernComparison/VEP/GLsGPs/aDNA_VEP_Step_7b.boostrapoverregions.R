@@ -132,8 +132,7 @@ for(ind in seq(0,8)){
   ### skip empty bins!
   indAllBins <- data.frame()
   print("setting up bins (takes a while)")
-  test = data.frame(indAllBins) %>% 
-    group_by(Consequence)
+
   for(bin in seq(1,length(unique(bins$binNum)))){
     #print(bin)
     subset <- subsetByOverlaps(test, bins[bins$binNum==bin,])
