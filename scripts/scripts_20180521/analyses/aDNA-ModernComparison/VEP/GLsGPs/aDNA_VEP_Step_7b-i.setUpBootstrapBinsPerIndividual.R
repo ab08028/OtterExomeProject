@@ -16,7 +16,7 @@ require(plyranges)
 # BiocManager::install("plyranges")
 ## okay this works pretty well; want to parallelize and try running on hoffman and be able to feed in files; and make sure point estimates are inside there somewhere.
 #require(plyranges) # this is needed so you can use group_by with GRanges objects!!
-##minDepth=1 # make this match whatever I used to get point estimate
+#minDepth=1 # make this match whatever I used to get point estimate
 #minGP=0.95 # make this match whatever I used to get point estimate
 #binsize=100000 # start with 100kb
 #out.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/"
@@ -50,7 +50,7 @@ outPREFIX=opt$outPREFIX
 minDepth=as.numeric(opt$minDepth) # make this match whatever I used to get point estimate
 minGP=as.numeric(opt$minGP) # make this match whatever I used to get point estimate
 binsize=as.numeric(opt$binsize) # start with 100kb
-indNum=as.numeric(opt$indNum)
+ind=as.numeric(opt$indNum)
 #print("read in arguments:\n")
 #print("cdsFile: ",cdsFile,"\n")
 #print("chrSizes: ",mustelaChrSizesFile,"\n")
@@ -85,7 +85,7 @@ bins   <- tileGenome(sizes, tilewidth=binsize, cut.last.tile.in.chrom=T)
 # add a bin number to each bin
 bins$binNum <- seq(1,length(bins))
 print(c("number of unique bins:", length(unique(bins$binNum))))
-
+write.table(bins,paste(out.dir,"/",outPREFIX,".Ind.",ind,".BinCoords.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 ############### want to sum stuff up per bin per category #######
 # so want to sum up missense GPs 00 01 11 per individual
 # also need to specify depth min and GP min -- hold off for a second
@@ -95,7 +95,6 @@ print(c("number of unique bins:", length(unique(bins$binNum))))
 # 1 based position:
 allIndsAllBoots=data.frame()
 #for(ind in seq(0,8)){
-ind=indNum
 print(paste("starting ind",ind))
 IndVariables=c("chromo","start0based","end","position","major","minor","ref",paste("Ind",ind,sep=""),paste("Ind",ind,".1",sep=""),paste("Ind",ind,".2",sep=""),paste("ind",ind,"TotDepth",sep=""),"Consequence") # note: IndX is 00, IndX.1 is 01, IndX.2 is 11 
 indOnly <- cds[,IndVariables] # okay this works. 
@@ -156,11 +155,13 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     TiTvTotals$sites <- "Ti+Tv"
     
     # TV only:
+    print("starting transversions")
     TvTotals <- subset %>% 
       group_by(Consequence) %>%
       filter(Alleles %in% transversions) %>%
       summarise(sumHomRef=sum(homRef),sumHet=sum(het),sumHomAlt=sum(homAlt))
-    sum(TvTotals$sumHomRef,TvTotals$sumHet,TvTotals$sumHomAlt)==totalCallableSites # SHOULD BE TRUE -- should all add up to total
+    # check to make sure there are transversions (may be where low-cov fails)
+    if(dim(TvTotals)[1] > 0){
     # add metadata
     TvTotals$ind <- ind
     TvTotals$binNum <- bin
@@ -174,7 +175,7 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     TvTotals$sites <- "TvOnly"
     # put all together:
     indAllBins <- rbind(indAllBins,TiTvTotals,TvTotals)
-  }}
+  }}}
 
 print(c("Total filled bins for ind",ind,": ",length(unique(indAllBins$binNum))))
 
