@@ -11,8 +11,6 @@
 source /u/local/Modules/default/init/modules.sh
 module load R/3.5.1  
 
-### need to do some uniqueness check somewhere. ####
-
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
@@ -68,3 +66,5 @@ echo "Rscript $scriptDir/$script --infile $infile --outdir $outdir --outPREFIX $
 
 Rscript $scriptDir/$script --infile $infile --outdir $outdir --outPREFIX $outPREFIX --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw --indNum $indNum
 done
+
+sleep 10m

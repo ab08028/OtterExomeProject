@@ -80,25 +80,25 @@ for(i in seq(1,numBoots)){
     numberOfDraws=numberOfDraws+1
     runningTotal = runningTotal+unique(bin$totalCallableSitesPerBin)
     if((runningTotal+unique(bin$totalCallableSitesPerBin)) < SitesToDraw){
-      MISdf$homRef= MISdf$homRef + sum(bin[grepl("missense",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
-      MISdf$het= MISdf$het +sum(bin[grepl("missense",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
-      MISdf$homAlt= MISdf$homAlt +sum(bin[grepl("missense",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
+      MISdf$homRef= MISdf$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
+      MISdf$het= MISdf$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
+      MISdf$homAlt= MISdf$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
       # synonymous:
-      SYNdf$homRef= SYNdf$homRef + sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
-      SYNdf$het= SYNdf$het +sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
-      SYNdf$homAlt= SYNdf$homAlt +sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
+      SYNdf$homRef= SYNdf$homRef + sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
+      SYNdf$het= SYNdf$het +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
+      SYNdf$homAlt= SYNdf$homAlt +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
       # stop_gained:
       SGdfTV$homRef= SGdfTV$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
       SGdfTV$het= SGdfTV$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
       SGdfTV$homAlt= SGdfTV$homAlt +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
       # transversions:
-      MISdfTV$homRef= MISdfTV$homRef + sum(bin[grepl("missense",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
-      MISdfTV$het= MISdfTV$het +sum(bin[grepl("missense",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
-      MISdfTV$homAlt= MISdfTV$homAlt +sum(bin[grepl("missense",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
+      MISdfTV$homRef= MISdfTV$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
+      MISdfTV$het= MISdfTV$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
+      MISdfTV$homAlt= MISdfTV$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
       # synonymous:
-      SYNdfTV$homRef= SYNdfTV$homRef + sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
-      SYNdfTV$het= SYNdfTV$het +sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
-      SYNdfTV$homAlt= SYNdfTV$homAlt +sum(bin[grepl("synonymous",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
+      SYNdfTV$homRef= SYNdfTV$homRef + sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
+      SYNdfTV$het= SYNdfTV$het +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
+      SYNdfTV$homAlt= SYNdfTV$homAlt +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
       # stop_gained:
       SGdfTV$homRef= SGdfTV$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
       SGdfTV$het= SGdfTV$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)

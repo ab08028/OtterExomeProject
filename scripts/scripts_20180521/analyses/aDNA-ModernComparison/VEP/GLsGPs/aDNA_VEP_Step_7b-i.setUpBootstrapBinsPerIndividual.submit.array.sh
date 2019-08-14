@@ -12,8 +12,12 @@ source /u/local/Modules/default/init/modules.sh
 module load R/3.5.1  
 
 ### each site should only appear once in the super file but want to make sure 
+# zcat angsdOut.mappedTomfur.superfile.GPs.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed.gz | grep -v "#" -c   # total sites
+# 25971997
 # zcat angsdOut.mappedTomfur.superfile.GPs.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed.gz | grep -v "#" | awk '{print $4}' | sort | uniq | wc -l
-
+# 25971997 with uniq
+# so since --pick was used, each site only appears once
+ 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
 script=aDNA_VEP_Step_7b-i.setUpBootstrapBinsPerIndividual.R
@@ -72,3 +76,5 @@ echo "Rscript $scriptDir/$script --infile $infile --chrSizes $chrSizes --outdir 
 
 Rscript $scriptDir/$script --infile $infile --chrSizes $chrSizes --outdir $outdir --outPREFIX $outPREFIX --minDepth $minDepth --minGP $minGP --binsize $binsize --indNum $indNum
 done
+
+sleep 10m
