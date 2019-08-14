@@ -180,7 +180,7 @@ for(ind in seq(0,8)){
       indAllBins <- rbind(indAllBins,TiTvTotals,TvTotals)
     }}
   
-  
+  print(c("Total filled bins for ind",ind,": ",length(unique(indAllBins$binNum))))
   
   ####### okay this works! Could loop over every individual and write out a file per one , or combine them all ########
   #ggplot(data.frame(indAllBins),aes(x=binNum,y=totalCallableSitesPerBin))+
@@ -245,8 +245,11 @@ for(ind in seq(0,8)){
       
       allBoots=rbind(allBoots,MISdf,MISdfTV,SYNdf,SYNdfTV,SGdf,SGdfTV) # update allBoots
     }
-  write.table(indAllBins,paste(out.dir,"/",outPREFIX,"Ind.",ind,".sumsPerBin.txt",sep=""),col.names = T,row.names = F,quote=F)
+  write.table(indAllBins,paste(out.dir,"/",outPREFIX,"Ind.",ind,".sumsPerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
   write.table(allBoots,paste(out.dir,"/",outPREFIX,"Ind.",ind,".allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
-  allIndsAllBoots=rbind(allIndsAllBoots,allBoots)
+  allIndsAllBoots=rbind(allIndsAllBoots,allBoots,sep="\t")
 }
-write.table(allIndsAllBoots,paste(out.dir,"/",outPREFIX,"AllInds.allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
+write.table(allIndsAllBoots,paste(out.dir,"/",outPREFIX,"AllInds.allBoots.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+
+
+# turn this into two scripts-- write out the sumsPerBin first in step a., then read those in and bootstrap over them in step b. Setting up the bins is v. time consuming -- can I speed it up? or at least only do once.
