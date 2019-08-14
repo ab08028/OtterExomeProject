@@ -8,12 +8,14 @@ transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 #BiocManager::install("plyranges")
 require(GenomicRanges)
 require(dplyr)
+require(plyranges)
 #require(bootstrap)
 # install plyranges (dplyr to work with Granges)
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #  install.packages("BiocManager")
+# BiocManager::install("plyranges")
 ## okay this works pretty well; want to parallelize and try running on hoffman and be able to feed in files; and make sure point estimates are inside there somewhere.
-#require(plyranges)
+#require(plyranges) # this is needed so you can use group_by with GRanges objects!!
 #minDepth=1 # make this match whatever I used to get point estimate
 #minGP=0.95 # make this match whatever I used to get point estimate
 #binsize=100000 # start with 100kb
