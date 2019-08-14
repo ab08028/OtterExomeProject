@@ -87,7 +87,7 @@ bins   <- tileGenome(sizes, tilewidth=binsize, cut.last.tile.in.chrom=T)
 #bins
 # add a bin number to each bin
 bins$binNum <- seq(1,length(bins))
-length(unique(bins$binNum))
+print(c("number of unique bins:", length(unique(bins$binNum))))
 
 ############### want to sum stuff up per bin per category #######
 # so want to sum up missense GPs 00 01 11 per individual
@@ -132,7 +132,8 @@ for(ind in seq(0,8)){
   ### skip empty bins!
   indAllBins <- data.frame()
   print("setting up bins (takes a while)")
-
+  #test = data.frame(indAllBins) %>% 
+  #  group_by(Consequence)
   for(bin in seq(1,length(unique(bins$binNum)))){
     #print(bin)
     subset <- subsetByOverlaps(test, bins[bins$binNum==bin,])
