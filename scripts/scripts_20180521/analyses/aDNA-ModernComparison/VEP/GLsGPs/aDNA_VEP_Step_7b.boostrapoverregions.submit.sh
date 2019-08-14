@@ -6,7 +6,7 @@
 #$ -N bootstrapVEPResults
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
-
+#$ -V
 source /u/local/Modules/default/init/modules.sh
 module load R/3.5.1  
 
@@ -34,6 +34,7 @@ for angsdDate in $dates
 do
 echo $angsdDate
 indir=$SCRATCH/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate/cdsPerCategoryFromVEP/
+#infile=$indir/testingScript.CDS.bed.gz
 infile=$indir/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed.gz # need to fix header issue
 chrSizes=$scriptDir/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.224.ChrLengths.txt # need the chr sizes to be uploaded somewhere
 outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps

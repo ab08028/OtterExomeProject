@@ -189,6 +189,7 @@ for(ind in seq(0,8)){
   allBoots=data.frame()
   print("starting resampling bootstraps")
   for(i in seq(1,numBoots)){
+    print(c("starting bootstrap: ",i))
     runningTotal=0
     numberOfDraws=0
     binNums=unique(indAllBins$binNum)
