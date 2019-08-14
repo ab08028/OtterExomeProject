@@ -137,9 +137,10 @@ for(ind in seq(0,8)){
   #test = data.frame(indAllBins) %>% 
   #  group_by(Consequence)
   for(bin in seq(1,length(unique(bins$binNum)))){
-    #print(bin)
+    print(bin)
     subset <- subsetByOverlaps(test, bins[bins$binNum==bin,])
     totalCallableSites=length(subset)
+    print(c("total callable sites:", totalCallableSites))
     if(totalCallableSites>0){
       # all sites:
       TiTvTotals <- subset %>% 
