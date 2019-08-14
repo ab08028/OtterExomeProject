@@ -153,7 +153,8 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     TiTvTotals$minDepth <- minDepth
     TiTvTotals$minGP <- minGP
     TiTvTotals$sites <- "Ti+Tv"
-    
+    # put all together:
+    indAllBins <- rbind(indAllBins,TiTvTotals)
     # TV only:
     print("starting transversions")
     TvTotals <- subset %>% 
@@ -174,8 +175,12 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     TvTotals$minGP <- minGP
     TvTotals$sites <- "TvOnly"
     # put all together:
-    indAllBins <- rbind(indAllBins,TiTvTotals,TvTotals)
-  }}}
+    indAllBins <- rbind(indAllBins,TvTotals)
+    }
+    else{
+      print("no TV in this bin!")
+    }
+  }}
 
 print(c("Total filled bins for ind",ind,": ",length(unique(indAllBins$binNum))))
 
