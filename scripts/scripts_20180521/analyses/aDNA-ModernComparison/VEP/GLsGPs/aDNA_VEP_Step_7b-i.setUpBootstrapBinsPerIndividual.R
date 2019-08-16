@@ -107,9 +107,10 @@ colnames(indOnly) <- c("chromo","start0based","end","position1based","major","mi
 # get maxGP value among the homRef, het or homAlt GTs:
 indOnly$maxGP <- apply(indOnly[,c("homRef","het","homAlt")],1,max) # this works
 # 1. min depth
+# 20180816: fixed this to be >= not just > -- this could cause discrepancy! 
 indOnly_filter <- indOnly %>% 
-  filter(indDepth>minDepth) %>%
-  filter(maxGP > minGP) # this makes sure that whatever the largest GP is for the site, that it is > some cutoff for the site (makes a 'callable site')
+  filter(indDepth >= minDepth) %>%
+  filter(maxGP >= minGP) # this makes sure that whatever the largest GP is for the site, that it is > some cutoff for the site (makes a 'callable site')
 
 # okay so now it's been filtered by GP and by Depth
 # want to sum up by category
