@@ -41,7 +41,7 @@ do
 echo $angsdDate
 indir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
 #infile=$indir/testingScript.CDS.bed.gz
-infile=$indir/${basename}.superfile.${type}.Ind.${indNum}.allBoots.txt # result of step 7b-i
+infile=$indir/${basename}.superfile.${type}.Ind.${indNum}.sumsPerBin.txt # result of step 7b-i 
  # need to fix header issue
 #outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
 mkdir -p $outdir
