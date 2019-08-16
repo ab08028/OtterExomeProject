@@ -37,11 +37,11 @@ outPREFIX=${basename}.superfile.${type}
 for angsdDate in $dates
 do
 echo $angsdDate
-indir=$SCRATCH/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate/cdsPerCategoryFromVEP/
+indir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
 #infile=$indir/testingScript.CDS.bed.gz
 infile=$indir/${basename}.superfile.${type}.Ind.${indNum}.allBoots.txt # result of step 7b-i
  # need to fix header issue
-outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
+#outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
 mkdir -p $outdir
 # file with avg sites to draw (depends on minDepth,minGP, minInd) and is a result of the script: /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/getAverageCalledCDSSItesAcrossAllInds.R
 # get count for this date:
@@ -64,9 +64,9 @@ echo "avg sites to draw: " $avgSitesToDraw
 #               help="Individual number assigned by ANGSD, starts at 0 (for my study it's 0-8))", metavar="numeric")
 # ); 
 
-echo "Rscript $scriptDir/$script --infile $infile --outdir $outdir --outPREFIX $outPREFIX --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw --indNum $indNum"
+echo "Rscript $scriptDir/$script --infile $infile --outdir $indir --outPREFIX $outPREFIX --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw --indNum $indNum"
 
-Rscript $scriptDir/$script --infile $infile --outdir $outdir --outPREFIX $outPREFIX --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw --indNum $indNum
+Rscript $scriptDir/$script --infile $infile --outdir $indir --outPREFIX $outPREFIX --numBoots $numBoots --avgSitesToDraw $avgSitesToDraw --indNum $indNum
 done
 
 sleep 10m
