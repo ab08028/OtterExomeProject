@@ -19,11 +19,14 @@ script=aDNA_VEP_Step_7b-ii.BootstrapsOverBins.R
 # parameters:
 #binsize=100000 # 100kb
 numBoots=100 # eventually do more! 
-#minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
-#minGP=0.95
-#minInd=1
-#dates='20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4'
+
 dates="20190701-lowcov-AFprior-MajorMinor4"
+# just need these min variables to pull the correct avg site counts file:
+minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
+minGP=0.95
+minInd=1
+#dates='20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4'
+
 SCRATCH=/u/flashscratch/a/ab08028/
 avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
 # contains both dates
