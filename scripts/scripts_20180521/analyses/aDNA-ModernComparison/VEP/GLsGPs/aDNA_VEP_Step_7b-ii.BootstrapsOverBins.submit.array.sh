@@ -34,16 +34,17 @@ ref="mfur"
 basename=angsdOut.mappedTo${ref}
 type="GPs" # for now
 indNum=$(($SGE_TASK_ID-1)) # ind #s are start at 0 but can't do array starting at 0, so need to subtract 1 so 1-9 turns into 0-8.
-outPREFIX=${basename}.superfile.${type}
+outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${date}
+
 # loop through dates:
 for angsdDate in $dates
 do
 echo $angsdDate
-indir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
+indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
 #infile=$indir/testingScript.CDS.bed.gz
 infile=$indir/${basename}.superfile.${type}.Ind.${indNum}.sumsPerBin.txt # result of step 7b-i 
  # need to fix header issue
-#outdir=$SCRATCH/captures/aDNA-ModernComparison/compareMisSynDists_withBootstraps/$angsdDate
+#outdir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
 mkdir -p $outdir
 # file with avg sites to draw (depends on minDepth,minGP, minInd) and is a result of the script: /Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/getAverageCalledCDSSItesAcrossAllInds.R
 # get count for this date:
