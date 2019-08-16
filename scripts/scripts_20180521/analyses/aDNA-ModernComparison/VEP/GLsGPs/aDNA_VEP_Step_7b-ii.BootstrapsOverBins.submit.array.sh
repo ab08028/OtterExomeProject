@@ -14,7 +14,7 @@ module load R/3.5.1
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
-script=aDNA_VEP_Step_7b.boostrapoverregions.R
+script=aDNA_VEP_Step_7b-ii.BootstrapsOverBins.R
 
 # parameters:
 #binsize=100000 # 100kb
@@ -22,7 +22,8 @@ numBoots=100 # eventually do more!
 #minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
 #minGP=0.95
 #minInd=1
-dates='20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4'
+#dates='20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4'
+dates="20190701-lowcov-AFprior-MajorMinor4"
 SCRATCH=/u/flashscratch/a/ab08028/
 avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
 # contains both dates
