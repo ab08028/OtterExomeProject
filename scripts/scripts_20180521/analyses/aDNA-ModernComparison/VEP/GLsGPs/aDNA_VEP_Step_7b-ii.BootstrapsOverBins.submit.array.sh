@@ -18,9 +18,9 @@ script=aDNA_VEP_Step_7b-ii.BootstrapsOverBins.R
 
 # parameters:
 #binsize=100000 # 100kb
-numBoots=100 # eventually do more! 
+numBoots=100 
 
-dates="20190701-lowcov-AFprior-MajorMinor4"
+dates="20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4"
 # just need these min variables to pull the correct avg site counts file:
 minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
 minGP=0.95
@@ -34,15 +34,15 @@ ref="mfur"
 basename=angsdOut.mappedTo${ref}
 type="GPs" # for now
 indNum=$(($SGE_TASK_ID-1)) # ind #s are start at 0 but can't do array starting at 0, so need to subtract 1 so 1-9 turns into 0-8.
-outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${date}
 
 # loop through dates:
 for angsdDate in $dates
 do
 echo $angsdDate
+outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}
 indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
 #infile=$indir/testingScript.CDS.bed.gz
-infile=$indir/${basename}.superfile.${type}.Ind.${indNum}.sumsPerBin.txt # result of step 7b-i 
+infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Ind.${indNum}.sumsPerBin.txt # result of step 7b-i 
  # need to fix header issue
 #outdir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
 mkdir -p $outdir

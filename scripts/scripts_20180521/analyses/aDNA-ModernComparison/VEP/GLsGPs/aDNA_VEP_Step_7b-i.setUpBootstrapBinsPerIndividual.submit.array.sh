@@ -36,12 +36,13 @@ ref="mfur"
 basename=angsdOut.mappedTo${ref}
 type="GPs" # for now 
 indNum=$(($SGE_TASK_ID-1)) # ind #s are start at 0 but can't do array starting at 0, so need to subtract 1 so 1-9 turns into 0-8.
-outPREFIX=${basename}.superfile.${type}
 
 # loop through dates:
 for angsdDate in $dates
 do
 echo $angsdDate
+outPREFIX=${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}
+
 indir=$SCRATCH/captures/aDNA-ModernComparison/angsd-GLs/$angsdDate/cdsPerCategoryFromVEP/
 #infile=$indir/testingScript.CDS.bed.gz
 infile=$indir/${basename}.superfile.${type}.mafs.counts.0based.allCDSSites.AnnotatedWithVEP.bed.gz # need to fix header issue
