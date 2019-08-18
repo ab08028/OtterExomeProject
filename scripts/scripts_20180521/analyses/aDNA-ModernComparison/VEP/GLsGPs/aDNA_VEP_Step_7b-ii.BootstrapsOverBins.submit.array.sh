@@ -7,7 +7,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -V
-#$ -t 1-1
+#$ -t 1-9
 source /u/local/Modules/default/init/modules.sh
 module load R/3.5.1  
 
