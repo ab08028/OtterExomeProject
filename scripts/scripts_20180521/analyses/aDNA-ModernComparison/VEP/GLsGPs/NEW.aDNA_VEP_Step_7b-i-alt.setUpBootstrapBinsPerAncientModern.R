@@ -20,8 +20,8 @@ option_list = list(
               help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
   #make_option(c("--indNum"), type="numeric", default=NULL, 
  #             help="Individual number assigned by ANGSD, starts at 0 (for my study it's 0-8))", metavar="numeric"),
-  make_option(c("--bamList"), type="numeric", default=NULL, 
-              help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A'!!!!!!#", metavar="numeric")
+  make_option(c("--bamList"), type="character", default=NULL, 
+              help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A'!!!!!!#", metavar="file")
   ); 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
