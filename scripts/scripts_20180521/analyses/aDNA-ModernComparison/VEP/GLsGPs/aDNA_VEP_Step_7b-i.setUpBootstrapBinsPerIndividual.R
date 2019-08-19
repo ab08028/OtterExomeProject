@@ -154,7 +154,8 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     TiTvTotals$minDepth <- minDepth
     TiTvTotals$minGP <- minGP
     TiTvTotals$sites <- "Ti+Tv"
-    # put all together:
+    # put all together: 
+
     indAllBins <- rbind(indAllBins,TiTvTotals)
     # TV only:
     print("starting transversions")
