@@ -91,8 +91,8 @@ write.table(bins,paste(out.dir,"/",outPREFIX,".Ind.",ind,".BinCoords.txt",sep=""
 ############### want to sum stuff up per bin per category #######
 ##### loop over bins (make run in parallel?) ####
 allBinsallInds=data.frame()
-#for(bin in seq(1,length(unique(bins$binNum)))){
-for(bin in seq(1,10)){
+for(bin in seq(1,length(unique(bins$binNum)))){
+#for(bin in seq(1,10)){
   print(paste("starting bin ",bin),quote=F)
   binTotals=data.frame()  # reset this for every bin
   callableSiteTotalsPerBin=data.frame() # just for totals per individual
@@ -196,10 +196,10 @@ for(bin in seq(1,10)){
   
 }
 # write out modern and ancient:
-write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,"Modern.Ancient.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,"ModernOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,"AncientOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 # what needs to be written out?
 
