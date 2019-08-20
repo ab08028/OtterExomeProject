@@ -35,13 +35,14 @@ minGP=as.numeric(opt$minGP) # make this match whatever I used to get point estim
 binsize=as.numeric(opt$binsize) # start with 100kb
 ind=as.numeric(opt$indNum)
 bamListFile=as.character(opt$bamList)
+
 transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 
 # for testing:
-# minDepth=2 # make this match whatever I used to get point estimate
-# minGP=0.95 # make this match whatever I used to get point estimate
-# binsize=100000 # start with 100kb
-# bamListFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt"
+#minDepth=2 # make this match whatever I used to get point estimate
+#minGP=0.95 # make this match whatever I used to get point estimate
+#binsize=100000 # start with 100kb
+#bamListFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt"
 bamList=read.table(bamListFile)
 # need to turn bamList into something with indexes and get the modern and ancient indices from it. 
 colnames(bamList) <- "sample"
@@ -100,7 +101,7 @@ for(bin in seq(1,length(unique(bins$binNum)))){
   subset <- subsetByOverlaps(cds_GRanges, bins[bins$binNum==bin,])
   # go through inds:
   for(ind in seq(0,length(bamList$sample)-1)){
-    print(paste("starting ind ",ind),quote=F)
+    #print(paste("starting ind ",ind),quote=F)
     indTotals=data.frame() # per ind
     print(paste("starting ind",ind))
     IndVariables=c("seqnames","start","end","position","major","minor","ref",paste("Ind",ind,sep=""),paste("Ind",ind,".1",sep=""),paste("Ind",ind,".2",sep=""),paste("ind",ind,"TotDepth",sep=""),"Consequence","Extra") # note: IndX is 00, IndX.1 is 01, IndX.2 is 11 
@@ -154,33 +155,31 @@ for(bin in seq(1,length(unique(bins$binNum)))){
   binTotals$sumHet_Frac <- binTotals$sumHet/binTotals$totalCallableSitesPerBin    
   binTotals$sumHomAlt_Frac <- binTotals$sumHomAlt/binTotals$totalCallableSitesPerBin
   # then multiply by average sites in the bin for modern or for ancient (for now keeping separate)
-  ### set up columns:
-  binTotals$sumHomRef_Rescaled <- NA
-  binTotals$sumHet_Rescaled <- NA
-  binTotals$sumHomAlt_Rescaled <- NA
   ### get averages per bin: (useing separate callableSiteTotalsPerBin df so that multiple entries don't get counted, just one total per individual for mean )
-  ########## modern: ##############
+  ########## get modern and ancient average called sites per bin (doing separately for now) ####
+  # update for modern and ancient 
   averageModernPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% modernIDs,]$total)
-  # add info to binTotals
-  binTotals$averageModernPerBin <- averageModernPerBin
-  # then want to multiply: 
-  binTotals[binTotals$ind %in% modernIDs,]$sumHomRef_Rescaled <- binTotals[binTotals$ind %in% modernIDs,]$sumHomRef_Frac * averageModernPerBin
-  binTotals[binTotals$ind %in% modernIDs,]$sumHet_Rescaled <- binTotals[binTotals$ind %in% modernIDs,]$sumHet_Frac * averageModernPerBin
-  binTotals[binTotals$ind %in% modernIDs,]$sumHomAlt_Rescaled <- binTotals[binTotals$ind %in% modernIDs,]$sumHomAlt_Frac * averageModernPerBin
-  ####### ancient: #########
+  # ancient:
   averageAncientPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% ancientIDs,]$total)
-  binTotals$averageAncientPerBin <- averageAncientPerBin
-  binTotals[binTotals$ind %in% ancientIDs,]$sumHomRef_Rescaled <- binTotals[binTotals$ind %in% ancientIDs,]$sumHomRef_Frac * averageAncientPerBin
-  binTotals[binTotals$ind %in% ancientIDs,]$sumHet_Rescaled <- binTotals[binTotals$ind %in% ancientIDs,]$sumHet_Frac * averageAncientPerBin
-  binTotals[binTotals$ind %in% ancientIDs,]$sumHomAlt_Rescaled <- binTotals[binTotals$ind %in% ancientIDs,]$sumHomAlt_Frac * averageAncientPerBin
+  # add avg sites info to binTotals
+  binTotals$averageCalledSitesPerBin <- NA
+  binTotals[binTotals$ind %in% modernIDs,]$averageCalledSitesPerBin <- averageModernPerBin
+  # add avg sites info to binTotals
+  binTotals[binTotals$ind %in% ancientIDs,]$averageCalledSitesPerBin <- averageAncientPerBin
   
+  # then want to rescale values:
+  binTotals$sumHomRef_Rescaled <- binTotals$sumHomRef_Frac * binTotals$averageCalledSitesPerBin
+  binTotals$sumHet_Rescaled <- binTotals$sumHet_Frac * binTotals$averageCalledSitesPerBin
+  binTotals$sumHomAlt_Rescaled <- binTotals$sumHomAlt_Frac * binTotals$averageCalledSitesPerBin
+
   ### add individual group info ###
-  binTotals$group <- "Modern"
+  binTotals$group <- NA
+  binTotals[binTotals$ind %in% modernIDs,]$group <- "Modern"
   binTotals[binTotals$ind %in% ancientIDs,]$group <- "Ancient"
   ## need to then average over those:
   summaries <- binTotals %>% 
-    group_by(group,sites,Consequence,.drop=F) %>%
-    summarise(avgHomRef_Rescaled=mean(sumHomRef_Rescaled),avgHet_Rescaled=mean(sumHet_Rescaled),avgHomAlt=mean(sumHomAlt_Rescaled))
+    group_by(group,sites,Consequence,averageCalledSitesPerBin,.drop=F) %>%
+    summarise(avgRescaledHomRef=mean(sumHomRef_Rescaled),avgRescaledHet=mean(sumHet_Rescaled),avgRescaledHomAlt=mean(sumHomAlt_Rescaled))
   # checked this, it works. cool.
   ### add metadata:
   summaries$binNum <- bin
