@@ -19,10 +19,10 @@ option_list = list(
   make_option(c("--binsize"), type="numeric", default=NULL, 
               help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
   #make_option(c("--indNum"), type="numeric", default=NULL, 
- #             help="Individual number assigned by ANGSD, starts at 0 (for my study it's 0-8))", metavar="numeric"),
+  #             help="Individual number assigned by ANGSD, starts at 0 (for my study it's 0-8))", metavar="numeric"),
   make_option(c("--bamList"), type="character", default=NULL, 
               help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A'!!!!!!#", metavar="file")
-  ); 
+); 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
@@ -88,7 +88,7 @@ bins   <- tileGenome(sizes, tilewidth=binsize, cut.last.tile.in.chrom=T)
 bins$binNum <- seq(1,length(bins))
 print(c("number of unique bins:", length(unique(bins$binNum))))
 ##### UPDATE:
-write.table(bins,paste(out.dir,"/",outPREFIX,".Ind.",ind,".BinCoords.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(bins,paste(out.dir,"/",outPREFIX,".BinCoords.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 ############### want to sum stuff up per bin per category #######
 ##### loop over bins (make run in parallel?) ####
 allBinsallInds=data.frame()
@@ -113,92 +113,104 @@ for(bin in seq(1,10)){
     indOnly$maxGP <- apply(indOnly[,c("homRef","het","homAlt")],1,max) # this works
     # 1. min depth
     # 20180816: fixed this to be >= not just > -- this could cause discrepancy! 
+    # also checks for canonical (just added this --20190820)
     indOnly_filter <- indOnly %>% 
       filter(indDepth >= minDepth) %>%
-      filter(maxGP >= minGP) # this makes sure that whatever the largest GP is for the site, that it is > some cutoff for the site (makes a 'callable site')
+      filter(maxGP >= minGP) %>% 
+      filter(grepl("CANONICAL=YES",Extra))
+    # this makes sure that whatever the largest GP is for the site, that it is > some cutoff for the site (makes a 'callable site')
+    # add canonical filter
     
     # okay so now it's been filtered by GP and by Depth
     # want to sum up by category
     totalCallableSites=dim(indOnly_filter)[1] # after filtering, the sites remaining are the total callable sites. 
-    # add to callable sites df:
-    callableSiteTotalsPerBin = rbind(callableSiteTotalsPerBin,data.frame(total=totalCallableSites,bin=bin,ind=ind))
-    # make sure ref is in major minor
-    indOnly_filter$Alleles <- paste(indOnly_filter$major,indOnly_filter$minor,sep=",")
-    #if(totalCallableSites>0){
-    # all sites
-    # use .drop=F in group_by to get zeros if it's an empty category -- helps avoid empty dfs if sites are missing; will put in zero counts instead
-    indTotals <- indOnly_filter %>% 
-      group_by(Consequence,.drop=F) %>%
-      summarise(sumHomRef=sum(homRef),sumHet=sum(het),sumHomAlt=sum(homAlt))
-    indTotals$ind <- ind
-    indTotals$sites <- "Ti+Tv"
-    indTotals$totalCallableSitesPerBin <- totalCallableSites
-    binTotals <- rbind(binTotals,indTotals)
-    
-    # transverions:
-    indTotalsTV <- indOnly_filter %>% 
-      group_by(Consequence,.drop=F) %>%
-      filter(Alleles %in% transversions) %>%
-      summarise(sumHomRef=sum(homRef),sumHet=sum(het),sumHomAlt=sum(homAlt))
-    indTotalsTV$ind <- ind
-    indTotalsTV$sites <- "TvOnly"
-    indTotalsTV$totalCallableSitesPerBin <- totalCallableSites
-    binTotals <- rbind(binTotals,indTotalsTV)
-    
-  }
-  
+    # Exclude individual if they don't have any callable sites in the window (saves NAs)
+    if(totalCallableSites>0){
+      # add to callable sites df:
+      callableSiteTotalsPerBin = rbind(callableSiteTotalsPerBin,data.frame(total=totalCallableSites,bin=bin,ind=ind))
+      # make sure ref is in major minor
+      indOnly_filter$Alleles <- paste(indOnly_filter$major,indOnly_filter$minor,sep=",")
+      #if(totalCallableSites>0){
+      # all sites
+      # use .drop=F in group_by to get zeros if it's an empty category -- helps avoid empty dfs if sites are missing; will put in zero counts instead
+      indTotals <- indOnly_filter %>% 
+        group_by(Consequence,.drop=F) %>%
+        summarise(sumHomRef=sum(homRef),sumHet=sum(het),sumHomAlt=sum(homAlt))
+      indTotals$ind <- ind
+      indTotals$sites <- "Ti+Tv"
+      indTotals$totalCallableSitesPerBin <- totalCallableSites
+      binTotals <- rbind(binTotals,indTotals)
+      
+      # transverions:
+      indTotalsTV <- indOnly_filter %>% 
+        group_by(Consequence,.drop=F) %>%
+        filter(Alleles %in% transversions) %>%
+        summarise(sumHomRef=sum(homRef),sumHet=sum(het),sumHomAlt=sum(homAlt))
+      indTotalsTV$ind <- ind
+      indTotalsTV$sites <- "TvOnly"
+      indTotalsTV$totalCallableSitesPerBin <- totalCallableSites
+      binTotals <- rbind(binTotals,indTotalsTV)
+      
+    }}
+  # want to count up individuals 
   ##### need to do some normalizing ####
   # get avg sites per group of individuals:
-  
-  # divide each by total callable sites per individual
-  binTotals$sumHomRef_Frac <- binTotals$sumHomRef/binTotals$totalCallableSitesPerBin
-  binTotals$sumHet_Frac <- binTotals$sumHet/binTotals$totalCallableSitesPerBin    
-  binTotals$sumHomAlt_Frac <- binTotals$sumHomAlt/binTotals$totalCallableSitesPerBin
-  # then multiply by average sites in the bin for modern or for ancient (for now keeping separate)
-  ### get averages per bin: (useing separate callableSiteTotalsPerBin df so that multiple entries don't get counted, just one total per individual for mean )
-  ########## get modern and ancient average called sites per bin (doing separately for now) ####
-  # update for modern and ancient 
-  averageModernPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% modernIDs,]$total)
-  # ancient:
-  averageAncientPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% ancientIDs,]$total)
-  # add avg sites info to binTotals
-  binTotals$averageCalledSitesPerBin <- NA
-  binTotals[binTotals$ind %in% modernIDs,]$averageCalledSitesPerBin <- averageModernPerBin
-  # add avg sites info to binTotals
-  binTotals[binTotals$ind %in% ancientIDs,]$averageCalledSitesPerBin <- averageAncientPerBin
-  
-  # then want to rescale values:
-  binTotals$sumHomRef_Rescaled <- binTotals$sumHomRef_Frac * binTotals$averageCalledSitesPerBin
-  binTotals$sumHet_Rescaled <- binTotals$sumHet_Frac * binTotals$averageCalledSitesPerBin
-  binTotals$sumHomAlt_Rescaled <- binTotals$sumHomAlt_Frac * binTotals$averageCalledSitesPerBin
-
-  ### add individual group info ###
-  binTotals$group <- NA
-  binTotals[binTotals$ind %in% modernIDs,]$group <- "Modern"
-  binTotals[binTotals$ind %in% ancientIDs,]$group <- "Ancient"
-  ## need to then average over those:
-  summaries <- binTotals %>% 
-    group_by(group,sites,Consequence,averageCalledSitesPerBin,.drop=F) %>%
-    summarise(avgRescaledHomRef=mean(sumHomRef_Rescaled),avgRescaledHet=mean(sumHet_Rescaled),avgRescaledHomAlt=mean(sumHomAlt_Rescaled))
-  # checked this, it works. cool.
-  ### add metadata:
-  summaries$binNum <- bin
-  summaries$scaff <- as.character(unlist(seqnames(bins[bins$binNum==bin,])))
-  summaries$start <- start(bins[bins$binNum==bin,])
-  summaries$end <- end(bins[bins$binNum==bin,])
-  summaries$width <- width(bins[bins$binNum==bin,])
-  summaries$minDepth <- minDepth
-  summaries$minGP <- minGP
-  # finally: add to allBinsallInds df:
-  allBinsallInds <- rbind(allBinsallInds,data.frame(summaries))
-  
-  
-}
+  # count up how many inds have data (so can filter on later if you want)
+  totalIndsWithData=length(unique(binTotals$ind)) # counts up inds with data. If no individuals have data, skip the bin:
+  if(totalIndsWithData>0){
+    # add that info to df
+    # divide each by total callable sites per individual
+    # generates NaN if totalCallableSitesPerBin is 0
+    binTotals$sumHomRef_Frac <- binTotals$sumHomRef/binTotals$totalCallableSitesPerBin
+    binTotals$sumHet_Frac <- binTotals$sumHet/binTotals$totalCallableSitesPerBin    
+    binTotals$sumHomAlt_Frac <- binTotals$sumHomAlt/binTotals$totalCallableSitesPerBin
+    # then multiply by average sites in the bin for modern or for ancient (for now keeping separate)
+    ### get averages per bin: (useing separate callableSiteTotalsPerBin df so that multiple entries don't get counted, just one total per individual for mean )
+    ########## get modern and ancient average called sites per bin (doing separately for now) ####
+    # update for modern and ancient 
+    averageModernPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% modernIDs,]$total,na.rm=T)
+    # ancient:
+    averageAncientPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% ancientIDs,]$total,na.rm=T)
+    # add avg sites info to binTotals
+    binTotals$averageCalledSitesPerBin <- NA
+    binTotals[binTotals$ind %in% modernIDs,]$averageCalledSitesPerBin <- averageModernPerBin
+    # add avg sites info to binTotals
+    binTotals[binTotals$ind %in% ancientIDs,]$averageCalledSitesPerBin <- averageAncientPerBin
+    
+    # then want to rescale values:
+    binTotals$sumHomRef_Rescaled <- binTotals$sumHomRef_Frac * binTotals$averageCalledSitesPerBin
+    binTotals$sumHet_Rescaled <- binTotals$sumHet_Frac * binTotals$averageCalledSitesPerBin
+    binTotals$sumHomAlt_Rescaled <- binTotals$sumHomAlt_Frac * binTotals$averageCalledSitesPerBin
+    
+    ### add individual group info ###
+    binTotals$group <- NA
+    binTotals[binTotals$ind %in% modernIDs,]$group <- "Modern"
+    binTotals[binTotals$ind %in% ancientIDs,]$group <- "Ancient"
+    ## need to then average over those:
+    summaries <- binTotals %>% 
+      group_by(group,sites,Consequence,averageCalledSitesPerBin,.drop=F) %>%
+      summarise(avgRescaledHomRef=mean(sumHomRef_Rescaled,na.rm=T),avgRescaledHet=mean(sumHet_Rescaled,na.rm=T),avgRescaledHomAlt=mean(sumHomAlt_Rescaled,na.rm=T))
+    # checked this, it works. cool.
+    ### add metadata:
+    summaries$binNum <- bin
+    summaries$scaff <- as.character(unlist(seqnames(bins[bins$binNum==bin,])))
+    summaries$start <- start(bins[bins$binNum==bin,])
+    summaries$end <- end(bins[bins$binNum==bin,])
+    summaries$width <- width(bins[bins$binNum==bin,])
+    summaries$minDepth <- minDepth
+    summaries$minGP <- minGP
+    summaries$totalIndsWithData <- totalIndsWithData
+    # finally: add to allBinsallInds df:
+    allBinsallInds <- rbind(allBinsallInds,data.frame(summaries))
+    
+    
+  }}
 # write out modern and ancient:
-write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+# could do NA.omit? 
+write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBinbinSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 # what needs to be written out?
 
