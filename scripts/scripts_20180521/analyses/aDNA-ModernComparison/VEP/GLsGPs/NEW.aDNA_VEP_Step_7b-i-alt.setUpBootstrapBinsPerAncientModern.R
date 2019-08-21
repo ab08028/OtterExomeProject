@@ -92,8 +92,8 @@ write.table(bins,paste(out.dir,"/",outPREFIX,".Ind.",ind,".BinCoords.txt",sep=""
 ############### want to sum stuff up per bin per category #######
 ##### loop over bins (make run in parallel?) ####
 allBinsallInds=data.frame()
-for(bin in seq(1,length(unique(bins$binNum)))){
-#for(bin in seq(1,10)){
+#for(bin in seq(1,length(unique(bins$binNum)))){
+for(bin in seq(1,10)){
   print(paste("starting bin ",bin),quote=F)
   binTotals=data.frame()  # reset this for every bin
   callableSiteTotalsPerBin=data.frame() # just for totals per individual
