@@ -80,14 +80,15 @@ for(i in seq(1,numBoots)){
     numberOfDraws=numberOfDraws+1
     runningTotal = runningTotal+unique(bin$totalCallableSitesPerBin)
     if((runningTotal+unique(bin$totalCallableSitesPerBin)) < SitesToDraw){
+      # filter vep has mult annots matching missense, so use grep (missense_variant; missense_variant, splice_region_variant etc.); but with synonymous want it just to be synonymous. 
       MISdf$homRef= MISdf$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
       MISdf$het= MISdf$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
       MISdf$homAlt= MISdf$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
-      # synonymous:
-      SYNdf$homRef= SYNdf$homRef + sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
-      SYNdf$het= SYNdf$het +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
-      SYNdf$homAlt= SYNdf$homAlt +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
-      # stop_gained:
+      # synonymous: ** note syn treated diff than mis or sg here to match with filter vep!** to match with point estimates from filter_vep want to make sure it's a) canonical and b) only equals synonymous_variant not splice_region_variant,synonymous_variant (this is a choice -- doesn't really matter, just want to be consistent.)
+      SYNdf$homRef= SYNdf$homRef + sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$sumHomRef)
+      SYNdf$het= SYNdf$het +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$sumHet)
+      SYNdf$homAlt= SYNdf$homAlt +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$sumHomAlt)
+      # stop_gained: use grepl because filter_vep includes stop_gained and stop_gained, splice_region_variant as valid in point estimates
       SGdf$homRef= SGdf$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomRef)
       SGdf$het= SGdf$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHet)
       SGdf$homAlt= SGdf$homAlt +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$sumHomAlt)
@@ -95,10 +96,10 @@ for(i in seq(1,numBoots)){
       MISdfTV$homRef= MISdfTV$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
       MISdfTV$het= MISdfTV$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
       MISdfTV$homAlt= MISdfTV$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
-      # synonymous:
-      SYNdfTV$homRef= SYNdfTV$homRef + sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
-      SYNdfTV$het= SYNdfTV$het +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
-      SYNdfTV$homAlt= SYNdfTV$homAlt +sum(bin[grepl("synonymous_variant",bin$Consequence) & bin$sites=="TvOnly",]$sumHomAlt)
+      # synonymous: note
+      SYNdfTV$homRef= SYNdfTV$homRef + sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$sumHomRef)
+      SYNdfTV$het= SYNdfTV$het +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$sumHet)
+      SYNdfTV$homAlt= SYNdfTV$homAlt +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$sumHomAlt)
       # stop_gained:
       SGdfTV$homRef= SGdfTV$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$sumHomRef)
       SGdfTV$het= SGdfTV$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$sumHet)
