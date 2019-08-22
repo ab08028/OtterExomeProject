@@ -1,0 +1,26 @@
+Model parameters for sea otter simulations:
+
+dominance coefficients: 0 (recessive); 0.5 (additive)
+mutation rate: 8.64e-9
+(generation time: 6-7 years/gen)
+
+Alaska:
+Nanc = 4500 diploids
+Ncur = 250 diploids
+Time of contraction = 35 gen ago
+number of individuals to sample in VCF for SFS: 7 (sample VCF after burnin and after contraction)
+optional: could add recovery to ~2500 individuals or so (10,000 census size) for 5-10 generations
+
+
+California:
+Nanc = 3500 generations
+Ncur = 135 diploids
+Time of contraction = 35 gen ago
+number of individuals to sample in VCF for SFS: 6 (sample VCF after burnin and after contraction)
+optional: could add recovery to ~1000 individuals or so (3000 census size) for 5-10 generations
+
+
+Split time between populations: ~8000 generations
+((optional) could add migration)
+
+Note: could make contraction more recent/extreme or older/milder for each population depending on what we want to test
