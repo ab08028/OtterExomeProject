@@ -1,3 +1,6 @@
+# this first filters out individuals that don't have at least XX amount of sites per window (eg 500), then counts up to make sure the passing number of inds meets a threshold (eg 9/9) then checks to see 
+# this now averages over both ancient and modern together, not one or the other
+
 #BiocManager::install("plyranges")
 require(GenomicRanges)
 require(dplyr)
@@ -16,10 +19,12 @@ option_list = list(
               help="min depth per individual for a site to be 'callalble'", metavar="numeric"),
   make_option(c("--minGP"), type="numeric", default=NULL, 
               help="minimum value of the max. GP per site, per individual. Use 0.95.", metavar="numeric"),
+  make_option(c("--minCalledSitesPerWindowPerIndividual"), type="numeric", default=NULL, 
+              help="minimum sites called per individual per window", metavar="numeric"),
+  make_option(c("--minIndPerWindow"), type="numeric", default=NULL, 
+              help="minimum individuals with data per window; data does not need to be overlapping, but most contain at least minCalledSitesPerWindowPerIndividual in the window", metavar="numeric"),
   make_option(c("--binsize"), type="numeric", default=NULL, 
               help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
-  #make_option(c("--indNum"), type="numeric", default=NULL, 
-  #             help="Individual number assigned by ANGSD, starts at 0 (for my study it's 0-8))", metavar="numeric"),
   make_option(c("--bamList"), type="character", default=NULL, 
               help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A'!!!!!!#", metavar="file")
 ); 
@@ -33,6 +38,8 @@ outPREFIX=opt$outPREFIX
 minDepth=as.numeric(opt$minDepth) # make this match whatever I used to get point estimate
 minGP=as.numeric(opt$minGP) # make this match whatever I used to get point estimate
 binsize=as.numeric(opt$binsize) # start with 100kb
+minCalledSitesPerWindowPerIndividual=as.numeric(opt$minCalledSitesPerWindowPerIndividual)
+minIndPerWindow=as.numeric(opt$minIndPerWindow) 
 ind=as.numeric(opt$indNum)
 bamListFile=as.character(opt$bamList)
 
@@ -42,6 +49,8 @@ transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 #minDepth=2 # make this match whatever I used to get point estimate
 #minGP=0.95 # make this match whatever I used to get point estimate
 #binsize=100000 # start with 100kb
+#minIndPerWindow=9
+#minCalledSitesPerWindowPerIndividual=500
 #bamListFile="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt"
 bamList=read.table(bamListFile)
 # need to turn bamList into something with indexes and get the modern and ancient indices from it. 
@@ -92,11 +101,11 @@ write.table(bins,paste(out.dir,"/",outPREFIX,".BinCoords.binSize.",binsize,".txt
 ############### want to sum stuff up per bin per category #######
 ##### loop over bins (make run in parallel?) ####
 allBinsallInds=data.frame()
+callableSiteTotalsPerBin=data.frame()
 for(bin in seq(1,length(unique(bins$binNum)))){
 #for(bin in seq(1,10)){
   print(paste("starting bin ",bin),quote=F)
   binTotals=data.frame()  # reset this for every bin
-  callableSiteTotalsPerBin=data.frame() # just for totals per individual
   # go through each individual
   subset <- subsetByOverlaps(cds_GRanges, bins[bins$binNum==bin,])
   # go through inds:
@@ -125,9 +134,9 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     # want to sum up by category
     totalCallableSites=dim(indOnly_filter)[1] # after filtering, the sites remaining are the total callable sites. 
     # Exclude individual if they don't have any callable sites in the window (saves NAs)
-    if(totalCallableSites>0){
-      # add to callable sites df:
-      callableSiteTotalsPerBin = rbind(callableSiteTotalsPerBin,data.frame(total=totalCallableSites,bin=bin,ind=ind))
+    # used to be just greater than 0 but now setting it as min callable per window
+    callableSiteTotalsPerBin = rbind(callableSiteTotalsPerBin,data.frame(total=totalCallableSites,bin=bin,ind=ind))
+    if(totalCallableSites>=minCalledSitesPerWindowPerIndividual){
       # make sure ref is in major minor
       indOnly_filter$Alleles <- paste(indOnly_filter$major,indOnly_filter$minor,sep=",")
       #if(totalCallableSites>0){
@@ -157,7 +166,7 @@ for(bin in seq(1,length(unique(bins$binNum)))){
   # get avg sites per group of individuals:
   # count up how many inds have data (so can filter on later if you want)
   totalIndsWithData=length(unique(binTotals$ind)) # counts up inds with data. If no individuals have data, skip the bin:
-  if(totalIndsWithData>0){
+  if(totalIndsWithData>=minIndPerWindow){
     # add that info to df
     # divide each by total callable sites per individual
     # generates NaN if totalCallableSitesPerBin is 0
@@ -167,15 +176,15 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     # then multiply by average sites in the bin for modern or for ancient (for now keeping separate)
     ### get averages per bin: (useing separate callableSiteTotalsPerBin df so that multiple entries don't get counted, just one total per individual for mean )
     ########## get modern and ancient average called sites per bin (doing separately for now) ####
-    # update for modern and ancient 
-    averageModernPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% modernIDs,]$total,na.rm=T)
+    averageCalledSitesPerBin <- mean(callableSiteTotalsPerBin$total,na.rm=T)
+    #averageModernPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% modernIDs,]$total,na.rm=T)
     # ancient:
-    averageAncientPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% ancientIDs,]$total,na.rm=T)
+    #averageAncientPerBin=mean(callableSiteTotalsPerBin[callableSiteTotalsPerBin$ind %in% ancientIDs,]$total,na.rm=T)
     # add avg sites info to binTotals
-    binTotals$averageCalledSitesPerBin <- NA
-    binTotals[binTotals$ind %in% modernIDs,]$averageCalledSitesPerBin <- averageModernPerBin
+    binTotals$averageCalledSitesPerBin <- averageCalledSitesPerBin
+    #binTotals[binTotals$ind %in% modernIDs,]$averageCalledSitesPerBin <- averageModernPerBin
     # add avg sites info to binTotals
-    binTotals[binTotals$ind %in% ancientIDs,]$averageCalledSitesPerBin <- averageAncientPerBin
+    #binTotals[binTotals$ind %in% ancientIDs,]$averageCalledSitesPerBin <- averageAncientPerBin
     
     # then want to rescale values:
     binTotals$sumHomRef_Rescaled <- binTotals$sumHomRef_Frac * binTotals$averageCalledSitesPerBin
@@ -199,6 +208,8 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     summaries$width <- width(bins[bins$binNum==bin,])
     summaries$minDepth <- minDepth
     summaries$minGP <- minGP
+    summaries$minCalledSitesPerWindowPerIndividual <- minCalledSitesPerWindowPerIndividual
+    summaries$minIndPerWindow <- minIndPerWindow
     summaries$totalIndsWithData <- totalIndsWithData
     # finally: add to allBinsallInds df:
     allBinsallInds <- rbind(allBinsallInds,data.frame(summaries))
@@ -207,10 +218,13 @@ for(bin in seq(1,length(unique(bins$binNum)))){
   }}
 # write out modern and ancient:
 # could do NA.omit? 
-write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBinbinSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+# callable sites:
+write.table(callableSiteTotalsPerBin,paste(out.dir,"/",outPREFIX,".Modern.Ancient.callableSitesPerBin.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
-write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
+
+write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 # what needs to be written out?
 
