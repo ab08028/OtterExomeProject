@@ -1,5 +1,4 @@
 ############# 
-#transversions=c('A,C','C,A','A,T','T,A','C,G','G,C','G,T','T,G')
 #BiocManager::install("plyranges")
 require(GenomicRanges)
 require(dplyr)
@@ -26,11 +25,12 @@ option_list = list(
   make_option(c("--outPREFIX"), type="character", default=NULL, 
               help="outfilePrefix", metavar="prefix"),
   make_option(c("--numBoots"), type="numeric", default=NULL, 
-              help="Number of bootstraps to perform per individual", metavar="numeric"),
-  make_option(c("--avgSitesToDraw"), type="numeric", default=NULL, 
-              help="Number of sites to draw per individual (will be approximately this many, not exactly) due to varying bin size. Based on average 'callable' cds sites calculated elsewhere.", metavar="numeric")
+              help="Number of bootstraps to perform per individual", metavar="numeric")
 ); 
 
+# removing this option -- instead calculating driectly from point estimates based on bins:
+#make_option(c("--avgSitesToDraw"), type="numeric", default=NULL, 
+#            help="Number of sites to draw per individual (will be approximately this many, #not exactly) due to varying bin size. Based on average 'callable' cds sites calculated #elsewhere.", metavar="numeric")
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
@@ -38,82 +38,98 @@ infile=opt$infile # output by step a-i - paste(out.dir,"/",outPREFIX,"Ind.",ind,
 out.dir=opt$outdir
 outPREFIX=opt$outPREFIX
 numBoots=as.numeric(opt$numBoots) # do boots a number of times
-SitesToDraw=as.numeric(opt$avgSitesToDraw)
-# read in results of step 7b-i:
-allBins = read.table(infile,header=T,sep="\t")
+#SitesToDraw=as.numeric(opt$avgSitesToDraw) getting this from point est now.
+
 ######### for testing #####
-#allBins <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/sandbox/angsdOut.mappedTomfur.Bins.GPs.ProbCutoff.0.95.DepthCutoff.2.minInd.1.20190701-highcov-AFprior-MajorMinor4.Modern.Ancient.AvgsPerGroup.PerBin.txt",header=T)
+#allBins <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/sandbox/test.txt",header=T)
 #head(allBins)
 #numBoots=5
-SitesToDraw=30000
+#out.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/sandbox/"
+#outPREFIX="test"                     
 
-##### randomly sample bins from an individual until some number is reached
+# read in results of step 7b-i:
+allBins = read.table(infile,header=T,sep="\t")
+# just pull out consequences we are interested in :
+allBins_ConcOfInterest <- allBins[grepl("missense_variant",allBins$Consequence) | grepl("stop_gained",allBins$Consequence) | allBins$Consequence=="synonymous_variant",] # note missense and sg can be part of multiple annotations based on filter_vep (why I use grepl) but synonymous should just be alone (filter_vep), which is why we use == for it
+allBins_ConcOfInterest$Consequence_BroadName <- as.character(allBins_ConcOfInterest$Consequence)
+### rename composite consquences eg missense,splice_site just to be missense:
+allBins_ConcOfInterest[grepl("missense_variant",allBins_ConcOfInterest$Consequence),]$Consequence_BroadName <- "missense_variant"
+allBins_ConcOfInterest[grepl("stop_gained",allBins_ConcOfInterest$Consequence),]$Consequence_BroadName <- "stop_gained"
+allBins_ConcOfInterest[allBins_ConcOfInterest$Consequence=="synonymous_variant",]$Consequence_BroadName <- "synonymous_variant"
+
+
+###### get and write out point estimates from the bins: ###########
+pointEstimates <- allBins_ConcOfInterest %>% 
+  group_by(group,sites,Consequence_BroadName) %>%
+  summarise(homRef=sum(avgRescaledHomRef),het=sum(avgRescaledHet),homAlt=sum(avgRescaledHomAlt)) # summing up over each category type that corresponds to missense,sg, syn. 
+# get derived alleles:
+pointEstimates$derivedAlleles <- (2*pointEstimates$homAlt) + pointEstimates$het
+write.table(pointEstimates,paste(out.dir,"/",outPREFIX,".Modern.Ancient.PointEstimatesBasedonGoodBins.txt",sep=""),col.names = T,row.names = F,quote=F)
+# also get callable sites in the bins passing filters (will be same across ancient and modern because you standardised bins)
+callableSitesPerBin <- allBins_ConcOfInterest %>% 
+  group_by(binNum) %>%
+  summarise(unique(averageCalledSitesPerBin))
+colnames(callableSitesPerBin) <- c("binNum","totalCallableSites")
+totalCallableSitesAll <- sum(callableSitesPerBin$totalCallableSites)
+SitesToDraw=totalCallableSitesAll # this is how many sites to draw for boots to match point ests
+print(paste("Drawing ",SitesToDraw," sites for bootstraps",sep=""),quote=F)
+  ##### randomly sample bins from an individual until some number is reached
 allBoots=data.frame()
-print("starting resampling bootstraps")
+print("starting resampling bootstraps",quote=F)
 # do ancient and modern distributions separately
-for(group in c("Ancient","Modern")){
-  # select out ancient or modern rows: 
-  GroupBoots <- data.frame()
-  GroupBins <- allBins[allBins$group==group,]
-  for(i in seq(1,numBoots)){
-    print(c("starting bootstrap: ",i))
-    runningTotal=0
-    numberOfDraws=0
-    binNums=unique(GroupBins$binNum)
-    ###### if this has been through "pick" then can use grepl because 
-    
-    # can add other categories if I want
-    MISdf=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="missense",siteType="Ti+Tv",stringsAsFactors = F)
-    SYNdf=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="synonymous",siteType="Ti+Tv")
-    SGdf=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="stop_gained",siteType="Ti+Tv")
-    # tv only:
-    MISdfTV=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="missense",siteType="TvOnly")
-    SYNdfTV=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="synonymous",siteType="TvOnly")
-    SGdfTV=data.frame(group=group,bootNum=i,homRef=as.numeric(0),het=as.numeric(0),homAlt=as.numeric(0),category="stop_gained",siteType="TvOnly")
-    while(runningTotal < SitesToDraw){
-      randomBin=sample(binNums,1) # draw a bin number -- will have replacement because you're not removing the number
-      bin=GroupBins[GroupBins$binNum==randomBin,]
-      numberOfDraws=numberOfDraws+1
-      runningTotal = runningTotal+unique(bin$averageCalledSitesPerBin)
-      if((runningTotal+unique(bin$averageCalledSitesPerBin)) < SitesToDraw){
-        MISdf$homRef= MISdf$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHomRef)
-        MISdf$het= MISdf$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHet)
-        MISdf$homAlt= MISdf$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHomAlt)
-        # synonymous: ** note syn treated diff than mis or sg here to match with filter vep!** to match with point estimates from filter_vep want to make sure it's a) canonical and b) only equals synonymous_variant not splice_region_variant,synonymous_variant (this is a choice -- doesn't really matter, just want to be consistent.)
-        SYNdf$homRef= SYNdf$homRef + sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$avgRescaledHomRef)
-        SYNdf$het= SYNdf$het +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$avgRescaledHet)
-        SYNdf$homAlt= SYNdf$homAlt +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="Ti+Tv",]$avgRescaledHomAlt)
-        # stop_gained:
-        SGdf$homRef= SGdf$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHomRef)
-        SGdf$het= SGdf$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHet)
-        SGdf$homAlt= SGdf$homAlt +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="Ti+Tv",]$avgRescaledHomAlt)
-        # transversions:
-        MISdfTV$homRef= MISdfTV$homRef + sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHomRef)
-        MISdfTV$het= MISdfTV$het +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHet)
-        MISdfTV$homAlt= MISdfTV$homAlt +sum(bin[grepl("missense_variant",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHomAlt)
-        # synonymous: ** note syn is treated differently to match with filter_vep -- no composite consequences allowed. but they are allowed for mis and sg*
-        SYNdfTV$homRef= SYNdfTV$homRef + sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$avgRescaledHomRef)
-        SYNdfTV$het= SYNdfTV$het +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$avgRescaledHet)
-        SYNdfTV$homAlt= SYNdfTV$homAlt +sum(bin[bin$Consequence=="synonymous_variant" & bin$sites=="TvOnly",]$avgRescaledHomAlt)
-        # stop_gained:
-        SGdfTV$homRef= SGdfTV$homRef + sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHomRef)
-        SGdfTV$het= SGdfTV$het +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHet)
-        SGdfTV$homAlt= SGdfTV$homAlt +sum(bin[grepl("stop_gained",bin$Consequence) & bin$sites=="TvOnly",]$avgRescaledHomAlt)
-        
-      }}
-      # update with final running totals
-      MISdf$totalCDSSitesInBoot <- runningTotal
-      SYNdf$totalCDSSitesInBoot <- runningTotal
-      SGdf$totalCDSSitesInBoot <- runningTotal
-      MISdfTV$totalCDSSitesInBoot <- runningTotal
-      SYNdfTV$totalCDSSitesInBoot <- runningTotal
-      SGdfTV$totalCDSSitesInBoot <- runningTotal
-      
-      GroupBoots=rbind(GroupBoots,MISdf,MISdfTV,SYNdf,SYNdfTV,SGdf,SGdfTV) # update GroupBoots
-      
-    }
-    #GroupBoots$group <- group
-    allBoots <- rbind(allBoots,GroupBoots) # add to allBoots
-    write.table(GroupBoots,paste(out.dir,"/",outPREFIX,".",group,".allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
+# want to pick the *same bins* for anc and modern -- not separately!!!
+
+binNums=unique(allBins_ConcOfInterest$binNum)
+for(i in seq(1,numBoots)){
+  print(paste("starting bootstrap: ",i,sep=""),quote=F)
+  runningTotal=0
+  totalSitesInBoot=0
+  numberOfDraws=0
+  binsOfBoot=data.frame()
+  ### start drawing bins:
+  # this will slightly overshoot value, but that's okay, can rescale later if desired.
+  while(runningTotal < SitesToDraw){
+    # draw a random bin:
+    randomBin=sample(binNums,1)
+    numberOfDraws=numberOfDraws+1
+    bin=allBins_ConcOfInterest[allBins_ConcOfInterest$binNum==randomBin,]
+    # make sure what you're adding isn't going far over your SitesToDraw:
+    # if adding the new amount won't make runningTotal > Sites to draw, then you can include that bin and update the running total
+    runningTotal = runningTotal+unique(bin$averageCalledSitesPerBin) # this works; every line of df of bin has the total so you just need the unique value 
+    # add the new bin to the rest of the bins:
+    binsOfBoot=rbind(binsOfBoot,bin)
+    # update running total:
+    # get consequences of interest from the bin:
+    totalSitesInBoot=runningTotal+totalSitesInBoot
   }
-write.table(allBoots,paste(out.dir,"/",outPREFIX,".Modern.Plus.Ancient.allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
+  # then once you have enough sites, summarise them all: 
+  # test:
+  # way more efficient: group by type of sites (Ti+Tv or TvOnly and by broad consequnce (mis, syn, sg)) and by ancient/modern
+  # sum up avg GPs over each category: 
+  sumsPerBoot <- binsOfBoot %>% 
+    group_by(group,sites,Consequence_BroadName) %>%
+    summarise(homRef=sum(avgRescaledHomRef),het=sum(avgRescaledHet),homAlt=sum(avgRescaledHomAlt)) # summing up over each category type that corresponds to missense,sg, syn. 
+  # need to get this per boot
+  # get derived alleles:
+  sumsPerBoot$derivedAlleles <- (2*sumsPerBoot$homAlt) + (sumsPerBoot$het)
+  # update with final running totals
+  sumsPerBoot$totalCDSSitesInBoot <- runningTotal
+  # add metadata:
+  sumsPerBoot$bootNum <- i
+  sumsPerBoot$numberOfDraws <- numberOfDraws
+  #head(sumsPerBoot)
+  allBoots=rbind(allBoots,data.frame(sumsPerBoot)) # update GroupBoots
+  
+}
+allBoots$SitesToDraw <- SitesToDraw
+allBoots$derivedAlleles_Rescaled <- (allBoots$derivedAlleles/allBoots$totalCDSSitesInBoot) * allBoots$SitesToDraw # rescale by SitesToDraw to get spot on estimates of exaclty the SitesToDRaw amount per bootstrap
+
+# get derived alleles:
+write.table(allBoots,paste(out.dir,"/",outPREFIX,".Modern.Ancient.allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
+
+#ggplot(allBoots,aes(x=group,y=homRef))+
+  #geom_violin()+
+#  geom_point(data=pointEstimates,aes(x=group,y=homRef))+
+#  facet_wrap(sites~Consequence_BroadName,scales="free")+
+#  theme_bw()
+## too many missense?

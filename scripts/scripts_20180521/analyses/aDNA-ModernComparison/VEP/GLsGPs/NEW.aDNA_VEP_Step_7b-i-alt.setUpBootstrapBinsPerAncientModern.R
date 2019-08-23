@@ -217,14 +217,16 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     
   }}
 # write out modern and ancient:
-# could do NA.omit? 
+
 write.table(allBinsallInds,paste(out.dir,"/",outPREFIX,".Modern.Ancient.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
 # callable sites:
 write.table(callableSiteTotalsPerBin,paste(out.dir,"/",outPREFIX,".Modern.Ancient.callableSitesPerBin.PerBin.binSize.",binsize,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
+# modern only:
 write.table(allBinsallInds[allBinsallInds$group=="Modern",],paste(out.dir,"/",outPREFIX,".ModernOnly.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 
+# ancient only 
 write.table(allBinsallInds[allBinsallInds$group=="Ancient",],paste(out.dir,"/",outPREFIX,".AncientOnly.AvgsPerGroup.PerBin.binSize.",binsize,".minIndPerWindow.",minIndPerWindow,".minCallSitesPerWindow.",minCalledSitesPerWindowPerIndividual,".txt",sep=""),col.names = T,row.names = F,quote=F,sep="\t")
 # what needs to be written out?
 
