@@ -23,7 +23,10 @@ dates="20190701-lowcov-AFprior-MajorMinor4 20190701-highcov-AFprior-MajorMinor4"
 # just need these min variables to pull the correct avg site counts file:
 minDepth=2 # I calculated totals with 1, 2 and 4. 2 lowers values of homAlt compared to 1. I think 2 is fitting since 1 read might seem homAlt but not be. 
 minGP=0.95
-minInd=1
+minInd=1 # min ind *per site*
+binSize=5e+05
+minIndPerWindow=9 # min ind *per window* (this many inds must have at least some data in the window, not overlapping)
+minCallSitesPerWindow=1000 # number of sites per window that must be callable per ind.
 
 SCRATCH=/u/flashscratch/a/ab08028/
 avgSitesFile=$SCRATCH/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/AVERAGECALLEDSITES.allInds.HighCov.LowCov.minDepth.${minDepth}.minInd.${minInd}.minGP.${minGP}.txt
@@ -38,8 +41,8 @@ do
 echo $angsdDate
 outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}
 indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
-#infile=$indir/testingScript.CDS.bed.gz
-infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Ind.${indNum}.sumsPerBin.txt # result of step 7b-i 
+infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Modern.Ancient.AvgsPerGroup.PerBin.binSize.${binSize}.minIndPerWindow.${minIndPerWindow}.minCallSitesPerWindow.${minCallSitesPerWindow}.txt
+
  # need to fix header issue
 outdir=$indir/PointEstsPlusBootstraps
 mkdir -p $outdir
