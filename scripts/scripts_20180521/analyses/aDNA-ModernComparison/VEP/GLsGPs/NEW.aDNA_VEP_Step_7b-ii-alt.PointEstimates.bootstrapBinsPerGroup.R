@@ -124,12 +124,7 @@ for(i in seq(1,numBoots)){
 allBoots$SitesToDraw <- SitesToDraw
 allBoots$derivedAlleles_Rescaled <- (allBoots$derivedAlleles/allBoots$totalCDSSitesInBoot) * allBoots$SitesToDraw # rescale by SitesToDraw to get spot on estimates of exaclty the SitesToDRaw amount per bootstrap
 
+
 # get derived alleles:
 write.table(allBoots,paste(out.dir,"/",outPREFIX,".Modern.Ancient.allBoots.txt",sep=""),col.names = T,row.names = F,quote=F)
 
-#ggplot(allBoots,aes(x=group,y=homRef))+
-  #geom_violin()+
-#  geom_point(data=pointEstimates,aes(x=group,y=homRef))+
-#  facet_wrap(sites~Consequence_BroadName,scales="free")+
-#  theme_bw()
-## too many missense?

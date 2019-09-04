@@ -1,5 +1,6 @@
 require(ggplot2)
 require(reshape2)
+require(dplyr)
 ###### Plot distribution
 #dates=c("20190701-lowcov-AFprior-MajorMinor4", "20190701-highcov-AFprior-MajorMinor4")
 
@@ -13,8 +14,10 @@ minInd=1
 ###################### LOW COVERAGE ############
 date="20190701-lowcov-AFprior-MajorMinor4"
 bamListDir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/"
-pointDir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/sumGPsGLsPerVEPCategory/",date,"/",sep="")
-bootsDir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/compareMisSynDists_withBootstraps/",date,"/",sep="")
+# these point estimates were old and are not based on windowing the genome; if all windows are included should be the same, but I want to use the point estimate based on my good windows and the averaging of windows.
+indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/compareMisSynDists_withBootstraps/",date,"/PointEstsPlusBootstraps/",sep="")
+#pointDir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/sumGPsGLsPerVEPCategory/",date,"/",sep="")
+#bootsDir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/compareMisSynDists_withBootstraps/",date,"/",sep="")
 bamListFile="SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt" ### CHECK CAREFULLY
 bamList=read.table(paste(bamListDir,bamListFile,sep=""),header=F)
 plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/aDNA-ModernComparison/VEP/GLsGPs/plots/",date,"/",sep="")
@@ -22,12 +25,9 @@ dir.create(plot.dir,showWarnings = F)
 # this is the order of samples in low coverage (is in diff order for high coverage)
 # so ind0 = bamList[1,]
 # point estimates:
-# point estimates gotten from summing up GPs acrosss sites passing filters and rescaling by teh avg called cds sites across all individuals (done in Step 5)
-pointEsts <- read.table(paste(pointDir,"angsdOut.mappedTomfur.hetHomTotals.GPs.ProbCutoff.",minGP,".DepthCutoff.",minDepth,".minInd.",minInd,".",date,".AllPointEstimates.allCategories.txt",sep=""),header = T)
-# make stopgained stop_gained to match
-pointEsts$category2 <- as.character(pointEsts$category)
-pointEsts[pointEsts$category=="stopgained",]$category2 <- "stop_gained"
-pointEsts$category <- pointEsts$category2
+# point estimates are gotten from summing up GPs across all rescaled genome windows that pass filters (within each window, ancient and modern were rescaled by avg called cds sites in that window)
+
+pointEsts <- read.table(paste(indir,"angsdOut.mappedTomfur.Bootstraps.GPs.ProbCutoff.",minGP,".DepthCutoff.",minDepth,".minInd.",minInd,".",date,".Modern.Ancient.PointEstimatesBasedonGoodBins.txt",sep=""),header = T)
 # then want to plot these point estimates on top of distributions as points (don't freak out if it's weird -- this is all new and you're trouble shooting)
 
 allIndBootstraps=data.frame()
@@ -256,3 +256,4 @@ p4b <- ggplot(allIndBootstraps,aes(x=ancOrModern,y=homAlt))+
 p4b
 
 ggsave(paste(plot.dir,"homAltGenotypes.Anc.Modern.minGP.",minGP,".minDepth.",minDepth,".minInd",minInd,".pdf",sep=""),p4b,device="pdf",height=5,width=7)
+

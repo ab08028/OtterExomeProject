@@ -1,6 +1,6 @@
 # this first filters out individuals that don't have at least XX amount of sites per window (eg 500), then counts up to make sure the passing number of inds meets a threshold (eg 9/9) then checks to see 
 # this now averages over both ancient and modern together, not one or the other
-
+### want to separate CA / AK and ancient
 #BiocManager::install("plyranges")
 require(GenomicRanges)
 require(dplyr)
@@ -26,7 +26,7 @@ option_list = list(
   make_option(c("--binsize"), type="numeric", default=NULL, 
               help="Size of bin to chunk the genome into (should be > than a recombination block)", metavar="numeric"),
   make_option(c("--bamList"), type="character", default=NULL, 
-              help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A'!!!!!!#", metavar="file")
+              help="path to list of bams in angsd (gives IDs) ***ASSUMES THAT ANCIENT SAMPLE IDs start with 'A' and that populations are CA and AK **** very specific to my study ****!!!!!!#", metavar="file")
 ); 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
@@ -58,15 +58,22 @@ colnames(bamList) <- "sample"
 # add numbers (0 based)
 bamList$indNumber <- unlist(seq(0,length(bamList$sample)-1)) # from angsd
 # add group info **** THIS ASSUMES THAT ANCIENT SAMPLES START WITH ^A***
-bamList$group <- "Modern"
+bamList$group <- NA
+## assign ancient: 
 bamList[grepl("^A",bamList$sample),]$group <- "Ancient"
+# then assign modern as not ancient and with corresponding populations
+bamList[grepl("Elut_CA_",bamList$sample) & !grepl("^A",bamList$sample),]$group <- "Modern-CA"
+bamList[grepl("Elut_AK_",bamList$sample) & !grepl("^A",bamList$sample),]$group <- "Modern-AK"
 # get lists of IDs that correspond to anc and mod:
 ancientIDs=bamList[bamList$group=="Ancient",]$indNumber
-modernIDs=bamList[bamList$group=="Modern",]$indNumber
+modernIDs_CA=bamList[bamList$group=="Modern-CA",]$indNumber
+modernIDs_AK=bamList[bamList$group=="Modern-AK",]$indNumber
 
-print("WARNING: NOTE THAT THIS SCRIPT ASSUMES aDNA IDs start with 'A' -- this is specific to my dataset and my not be specific to others!!!!!!" )
+
+print("WARNING: NOTE THAT THIS SCRIPT ASSUMES aDNA IDs start with 'A' -- this is specific to my dataset and my not be specific to others!!!!!! Then also assumes that the pop labels Elut_CA and Elut_AK are present and refer to CA and AK populations in the non-ancient samples --- this all would need to be adjusted for a different dataset" )
 print(paste("ancient samples are flagged as:", bamList[bamList$group=="Ancient",]$sample))
-print(paste("modern samples are flagged as: ",bamList[bamList$group=="Modern",]$sample))
+print(paste("modern CA samples are flagged as: ",bamList[bamList$group=="Modern-CA",]$sample))
+print(paste("modern AK samples are flagged as: ",bamList[bamList$group=="Modern-AK",]$sample))
 print("If this isn't right, you must modify script -- sorry in advance")
 ###############read in cds superfile ######################
 #cds=read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/sandbox/bootStrapRegions/test.out.bed",header=T,sep="\t",strip.white = T, comment.char = "") # converts # to X. in table ### will R be able to read it in on Hoffman?
@@ -193,7 +200,8 @@ for(bin in seq(1,length(unique(bins$binNum)))){
     
     ### add individual group info ###
     binTotals$group <- NA
-    binTotals[binTotals$ind %in% modernIDs,]$group <- "Modern"
+    binTotals[binTotals$ind %in% modernIDs_CA,]$group <- "Modern-CA"
+    binTotals[binTotals$ind %in% modernIDs_AK,]$group <- "Modern-AK"
     binTotals[binTotals$ind %in% ancientIDs,]$group <- "Ancient"
     ## need to then average over those:
     summaries <- binTotals %>% 
