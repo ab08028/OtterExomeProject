@@ -39,7 +39,7 @@ for angsdDate in $dates
 do
 echo $angsdDate
 outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate} ## update this to be more similar to infile name:
-indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/$angsdDate
+indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/separateCA-AK/$angsdDate
 infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Modern.Ancient.AvgsPerGroup.PerBin.binSize.${binSize}.minIndPerWindow.${minIndPerWindow}.minCallSitesPerWindow.${minCallSitesPerWindow}.txt
 
  # need to fix header issue
