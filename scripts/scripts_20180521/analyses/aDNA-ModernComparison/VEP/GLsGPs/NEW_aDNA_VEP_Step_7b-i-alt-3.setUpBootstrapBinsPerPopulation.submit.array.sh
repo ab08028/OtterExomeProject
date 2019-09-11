@@ -22,7 +22,8 @@ SCRATCH=/u/flashscratch/a/ab08028/
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
 #script=NEW.aDNA_VEP_Step_7b-i-alt.setUpBootstrapBinsPerAncientModern.R
-script=NEW.aDNA_VEP_Step_7b-i-alt-2.setUpBootstrapBinsPerPopulationAndAncientModern.R 
+#script=NEW.aDNA_VEP_Step_7b-i-alt-2.setUpBootstrapBinsPerPopulationAndAncientModern.R 
+script=NEW.aDNA_VEP_Step_7b-i-alt-3.setUpBootstrapBinsPerPopulationAndAncientModern.R
 # parameters:
 binsize=500000 # 500kb (raised from 100kb)
 #numBoots=100 # eventually do more! 
