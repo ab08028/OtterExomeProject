@@ -13,8 +13,8 @@ module load R/3.5.1
 
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/analyses/aDNA-ModernComparison/VEP/GLsGPs/
-script=NEW.aDNA_VEP_Step_7b-ii-alt.PointEstimates.bootstrapBinsPerGroup.R
-
+#script=NEW.aDNA_VEP_Step_7b-ii-alt.PointEstimates.bootstrapBinsPerGroup.R
+script=NEW.aDNA_VEP_Step_7b-ii-alt3.PointEstimates.bootstrapBinsPerIndividual.THENAvg.R
 # this script will get point estimates based on the bins passing filters and generate bootstraps
 
 numBoots=1000
@@ -40,7 +40,8 @@ do
 echo $angsdDate
 outPREFIX=${basename}.Bootstraps.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate} ## update this to be more similar to infile name:
 indir=$SCRATCH/captures/aDNA-ModernComparison/VEP/compareMisSynDists_withBootstraps/separateCA-AK/$angsdDate
-infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Modern.Ancient.AvgsPerGroup.PerBin.binSize.${binSize}.minIndPerWindow.${minIndPerWindow}.minCallSitesPerWindow.${minCallSitesPerWindow}.txt
+infile=$indir/${basename}.Bins.${type}.ProbCutoff.${minGP}.DepthCutoff.${minDepth}.minInd.${minInd}.${angsdDate}.Modern.Ancient.SumsPerIndividuals.RescaledPerWindow.binSize.${binSize}.minIndPerWindow.${minIndPerWindow}.minCallSitesPerWindow.${minCallSitesPerWindow}.txt
+
 
  # need to fix header issue
 outdir=$indir/PointEstsPlusBootstraps
