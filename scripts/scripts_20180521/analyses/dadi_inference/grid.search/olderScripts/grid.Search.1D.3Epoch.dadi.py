@@ -27,7 +27,7 @@ from numpy import array # don't comment this out
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
-modelName="1D.2Epoch"
+modelName="1D.3Epoch"
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Carry out a grid search for a '+ modelName +' model ')
 #parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
@@ -35,11 +35,11 @@ parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'
 #parser.add_argument("--mu",required=True,help="supply mutation rate in mutation/bp/gen")
 #parser.add_argument("--L",required=True,help="number of called neutral sites that went into making SFS (monomorphic+polymorphic)")
 parser.add_argument("--sfs",required=True,help="path to FOLDED SFS in dadi format from easysfs (mask optional)")
-#parser.add_argument("--Nanc",required=True,help="input ancestral size parameter in diploids") # fix this
-parser.add_argument("--nu_Low",required=True,help="input lower bound on nu in dadi units -- distance between low and high will be searched evenly along a log scale")
-parser.add_argument("--nu_High",required=True,help="input upper bound on nu in dadi units -- distance points between nu_Low and nu_High will be searched evenly along a log scale")
-parser.add_argument("--T_Low",required=True,help="input lower bound on T in dadi units ; distance between T_Low and T_High will be searched evenly along a log scale")
-parser.add_argument("--T_High",required=True,help="input upper bound on T in dadi units ; distance between low and high will be searched evenly along a log scale")
+parser.add_argument("--Nanc",required=True,help="input ancestral size parameter in diploids") # fix this
+parser.add_argument("--nu_Low",required=True,help="input lower bound on nu in diploids; will be scaled by Nanc and numGridPoints points between nu_Low and nu_High will be searched evenly along a log scale")
+parser.add_argument("--nu_High",required=True,help="input upper bound on nu in diploids; will be scaled by Nanc and the numGridPoints points between nu_Low and nu_High will be searched evenly along a log scale")
+parser.add_argument("--T_Low",required=True,help="input lower bound on T in generations; will be scaled by 2*Nanc and numGridPoints points between T_Low and T_High will be searched evenly along a log scale")
+parser.add_argument("--T_High",required=True,help="input upper bound on T in generations; will be scaled by 2*Nanc and the numGridPoints points between T_Low and T_High will be searched evenly along a log scale")
 parser.add_argument("--numGridPoints",required=True,help="number of grid points per parameter you want. Keep in mind this can drastically affect run time (e.g. 10 --> 100 calculations; 25 -->  625 calculations")
 parser.add_argument("--outdir",required=True,help="path to output directory")
 # usage:
@@ -53,19 +53,12 @@ pop=str(args.pop)
 #L=float(args.L)
 outdir=str(args.outdir)
 sfs=str(args.sfs)
-#Nanc=float(args.Nanc) # no longer needed -- calculated from theta
+Nanc=float(args.Nanc)
 numGridPoints=float(args.numGridPoints)
-# not needed any more because you're already in dadi units:
-#nu_High_rescaled=float(args.nu_High)/Nanc # rescale by Nanc to get into dadi units
-#nu_Low_rescaled=float(args.nu_Low)/Nanc # rescale by Nanc to get into dadi units
-#T_High_rescaled=float(args.T_High)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
-#T_Low_rescaled=float(args.T_Low)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
-
-### 2019011 update: input is in dadi units:
-nu_High_rescaled=float(args.nu_High)
-nu_Low_rescaled=float(args.nu_Low)
-T_High_rescaled=float(args.T_High)
-T_Low_rescaled=float(args.T_Low)
+nu_High_rescaled=float(args.nu_High)/Nanc # rescale by Nanc to get into dadi units
+nu_Low_rescaled=float(args.nu_Low)/Nanc # rescale by Nanc to get into dadi units
+T_High_rescaled=float(args.T_High)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
+T_Low_rescaled=float(args.T_Low)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
 maxiter=100
 
 ############### Input data ####################################

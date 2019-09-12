@@ -27,7 +27,7 @@ from numpy import array # don't comment this out
 import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
-modelName="1D.2Epoch"
+modelName="1D.3Epoch"
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Carry out a grid search for a '+ modelName +' model ')
 #parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
@@ -36,10 +36,12 @@ parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'
 #parser.add_argument("--L",required=True,help="number of called neutral sites that went into making SFS (monomorphic+polymorphic)")
 parser.add_argument("--sfs",required=True,help="path to FOLDED SFS in dadi format from easysfs (mask optional)")
 #parser.add_argument("--Nanc",required=True,help="input ancestral size parameter in diploids") # fix this
-parser.add_argument("--nu_Low",required=True,help="input lower bound on nu in dadi units -- distance between low and high will be searched evenly along a log scale")
-parser.add_argument("--nu_High",required=True,help="input upper bound on nu in dadi units -- distance points between nu_Low and nu_High will be searched evenly along a log scale")
-parser.add_argument("--T_Low",required=True,help="input lower bound on T in dadi units ; distance between T_Low and T_High will be searched evenly along a log scale")
-parser.add_argument("--T_High",required=True,help="input upper bound on T in dadi units ; distance between low and high will be searched evenly along a log scale")
+parser.add_argument("--nuB_Low",required=True,help="input lower bound on nuB (bottleneck size) in dadi units -- distance between low and high will be searched evenly along a log scale")
+parser.add_argument("--nuB_High",required=True,help="input upper bound on nuB (bottleneck size) in dadi units -- distance points between nu_Low and nu_High will be searched evenly along a log scale")
+parser.add_argument("--nuF_Low",required=True,help="input lower bound on nuF (recovery size) in dadi units -- distance between low and high will be searched evenly along a log scale")
+parser.add_argument("--nuF_High",required=True,help="input upper bound on nuF (recovery size) in dadi units -- distance points between nu_Low and nu_High will be searched evenly along a log scale")
+parser.add_argument("--TF_Low",required=True,help="input lower bound on TF (duration of recovery period; bneck duration is fixed at 30 gen) in dadi units ; distance between T_Low and T_High will be searched evenly along a log scale")
+parser.add_argument("--TF_High",required=True,help="input upper bound on TF (duration of recovery period; bneck duration is fixed at 30 gen) in dadi units; distance between low and high will be searched evenly along a log scale")
 parser.add_argument("--numGridPoints",required=True,help="number of grid points per parameter you want. Keep in mind this can drastically affect run time (e.g. 10 --> 100 calculations; 25 -->  625 calculations")
 parser.add_argument("--outdir",required=True,help="path to output directory")
 # usage:
@@ -61,11 +63,13 @@ numGridPoints=float(args.numGridPoints)
 #T_High_rescaled=float(args.T_High)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
 #T_Low_rescaled=float(args.T_Low)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
 
-### 2019011 update: input is in dadi units:
-nu_High_rescaled=float(args.nu_High)
-nu_Low_rescaled=float(args.nu_Low)
-T_High_rescaled=float(args.T_High)
-T_Low_rescaled=float(args.T_Low)
+### 2019011 update: input is in dadi units: ### don't need to do any rescaling because already input as dadi units
+nuB_High_rescaled=float(args.nuB_High)
+nuB_Low_rescaled=float(args.nuB_Low)
+nuF_High_rescaled=float(args.nuF_High)
+nuF_Low_rescaled=float(args.nuF_Low)
+TF_High_rescaled=float(args.TF_High)
+TF_Low_rescaled=float(args.TF_Low)
 maxiter=100
 
 ############### Input data ####################################
@@ -80,10 +84,20 @@ else:
     fs=fs
 ############ set up grid for specific model  ##########
 
-func = Demographics1D.two_epoch #
-
-param_names= ("nu","T")
-scaled_param_names=("nu_scaledByGivenNanc_dip","T_scaledByGivenNanc_gen")
+func = Demographics1D.three_epoch
+#     params = (nuB,nuF,TB,TF)
+#     ns = (n1,)
+#
+#     nuB: Ratio of bottleneck population size to ancient pop size
+#     nuF: Ratio of contemporary to ancient pop size
+#     TB: Length of bottleneck (in units of 2*Na generations)
+#     TF: Time since bottleneck recovery (in units of 2*Na generations)
+#
+#     n1: Number of samples in resulting Spectrum
+#     pts: Number of grid points to use in integration.
+param_names= ("nuB","nuF","TB","TF")
+# want to fix TB as ? ~30 generations? 30/(2*5000) = 0.003
+#scaled_param_names=("nu_scaledByGivenNanc_dip"," T_scaledByGivenNanc_gen")
 # Make extrapolation function:
 func_ex = dadi.Numerics.make_extrap_log_func(func) # this will give you the exp SFS
 
@@ -99,10 +113,12 @@ from sklearn.model_selection import ParameterGrid
 # 0.0001 and 0.001
 # you would do np.logspace(-4,-3,10) where -4 and -3 are the exponents
 # so to get those exponents you take the base10 log of 0.0001 to get -4 and put that in: *make sure to use log10!!! (not natural log) ***
-nus= np.logspace(math.log10(nu_Low_rescaled),math.log10(nu_High_rescaled),numGridPoints) # return values evenly spaced along log scale,from base**start to base**stop base =10, get 10 data points
-Ts= np.logspace(math.log10(T_Low_rescaled),math.log10(T_High_rescaled),numGridPoints) # goes from approx 1 gen to ~70 gen
+nuBs= np.logspace(math.log10(nuB_Low_rescaled),math.log10(nuB_High_rescaled),numGridPoints) # return values evenly spaced along log scale,from base**start to base**stop base =10, get 10 data points
+TB_fixed=0.003 # fixed
+nuFs= np.logspace(math.log10(nuF_Low_rescaled),math.log10(nuF_High_rescaled),numGridPoints) # return values evenly spaced along log scale,from base**start to base**stop base =10, get 10 data points
+TFs= np.logspace(math.log10(TF_Low_rescaled),math.log10(TF_High_rescaled),numGridPoints) # goes from approx 1 gen to ~70 gen
 # set up your set of parameters
-param_grid = {'nu': nus, 'T' : Ts}
+param_grid = {'nuB': nuBs, 'nuF' : nuFs, 'TF' : TFs,}
 # use the sklearn module to make a list with every pair of parameters in it:
 # similar to R expand
 grid = ParameterGrid(param_grid)
@@ -115,20 +131,20 @@ grid = ParameterGrid(param_grid)
 #############3 set up outfile #########
 outputFile=open(str(outdir)+"/"+"dadi.grid.search."+str(pop)+"."+str(modelName)+".LL.output.txt","w")
 param_names_str='\t'.join(str(x) for x in param_names)
-scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
-header=param_names_str+"\t"+scaled_param_names_str+"\ttheta\tNanc_given\tLL_model\tLL_data\tmodelFunction\tsampleSize\texpectedSFS_fold_Theta1\tobservedSFS_folded" # add additional parameters theta, log-likelihood, model name, run number and rundate
+header=param_names_str+"\ttheta\tLL_model\tLL_data\tmodelFunction\tsampleSize\texpectedSFS_fold_Theta1\tobservedSFS_folded" # add additional parameters theta, log-likelihood, model name, run number and rundate
 # set Nanc externally from past runs for each population
 outputFile.write(header)
 outputFile.write("\n")
 # function to get the exp SFS and LL based on parameters YOU provide
 
-def provideParams_2EpochModel(fs,Nanc,nu,T):
+def provideParams_3EpochModel(fs,nuB,nuF,TB,TF):
     # get sample size from sfs
     ns= fs.sample_sizes
     # get pts from sample size
     pts_l = [ns[0]+5,ns[0]+15,ns[0]+25]
     # get the expected sfs for this set of parameters:
-    model=func_ex([nu,T],ns,pts_l)
+    # parameters in order: (nuB,nuF,TB,TF)
+    model=func_ex([nuB,nuF,TB,TF],ns,pts_l)
     # get the LL of model
     ll_model = dadi.Inference.ll_multinom(model, fs)
     # also get the LL of the data to itself (best possible ll)
@@ -137,14 +153,13 @@ def provideParams_2EpochModel(fs,Nanc,nu,T):
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     #Nanc=theta / (4*mu*L)
     # Set Nanc without theta (maybe? see how this works)
-    nu_scaled_dip=nu*Nanc
-    T_scaled_gen=T*2*Nanc
+    #nu_scaled_dip=nu*Nanc
+    #T_scaled_gen=T*2*Nanc
     # fold exp sfs?
     model_folded=model.fold()
     # note use of sfs.tolist() has to have () at the end
     # otherwise you get weird newlines in the mix
-    output=[nu,T,nu_scaled_dip,T_scaled_gen,theta,
- Nanc,ll_model,ll_data,func.func_name,ns[0],model_folded.tolist(),fs.tolist()] # put all the output terms together
+    output=[nuB,nuF,TB,TF,theta,ll_model,ll_data,func.func_name,ns[0],model_folded.tolist(),fs.tolist()] # put all the output terms together
     output='\t'.join(str(x) for x in output)
     return(output)
 
@@ -152,7 +167,7 @@ def provideParams_2EpochModel(fs,Nanc,nu,T):
 # run the function on the grid of all parameter pairs:
 for params in grid:
     #print(params)
-    output=provideParams_2EpochModel(fs=fs, Nanc=Nanc,nu=params['nu'],T=params['T'])
+    output=provideParams_3EpochModel(fs=fs,nuB=params['nuB'],nuF=params['nuF'],TB=TB_fixed,TF=params['TF'])
     outputFile.write(output)
     outputFile.write("\n")
 

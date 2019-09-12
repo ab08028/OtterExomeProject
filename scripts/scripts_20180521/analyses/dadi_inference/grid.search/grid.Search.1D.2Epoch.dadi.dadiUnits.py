@@ -61,7 +61,7 @@ numGridPoints=float(args.numGridPoints)
 #T_High_rescaled=float(args.T_High)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
 #T_Low_rescaled=float(args.T_Low)/(2*Nanc) # rescale by 2*Nanc to get into dadi units
 
-### 2019011 update: input is in dadi units:
+### 2019011 update: input is in dadi units: ### don't need to do any rescaling because already input as dadi units
 nu_High_rescaled=float(args.nu_High)
 nu_Low_rescaled=float(args.nu_Low)
 T_High_rescaled=float(args.T_High)
@@ -83,7 +83,7 @@ else:
 func = Demographics1D.two_epoch #
 
 param_names= ("nu","T")
-scaled_param_names=("nu_scaledByGivenNanc_dip","T_scaledByGivenNanc_gen")
+#scaled_param_names=("nu_scaledByGivenNanc_dip","T_scaledByGivenNanc_gen")
 # Make extrapolation function:
 func_ex = dadi.Numerics.make_extrap_log_func(func) # this will give you the exp SFS
 
@@ -115,14 +115,14 @@ grid = ParameterGrid(param_grid)
 #############3 set up outfile #########
 outputFile=open(str(outdir)+"/"+"dadi.grid.search."+str(pop)+"."+str(modelName)+".LL.output.txt","w")
 param_names_str='\t'.join(str(x) for x in param_names)
-scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
-header=param_names_str+"\t"+scaled_param_names_str+"\ttheta\tNanc_given\tLL_model\tLL_data\tmodelFunction\tsampleSize\texpectedSFS_fold_Theta1\tobservedSFS_folded" # add additional parameters theta, log-likelihood, model name, run number and rundate
+#scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
+header=param_names_str+"\ttheta\tLL_model\tLL_data\tmodelFunction\tsampleSize\texpectedSFS_fold_Theta1\tobservedSFS_folded" # add additional parameters theta, log-likelihood, model name, run number and rundate
 # set Nanc externally from past runs for each population
 outputFile.write(header)
 outputFile.write("\n")
 # function to get the exp SFS and LL based on parameters YOU provide
 
-def provideParams_2EpochModel(fs,Nanc,nu,T):
+def provideParams_2EpochModel(fs,nu,T):
     # get sample size from sfs
     ns= fs.sample_sizes
     # get pts from sample size
@@ -137,14 +137,13 @@ def provideParams_2EpochModel(fs,Nanc,nu,T):
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     #Nanc=theta / (4*mu*L)
     # Set Nanc without theta (maybe? see how this works)
-    nu_scaled_dip=nu*Nanc
-    T_scaled_gen=T*2*Nanc
+    #nu_scaled_dip=nu*Nanc
+    #T_scaled_gen=T*2*Nanc
     # fold exp sfs?
     model_folded=model.fold()
     # note use of sfs.tolist() has to have () at the end
     # otherwise you get weird newlines in the mix
-    output=[nu,T,nu_scaled_dip,T_scaled_gen,theta,
- Nanc,ll_model,ll_data,func.func_name,ns[0],model_folded.tolist(),fs.tolist()] # put all the output terms together
+    output=[nu,T,theta,ll_model,ll_data,func.func_name,ns[0],model_folded.tolist(),fs.tolist()] # put all the output terms together
     output='\t'.join(str(x) for x in output)
     return(output)
 
@@ -152,7 +151,7 @@ def provideParams_2EpochModel(fs,Nanc,nu,T):
 # run the function on the grid of all parameter pairs:
 for params in grid:
     #print(params)
-    output=provideParams_2EpochModel(fs=fs, Nanc=Nanc,nu=params['nu'],T=params['T'])
+    output=provideParams_2EpochModel(fs=fs, nu=params['nu'],T=params['T'])
     outputFile.write(output)
     outputFile.write("\n")
 
