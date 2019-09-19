@@ -21,7 +21,7 @@ outdir=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/20181119/BITE
 mkdir -p $outdir
 outname=mig.${numk}.k.${blockk}.out.${outgroup}.out		## name for output file
 
-scriptdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/TREEMIX/BITE-treemix/
+scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/analyses/TREEMIX/BITE-treemix
 script=Treemix_bootstrap.AB.sh
 
 for mig in 5
