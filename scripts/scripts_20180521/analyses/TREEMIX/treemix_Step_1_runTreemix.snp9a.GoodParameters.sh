@@ -22,7 +22,7 @@ mkdir -p $wd
 ######### With BAJA (note relatives already excluded athis is snp9a) #############
 k=500
 marker="sepCA-BAJ"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ combined 
+infile=${header}.${marker}.frq.strat.treemixFormat.gz
 root='CA'
 for m in {0..10}
 do
@@ -35,7 +35,7 @@ done
 ######### CA Only (no Baja, no relatives) #############
 k=500
 marker="noBAJA"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ separated 
+infile=${header}.${marker}.frq.strat.treemixFormat.gz 
 root='CA'
 for m in {0..10}
 do

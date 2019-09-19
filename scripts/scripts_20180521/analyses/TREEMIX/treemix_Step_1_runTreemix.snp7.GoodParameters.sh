@@ -27,7 +27,7 @@ mkdir -p $wd
 ######### With BAJA (no relatives) #############
 k=500
 marker="sepCA-BAJ.exclRelatives"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ combined 
+infile=${header}.${marker}.frq.strat.treemixFormat.gz
 root='CA,BAJ'# root is both
 for m in {0..10}
 do
@@ -40,7 +40,7 @@ done
 ######### CA Only (no Baja, no relatives) #############
 k=500
 marker="noBAJA.exclRelatives"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ separated 
+infile=${header}.${marker}.frq.strat.treemixFormat.gz #
 root='CA'
 for m in {0..10}
 do
@@ -54,7 +54,7 @@ done
 ######### CA Only (no Baja, no relatives) #############
 k=500
 marker="noBAJA.exclRelatives"
-infile=${header}.${marker}.frq.strat.treemixFormat.gz # this has CA-BAJ separated 
+infile=${header}.${marker}.frq.strat.treemixFormat.gz # 
 root='AK'
 for m in {0..3}
 do

@@ -76,7 +76,7 @@ for(angsdDate in dates){
   avg_pointEst_modCA <- averagePointEsts[averagePointEsts$group=="Modern-CA",c("sites","Consequence_BroadName","meanPtEstHomAlt","meanPtEstDerivedAlleles")]
   # put together point ests and variance for modern/ancient:
   modComboCA <- merge(avg_pointEst_modCA,variance_modCA,by=c("sites","Consequence_BroadName"))
-  modComboAK <- merge(avg_pointEst_modAK,variance_modCA,by=c("sites","Consequence_BroadName"))
+  modComboAK <- merge(avg_pointEst_modAK,variance_modAK,by=c("sites","Consequence_BroadName"))
   ancCombo <- merge(avg_pointEst_anc,variance_anc,by=c("sites","Consequence_BroadName"))
   
   # then need to merge the two combos:
