@@ -27,5 +27,6 @@ script=Treemix_bootstrap.AB.sh
 for mig in 5
 do
 # can loop over migrations
-sh $script $indir/$infile $mig $ncore $blockk $outgroup $nboot $pathP $outdir/$outname
+$scriptdir/$script $indir/$infile $mig $ncore $blockk $outgroup $nboot $pathP $outdir/$outname
 done
+
