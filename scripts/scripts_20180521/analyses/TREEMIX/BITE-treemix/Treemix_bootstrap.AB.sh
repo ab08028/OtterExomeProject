@@ -52,7 +52,7 @@ if [ $outgroup = "NoOutgroup" ]; then
 		treemix -i $2 -k $3 -se -m $4 -seed $c -o "bootstrap/"$5"_treemix_bootrep_"$1
 	}
 	export -f dowork
-	seq 1 $nboot | parallel -j$ncore dowork {} $infile $blockk $numk $outname > $outname"_logfile_treemix_bootrep.log"
+	seq 1 $nboot | dowork {} $infile $blockk $numk $outname > $outname"_logfile_treemix_bootrep.log"
 else
 	dowork() { 
 		a=$RANDOM
@@ -61,7 +61,7 @@ else
 		treemix -i $2 -k $3 -se -m $4 -root $6 -seed $c -o "bootstrap/"$5"_treemix_bootrep_"$1
 	}
 	export -f dowork
-	seq 1 $nboot | parallel -j$ncore dowork {} $infile $blockk $numk $outname $outgroup > $outname"_logfile_treemix_bootrep.log"
+	seq 1 $nboot | dowork {} $infile $blockk $numk $outname $outgroup > $outname"_logfile_treemix_bootrep.log"
 fi
 echo "**** RUNNING TREEMIX: DONE ****"
 
