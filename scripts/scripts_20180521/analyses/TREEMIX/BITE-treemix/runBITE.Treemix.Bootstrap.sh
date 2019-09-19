@@ -18,12 +18,14 @@ nboot=100 # start with 100		## number of bootstrap replicates of the TREE
 pathP=/u/home/a/ab08028/klohmueldata/annabel_data/bin/phylip-3.697/exe/consense		## path to Phylip consense program. Example: /biosoftware/phylip/phylip-3.696/exe/consense
 
 outdir=/u/flashscratch/a/ab08028/captures/analyses/TREEMIX/20181119/BITE
+mkdir -p $outdir
 outname=mig.${numk}.k.${blockk}.out.${outgroup}.out		## name for output file
 
-script=Treemix_bootstrap.sh
+scriptdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/analyses/TREEMIX/BITE-treemix/
+script=Treemix_bootstrap.AB.sh
 
 for mig in 5
 do
 # can loop over migrations
 $script $indir/$infile $mig $ncore $blockk $outgroup $nboot $pathP $outdir/$outname
-do
+done
