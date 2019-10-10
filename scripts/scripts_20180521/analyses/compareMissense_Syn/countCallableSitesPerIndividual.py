@@ -11,6 +11,11 @@ import gzip
 parser = argparse.ArgumentParser(description='Count number of derived alleles per individual from vcf file (missense or syn sites only in file)')
 parser.add_argument("--vcf",required=True,help="path to cds vcf file containing only cds sites, both polymorphic AND monomorphic sites")
 parser.add_argument("--outfile",required=True,help="path to output file")
+
+args = parser.parse_args()
+vcf=str(args.vcf)
+outfilename=str(args.outfile)
+
 ################ testing params ############
 # hoffman vcf location /u/flashscratch/a/ab08028/captures/vcf_filtering/20181119_filtered/neutral_and_cds_VCFs/cdsVCFs
 
