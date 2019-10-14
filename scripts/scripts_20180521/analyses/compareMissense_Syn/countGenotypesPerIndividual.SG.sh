@@ -1,3 +1,4 @@
+#### with no missing data filter, this led to very different estimates of syn sites #####
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
 # Count up types of sites for missense and synonymous and neutral
@@ -20,8 +21,8 @@ vcfIdentifier=snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingB
 echo "These are the vcfs being used to get the counts:" > $outdir/countsLog.vcfsUsed.${todaysdate}.txt
 
 # note full vcf name is missense_vep_cds_snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
-#for category in missense syn
-for category in stopgained
+for category in missense syn
+#for category in stopgained
 do
 echo "starting $category"
 vcf=${category}_vep_cds_${vcfIdentifier}

@@ -1,7 +1,7 @@
 #! /bin/bash
 #$ -cwd
 #$ -l h_rt=24:00:00,h_data=8G
-#$ -N dadi_inference
+#$ -N countCallableCDSSitesPerInd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/cdsSites
 #$ -e /u/flashscratch/a/ab08028/captures/reports/cdsSites
 #$ -m abe
