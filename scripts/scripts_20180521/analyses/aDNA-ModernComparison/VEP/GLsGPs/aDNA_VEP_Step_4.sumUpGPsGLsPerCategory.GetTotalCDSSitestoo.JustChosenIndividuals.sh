@@ -15,7 +15,7 @@
 # and then sums of GPs for 1/1 and 0/1 sites for syn, mis, and sg
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
-script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.py
+script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.py
 GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/
 outdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/ChosenIndsOnly # moving this inside the VEP dir
 mkdir -p $outdir

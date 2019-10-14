@@ -1,3 +1,5 @@
+############ need to update this script to work on different missingness filters #######
+
 require(ggplot2)
 genotypeDate="20181119"
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/compareMissense_Syn/",genotypeDate,"/countsOfGenotypesPerIndividual/",sep="")
@@ -9,7 +11,7 @@ pops=c("CA","AK","AL","COM","KUR") # excluding BAJA because too low sample size
 categories=c("syn","missense")
 allCountsSynMis <- data.frame()
 for(cat in categories){
-counts <- read.table(paste(data.dir,cat,".countsPerIndividual.countOfHomAltRefHet.txt",sep=""),header=T)
+counts <- read.table(paste(data.dir,cat,".countsPerIndividual.countOfHomAltRefHet.txt",sep=""),header=T) ### DONT USE! this has no missingness! use missingness filters (see below for example)
 counts$derivedAlleles <- (2*counts$HomAltCount) + counts$HetCount # note -- Hom ref counts are very low because these are all snps, many of which are fixed 1/1 against ferret (elevates count of hom alt a lot); monomorphic ref sites will contain all the 0/0s.
 counts$category <- cat
 allCountsSynMis = rbind(allCountsSynMis,counts)
@@ -108,3 +110,14 @@ ggplot(allCountsSynMis_plusCallable,aes(x=CalledCount,y=homAlt_normalized,color=
   ggtitle("Number of hom-alt sites is correlated\nwith number of called cds sites (drop out isn't random?)")
 
 ## look at this with missingness filter of 0.8 -- might be a lot better.
+
+################## explore neutral regions (need to normalize by neutral _all) #####
+neutral <- read.table("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/compareMissense_Syn/20181119/countsOfGenotypesPerIndividual/neutral.countsPerIndividual.countOfHomAltRefHet.txt",header=T)
+head(neutral)
+neutral$derivedAlleles <- (2*neutral$HomAltCount) + neutral$HetCount
+ggplot(neutral,aes(x=individual,y=derivedAlleles))+
+  geom_point()
+# normalize?
+
+# maybe use neutral to get a neutral drop out rate to use in fudge factor! <- cool idea
+# normalize by total called neut sites first though

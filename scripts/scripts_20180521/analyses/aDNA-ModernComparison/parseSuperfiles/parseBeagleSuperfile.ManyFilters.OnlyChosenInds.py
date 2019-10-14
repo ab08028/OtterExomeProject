@@ -76,11 +76,11 @@ chosenInds_comboIndices = chosenADNA_Indices + chosenMODERN_Indices # both ancie
 
 ###### make empty dictionaries : ##############
 #### counts of missing GTs: 
-#missingDict=dict()
-skippedSites=0
+missingDict=dict()
+#skippedSites=0
 #### counts of called GTs: 
-#calledDict=dict()
-calledSites=0
+calledDict=dict()
+#calledSites=0
 #### sums of het/homAlt/homRef GPs or GLs passing filters
 hetProbSumDict=dict()
 homAltProbSumDict=dict()
@@ -91,8 +91,8 @@ TransvOnly_HomAltProbSumDict=dict()
 TransvOnly_HomRefProbSumDict=dict()
 # populate all the dicts with sample IDs and 0s:
 for sample in chosenInds_combo:
-#    calledDict[sample]=0
-#    missingDict[sample]=0
+    calledDict[sample]=0
+    missingDict[sample]=0
     hetProbSumDict[sample]=0
     homAltProbSumDict[sample]=0
     homRefProbSumDict[sample]=0
@@ -170,49 +170,54 @@ for line0 in superfile:
 
     chosen_GTs_perInd_Dict = dict(zip(chosenInds_combo
 ,chosen_GTs_perInd)) # note that zip maintains the respective orders, but then dict orders alphabetically. this is okay as long as zip happens before dict 
-    successfulCallsPerSample=0
-    for sample in chosenInds_combo:
+    # Check if max GTs per ind are gte prob cutoff: yields TRUE FALSE TRUE etc.
+    PassingmaxGTsPerIndividual = [float(max(x))>=float(MaxProbCutoff)
+ for x in chosen_GTs_perInd_Dict.values()]
+     # check if counts pass: 
+    PassingCountsPerInidivual = [float(x)>=float(PerIndividualDepthMinimum)     for x in chosen_counts_perInd_Dict.values()]
+
+
+    if False in PassingmaxGTsPerIndividual or False in PassingCountsPerInidivual: # if min max GT test or min counts test are false any of them are false skip the site
+        continue
+    else:
+        for sample in chosenInds_combo:
         # first check if there isn't missing data, otherwise skip it
         # careful, was treating counts as strings for some reason
         # if either of these things are true ()
-        GTs=chosen_GTs_perInd_Dict[sample]
-        if float(chosen_counts_perInd_Dict[sample]) < float(PerIndividualDepthMinimum) or float(max(GTs)) < float(MaxProbCutoff):
-            #missingDict[sample]+=1 # add to the missing count 
-            continue
+            GTs=chosen_GTs_perInd_Dict[sample]
+        # internal check (this shouldn't ever get triggered now that I do this upstream -- eventually comment out)
+            if float(chosen_counts_perInd_Dict[sample]) < float(PerIndividualDepthMinimum) or float(max(GTs)) < float(MaxProbCutoff):
+                missingDict[sample]+=1 # add to the missing count 
+                continue
             # check if it passes both filters (read counts per individual and the maxProbCutoff); must pass both to keep add to het sum
-        elif float(chosen_counts_perInd_Dict[sample])>=  float(PerIndividualDepthMinimum) and float(max(GTs)) >=    float(MaxProbCutoff):
+            elif float(chosen_counts_perInd_Dict[sample])>=  float(PerIndividualDepthMinimum) and float(max(GTs)) >=    float(MaxProbCutoff):
             # count the site as callable:
-            #calledDict[sample]+=1 
-            successfulCallsPerSample+=1
-    if successfulCallsPerSample != len(chosenInds_combo):
-        skippedSites+=1
-    else:
-        calledSites+=1
-        for sample in chosenInds_combo:
+                calledDict[sample]+=1 
+            #successfulCallsPerSample+=1
             # get het/homAlt/homRef GPs or GLs:
             # don't need to define these as variables, just plunk them in (make sure indices are right); should be homRef 0, het 1, homAlt 2
             #homRefProb=GTs[0] # the first value is homRef
             #hetProb=GTs[1] # the middle value is the heterozygosity posterior value
             #homAltProb=GTs[2] # the third value is homALt
-            homRefProbSumDict[sample]+=float(GTs[0]) # add it to the total probability 
-            hetProbSumDict[sample]+=float(GTs[1]) # add it to the total probability 
-            homAltProbSumDict[sample]+=float(GTs[2]) # add it to the total probability 
+                homRefProbSumDict[sample]+=float(GTs[0]) # add it to the total probability 
+                hetProbSumDict[sample]+=float(GTs[1]) # add it to the total probability 
+                homAltProbSumDict[sample]+=float(GTs[2]) # add it to the total probability 
 # check if it's a transversion, if yes, add to the transvHetDict, if not don't
-            if (allele1,allele2) in transversions:
+                if (allele1,allele2) in transversions:
                 # note transversions only for HomRef doesn't make sense, so not tracking.
                 #TransvOnly_HomRefProbSumDict[sample]+=float(GTs[0])
-                TransvOnly_HetProbSumDict[sample]+=float(GTs[1])
-                TransvOnly_HomAltProbSumDict[sample]+=float(GTs[2])
+                    TransvOnly_HetProbSumDict[sample]+=float(GTs[1])
+                    TransvOnly_HomAltProbSumDict[sample]+=float(GTs[2])
 
 
 heterozygosityDict=dict()
 for sample in chosenInds_combo:
-    heterozygosityDict[sample] = hetProbSumDict[sample]/calledSites
+    heterozygosityDict[sample] = hetProbSumDict[sample]/calledDict[sample]
 
 
 TransvOnly_heterozygosityDict=dict()
 for sample in chosenInds_combo:
-    TransvOnly_heterozygosityDict[sample] = TransvOnly_HetProbSumDict[sample]/calledSites
+    TransvOnly_heterozygosityDict[sample] = TransvOnly_HetProbSumDict[sample]/calledDict[sample]
 
 # note that transv and regular het have same denominator (all callable sites)
 ## want to save this information
@@ -223,7 +228,7 @@ outfile=open(outname, "w")
 outheader="sample\tuncallableSites\tcallableSites\tsumHetGLsOrGPs\tsumHetGLsOrGPs_TransversionsOnly\tsumHomAltGLsOrGPs\tsumHomAltGLsOrGPs_TransversionsOnly\tsumHomRefGLsOrGPs\tHetPerSite\tHetPerSite_TransversionsOnly\tFilter_PerIndividualDepthMinimum\tChosenIndividuals\tChosenIndividualIndices\tFilter_ProbThresholdForCallableSite\n"
 outfile.write(outheader)
 for sample in chosenInds_combo:
-    out=[sample,str(calledSites),str(skippedSites),str(hetProbSumDict[sample]),str(TransvOnly_HetProbSumDict[sample]),str(homAltProbSumDict[sample]),str(TransvOnly_HomAltProbSumDict[sample]),str(homRefProbSumDict[sample]),str(heterozygosityDict[sample]),str(TransvOnly_heterozygosityDict[sample]),str(PerIndividualDepthMinimum),str(chosenInds_combo),str(chosenInds_comboIndices),str(MaxProbCutoff)]
+    out=[sample,str(missingDict[sample]),str(calledDict[sample]),str(hetProbSumDict[sample]),str(TransvOnly_HetProbSumDict[sample]),str(homAltProbSumDict[sample]),str(TransvOnly_HomAltProbSumDict[sample]),str(homRefProbSumDict[sample]),str(heterozygosityDict[sample]),str(TransvOnly_heterozygosityDict[sample]),str(PerIndividualDepthMinimum),str(chosenInds_combo),str(chosenInds_comboIndices),str(MaxProbCutoff)]
     outfile.write("\t".join(out))
     outfile.write("\n")
 outfile.close()
