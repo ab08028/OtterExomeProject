@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G
+#$ -l h_rt=50:00:00,h_data=8G,highp
 #$ -N countSitesNEW
 #$ -o /u/flashscratch/a/ab08028/captures/reports/cdsSites
 #$ -e /u/flashscratch/a/ab08028/captures/reports/cdsSites
@@ -19,14 +19,6 @@ wd=$SCRATCH/captures/analyses/compareMissense_Syn
 indir=/u/flashscratch/a/ab08028/captures/vcf_filtering/${genotypeDate}_filtered/neutral_and_cds_VCFs/
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/compareMissense_Syn
-#! /bin/bash
-#$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G
-#$ -N countSitesNEW
-#$ -o /u/flashscratch/a/ab08028/captures/reports/cdsSites
-#$ -e /u/flashscratch/a/ab08028/captures/reports/cdsSites
-#$ -m abe
-#$ -M ab08028
 script=countHomRefHomAltHetNoCall.perIndividual.py
 todaysdate=`date +%Y%m%d`
 ############################ cds -- annotated SNPS only! ####################
