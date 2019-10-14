@@ -31,9 +31,6 @@ allInputs=data.frame()
 # could make this a function to apply to a matrix as well
 ################################ Genome-Wide ################################
 for(angsdDate in dates) {
-  #for(prior in priors){
-    #angsdDatePrior=paste(angsdDate,prior,sep="-")
-    #data.dir=paste(overallDir,angsdDatePrior,"/",sep="")
     data.dir=paste(overallDir,angsdDate,"/",sep="")
     for(ref in refs){
       for(sitetype in sites){
@@ -42,7 +39,6 @@ for(angsdDate in dates) {
             for(minInd in minInds){
               input <- read.table(paste(data.dir,"angsdOut.mappedTo",ref,".superfile.",category,sitetype,".hetHomTotals.ProbCutoff.",probCutoff,".DepthCutoff.",depthCutoff,".minInd.",minInd,".",angsdDate,".txt",sep=""),header=T,sep="\t")
               input$date <- angsdDate
-              input$prior <- prior
               input$category <- category
               input$label <- "modern"
               input[grep("^A",input$sample),]$label <- "ancient"
@@ -73,7 +69,7 @@ for(angsdDate in dates) {
   }
 
 # just get heterozygosity measures: (can eventually get the others)
-input_melt <- melt(allInputs,measure.vars = c("HetPerSite","HetPerSite_TransversionsOnly","callableSites","sumHomAltGLsOrGPs","sumHomAltGLsOrGPs_TransversionsOnly"),id.vars = c("sample","label","population","reference","date","prior","Filter_PerIndividualDepthMinimum","Filter_ProbThresholdForCallableSite","Filter_minIndsPerSite","downsampled","sites"))
+input_melt <- melt(allInputs,measure.vars = c("HetPerSite","HetPerSite_TransversionsOnly","callableSites","sumHomAltGLsOrGPs","sumHomAltGLsOrGPs_TransversionsOnly"),id.vars = c("sample","label","population","reference","date","Filter_PerIndividualDepthMinimum","Filter_ProbThresholdForCallableSite","Filter_minIndsPerSite","downsampled","sites"))
 
 # label transitions+transv vs transv only
 input_melt$TVLabel <- "Transitions+Transversions"
@@ -83,7 +79,7 @@ hetOnly_input_melt <- input_melt[input_melt$variable %in% c("HetPerSite","HetPer
 callableSitesONly_input_melt <- input_melt[input_melt$variable %in% c("callableSites"),]
 # characterize this
 for(ref in refs){
-  p1 <- ggplot(hetOnly_input_melt[hetOnly_input_melt$prior=="AFprior" & hetOnly_input_melt$reference==ref,],aes(x=label,y=value,fill=label))+
+  p1 <- ggplot(hetOnly_input_melt[hetOnly_input_melt$reference==ref,],aes(x=label,y=value,fill=label))+
     geom_violin(position=position_dodge(.5))+
     geom_point(position=position_dodge(.5),size = 1)+
     theme_bw()+
@@ -132,7 +128,7 @@ for(ref in refs){
   ###################### P4: MAIN TEXT FIGURE COMPONENT #####################################
   minInd=2 # choose whatever you want, 2-3 seem reasonable
   prob=0.95 # definitely choose 0.95
-  p4a <- ggplot(hetOnly_input_melt[hetOnly_input_melt$prior=="AFprior" & hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=label,y=value,fill=label))+
+  p4a <- ggplot(hetOnly_input_melt[hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=label,y=value,fill=label))+
     geom_violin(position=position_dodge(.5))+
     geom_point(position=position_jitterdodge(jitter.width = 0.05,
                                              dodge.width = 0.5,seed=3),size = 1)+
@@ -144,7 +140,7 @@ for(ref in refs){
     facet_grid(sites~downsampled~TVLabel)# just adding to Transit+Transv
   p4a
   ggsave(paste(plot.dir,"mappedto.",ref,".hetComparison.ExampleForMainText.prob.",prob,".",todaysdate,".pdf",sep=""),p4a,height=10,width=10) 
-  p4b <- ggplot(hetOnly_input_melt[hetOnly_input_melt$prior=="AFprior" & hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd & hetOnly_input_melt$TVLabel=="TransversionsOnly",],aes(x=label,y=value,fill=label))+
+  p4b <- ggplot(hetOnly_input_melt[hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd & hetOnly_input_melt$TVLabel=="TransversionsOnly",],aes(x=label,y=value,fill=label))+
     geom_violin(position=position_dodge(.5))+
     geom_point(position=position_jitterdodge(jitter.width = 0.05,
                                              dodge.width = 0.5,seed=3),size = 1)+
@@ -157,7 +153,7 @@ for(ref in refs){
   ggsave(paste(plot.dir,"mappedto.",ref,".hetComparison.ExampleForMainText.TransversionsOnly.prob.",prob,".",todaysdate,".pdf",sep=""),p4b,height=10,width=10) 
   ######### P5: Plot callable sites for different filters (focus on GP 0.95 only): #############
   prob=0.95
-  p5 <- ggplot(callableSitesONly_input_melt[callableSitesONly_input_melt$prior=="AFprior" & callableSitesONly_input_melt$reference==ref & callableSitesONly_input_melt$Filter_ProbThresholdForCallableSite==prob,],aes(x=sample,y=value,fill=as.factor(Filter_minIndsPerSite)))+
+  p5 <- ggplot(callableSitesONly_input_melt[callableSitesONly_input_melt$reference==ref & callableSitesONly_input_melt$Filter_ProbThresholdForCallableSite==prob,],aes(x=sample,y=value,fill=as.factor(Filter_minIndsPerSite)))+
     geom_bar(position="dodge",stat="identity")+
     coord_flip()+
     facet_wrap(~downsampled~sites,scales="free")+
@@ -167,14 +163,14 @@ for(ref in refs){
    p5 
    ggsave(paste(plot.dir,"mappedto.",ref,".callableSites.prob.",prob,".",todaysdate,".pdf",sep=""),p5,height=4,width=14) 
    ############################ P6: plot callable sites vs het for aDNA only ############
-   p6a <- ggplot(allInputs[allInputs$prior=="AFprior" & allInputs$reference==ref & allInputs$Filter_ProbThresholdForCallableSite==prob & allInputs$Filter_minIndsPerSite==minInd,],aes(x=callableSites,y=HetPerSite,color=label))+
+   p6a <- ggplot(allInputs[allInputs$reference==ref & allInputs$Filter_ProbThresholdForCallableSite==prob & allInputs$Filter_minIndsPerSite==minInd,],aes(x=callableSites,y=HetPerSite,color=label))+
      geom_point()+
      theme_bw()+
      theme(legend.title = element_blank(),axis.text = element_text(size=8),legend.text = element_text(size=14),legend.background = element_rect(fill = "transparent"),strip.text = element_text(size=14))+
      facet_wrap(~downsampled,scales="free")
    p6a
    ggsave(paste(plot.dir,"mappedto.",ref,".aDNA.callableSitesVsHet.",prob,".",todaysdate,".pdf",sep=""),p6a,height=4,width=14) 
-   p6b <- ggplot(allInputs[allInputs$prior=="AFprior" & allInputs$reference==ref & allInputs$Filter_ProbThresholdForCallableSite==prob & allInputs$Filter_minIndsPerSite==minInd,],aes(x=callableSites,y=HetPerSite_TransversionsOnly,color=label))+
+   p6b <- ggplot(allInputs[allInputs$reference==ref & allInputs$Filter_ProbThresholdForCallableSite==prob & allInputs$Filter_minIndsPerSite==minInd,],aes(x=callableSites,y=HetPerSite_TransversionsOnly,color=label))+
      geom_point()+
      theme_bw()+
      theme(legend.title = element_blank(),axis.text = element_text(size=8),legend.text = element_text(size=14),legend.background = element_rect(fill = "transparent"),strip.text = element_text(size=14))+
@@ -189,7 +185,7 @@ for(ref in refs){
    # make an abbreviated TiTv label:
    hetOnly_input_melt$TVLabel2 <- "Ti+Tv"
    hetOnly_input_melt[hetOnly_input_melt$TVLabel=="TransversionsOnly",]$TVLabel2 <- "Tv Only"
-   p7a <- ggplot(hetOnly_input_melt[hetOnly_input_melt$downsampled=="Non-Downsampled"& hetOnly_input_melt$prior=="AFprior" & hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=TVLabel2,y=value,shape=label,color=as.factor(population)))+
+   p7a <- ggplot(hetOnly_input_melt[hetOnly_input_melt$downsampled=="Non-Downsampled"& hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=TVLabel2,y=value,shape=label,color=as.factor(population)))+
      #geom_violin(position=position_dodge(.5))+
      #geom_point(position=position_jitterdodge(jitter.width = 0.1,dodge.width = 0.5,seed=3),size = 4,alpha=0.75)+
      #geom_point(size = 3)+
@@ -208,7 +204,7 @@ for(ref in refs){
    ############## downsampled version for SI ##############
    # order of factors: 
    hetOnly_input_melt$downsampled <- factor(hetOnly_input_melt$downsampled, levels=c("Non-Downsampled","Downsampled"))
-   p7b <- ggplot(hetOnly_input_melt[hetOnly_input_melt$prior=="AFprior" & hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=TVLabel2,y=value,shape=label,color=as.factor(population)))+
+   p7b <- ggplot(hetOnly_input_melt[ hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=TVLabel2,y=value,shape=label,color=as.factor(population)))+
      #geom_violin(position=position_dodge(.5))+
      #geom_point(position=position_jitterdodge(jitter.width = 0.1,dodge.width = 0.5,seed=3),size = 4,alpha=0.75)+
      #geom_point(size = 3)+
@@ -224,6 +220,24 @@ for(ref in refs){
    p7b
    ggsave(paste(plot.dir,"FORSI.mappedto.",ref,".aDNA.Het.TiTv.smallJitter.lowCovOnly.",prob,".transversionsOnly.",todaysdate,".pdf",sep=""),p7b,height=4,width=6) 
    
+   ########### Plot 8: want to show transversions with downsampling on own ###########
+   #new groups
+   hetOnly_input_melt$newGroupName <- NA
+   hetOnly_input_melt[hetOnly_input_melt$population=="CA" & hetOnly_input_melt$label=="ancient",]$newGroupName <-"Ancient"
+   hetOnly_input_melt[hetOnly_input_melt$population=="CA" & hetOnly_input_melt$label=="modern",]$newGroupName <-"Modern-CA"
+   hetOnly_input_melt[hetOnly_input_melt$population=="AK" & hetOnly_input_melt$label=="modern",]$newGroupName <-"Modern-AK"
+   p8a <- ggplot(hetOnly_input_melt[hetOnly_input_melt$TVLabel2=="Tv Only" & hetOnly_input_melt$reference==ref & hetOnly_input_melt$Filter_ProbThresholdForCallableSite==prob & hetOnly_input_melt$Filter_minIndsPerSite==minInd,],aes(x=newGroupName,y=value,shape=label,color=as.factor(population)))+
+     geom_jitter(width = 0.05,size=3)+
+     theme_bw()+
+     theme(legend.title = element_blank(),axis.text = element_text(size=10),legend.text = element_text(size=10),legend.background = element_rect(fill = "transparent"),strip.text = element_text(size=10))+
+     xlab("")+ylab("Individual Heterozygosity")+
+     scale_shape_manual(values=c(8,1)) +
+     scale_color_manual(values=c(unlist(colors['AK']), unlist(colors['CA'])))+
+     facet_wrap(~downsampled)+
+     ggtitle(paste("Heterozygosity (transversions only)\nmapped to ",ref,sep=""))+
+     theme(legend.position = "none")
+   p8a
+   ggsave(paste(plot.dir,"FORPAPER.mappedto.",ref,".aDNA.Het.TvOnly.smallJitter.",prob,".transversionsOnly.",todaysdate,".pdf",sep=""),p8a,height=2.2,width=7) 
 
 }
 

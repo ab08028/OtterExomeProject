@@ -101,3 +101,10 @@ ggplot(allCountsSynMis_plusCallable,aes(x=CalledCount,y=derivedAlleles_frac,colo
   facet_wrap(~category,scales="free")+
   theme_bw()+
   ggtitle("Fraction of derived alleles is correlated\nwith number of called cds sites (drop out isn't random?)")
+ggplot(allCountsSynMis_plusCallable,aes(x=CalledCount,y=homAlt_normalized,color=pop2))+
+  geom_point()+
+  facet_wrap(~category,scales="free")+
+  theme_bw()+
+  ggtitle("Number of hom-alt sites is correlated\nwith number of called cds sites (drop out isn't random?)")
+
+## look at this with missingness filter of 0.8 -- might be a lot better.

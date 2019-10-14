@@ -118,7 +118,26 @@ python $scriptdir/plink2treemix.py $plinkFileDir/${header}.${marker}.frq.strat.g
 ###### cool this works.
 
 
+########### 20191007: new addition: merge Aleutian Islands ""****CombineAl****"" ####################
+# manually edit clusters and want to exclude BAJ still ()
+marker=noBAJA.exclRelatives.CombineAL
+clusters=$plinkFileDir/$header.population.clusters.sepCA-BAJ.CombineAL # 3 columns: 0 sampleID popID
 
+plink --bfile $plinkFileDir/$header \
+--freq \
+--missing \
+--within $clusters \
+--allow-extra-chr \
+--out $plinkFileDir/$header.${marker} \
+--nonfounders \
+--keep-allele-order \
+--filter $plinkFileDir/$header.exclList.rmRelatives.rmBAJA 1
+
+gzip -f $plinkFileDir/${header}.${marker}.frq.strat
+
+python $scriptdir/plink2treemix.py $plinkFileDir/${header}.${marker}.frq.strat.gz $treeFileDir/${header}.${marker}.frq.strat.treemixFormat.gz
+
+#results in file: snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.noBAJA.exclRelatives.CombineAL.frq.strat.treemixFormat.gz
 
 
 

@@ -1,4 +1,4 @@
-#load R packages
+ #load R packages
 library(gdsfmt)
 library(SNPRelate)
 require(ggplot2)

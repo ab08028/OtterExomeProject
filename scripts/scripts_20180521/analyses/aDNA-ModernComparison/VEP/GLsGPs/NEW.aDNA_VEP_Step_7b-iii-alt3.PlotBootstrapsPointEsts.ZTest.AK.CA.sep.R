@@ -3,7 +3,11 @@
 ########## plot bootstraps and point estimates based on good windows that passed filters ##########
 require(ggplot2)
 require(dplyr)
-dates="20190701-lowcov-AFprior-MajorMinor4"
+require(RColorBrewer)
+# not loving the color scheme.
+colorPal=RColorBrewer::brewer.pal(n=6,name = "Dark2")
+colors=list(CA=colorPal[1],BAJ=colorPal[7],AK=colorPal[2],AL=colorPal[3],COM=colorPal[4],KUR=colorPal[5]) # your population colors
+dates=c("20190701-lowcov-AFprior-MajorMinor4","20190701-highcov-AFprior-MajorMinor4")
 #dates=c("20190701-lowcov-AFprior-MajorMinor4","20190701-highcov-AFprior-MajorMinor4")
 minGP=0.95
 minDepth=2
@@ -30,18 +34,22 @@ for(angsdDate in dates){
   
   ###### plot ######
   p1 <- ggplot(boots,aes(x=group,y=derivedAlleles_Rescaled))+
-    geom_violin()+
+    geom_violin(alpha=0.7,aes(fill=group))+
     geom_point(data=averagePointEsts,aes(x=group,y=meanPtEstDerivedAlleles))+
     theme_bw()+
+    scale_fill_manual(values=c("#1B9E77","#D95F02", "#1B9E77"))+
+    theme(legend.position = "none")+
     facet_wrap(~sites~Consequence_BroadName,scales="free")+
     ggtitle("Derived Alleles -- calculated from windows of genome passing filters\n1000 bootstraps\nNew approach: averaging across individuals per bootstrap not per window")
   p1
   ggsave(paste(data.dir,"derivedAlleles.PointPlusBoots.pdf",sep=""),p1,device="pdf",height=6,width=9)
   
   p2 <-  ggplot(boots,aes(x=group,y=homAlt_Rescaled))+
-    geom_violin()+
+    geom_violin(alpha=0.7,aes(fill=group))+
     geom_point(data=averagePointEsts,aes(x=group,y=meanPtEstHomAlt))+
     theme_bw()+
+    scale_fill_manual(values=c("#1B9E77","#D95F02", "#1B9E77"))+
+    theme(legend.position = "none")+
     facet_wrap(~sites~Consequence_BroadName,scales="free")+
     ggtitle("Homozygous alternate genotypes -- calculated from windows of genome passing filters\n1000 bootstraps\nNew approach: averaging across individuals per bootstrap not per window")      
   p2
