@@ -62,17 +62,18 @@ for minCallRate in 1 0.8
 do
 echo "starting rate $minCallRate"
 vcf=cds_all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
-vcftools --gzvcf $indir/cdsVCFs/$vcf \
---max-missing $minCallRate 	\
---out $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate} \
---recode
+#vcftools --gzvcf $indir/cdsVCFs/$vcf \
+#--max-missing $minCallRate 	\
+#--out $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate} \
+#--recode
 
+gzip -f $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate}.recode.vcf
 # count callable sites per ind:
 script=countCallableSitesPerIndividual.py
 outdir=/u/flashscratch/a/ab08028/captures/analyses/compareMissense_Syn/callableCDSPerIndividual/minCallRate_$minCallRate
 mkdir -p $outdir
 ### run script: 
-python $scriptdir/$script --vcf $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate}.recode.vcf --outfile $outdir/callableCDSSitesPerIndividual.${todaysdate}.txt
+python $scriptdir/$script --vcf $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate}.recode.vcf.gz --outfile $outdir/callableCDSSitesPerIndividual.${todaysdate}.txt
 
 done
 # this may need to be a job (make take a while)
