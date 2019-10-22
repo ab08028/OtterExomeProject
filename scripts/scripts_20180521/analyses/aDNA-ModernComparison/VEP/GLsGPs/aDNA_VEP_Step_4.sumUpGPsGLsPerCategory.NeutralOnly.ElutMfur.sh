@@ -28,7 +28,6 @@ hcdates="20190701-highcov-AFprior-MajorMinor4"
 lcdates="20190701-lowcov-AFprior-MajorMinor4"
 refs="elut mfur"
 type=GPs # using GPs for now
-basename=angsdOut.mappedTo${ref}
 categories="synonymous missense stopgained"
 maxProbCutoff=0.95 # e.g. 0.95 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
 # than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
@@ -40,6 +39,7 @@ minInds=1 # okay to just have one individual with sequence
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
 for ref in refs
 do
+basename=angsdOut.mappedTo${ref}
 for minDepthCutoff in $minDepthCutoffs
 do
 for angsdDate in $hcdates
@@ -59,6 +59,7 @@ done
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt # low cov
 for ref in refs
 do
+basename=angsdOut.mappedTo${ref}
 for minDepthCutoff in $minDepthCutoffs
 do
 for angsdDate in $lcdates
