@@ -15,25 +15,23 @@
 # and then sums of GPs for 1/1 and 0/1 sites for syn, mis, and sg
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/
-#script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.py
+script=$scriptDir/analyses/aDNA-ModernComparison/Heterozygosity/parseBeagleSuperfile.CalculateHeterozygosity.ManyFilters.py
 GLdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/angsd-GLs/
-outdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory/ChosenIndsOnly # moving this inside the VEP dir
-mkdir -p $outdir
+outdir=/u/flashscratch/a/ab08028/captures/aDNA-ModernComparison/VEP/sumGPsGLsPerVEPCategory # moving this inside the VEP dir
 hcdates="20190701-highcov-AFprior-MajorMinor4"
 lcdates="20190701-lowcov-AFprior-MajorMinor4"
 ref=mfur #only mfur for vep stuff
 type=GPs # using GPs for now
 basename=angsdOut.mappedTo${ref}
 categories="synonymous missense stopgained"
-minInds=ChosenIndsOnly
+
 
 maxProbCutoff=0.95 # e.g. 0.95 # this is the cutoff for the max posterior probability. If the max of one of the three GTs posteriors isn't >=
 # than this cutoff, then it won't be counted for that individual. Note that it doesn't have to be the het GT that is >0.5, just one of the three
 # this is to avoid cases where each of the three GTs is very close in probability, indicating low overal confidence or possibly no data
 minDepthCutoffs="1 2 4" # minimum only 1 read (maybe try raising this)
-# chosen inds are A30 and 116 CA
+minInds=9 # okay to just have one individual with sequence # 20191014 -- want to challenge this and only look at sites where all are covered (not many)
 ################################ high coverage ###############################
-script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.HighCoverage.py
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
 for minDepthCutoff in $minDepthCutoffs
 do
@@ -60,7 +58,6 @@ done
 
 ############################ low coverage #########################################  
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt # low cov
-script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.LowCoverage.py
 for minDepthCutoff in $minDepthCutoffs
 do
 for angsdDate in $lcdates

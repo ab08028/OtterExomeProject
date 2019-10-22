@@ -6,7 +6,7 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/treemix
 #$ -m abe
 #$ -M ab08028
-#$ -t 7
+#$ -t 1-5
 
 
 ### array over migration rates in parallel

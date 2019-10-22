@@ -33,29 +33,29 @@ maxProbCutoff=0.95 # e.g. 0.95 # this is the cutoff for the max posterior probab
 minDepthCutoffs="1 2 4" # minimum only 1 read (maybe try raising this)
 # chosen inds are A30 and 116 CA
 ################################ high coverage ###############################
-script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.HighCoverage.py
-sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
-for minDepthCutoff in $minDepthCutoffs
-do
-for angsdDate in $hcdates
-do
-indir=$GLdir/$angsdDate 
-mkdir -p $outdir/$angsdDate
-cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
-output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
+#script=$scriptDir/analyses/aDNA-ModernComparison/parseSuperfiles/parseBeagleSuperfile.ManyFilters.OnlyChosenInds.HighCoverage.py
+#sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
+#for minDepthCutoff in $minDepthCutoffs
+#do
+#for angsdDate in $hcdates
+#do
+#indir=$GLdir/$angsdDate 
+#mkdir -p $outdir/$angsdDate
+#cds=${basename}.superfile.${type}.mafs.counts.cdsOnly.0based.bed.gz
+#output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.CDS.txt
 # get total callable cds sites with same filters: 
-python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
+#python $script $indir/$cds $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
-for category in $categories
-do
-input=cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed.gz
-output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.${category}.txt
+#for category in $categories
+#do
+#input=cdsPerCategoryFromVEP/${basename}.superfile.${type}.mafs.counts.0based.${category}.bed.gz
+#output=${basename}.hetHomTotals.${type}.ProbCutoff.${maxProbCutoff}.DepthCutoff.${minDepthCutoff}.minInd.${minInds}.${angsdDate}.${category}.txt
 
-python $script $indir/$input $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
+#python $script $indir/$input $sampleIDs $outdir/$angsdDate/$output $maxProbCutoff $minDepthCutoff $minInds
 
-done
-done
-done
+#done
+#done
+#done
 
 
 ############################ low coverage #########################################  
