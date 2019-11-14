@@ -37,7 +37,7 @@ minInds=1 # okay to just have one individual with sequence
 
 ################################ high coverage ###############################
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.HighCoverageAndADNAOnly.BeCarefulOfOrder.txt # high cov
-for ref in refs
+for ref in $refs
 do
 basename=angsdOut.mappedTo${ref}
 for minDepthCutoff in $minDepthCutoffs
@@ -57,7 +57,7 @@ done
 
 ############################ low coverage #########################################  
 sampleIDs=$scriptDir/data_processing/variant_calling_aDNA/bamLists/SampleIDsInOrder.LowCoverageOnly.BeCarefulOfOrder.txt # low cov
-for ref in refs
+for ref in $refs
 do
 basename=angsdOut.mappedTo${ref}
 for minDepthCutoff in $minDepthCutoffs
