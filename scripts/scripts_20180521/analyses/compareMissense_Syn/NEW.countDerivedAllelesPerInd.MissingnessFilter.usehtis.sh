@@ -31,7 +31,8 @@ vcfIdentifier=snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingB
 echo "These are the vcfs being used to get the counts:" > $outdir/countsLog.vcfsUsed.${todaysdate}.txt
 
 # note full vcf name is missense_vep_cds_snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
-for minCallRate in 1 0.8 # 1 = no missing allowed; 0.8 = 20% missing allowed 
+#for minCallRate in 1 0.8 # 1 = no missing allowed; 0.8 = 20% missing allowed 
+for minCallRate in 0.95 0.90 # try 5 and 10% missingness allowed too 
 do
 outdir=$wd/countsOfGenotypesPerIndividual/minCallRate_$minCallRate
 mkdir -p $outdir
