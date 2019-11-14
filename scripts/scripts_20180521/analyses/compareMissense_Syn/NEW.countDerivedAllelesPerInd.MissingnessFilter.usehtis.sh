@@ -21,6 +21,7 @@ gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/compareMissense_Syn
 script=countHomRefHomAltHetNoCall.perIndividual.py
 todaysdate=`date +%Y%m%d`
+minCallRates='0.95 0.90' # previously tried 1 and 0.8
 ############################ cds -- annotated SNPS only! ####################
 # vep was carried out during filtering steps (1e)
 # so now have missense and synonymous separate vcfs 
@@ -32,7 +33,7 @@ echo "These are the vcfs being used to get the counts:" > $outdir/countsLog.vcfs
 
 # note full vcf name is missense_vep_cds_snp_9b_forEasySFS_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_passingBespoke_passingAllFilters_postMerge_raw_variants.vcf
 #for minCallRate in 1 0.8 # 1 = no missing allowed; 0.8 = 20% missing allowed 
-for minCallRate in 0.95 0.90 # try 5 and 10% missingness allowed too 
+for minCallRate in $minCallRates # try 5 and 10% missingness allowed too 
 do
 outdir=$wd/countsOfGenotypesPerIndividual/minCallRate_$minCallRate
 mkdir -p $outdir
@@ -59,7 +60,7 @@ done
 # maybe want to remove totally monomorphic sites too? try that next perhaps
 
 ############### count total cds sites: #########
-for minCallRate in 1 0.8
+for minCallRate in $minCallRates
 do
 echo "starting rate $minCallRate"
 vcf=cds_all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
