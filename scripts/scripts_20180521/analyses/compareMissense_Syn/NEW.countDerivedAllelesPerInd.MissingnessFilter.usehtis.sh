@@ -64,10 +64,10 @@ for minCallRate in $minCallRates
 do
 echo "starting rate $minCallRate"
 vcf=cds_all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
-#vcftools --gzvcf $indir/cdsVCFs/$vcf \
-#--max-missing $minCallRate 	\
-#--out $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate} \
-#--recode
+vcftools --gzvcf $indir/cdsVCFs/$vcf \
+--max-missing $minCallRate 	\
+--out $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate} \
+--recode
 
 gzip -f $indir/cdsVCFs/${vcf%.vcf.gz}.minCallRate.${minCallRate}.recode.vcf
 # count callable sites per ind:
