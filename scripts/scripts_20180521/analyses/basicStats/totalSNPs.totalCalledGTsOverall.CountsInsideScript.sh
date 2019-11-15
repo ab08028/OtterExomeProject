@@ -1,4 +1,11 @@
-
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=50:00:00,h_data=8G,highp
+#$ -N countSNPs_countGTs
+#$ -o /u/flashscratch/a/ab08028/captures/reports/cdsSites
+#$ -e /u/flashscratch/a/ab08028/captures/reports/cdsSites
+#$ -m abe
+#$ -M ab08028
 #### count total snps, excluding monomorphic
 
 source /u/local/Modules/default/init/modules.sh
