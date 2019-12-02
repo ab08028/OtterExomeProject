@@ -38,7 +38,7 @@ elutBamList=$scriptDir/bamLists/mtGenomes.Only.A19.A24.A22.A28.txt
 #mfurBamList=$scriptDir/bamLists/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.txt  # list of bam files mapped to ferret, including downsampled AND non-downsampled
 
 # reference genomes:
-elutMTRef=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/elut_kenyoni_ref_ASM228890v2_chrMT.fasta
+elutMTRef=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/mtGenome/elut_kenyoni_ref_ASM228890v2_chrMT.fasta
 ## need to move those bams over 
 #mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
