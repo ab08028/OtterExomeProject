@@ -3,7 +3,7 @@
 #$ -l h_rt=200:00:00,h_data=2G,highp
 #$ -m abe
 #$ -M ab08028
-#$ -pe shared 16
+#$ -pe shared 4
 #$ -N angsdStep1ai
 #$ -e /u/flashscratch/a/ab08028/captures/reports/angsd
 #$ -o /u/flashscratch/a/ab08028/captures/reports/angsd
@@ -42,7 +42,7 @@ elutMTRef=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/
 ## need to move those bams over 
 #mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
-echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.txt
+echo -e "THIS uses ancient mt genome ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/mtGenomeOnly.txt
 
 
 ######### ANGSD settings:##############
@@ -92,3 +92,4 @@ angsd -nThreads 16 \
 
 deactivate
 
+sleep 5m

@@ -108,5 +108,5 @@ angsd -nThreads 16 \
 -doGlf 2 \
 -doCounts 1 -dumpCounts 2
 
-deactivate
+source deactivate
 
