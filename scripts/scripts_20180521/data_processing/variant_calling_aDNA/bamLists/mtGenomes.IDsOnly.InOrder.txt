@@ -1,0 +1,4 @@
+A19_Elut_CA_SM_30_SN2_screen
+A24_Elut_CA_SM_35_SN1_screen
+A22_Elut_CA_SM_33_SN1_screen
+A28_Elut_CA_SM_41_SN2_screen
