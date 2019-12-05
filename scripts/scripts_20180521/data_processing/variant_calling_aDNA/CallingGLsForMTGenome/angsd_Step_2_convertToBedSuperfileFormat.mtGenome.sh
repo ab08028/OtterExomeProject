@@ -19,7 +19,8 @@
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/aDNA-ModernComparison
 #dates="20190524-highcov-AFprior 20190524-lowcov-AFprior 20190524-highcov-UNIFprior 20190524-lowcov-UNIFprior" # set of angsdDates you want to process 
-dates="20191202-highcov-AFprior-MajorMinor4-mtGenomeOnly"
+#dates="20191202-highcov-AFprior-MajorMinor4-mtGenomeOnly"
+dates="20191205-highcov-UNIFprior-MajorMinor4-mtGenomeOnly"
 refs="elut"
 #refs="mfur"
 for ref in $refs
