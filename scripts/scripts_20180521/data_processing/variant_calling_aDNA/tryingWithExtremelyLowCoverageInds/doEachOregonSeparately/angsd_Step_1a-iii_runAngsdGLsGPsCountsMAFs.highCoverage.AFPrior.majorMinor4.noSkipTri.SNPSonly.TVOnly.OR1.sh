@@ -16,7 +16,7 @@ posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prio
 snpCutoff=1e-06
 minInd=7 # adding this in just for Oregon analysis
 #todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
-todaysdate='20191205-highcov-AFprior-MajorMinor4-justOR-notIndelRealYet-minInd'
+todaysdate='20191205-highcov-AFprior-MajorMinor4-justOR1'
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
