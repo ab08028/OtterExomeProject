@@ -15,7 +15,7 @@ posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prio
 snpCutoff=1e-06
 #todaysdate=`date +%Y%m%d`'-lowcov-AFprior'
 
-todaysdate='20191201-lowcov-AFprior-MajorMinor4-IncludesMoreInds-notAllIndelRealignedYet'
+todaysdate='20191202-lowcov-AFprior-MajorMinor4-IncludesMoreInds-notAllIndelRealignedYet'
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda

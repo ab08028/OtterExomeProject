@@ -1,0 +1,5 @@
+/u/flashscratch/a/ab08028/captures/paleomix/mtGenome-Rescaled/A19_Elut_CA_SM_30_SN2_screen/A19_Elut_CA_SM_30_SN2_screen.elut_kenyoni_ref_ASM228890v2_chrMT.realigned.bam
+/u/flashscratch/a/ab08028/captures/paleomix/mtGenome-Rescaled/A24_Elut_CA_SM_35_SN1_screen/A24_Elut_CA_SM_35_SN1_screen.elut_kenyoni_ref_ASM228890v2_chrMT.realigned.bam
+/u/flashscratch/a/ab08028/captures/paleomix/mtGenome-Rescaled/A22_Elut_CA_SM_33_SN1_screen/A22_Elut_CA_SM_33_SN1_screen.elut_kenyoni_ref_ASM228890v2_chrMT.realigned.bam
+/u/flashscratch/a/ab08028/captures/paleomix/mtGenome-Rescaled/A28_Elut_CA_SM_41_SN2_screen/A28_Elut_CA_SM_41_SN2_screen.elut_kenyoni_ref_ASM228890v2_chrMT.realigned.bam
+
