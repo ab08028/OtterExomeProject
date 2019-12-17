@@ -21,9 +21,10 @@ module load R
 source activate angsd-conda-env # activate conda env
 
 ######### dirs and files ###########
-#abbadate='20191210-highcov-multipop' # dir where abba baba files are 
-abbadate="20191211-highcov-multipop-minInd" # with min ind filter
-DSTAT=/u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/R/estAvgError.R ### this script can be used for error est (not doing here) but also for getting the D statistics
+abbadate="20191211-highcov-singleInd-minInd" # with min ind filter
+# http://www.popgen.dk/angsd/index.php/Abbababa
+# use a different script than the multipop case:
+JACKKNIFE=/u/home/a/ab08028/klohmueldata/annabel_data/bin/angsd/R/jackKnife.R ### this script can be used for error est (not doing here) but also for getting the D statistics
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling_aDNA
 SCRATCH=/u/flashscratch/a/ab08028
@@ -34,15 +35,15 @@ ABBADIR=$wd/ABBA_BABA
 #mkdir -p $ABBADIR/$todaysdate
 outdir=$ABBADIR/$abbadate
 
-bamListDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/forABBABABA/multipop
+bamListDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_calling_aDNA/bamLists/forABBABABA/singleInd
 #mfurBamList=$bamListDir/angsd.bamList.mappedtoMfurfullpaths.HighCovPlusADNAOnly.InPopOrder.txt
-errorList=$bamListDir/errorList.txt # this should be NA for all pops because not doing error correction (at least for now)
+#errorList=$bamListDir/errorList.txt # this should be NA for all pops because not doing error correction (at least for now)
 #mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 # note: sizeList.pops.txt must include a 1 at the end for the ancestral(maybe?)
 ### HAS TO BE MFUR TO HAVE ANCESTRAL!!! #########
 ### in R need to install.packages("pracma") in the anaconda session
 ############ run DSTAT : ############
-Rscript $DSTAT angsdFile=$outdir/angsdOut.TransvOnly out=$outdir/DStats sizeFile=$bamListDir/sizeList.pops.txt errFile=$errorList nameFile=$bamListDir/popNameFile.txt
+Rscript $JACKKNIFE file=$outdir/angsdOut.TransvOnly.abbababa outfile=$outdir/DStats indNames=$bamListDir/IDs.txt
 
 
 # results 1)result.Observed.txt
