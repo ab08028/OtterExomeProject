@@ -81,8 +81,7 @@ sfs=""
 
 ################# AL #########################
 pop=AL
-# input these from dadi MLE results: CALIFORNIA SPECIFIC PARAMS:
-#Nanc=4834
+# input these from dadi MLE results:
 outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
 mkdir -p $outdir
 sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
@@ -97,10 +96,43 @@ gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
 sfs=""
 #Nanc=""
 
-############## COM-- 3 Epoch ################
+############## COM-- 3 Epoch; adding 2 epoch too ################
 pop=COM
 
-######### NOTE: different script:
+############ do 2 Epoch as well 20191230
+# input these from dadi MLE results:
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
+mkdir -p $outdir
+sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+
+#  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
+python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
+
+# gzip output
+gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
+
+# empty variables just in case:
+sfs=""
+#Nanc=""
+
+##### Try without singletons:  ##############
+pop=COM
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}-noSingletons
+mkdir -p $outdir
+
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+
+#  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
+python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
+
+# gzip output
+gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
+
+# empty variables just in case:
+sfs=""
+#Nanc=""
+
+######### 3 EPOCH NOTE: different script: #######
 script=grid.Search.1D.3Epoch.dadi.dadiUnits.py ## 3 Epoch script
 outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
 mkdir -p $outdir
@@ -113,6 +145,8 @@ python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 25 --nuB_
 
 # gzip output
 gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
+
+
 
 # empty variables just in case:
 #sfs=""
