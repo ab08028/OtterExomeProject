@@ -15,7 +15,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 
-modelName="1D.1Bottleneck.TB20gen"
+modelName="1D.1Bottleneck.TB.005.gen.TRec.005.gen"
 
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
