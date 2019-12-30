@@ -46,8 +46,9 @@ sfssuffix=plusMonomorphic.sfs
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
-scripts='1D.Decline.dadi.py'
-for pop in CA AK AL KUR # skipping med/ber/com for now
+#scripts='1D.Decline.dadi.py'
+scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.1Bottleneck.TB.005.gen.TRec.005.gen.dadi.py'
+for pop in COM CA AK AL KUR # do them all why not. 
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
 L=`grep $pop $sfsdir/$pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`
