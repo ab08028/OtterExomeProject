@@ -30,7 +30,7 @@ mu=8.64411385098638e-09
 genotypeDate=20181119 # newer gts
 sfsDate=20181221 # projection with 0.75 het filter and these projection values ## for COM only
 hetFilter=0.75
-todaysdate=`date +%Y%m%d`
+todaysdate=`date +%Y%m%d`-noSingletons
 captures=$SCRATCH/captures/
 ### NOTE: COM Has a different SFS dir (otherwise is sep into berin and medny)
 sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
