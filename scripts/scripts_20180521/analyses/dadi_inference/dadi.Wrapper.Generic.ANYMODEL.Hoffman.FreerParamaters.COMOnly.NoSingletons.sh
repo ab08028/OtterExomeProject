@@ -69,11 +69,11 @@ python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs ${sfsdir}
 done
 
 
-echo "concatenating results"
-grep rundate -m1 $outdir/${pop}.dadi.inference.${model}.runNum.1.${todaysdate}.output > $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
+echo "concatenating results" # note: some models output date and some don't! 
+grep rundate -m1 $outdir/${pop}.dadi.inference.${model}.runNum.1.*output > $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
 for i in {1..50}
 do
-grep rundate -A1 $outdir/${pop}.dadi.inference.${model}.runNum.${i}.${todaysdate}.output | tail -n1 >> $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
+grep rundate -A1 $outdir/${pop}.dadi.inference.${model}.runNum.${i}.*output | tail -n1 >> $outdir/${pop}.dadi.inference.${model}.all.output.concatted.txt
 done
 
 done
