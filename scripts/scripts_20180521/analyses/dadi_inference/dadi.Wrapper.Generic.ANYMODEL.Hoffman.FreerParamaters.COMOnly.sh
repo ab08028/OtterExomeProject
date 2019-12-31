@@ -28,12 +28,12 @@ scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference
 #model=${script%.dadi.py}
 mu=8.64411385098638e-09
 genotypeDate=20181119 # newer gts
-sfsDate=20190424 # projection with 0.75 het filter and these projection values ## for COM only
+sfsDate=20181221 # projection with 0.75 het filter and these projection values ## for COM only -- using COM-35 as opposed to COM-31 so it's all comparable with grid.search!!
 hetFilter=0.75
 todaysdate=`date +%Y%m%d`
 captures=$SCRATCH/captures/
 ### NOTE: COM Has a different SFS dir (otherwise is sep into berin and medny)
-sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}-COM/dadi-plusMonomorphic/
+sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
 dadidir=$captures/analyses/dadi_inference/
 sfssuffix=plusMonomorphic.sfs
 ### Make sure this is the correct file #####
@@ -48,7 +48,8 @@ sfssuffix=plusMonomorphic.sfs
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 #scripts='1D.Decline.dadi.py'
-scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.1Bottleneck.TB.005.gen.TRec.005.gen.dadi.py'
+#scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.1Bottleneck.TB.005.gen.TRec.005.gen.dadi.py'
+scripts='1D.1Bottleneck.FixTRec.gen.dadi.py'
 for pop in COM # COM only 
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts

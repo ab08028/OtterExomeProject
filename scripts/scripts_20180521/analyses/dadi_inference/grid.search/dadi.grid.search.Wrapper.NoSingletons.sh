@@ -1,3 +1,4 @@
+######### running without singletons! 
 # wrapper
 # runs fast, can do on home computer
 gitdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/
@@ -28,9 +29,9 @@ pop=CA
 # input these from dadi MLE results: CALIFORNIA SPECIFIC PARAMS:
 #Nanc=3585
 # pop specific out-dir
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}-noSingletons
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 python $scriptdir/$script --sfs $indir/$sfs --pop $pop  --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
@@ -45,9 +46,9 @@ sfs=""
 pop=AK
 # input these from dadi MLE results: CALIFORNIA SPECIFIC PARAMS:
 #Nanc=4381
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}-noSingletons
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 python $scriptdir/$script --sfs $indir/$sfs --pop $pop  --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
@@ -64,9 +65,9 @@ sfs=""
 pop=KUR
 # input these from dadi MLE results: CALIFORNIA SPECIFIC PARAMS:
 #Nanc=4349
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}-noSingletons
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 python $scriptdir/$script --sfs $indir/$sfs --pop $pop  --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
@@ -82,9 +83,9 @@ sfs=""
 ################# AL #########################
 pop=AL
 # input these from dadi MLE results:
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
+outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}-noSingletons
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
@@ -103,7 +104,7 @@ pop=COM
 # input these from dadi MLE results:
 outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
@@ -136,7 +137,7 @@ sfs=""
 script=grid.Search.1D.3Epoch.dadi.dadiUnits.py ## 3 Epoch script
 outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/$pop
 mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
+sfs=$pop-[0-9]*.plusMonomorphic.MASKED.SINGLETONS.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
 
 #  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
 
@@ -156,37 +157,3 @@ gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
 #script=grid.Search.1D.3Epoch.dadi.dadiUnits.TF.TB.Fixed.py
 
 #python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 10 --nuB_Low ${nu_Low} --nuB_High ${nu_High} --nuF_Low ${nu_Low} --nuF_High ${nu_High} --outdir $outdir
-
-############# Try just MED and BER ############
-indir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20181119/easySFS_projection/neutral/splitCOM/projection-20190301-hetFilter-0.75/dadi-plusMonomorphic
-pop=MED
-# input these from dadi MLE results:
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}
-mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
-
-#  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
-python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
-
-# gzip output
-gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
-
-# empty variables just in case:
-sfs=""
-#Nanc=""
-
-pop=BER
-# input these from dadi MLE results:
-outdir=/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/$genotypeDate/grid.search/${pop}
-mkdir -p $outdir
-sfs=$pop-[0-9]*.plusMonomorphic.sfs # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop
-
-#  note that grid is log10 scaled, so will have more data points at the lower values, fewer as you go higher
-python $scriptdir/$script --sfs $indir/$sfs --pop $pop --numGridPoints 100 --nu_Low ${nu_Low} --nu_High ${nu_High} --T_Low ${T_Low} --T_High ${T_High} --outdir $outdir
-
-# gzip output
-gzip -f $outdir/dadi.grid.search.$pop.$model.LL.output.txt
-
-# empty variables just in case:
-sfs=""
-#Nanc=""

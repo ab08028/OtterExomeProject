@@ -15,7 +15,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 
-modelName="1D.1Bottleneck.TB.005.gen.TRec.005.gen"
+modelName="1D.1Bottleneck.FixTRec"
 
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
@@ -53,14 +53,14 @@ pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than s
 # Bernard says to fix bottleneck duration
 # 20 generations ~ 20/(3000*2)
 def bottleneck(params, ns, pts):
-    nuB,nuF = params
+    nuB,nuF,TB = params
     xx = Numerics.default_grid(pts) # sets up grid
     phi = PhiManip.phi_1D(xx) # sets up initial phi for population
-    phi = Integration.one_pop(phi, xx, 0.005, nuB)  # bottleneck
-    phi = Integration.one_pop(phi, xx, 0.005, nuF) # recovery
+    phi = Integration.one_pop(phi, xx, TB, nuB)  # bottleneck
+    phi = Integration.one_pop(phi, xx, 0.001, nuF) # recovery
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
-param_names=("nuB","nuF")
+param_names=("nuB","nuF","TB")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
 # changing starting position to .1, tb to 0.005; TF to 0.001
@@ -72,9 +72,9 @@ param_names=("nuB","nuF")
 #2) the times for the lower bounds are supposed to be non-zero
 #IIRC if you give a min of 0 things get weird because of collapsing epochs
 #i'd throw something like 1e-5
-upper_bound = [10, 2]
-lower_bound = [1e-4, 1e-4]
-p0 = [0.01,0.1] # initial parameters
+upper_bound = [10, 2,2]
+lower_bound = [1e-4, 1e-4,1e-4]
+p0 = [0.01,0.1,0.005] # initial parameters
 
 
 func=bottleneck # set the function
@@ -104,9 +104,9 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 Nanc=theta / (4*mu*L)
 nuB_scaled_dip=popt[0]*Nanc
 nuF_scaled_dip=popt[1]*Nanc
-#TF_scaled_gen=popt[2]*2*Nanc
-scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB_scaled_dip","nuF_scaled_dip")
-scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip)
+TF_scaled_gen=popt[2]*2*Nanc
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB_scaled_dip","nuF_scaled_dip","T_scaled_gen")
+scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip,T_scaled_gen)
 
 
 ############### Write out output (same for any model) ########################
