@@ -57,8 +57,30 @@ done
 done
 # then want to do the counts:
 
-# maybe want to remove totally monomorphic sites too? try that next perhaps
+########## do counts wihtout monomorphic sites that are fixed across all inds ########
+for minCallRate in $minCallRates # try 5 and 10% missingness allowed too 
+do
+outdir=$wd/countsOfGenotypesPerIndividual/minCallRate_$minCallRate_NOMONOMORPHIC
+mkdir -p $outdir
+echo "starting min call rate $minCallRate"
+for category in missense syn
+do
+echo "starting $category"
+vcf=${category}_vep_cds_${vcfIdentifier}.vcf.gz
 
+# remove all sites with any missing data (should drop sites down a lot)
+# note weird naming of max-missing in vcftools; it actually refers to the min call rate allowed so 0 is all sites allowed
+# 1 is no missing data allowed; 0.8 says that at least 0.8 must be called 
+vcftools --gzvcf $indir/cdsVCFs/$vcf \
+	--max-missing $minCallRate \
+	--out $indir/cdsVCFs/${category}_vep_cds_${vcfIdentifier}.minCall.$minCallRate.MONOMORPHICREMOVED \
+	--recode \
+	--mac 1 # should get rid of sites that are entirely monomorphic across all individuals (1/1)
+noMissingVCF=${category}_vep_cds_${vcfIdentifier}.minCall.$minCallRate.MONOMORPHICREMOVED.recode.vcf
+echo "$category: $noMissingVCF" >> $outdir/countsLog.vcfsUsed.${todaysdate}.txt
+python $scriptdir/$script --vcf $indir/cdsVCFs/$noMissingVCF --outdir $outdir --outPREFIX ${category}.countsPerIndividual.minCall.$minCallRate.NOMONOMORPHIC
+done
+done
 ############### count total cds sites: #########
 for minCallRate in $minCallRates
 do

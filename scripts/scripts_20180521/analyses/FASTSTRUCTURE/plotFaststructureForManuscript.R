@@ -1,5 +1,6 @@
 require(ggplot2)
 require(reshape2)
+require(RColorBrewer)
 colorPal=RColorBrewer::brewer.pal(n=6,name = "Dark2")
 colors=list(CA=colorPal[1],BAJ=colorPal[1],AK=colorPal[2],AL=colorPal[3],COM=colorPal[4],KUR=colorPal[5])
 calldate="20181119"
@@ -69,9 +70,10 @@ plotForMs2 <- ggplot(combo_melt,aes(x=pop_sample,y=value,fill=variable))+
         panel.grid = element_blank(),
         panel.spacing.x = unit(0.1,"line"),
         axis.text.x=element_blank(),
+        axis.text.y=element_text(size=12),
         axis.ticks.x=element_blank(),
         strip.background = element_rect("transparent"),
-        strip.text = element_text(size=11))+
+        strip.text = element_text(size=12))+
   ylab("")+
   xlab("")+
   theme(legend.position = "none")
@@ -80,3 +82,5 @@ plotForMs2
 
 ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.pdf",sep=""),plotForMs2,height=4,width=7,dpi=300)
 ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.png",sep=""),plotForMs2,height=4,width=7,device="png",dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.pdf",sep=""),plotForMs2,height=4,width=9,device="pdf",dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.png",sep=""),plotForMs2,height=4,width=9,device="png",dpi=300)

@@ -19,7 +19,9 @@ minDepthCutoffOptions="1 2 3 4" # sites that are < this threshold will not be co
 minIndsOptions="1 2 3 4" # min number of individuals for a site to be worked on overall; because the prior is based on allele frequency, we don't want it to just be one individual
 # note that this minInd is not just the nInd in the maf file which shows how many inds had at least 1 read. instead it's how many inds have at least minDepthCutoff reads
 # which in this case is 1, but you can alter it (sites with < minInds will not be counted for ANY individuals even if they have data.)
-dates="20191202-highcov-AFprior-MajorMinor4-mtGenomeOnly" # high cov dates ; skipping UNIF prior because it is garbage: 20190524-highcov-UNIFprior
+#AF and UNIF priors
+dates="20191202-highcov-AFprior-MajorMinor4-mtGenomeOnly 20191205-highcov-UNIFprior-MajorMinor4-mtGenomeOnly" # high cov dates ; skipping UNIF prior because it is garbage: 20190524-highcov-UNIFprior
+#dates="20191205-highcov-UNIFprior-MajorMinor4-mtGenomeOnly"
 # high coverage:
 # for ref in $refs
 refs="elut"

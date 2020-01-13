@@ -1,7 +1,7 @@
 # Grid search
 # also want to input fsc parameters
 require(ggplot2)
-populations=c("CA","AK","KUR","AL")
+populations=c("CA","AK","KUR","AL","COM")
 #populations="CA"
 genotypeDate="20181119"
 model="1D.2Epoch"
@@ -16,18 +16,21 @@ mu=8.64e-09
 ######## eventually write out this out as a table in a different script to automate #############
 # total sites assessed: (these values are also in excel file)
 Ls = vector(mode="list",length=length(populations))
-Ls["CA"] <- 5989967
-Ls["AK"] <- 6335196
-Ls["AL"] <- 6379260
-Ls["KUR"] <- 6416481
+# need to update these values: 
+#Ls["CA"] <- 5989967
+#Ls["AK"] <- 6335196
+#Ls["AL"] <- 6379260
+#Ls["KUR"] <- 6416481
 
-
-
-
+Ls["CA"] <- 5990062
+Ls["AK"] <- 6335334
+Ls["AL"] <- 6379321
+Ls["KUR"] <- 6416655
+Ls["COM"] <- 6424477
 ############################### read in results and plot #####################
 
 for(pop in populations){
-  indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/grid.search/",pop,"-noSingletons/",sep="")
+  indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/grid.search/het1.0filter/",pop,"/",sep="")
   input <- read.table(paste(indir,"dadi.grid.search.",pop,".",model,".LL.output.txt.gz",sep=""),header=T,sep="\t")
   #input$deltaLL = input$LL_model - input$LL_data # this is relative to data:data
   # INSTEAD want to do it relative to MLE 
@@ -48,28 +51,31 @@ for(pop in populations){
     scale_x_log10()+
     scale_y_log10()+
     #scale_fill_gradientn(breaks=c(-50,-25,-10,-5),limits=c(-50,0),colors =c("darkgray","gray","darkorange","yellow","green"))+
-    scale_fill_gradientn(breaks=c(30,10,5,1),limits=c(0,30),colors =c("green","darkgreen","yellow","darkorange","gray","darkgray"))+
+    scale_fill_gradientn(breaks=c(30,10,1),limits=c(0,30),colors =c("green","yellow","darkorange","gray","darkgray"))+
+    geom_point(aes(x=MLE_nu,y=MLE_T),shape=8,size=6,color="red")+
     #annotate(geom="text",x=(MLE_nu),y=(MLE_T+0.0004),label=paste("Grid-Search MLE"),color="black")+
-    ggtitle(paste(pop, " grid Search of parameters in dadi\nSINGLETONS MASKED",sep="")) +
+    ggtitle(paste(pop, " grid Search of parameters in dadi\nhet filter 1.0",sep="")) +
     labs(fill = element_text("deltaLL\nrelative to MLE")) #+
     #geom_vline(xintercept = dadiNancs[[pop]],linetype="dashed")
   p1
-  ggsave(paste(indir,pop,".nu.Vs.T.dadiUnits.gridSearch.SINGLETONS.MASKED.pdf",sep=""),p1,height=5,width=7)
+  ggsave(paste(indir,pop,".nu.Vs.T.dadiUnits.gridSearch.pdf",sep=""),p1,height=5,width=7)
   # PLOT nu and T scaled by the inferred Nancs from each dadi model#
   p3 <- ggplot(input,aes(nu_scaledByNanc_from_Theta_dip,T_scaledByNanc_from_Theta_gen,color=deltaLL))+
     geom_point(size=3)+
     scale_x_log10()+
     scale_y_log10(breaks=c(1,10,100,1000,10000))+
+    scale_color_gradientn(breaks=c(30,10,1),limits=c(0,30),colors =c("green","yellow","darkorange","gray","darkgray"))+
+    geom_point(aes(x=MLE_nu*MLE_Nanc,y=MLE_T*2*MLE_Nanc),shape=8,size=6,color="red")+
     annotate(geom="text",x=(MLE_nu*MLE_Nanc),y=(MLE_T*2*MLE_Nanc+20),label=paste("Grid-Search MLE\nnu: ",round(MLE_nu*MLE_Nanc,2),"\nT: ",round(MLE_T*2*MLE_Nanc,2)),color="black")+
-    ggtitle(paste(pop, " grid Search of parameters in dadi\nSINGLETONS MASKED",sep="")) +
+    #annotate(geom="text",x=dadiNus[[pop]],y=dadiTs[[pop]],label=paste("Dadi Inference MLE\nnu: ",round(dadiNus[[pop]]),"\nT: ",round(dadiTs[[pop]])),color="black",size=4)+
+    ggtitle(paste(pop, " grid Search of parameters in dadi\nRed star is grid search MLE\nRed square indicates original dadi inferred MLE params\nRed triangle is fsc2 inferred MLE parameters",sep="")) +
+    #geom_vline(xintercept = dadiNancs[[pop]],linetype="dashed")+
     xlab("nu: Diploid invidiuals (scaled by inferred Nancs)")+
     ylab("T: Generations")+
-    scale_color_gradientn(breaks=c(30,10,5,1),limits=c(0,30),colors =c("green","darkgreen","yellow","darkorange","gray","darkgray"))+
-    labs(fill = element_text("deltaLL\nrelative to MLE")) 
-  
+    labs(fill = element_text("deltaLL\nrelative to MLE")) #+
   
   p3
-  ggsave(paste(indir,pop,".nu.Vs.T.ScaledByInferredNanc.gridSearch.SINGLETONS.MASKED.pdf",sep=""),p3,height=5,width=7)
+  ggsave(paste(indir,pop,".nu.Vs.T.ScaledByInferredNanc.gridSearch.pdf",sep=""),p3,height=5,width=7)
   # PLOT LL surface of results that are w/in one LL of the best model fit 
   # p4 <- ggplot(input[input$LL_model > (max(input$LL_model))-1,],aes(nu_scaledByNanc_from_Theta_dip,T_scaledByNanc_from_Theta_gen,color=LL_model))+
   #   geom_point()+
@@ -82,10 +88,9 @@ for(pop in populations){
   #   geom_vline(xintercept = dadiNancs[[pop]],linetype="dashed")
   # p4
   #ggsave(paste(indir,pop,".focusOnBestLLs.pdf",sep=""),p4,height=5,width=7)
-  ### look at thetas -- some of them are crazy
+  
 }
 
 # try to rescale nu and T by the inferred Nanc for each parameter set? maybe that'll change things?
-
 
 

@@ -65,7 +65,7 @@ pc
 
 #make a data.frame
 tab1a <- data.frame(sample.id = pca$sample.id, pop1 = factor(pop1_code)[match(pca$sample.id, sample.id)], pop2=factor(pop2_code)[match(pca$sample.id,sample.id)],sequencer=factor(seq_code)[match(pca$sample.id, sample.id)],EV1 = pca$eigenvect[,1], EV2 = pca$eigenvect[,2], stringsAsFactors = FALSE)
-head(tab)
+head(tab1a)
 
 #plot first 2 pc coloring by primary population
 p1a <- ggplot(tab1a,aes(x=EV1,y=EV2,color=pop1,shape=sequencer))+
@@ -80,6 +80,19 @@ p1a <- ggplot(tab1a,aes(x=EV1,y=EV2,color=pop1,shape=sequencer))+
 p1a
 ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.BAJA.sequencer.",todaysdate,".pdf",sep=""),p1a,device="pdf",width = 8,height=5)
 
+
+########################### plot for manuscript #################
+#plot first 2 pc coloring by primary population
+p1a_forManuscript <- ggplot(tab1a,aes(x=EV1,y=EV2,color=pop1))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  #ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "none")+
+  scale_color_manual(values=unlist(colors))
+p1a_forManuscript
+ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.BAJA.FORMANUSCRIPT.",todaysdate,".pdf",sep=""),p1a_forManuscript,device="pdf",width = 3,height=2.4)
 #################### Look at FASTSTRUCTURE and relatedness and label individuals in the popMap file  with admixed, relative, outlier ... #########
 #plot first 2 pc coloring by primary population with shape colored by note (admixed, outlier, etc.)
 # add that note section to the tab dataframe: 
@@ -100,7 +113,7 @@ ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.BAJA.note.",todaysdate,".pdf",sep=
 ##################### Plot additional PCs ################
 #plot pc pairs for the first four pc 
 lbls <- paste("PC", 1:4, "\n", format(pc.percent[1:4], digit=2), "%", sep="")
-pairs(pca$eigenvect[,1:4], col=tab$pop1,labels=lbls)
+pairs(pca$eigenvect[,1:4], col=tab1a$pop1,labels=lbls)
 
 ######################  Second PCA: without MAF filter (to look at impact of low-freq variants) ################################
 pca <- snpgdsPCA(genofile,snp.id=snpset.id,autosome.only = F, maf=0.00, missing.rate=0.2)

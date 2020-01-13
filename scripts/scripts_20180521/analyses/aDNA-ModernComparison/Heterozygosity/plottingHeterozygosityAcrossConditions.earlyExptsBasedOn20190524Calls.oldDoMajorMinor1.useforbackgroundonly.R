@@ -172,6 +172,18 @@ facet_grid(sites~interaction(downsampled,Filter_PerIndividualDepthMinimum)~TVLab
    p6b
    ggsave(paste(plot.dir,"mappedto.",ref,".aDNA.callableSitesVsHet.",prob,".transversionsOnly.",todaysdate,".pdf",sep=""),p6b,height=4,width=14) 
 }
+
+######################## p7 JUST PLOT AN 388 #############
+prob=0.95
+allInputs$pop <- NA
+allInputs$pop <- unlist(lapply(strsplit(as.character(allInputs$sample),"_"),"[",3))
+p7 <- ggplot(allInputs[allInputs$prior=="AFprior" & allInputs$reference==ref & allInputs$Filter_ProbThresholdForCallableSite==prob & !(allInputs$sample %in% c("A30_Elut_CA_SM_35_SN1_CAP","A29_Elut_CA_SM_30_SN2_CAP")) & allInputs$sites=="neutral",],aes(x=pop,y=HetPerSite_TransversionsOnly,color=label))+
+  geom_point()+
+  theme_bw()+
+  theme(legend.title = element_blank(),axis.text = element_text(size=8),legend.text = element_text(size=14),legend.background = element_rect(fill = "transparent"),strip.text = element_text(size=14))+
+  facet_grid(~downsampled~Filter_minIndsPerSite)
+p7
+
 ######## Plot callable sites for different filters: #############
 ref="mfur"
 

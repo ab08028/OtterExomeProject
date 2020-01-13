@@ -3,6 +3,7 @@ library(gdsfmt)
 library(SNPRelate)
 require(ggplot2)
 require(RColorBrewer)
+requore(geosphere) # for distances : distm func
 # tutorial: http://corearray.sourceforge.net/tutorials/SNPRelate/#ld-based-snp-pruning
 # doesn't show ld pruning before hand, but I'm unsure if I should or not...
 ############### set up your colors -- keep this consistent across all plots ######

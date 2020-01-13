@@ -7,7 +7,7 @@ colors=list(CA=colorPal[1],BAJ=colorPal[7],AK=colorPal[2],AL=colorPal[3],COM=col
 pops=c("CA","AK","AL","COM","KUR") # excluding BAJA because too low sample size
 date="20191014" # annoying -- maybe don't output this in future
 categories=c("syn","missense")
-missingness=c("0.8","1") # this is max missingness threshold from vcftools which is unhelpfully named. it's really the min call rate, so 0 refers to any amount of missingness being allowed  (min call rate is 0); 0.8 allows 20% missingness; 1 allows no missingness. very confusing nomenclature, I know. Leaving 0 out because already plotted using old script and it has a slightly different filenames structure -- look in "olderScripts" to see plottin g of missingness  = 0 (all missing allowed)
+missingness=c("0.8","0.90","0.95","1") # this is max missingness threshold from vcftools which is unhelpfully named. it's really the min call rate, so 0 refers to any amount of missingness being allowed  (min call rate is 0); 0.8 allows 20% missingness; 1 allows no missingness. very confusing nomenclature, I know. Leaving 0 out because already plotted using old script and it has a slightly different filenames structure -- look in "olderScripts" to see plottin g of missingness  = 0 (all missing allowed)
 allCountsSynMis <- data.frame()
 for(missing in missingness){
   for(cat in categories){
@@ -16,7 +16,8 @@ for(missing in missingness){
     counts$category <- cat
     counts$missingLevel <- missing
     # normalize by missingness per individual
-    totalCallableCDSPerInd <- read.table(paste(data.dir,"/minCallRate_",missing,"/callableCDSSitesPerIndividual.20191014.txt",sep = ""),header=T)
+    # doing the list.files thing to avoid needin the specific date on the file
+    totalCallableCDSPerInd <- read.table(list.files(path=paste(data.dir,"/callableCDSPerIndividual/","minCallRate_",missing,sep=""),pattern=paste("callableCDSSitesPerIndividual.*.txt",sep=""),full.names = T),header=T)
     counts_PlusCallable <- merge(counts,totalCallableCDSPerInd,by.x = "individual",by.y="id")
     avgCallableCDS = mean(totalCallableCDSPerInd$CalledCount)
     counts_PlusCallable$derivedAlleles = (2*counts$HomAltCount) + counts$HetCount
@@ -44,19 +45,19 @@ allCountsSynMis$pop2 <- factor(allCountsSynMis$pop2,levels=c("CA","BAJ","AK","AL
 p1 <- ggplot(allCountsSynMis,aes(x=pop2,y=derivedAlleles_rescaled,fill=pop2))+
   geom_boxplot()+
   geom_point(alpha=0.4)+
-  facet_wrap(~missingLevel~category,scales="free")+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
   theme_bw()+
   scale_fill_manual(values=c(colors['CA'],colors['BAJ'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
   theme(legend.position = "None")+
   ggtitle("derived alleles (normalized)")+
   xlab("")
 p1
-ggsave(paste(data.dir,"/derivedAlleles.Perpop.MultMissingFilts.withBaja.pdf",sep=""),p1,height=5,width=7)
+ggsave(paste(data.dir,"/derivedAlleles.Perpop.MultMissingFilts.withBaja.pdf",sep=""),p1,height=15,width=8)
 ################# drop baja ######################
 p2 <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=derivedAlleles_rescaled,fill=pop2))+
   geom_boxplot()+
   geom_point(alpha=0.4)+
-  facet_wrap(~missingLevel~category,scales="free")+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
   theme_bw()+
   scale_fill_manual(values=c(colors['CA'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
   theme(legend.position = "None")+
@@ -64,13 +65,13 @@ p2 <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=derivedA
   theme(text=element_text(size=14))+
   xlab("")
 p2
-ggsave(paste(data.dir,"/derivedAlleles.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p2,height=5,width=7)
+ggsave(paste(data.dir,"/derivedAlleles.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p2,height=15,width=8)
 
 ############### Plot hom - alt and hets ##############
 p3 <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=homAlt_rescaled,fill=pop2))+
   geom_boxplot()+
   geom_point(alpha=0.4)+
-  facet_wrap(~missingLevel~category,scales="free")+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
   theme_bw()+
   scale_fill_manual(values=c(colors['CA'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
   theme(legend.position = "None")+
@@ -78,12 +79,12 @@ p3 <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=homAlt_r
   theme(text=element_text(size=14))+
   xlab("")
 p3
-ggsave(paste(data.dir,"/homAlt.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p3,height=5,width=7)
+ggsave(paste(data.dir,"/homAlt.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p3,height=15,width=8)
 ###### with baja
-p4 <- ggplot(allCountsSynMis,aes(x=pop2,y=,fill=pop2))+
+p4 <- ggplot(allCountsSynMis,aes(x=pop2,y=homAlt_rescaled,fill=pop2))+
   geom_boxplot()+
   geom_point(alpha=0.4)+
-  facet_wrap(~missingLevel~category,scales="free")+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
   theme_bw()+
   scale_fill_manual(values=c(colors['CA'],colors['BAJ'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
   theme(legend.position = "None")+
@@ -91,13 +92,13 @@ p4 <- ggplot(allCountsSynMis,aes(x=pop2,y=,fill=pop2))+
   theme(text=element_text(size=14))+
   xlab("")
 p4
-ggsave(paste(data.dir,"/homAlt.Perpop.MultMissingFilts.pdf",sep=""),p4,height=5,width=7)
+ggsave(paste(data.dir,"/homAlt.Perpop.MultMissingFilts.pdf",sep=""),p4,height=15,width=8)
 
 #### plot hets, no baja:
 p4b <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=het_rescaled,fill=pop2))+
   geom_boxplot()+
   geom_point(alpha=0.4)+
-  facet_wrap(~missingLevel~category,scales="free")+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
   theme_bw()+
   scale_fill_manual(values=c(colors['CA'],colors['BAJ'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
   theme(legend.position = "None")+
@@ -105,10 +106,61 @@ p4b <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ",],aes(x=pop2,y=het_res
   theme(text=element_text(size=14))+
   xlab("")
 p4b
-ggsave(paste(data.dir,"/hets.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p4b,height=5,width=7)
+ggsave(paste(data.dir,"/hets.Perpop.MultMissingFilts.noBaja.pdf",sep=""),p4b,height=15,width=8)
 
+################### try getting rid of extreme outliers #############
+head(allCountsSynMis)
+# look at dist of called:
+# just total called CDS:
+calledCDSOnly <- unique(allCountsSynMis[,c("individual","CalledCount","missingLevel","pop2")])
+ggplot(calledCDSOnly,aes(x=individual,y=CalledCount))+
+  geom_point()+
+  facet_wrap(~missingLevel,ncol=1,scales="free")
+require(dplyr)
+calledCDSOnly <- calledCDSOnly %>% 
+  group_by(missingLevel) %>%
+  mutate(meanCallable=mean(CalledCount),sdCallable=sd(CalledCount)) # adding in mean and sd callable sites for each group of missingness 
+# label those that are < 1sd from mean callable:
+calledCDSOnly$label <- "PASS"
+calledCDSOnly[calledCDSOnly$CalledCount < (calledCDSOnly$meanCallable - calledCDSOnly$sdCallable), ]$label <- "FAIL"
+pCallable <- ggplot(calledCDSOnly,aes(x=individual,y=CalledCount,color=label))+
+  geom_point()+
+  facet_wrap(~missingLevel,ncol=1,scales="free")+
+  ggtitle("Individuals with < 1 sd of mean callable sites (for each missingness thresholdhold) in red")+
+  theme_bw()
+ggsave(paste(data.dir,"/CallableCDSSitesPerIndividual.Below1SDInRed.pdf",sep=""),pCallable,height=5,width=8)
+
+# get the names of those individuals and then exclude them from next plot:
+failingInds <- calledCDSOnly[calledCDSOnly$label=="FAIL",]$individual
+
+
+p2_alt <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & !(allCountsSynMis$individual %in% failingInds),],aes(x=pop2,y=derivedAlleles_rescaled,fill=pop2))+
+  geom_boxplot()+
+  geom_point(alpha=0.4)+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
+  theme_bw()+
+  scale_fill_manual(values=c(colors['CA'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
+  theme(legend.position = "None")+
+  ggtitle("derived alleles (normalized)")+
+  theme(text=element_text(size=14))+
+  xlab("")
+p2_alt
+ggsave(paste(data.dir,"/derivedAlleles.Perpop.MultMissingFilts.noBaja.noOutliers.pdf",sep=""),p2_alt,height=15,width=8)
+
+p3_alt <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & !(allCountsSynMis$individual %in% failingInds),],aes(x=pop2,y=homAlt_rescaled,fill=pop2))+
+  geom_boxplot()+
+  geom_point(alpha=0.4)+
+  facet_wrap(~missingLevel~category,scales="free",ncol=2)+
+  theme_bw()+
+  scale_fill_manual(values=c(colors['CA'],colors['AK'],colors['AL'],colors['COM'],colors['KUR']))+
+  theme(legend.position = "None")+
+  ggtitle("hom-alt genotypes (normalized)")+
+  theme(text=element_text(size=14))+
+  xlab("")
+p3_alt
+ggsave(paste(data.dir,"/homAlt.Perpop.MultMissingFilts.noBaja.NoOutliers.pdf",sep=""),p3_alt,height=15,width=8)
 ############ Plot called vs rescaled #########
-p5a <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & allCountsSynMis$missingLevel==0.8,],aes(x=as.numeric(CalledCount),y=derivedAlleles_rescaled,color=pop2))+
+p5a <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & allCountsSynMis$missingLevel!=1,],aes(x=as.numeric(CalledCount),y=derivedAlleles_rescaled,color=pop2))+
   geom_point()+
   facet_wrap(~missingLevel~category,scales="free")+
   theme_bw()+
@@ -118,7 +170,7 @@ p5a <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & allCountsSynMis$miss
   theme(text=element_text(size=14))+
   xlab("")
 p5a
-ggsave(paste(data.dir,"/derivedAlleles.vs.CalledSites.pdf",sep=""),p5a,height=5,width=7)
+ggsave(paste(data.dir,"/derivedAlleles.vs.CalledSites.multfilt.pdf",sep=""),p5a,height=5,width=7)
 
 
 p5b <- ggplot(allCountsSynMis[allCountsSynMis$pop2!="BAJ" & allCountsSynMis$missingLevel==0.8,],aes(x=as.numeric(CalledCount),y=homAlt_rescaled,color=pop2))+
