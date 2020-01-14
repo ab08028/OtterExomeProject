@@ -40,12 +40,18 @@ print("#$ -l h_rt=5:00:00,h_data=28G,highp")
 print("#$ -N simDadiModel2")
 print("#$ -m abe")
 print("#$ -M ab08028")
+print("#$ -t 1-10")
 
-print("module load python/3.7") # >3.2 to have argparse
-print("#may need to pip install argparse for ms2multihetsep.py")
+print("module load python/3.7")  # >3.2 to have argparse
+print("wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC")
+print("cd $wd")
+print("macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs")
+print("msformatterFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msformatter")
+print("ms2multiFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msmc-tools/ms2multihetsep.py")
+#print("cp $macsFile $msformatter $ms2multiFile $wd")
+
 print("rundate=`date +%Y%m%d`")
 print("replicate=$SGE_TASK_ID")
-
 print("model=dadiModel2.RecentExtremeContraction")
 print("mkdir -p ${model}")
 print("for j in {1.."+str(groups)+"}")
@@ -78,29 +84,6 @@ print("#convert to ms format")
 print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
 print("#convert to msmc input format")
 print("python3 ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
-
-###################################################
-print("done")
-print("cd $wd")
-print("done")
-print("# dadi model 2 for msmc")
-print("mu="+str(mu))
-print("r="+str(r))
-print("Na="+str(Na))
-print("rho=" +str(rho))
-print("theta="+str(theta))
-print("date=`date +%Y%m%d`")
-print("SEED=$((date+$RANDOM+((j-1)*"+str(blocksPerGroup)+")+i))") #
-print("# this is a new addition! need to have a different random seed for each simulation; if they start within a second of each other, they will have the same seed. not an issue for big simulations of 30Mb because those are slow, but 100kb can start within a second of each other!")
-print("./macs " +str(ss) +" "+str(Len)+" -t "+str(theta)+" -r "+str(rho)+" -s $SEED"+" -eN 0.0 "+str(nu)+" -eN "+str(T_macs)+" 1"),
-#for x, y in zip(times_gen_trimancient_4Na,diploids_trimancient_Na):
-#    print("-eN " + str(x)+" "+str(y)),
-print(" > group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt")
-
-print("#convert to ms format")
-print("./msformatter < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
-print("#convert to msmc input format")
-print("python3 ms2multihetsep.py $i "+ str(Len) +" < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
 
 ###################################################
 print("done")

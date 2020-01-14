@@ -15,7 +15,7 @@ rundate=`date +%Y%m%d`
 replicate=$SGE_TASK_ID
 model=dadiModel1.OldShallowContraction
 mkdir -p ${model}
-for j in {1..1}
+for j in {1..6}
 do
 outdir=$wd/${model}/rep_${replicate}/group_$j.${model}
 mkdir -p $outdir
@@ -23,7 +23,7 @@ cd $outdir
 cp -n $macsFile $outdir
 cp -n $msformatterFile $outdir
 cp -n $ms2multiFile $outdir
-for i in {1..1}
+for i in {1..10}
 do
 # dadi model 1 for msmc
 mu=8.64e-09
