@@ -40,6 +40,8 @@ print("#$ -l h_rt=5:00:00,h_data=28G,highp")
 print("#$ -N simDadiModel1")
 print("#$ -m abe")
 print("#$ -M ab08028")
+print("#$ -o /u/flashscratch/a/ab08028/captures/reports/MaCS")
+print("#$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS")
 print("#$ -t 1-10")
 
 

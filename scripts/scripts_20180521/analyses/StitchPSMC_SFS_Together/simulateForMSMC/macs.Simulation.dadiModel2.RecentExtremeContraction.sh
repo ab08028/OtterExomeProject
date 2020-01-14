@@ -4,6 +4,8 @@
 #$ -N simDadiModel2
 #$ -m abe
 #$ -M ab08028
+#$ -o /u/flashscratch/a/ab08028/captures/reports/MaCS
+#$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS
 #$ -t 1-10
 module load python/3.7
 wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
@@ -15,7 +17,7 @@ rundate=`date +%Y%m%d`
 replicate=$SGE_TASK_ID
 model=dadiModel2.RecentExtremeContraction
 mkdir -p ${model}
-for j in {1..1}
+for j in {1..6}
 do
 outdir=$wd/${model}/rep_${replicate}/group_$j.${model}
 mkdir -p $outdir
@@ -23,7 +25,7 @@ cd $outdir
 cp -n $macsFile $outdir
 cp -n $msformatterFile $outdir
 cp -n $ms2multiFile $outdir
-for i in {1..1}
+for i in {1..10}
 do
 # dadi model 2 for msmc
 mu=8.64e-09

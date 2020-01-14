@@ -4,6 +4,8 @@
 #$ -N simDadiModel1
 #$ -m abe
 #$ -M ab08028
+#$ -o /u/flashscratch/a/ab08028/captures/reports/MaCS
+#$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS
 #$ -t 1-10
 module load python/3.7
 wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
