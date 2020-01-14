@@ -47,25 +47,42 @@ print("rundate=`date +%Y%m%d`")
 print("replicate=$SGE_TASK_ID")
 
 print("model=dadiModel2.RecentExtremeContraction")
-print("wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC")
-print("cd $wd")
-print("macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs")
-print("msformatterFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msformatter")
-print("ms2multiFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msmc-tools/ms2multihetsep.py")
-#print("cp $macsFile $msformatter $ms2multiFile $wd")
 print("mkdir -p ${model}")
 print("for j in {1.."+str(groups)+"}")
 # simulate slightly more than you need
 print("do")
-print("mkdir -p ${model}/rep_${replicate}/group_$j.${model}")
-
-print("cd ${model}/rep_${replicate}/group_$j.${model}")
-print("cp -n $macsFile ./")
-print("cp -n $msformatterFile ./")
-print("cp -n $ms2multiFile ./")
+print("outdir=$wd/${model}/rep_${replicate}/group_$j.${model}")
+print("mkdir -p $outdir")
+print("cd $outdir")
+print("cp -n $macsFile $outdir")
+print("cp -n $msformatterFile $outdir")
+print("cp -n $ms2multiFile $outdir")
 print("for i in {1.."+str(blocksPerGroup)+"}")
 print("do")
 
+print("# dadi model 2 for msmc")
+print("mu="+str(mu))
+print("r="+str(r))
+print("Na="+str(Na))
+print("rho=" +str(rho))
+print("theta="+str(theta))
+print("date=`date +%Y%m%d`")
+print("SEED=$((date+$RANDOM+((j-1)*"+str(blocksPerGroup)+")+i))") #
+print("# this is a new addition! need to have a different random seed for each simulation; if they start within a second of each other, they will have the same seed. not an issue for big simulations of 30Mb because those are slow, but 100kb can start within a second of each other!")
+print("./macs " +str(ss) +" "+str(Len)+" -t "+str(theta)+" -r "+str(rho)+" -s $SEED"+" -eN 0.0 "+str(nu)+" -eN "+str(T_macs)+" 1"),
+#for x, y in zip(times_gen_trimancient_4Na,diploids_trimancient_Na):
+#    print("-eN " + str(x)+" "+str(y)),
+print(" > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt")
+
+print("#convert to ms format")
+print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
+print("#convert to msmc input format")
+print("python3 ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
+
+###################################################
+print("done")
+print("cd $wd")
+print("done")
 print("# dadi model 2 for msmc")
 print("mu="+str(mu))
 print("r="+str(r))

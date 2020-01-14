@@ -58,12 +58,12 @@ print("mkdir -p ${model}")
 print("for j in {1.."+str(groups)+"}")
 # simulate slightly more than you need
 print("do")
-print("mkdir -p ${model}/rep_${replicate}/group_$j.${model}")
-
-print("cd ${model}/$replicate/group_$j.${model}")
-print("cp -n $macsFile ./")
-print("cp -n $msformatterFile ./")
-print("cp -n $ms2multiFile ./")
+print("outdir=$wd/${model}/rep_${replicate}/group_$j.${model}")
+print("mkdir -p $outdir")
+print("cd $outdir")
+print("cp -n $macsFile $outdir")
+print("cp -n $msformatterFile $outdir")
+print("cp -n $ms2multiFile $outdir")
 print("for i in {1.."+str(blocksPerGroup)+"}")
 print("do")
 
@@ -79,12 +79,12 @@ print("# this is a new addition! need to have a different random seed for each s
 print("./macs " +str(ss) +" "+str(Len)+" -t "+str(theta)+" -r "+str(rho)+" -s $SEED"+" -eN 0.0 "+str(nu)+" -eN "+str(T_macs)+" 1"),
 #for x, y in zip(times_gen_trimancient_4Na,diploids_trimancient_Na):
 #    print("-eN " + str(x)+" "+str(y)),
-print(" > group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt"),
+print(" > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt")
 
 print("#convert to ms format")
-print("./msformatter < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
+print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
 print("#convert to msmc input format")
-print("python3 ./ms2multihetsep.py $i "+ str(Len) +" < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
+print("python3 ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
 
 ###################################################
 print("done")
