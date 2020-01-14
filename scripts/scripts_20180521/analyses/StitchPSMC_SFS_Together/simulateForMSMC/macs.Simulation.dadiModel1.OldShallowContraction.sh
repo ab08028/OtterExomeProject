@@ -1,0 +1,42 @@
+#!/bin/bash
+#$ -cwd
+#$ -l h_rt=5:00:00,h_data=28G,highp
+#$ -N simDadiModel1
+#$ -m abe
+#$ -M ab08028
+#$ -t 1-10
+module load python/3.7
+wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
+cd $wd
+macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs
+msformatterFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msformatter
+ms2multiFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/msmc-tools/ms2multihetsep.py
+rundate=`date +%Y%m%d`
+replicate=$SGE_TASK_ID
+model=dadiModel1.OldShallowContraction
+mkdir -p ${model}
+for j in {1..6}
+do
+mkdir -p ${model}/rep_${replicate}/group_$j.${model}
+cd ${model}/$replicate/group_$j.${model}
+cp -n $macsFile ./
+cp -n $msformatterFile ./
+cp -n $ms2multiFile ./
+for i in {1..10}
+do
+# dadi model 1 for msmc
+mu=8.64e-09
+r=1e-08
+Na=4500.0
+rho=0.00018
+theta=0.00015552
+date=`date +%Y%m%d`
+SEED=$((date+$RANDOM+((j-1)*10)+i))
+# this is a new addition! need to have a different random seed for each simulation; if they start within a second of each other, they will have the same seed. not an issue for big simulations of 30Mb because those are slow, but 100kb can start within a second of each other!
+./macs 2 30000000 -t 0.00015552 -r 0.00018 -s $SEED -eN 0.0 0.4 -eN 0.06 1  > group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt #convert to ms format
+./msformatter < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt
+#convert to msmc input format
+python3 ./ms2multihetsep.py $i 30000000 < group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt
+done
+cd $wd
+done
