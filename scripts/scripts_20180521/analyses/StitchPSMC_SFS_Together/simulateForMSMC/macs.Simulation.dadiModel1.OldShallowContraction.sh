@@ -40,7 +40,7 @@ SEED=$((date+$RANDOM+((j-1)*10)+i))
 #convert to ms format
 ./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt
 #convert to msmc input format
-python3 ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt
+python ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt
 done
 cd $wd
 done
