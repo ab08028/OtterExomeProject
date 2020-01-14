@@ -85,7 +85,7 @@ print(" > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate
 print("#convert to ms format")
 print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
 print("#convert to msmc input format")
-print("python3 ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
+print("python ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
 
 ###################################################
 print("done")
