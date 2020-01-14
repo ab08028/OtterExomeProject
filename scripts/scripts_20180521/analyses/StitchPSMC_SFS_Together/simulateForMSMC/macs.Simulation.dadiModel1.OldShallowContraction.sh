@@ -7,6 +7,7 @@
 #$ -o /u/flashscratch/a/ab08028/captures/reports/MaCS
 #$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS
 #$ -t 1-10
+source /u/local/Modules/default/init/modules.sh
 module load python/3.7
 wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
 cd $wd
@@ -40,7 +41,7 @@ SEED=$((date+$RANDOM+((j-1)*10)+i))
 #convert to ms format
 ./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt
 #convert to msmc input format
-python ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt
+python3 ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt
 done
 cd $wd
 done
