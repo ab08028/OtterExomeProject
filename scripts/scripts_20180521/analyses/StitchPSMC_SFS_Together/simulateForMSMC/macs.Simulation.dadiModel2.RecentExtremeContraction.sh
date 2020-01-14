@@ -44,3 +44,4 @@ python ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.
 done
 cd $wd
 done
+sleep 5m

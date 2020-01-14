@@ -92,3 +92,4 @@ print("python ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_$
 print("done")
 print("cd $wd")
 print("done")
+print("sleep 5m")
