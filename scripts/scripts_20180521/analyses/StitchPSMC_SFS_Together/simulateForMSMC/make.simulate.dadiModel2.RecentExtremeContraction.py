@@ -45,7 +45,10 @@ print("#$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS")
 print("#$ -t 1-10")
 
 print("source /u/local/Modules/default/init/modules.sh")
-print("module load python/3.7")  # >3.2 to have argparse
+print("module load anaconda")
+# set up conda env:
+print("# conda create -n MaCsSimulations python=3.6 # only once")
+print("source conda activate MaCsSimulations")
 print("wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC")
 print("cd $wd")
 print("macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs")
@@ -93,3 +96,4 @@ print("done")
 print("cd $wd")
 print("done")
 print("sleep 5m")
+print("source deactivate # deactivate conda env")

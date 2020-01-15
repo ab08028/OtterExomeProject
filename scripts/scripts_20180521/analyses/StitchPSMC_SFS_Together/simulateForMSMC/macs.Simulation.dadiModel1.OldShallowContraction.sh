@@ -8,7 +8,9 @@
 #$ -e /u/flashscratch/a/ab08028/captures/reports/MaCS
 #$ -t 1-10
 source /u/local/Modules/default/init/modules.sh
-module load python/3.7
+module load anaconda
+# conda create -n MaCsSimulations python=3.6 # only once
+source conda activate MaCsSimulations
 wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
 cd $wd
 macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs
@@ -46,3 +48,4 @@ done
 cd $wd
 done
 sleep 5m
+source deactivate # deactivate conda env
