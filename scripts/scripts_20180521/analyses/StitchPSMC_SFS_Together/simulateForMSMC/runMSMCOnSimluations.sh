@@ -31,7 +31,7 @@ do
 INPUTDIR=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC/$model/rep_$rep/allMSMCInputFiles
 mkdir -p $INPUTDIR
 OUTDIR=/u/flashscratch/a/ab08028/captures/runMSMCOnSimulations/$model/rep_$rep/
-
+mkdir -p $OUTDIR
 # cp /u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC/$model/rep_$rep/*/*MSMCFormat* $INPUTDIR ## ONLY COPY THINGS OVER ONCE 
 # unless you redo the simulation
 $msmc -t 16 -o $OUTDIR/msmc.RunOn.${model}.sims.out $INPUTDIR/group_*_block_*.${model}.MSMCFormat.OutputFile.20200114.txt
