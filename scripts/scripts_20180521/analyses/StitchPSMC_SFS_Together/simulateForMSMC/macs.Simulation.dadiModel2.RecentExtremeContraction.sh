@@ -10,7 +10,7 @@
 source /u/local/Modules/default/init/modules.sh
 module load anaconda
 # conda create -n MaCsSimulations python=3.6 # only once
-source conda activate MaCsSimulations
+source activate MaCsSimulations
 wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC
 cd $wd
 macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs

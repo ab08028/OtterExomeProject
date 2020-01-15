@@ -48,7 +48,7 @@ print("source /u/local/Modules/default/init/modules.sh")
 print("module load anaconda")
 # set up conda env:
 print("# conda create -n MaCsSimulations python=3.6 # only once")
-print("source conda activate MaCsSimulations")
+print("source activate MaCsSimulations")
 print("wd=/u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC")
 print("cd $wd")
 print("macsFile=/u/home/a/ab08028/klohmueldata/annabel_data/bin/macs")
