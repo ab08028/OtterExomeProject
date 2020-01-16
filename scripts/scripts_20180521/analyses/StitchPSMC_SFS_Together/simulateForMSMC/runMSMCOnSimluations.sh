@@ -22,7 +22,7 @@ OUTDIR=/u/flashscratch/a/ab08028/captures/runMSMCOnSimulations/${rundate}
 mkdir -p $OUTDIR
 
 #models="dadiModel1.OldShallowContraction  dadiModel2.RecentExtremeContraction" # ran on 20200115
-models="make.simulate.dadiModel3.BothContractions.py" # need to run model3 
+models="dadiModel3.BothContractions" # need to run model3 
 for model in $models
 do
 for rep in `seq 1 10`
