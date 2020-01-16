@@ -109,9 +109,9 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
 Nanc=theta / (4*mu*L)
 nu1_scaled_dip=popt[0]*Nanc
-T1_scaled_gen=popt[2]*2*Nanc
+T1_scaled_gen=popt[1]*2*Nanc
 scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB_scaled_dip","nuF_scaled_dip","TB_scaled_gen","TF_scaled_gen")
-scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip,TB_scaled_gen,TF_scaled_gen)
+scaled_popt=(Nanc,nu1_scaled_dip,T1_scaled_gen)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
