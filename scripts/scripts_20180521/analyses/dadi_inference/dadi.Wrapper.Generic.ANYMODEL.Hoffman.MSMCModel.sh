@@ -40,7 +40,7 @@ sfssuffix=plusMonomorphic.sfs
 #scripts='1D.CA.PSMC.Trim27.dadi.py'  # use pop CA
 #scripts="1D.AL.PSMC.Simplified.dadi.py" # use pop AL this is a simple model of 4500>4000 followed by an inference period 
 #scripts="1D.AL.PSMC.Trim20.dadi.py" # use pop AL  this is the trimmed msmc model withall its small ups and downs
-scripts="1D.CA.PSMC.Simplified.py"
+scripts="1D.CA.PSMC.Simplified.dadi.py"
 for pop in CA # only AL for now
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
