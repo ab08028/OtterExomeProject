@@ -30,7 +30,7 @@ mu=8.64411385098638e-09
 genotypeDate=20181119 # newer gts
 sfsDate=20190301 # projection with 0.75 het filter and these projection values
 hetFilter=0.75
-todaysdate=`date +%Y%m%d`
+todaysdate=`date +%Y%m%d`-MSMCMODEL
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
 dadidir=$captures/analyses/dadi_inference/
@@ -39,7 +39,7 @@ sfssuffix=plusMonomorphic.sfs
 
 #scripts='1D.CA.PSMC.Trim27.dadi.py'
 scripts="1D.AL.PSMC.Simplified.dadi.py" # this is a simple model of 4500>4000 followed by an inference period 
-for pop in CA # only CA for now
+for pop in AL # only AL for now
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
 L=`grep $pop $sfsdir/$pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`
