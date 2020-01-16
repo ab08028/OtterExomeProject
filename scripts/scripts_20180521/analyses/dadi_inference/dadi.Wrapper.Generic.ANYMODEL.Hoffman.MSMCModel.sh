@@ -36,17 +36,9 @@ sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate
 dadidir=$captures/analyses/dadi_inference/
 sfssuffix=plusMonomorphic.sfs
 ### Make sure this is the correct file #####
-#totalNeut=$captures/vcf_filtering/${genotypeDate}_filtered/bedCoords/neutralCallableSites_perPop/summary.neutralCallableSites.perPop.txt # file with total neutral sites counts for each population 
-### want to make a slightly fancier outdir that is the model / date or something like that eventually. 
-# run multiple models for multiple popuations?
-#scripts='1D.1Bottleneck.dadi.py 1D.2Bottleneck.dadi.py 1D.2Epoch.dadi.py' # list of models you want to run
-#scripts='1D.2Epoch.dadi.py 1D.1Bottleneck.TB20gen.dadi.py'
-# want to run with new starting parameters
-#scripts='1D.2Epoch.newStartValues.dadi.py 1D.2Epoch.LargeFoldChange.dadi.py'
-#scripts='1D.1Epoch.dadi.py' # just this one for now
-#for pop in CA AK AL COM KUR
-#scripts='1D.1Epoch.dadi.py' # just this one for now
-scripts='1D.CA.PSMC.Trim27.dadi.py'
+
+#scripts='1D.CA.PSMC.Trim27.dadi.py'
+scripts="1D.AL.PSMC.Simplified.dadi.py" # this is a simple model of 4500>4000 followed by an inference period 
 for pop in CA # only CA for now
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts

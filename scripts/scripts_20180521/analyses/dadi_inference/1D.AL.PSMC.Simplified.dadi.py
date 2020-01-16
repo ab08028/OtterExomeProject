@@ -15,7 +15,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 
-modelName="1D.CA.PSMC.Trim27"
+modelName="1D.AL.MSMC.Simplified"
 
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
@@ -50,48 +50,22 @@ else:
 ns = fs.sample_sizes # get sample size from SFS (in haploids)
 pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than sample size and increase by 10
 ############### Set up Specific Model -- this will change from script to script ########################
-# Bernard says to fix bottleneck duration
-# this is from MSMC with trim point 27 for CA :
-def sso_model_trim_27_plusContraction_forOptimization(params,ns,pts):
-	nu,T=params
+### going to go from nanc =1 (4500~) to nu = 4000/4500 = 0.89, for 1000 gen (1000/(2*4500)) = 0.1 [4500 is weighted Ne average of MSMC curve ]
+# what if I fix T1 and do inference?
+
+def nso_model_trim_20_simplify((nu1, T1),ns,pts):
+	#nu1,T1=params
 	xx = Numerics.default_grid(pts)
 	# intialize phi with ancestral pop: (nu0 = 1)
 	phi = PhiManip.phi_1D(xx,nu=1)
-	# stays at nu0=1 for T0 duration of time:
-	# followed by a number of time steps, with associated pop changes:
-	phi = Integration.one_pop(phi, xx, 0.0881712197999992, 1)
-	phi = Integration.one_pop(phi, xx, 0.0820773125999968, 0.836551538729166)
-	phi = Integration.one_pop(phi, xx, 0.0767768829000064, 0.836551538729166)
-	phi = Integration.one_pop(phi, xx, 0.072122872869994, 0.761765214135537)
-	phi = Integration.one_pop(phi, xx, 0.0679989058100032, 0.761765214135537)
-	phi = Integration.one_pop(phi, xx, 0.0643224600599991, 0.738213027247672)
-	phi = Integration.one_pop(phi, xx, 0.0610215936600004, 0.738213027247672)
-	phi = Integration.one_pop(phi, xx, 0.0580444660799995, 0.750983120146509)
-	phi = Integration.one_pop(phi, xx, 0.05534346867, 0.750983120146509)
-	phi = Integration.one_pop(phi, xx, 0.0528826304500005, 0.795226999398677)
-	phi = Integration.one_pop(phi, xx, 0.0506312702899994, 0.795226999398677)
-	phi = Integration.one_pop(phi, xx, 0.0485650548800005, 0.869604885707006)
-	phi = Integration.one_pop(phi, xx, 0.04665859294, 0.869604885707006)
-	phi = Integration.one_pop(phi, xx, 0.0448991888299998, 0.968579772770968)
-	phi = Integration.one_pop(phi, xx, 0.0432646251800001, 0.968579772770968)
-	phi = Integration.one_pop(phi, xx, 0.0417474961999999, 1.07023813979649)
-	phi = Integration.one_pop(phi, xx, 0.0403308743700001, 1.07023813979649)
-	phi = Integration.one_pop(phi, xx, 0.03900946984, 1.12274330685933)
-	phi = Integration.one_pop(phi, xx, 0.0377705869699996, 1.12514450221579)
-	phi = Integration.one_pop(phi, xx, 0.0366078779399999, 1.09213414017289)
-	phi = Integration.one_pop(phi, xx, 0.0355149949300004, 1.01928801965413)
-	phi = Integration.one_pop(phi, xx, 0.0344855901200002, 0.91011303614748)
-	phi = Integration.one_pop(phi, xx, 0.0335133156900004, 0.774150824662306)
-	phi = Integration.one_pop(phi, xx, 0.0325958441059994, 0.609784494435127)
-	phi = Integration.one_pop(phi, xx, 0.0317262985630002, 0.386870175412936)
-	phi = Integration.one_pop(phi, xx, 0.030902139933, 0.141422067280315)
-	phi = Integration.one_pop(phi, xx, 0.030119771118, 0.36675344664418)
-	### add contraction:
-	phi = Integration.one_pop(phi, xx,T,  nu)
+	phi = Integration.one_pop(phi, xx, 0.1, 0.89)
+     # add inference:
+	phi = Integration.one_pop(phi, xx, T1, nu1)
+     #phi = Integration.one_pop(phi, xx, T2, nu2)
 	# get expected SFS:
 	fs = Spectrum.from_phi(phi,ns,(xx,))
 	return fs
-param_names=("nu","T")
+param_names=("nu1","nuT")
 
 # 20181024 changing upper bound on pop sizes to 10 because know it doesn't grow up to 100* Nanc; and lowering lower bounds to 1e-4 ; see what happens
 # changing starting position to .1, tb to 0.005; TF to 0.001
@@ -103,13 +77,13 @@ param_names=("nu","T")
 #2) the times for the lower bounds are supposed to be non-zero
 #IIRC if you give a min of 0 things get weird because of collapsing epochs
 #i'd throw something like 1e-5
+lower_bound = [1e-4,  1e-5]
+upper_bound = [10,  0.1]
+lower_bound = [1e-4, 1e-5]
+p0 = [0.01,0.001] # initial parameters
 
-upper_bound = [10, 2]
-lower_bound = [1e-4, 1e-4]
-p0 = [0.01,0.1] # initial parameters
 
-
-func=sso_model_trim_27_plusContraction_forOptimization # set the function
+func=nso_model_trim_20_simplify # set the function
 
 ############### Carry out optimization (same for any model) ########################
 # Make extrapolation function:
@@ -134,17 +108,14 @@ theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 ###### model specific scaling of parameters (will depend on mu and L that you supply) #######
 
 Nanc=theta / (4*mu*L)
-nu_scaled_dip=popt[0]*Nanc
-T_scaled_gen=popt[1]*2*Nanc
-scaled_param_names=("Nanc_FromTheta_scaled_dip","nu_scaled_dip","T_scaled_gen")
-scaled_popt=(Nanc,nu_scaled_dip,T_scaled_gen)
-
-############ what if I force Nanc to be what it is in psmc? how does that affect fit? Could get theta from N*mu*L*4 and then multiply up to get counts. Or could divide to get prportional. 
-############### Write out output (same for any model)
- ########################
+nu1_scaled_dip=popt[0]*Nanc
+T1_scaled_gen=popt[2]*2*Nanc
+scaled_param_names=("Nanc_FromTheta_scaled_dip","nuB_scaled_dip","nuF_scaled_dip","TB_scaled_gen","TF_scaled_gen")
+scaled_popt=(Nanc,nuB_scaled_dip,nuF_scaled_dip,TB_scaled_gen,TF_scaled_gen)
+############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
-outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".output","w")
+outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
 scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
@@ -161,7 +132,7 @@ outputFile.close()
 ############### Output SFS ########################
 print('Writing out SFS **************************************************')                                   
 
-outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".expSFS"
+outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS"
 
 # 20190117 -- fixed this to output EXPECTED sfs not obs sfs
 model.to_file(outputSFS)
@@ -174,7 +145,7 @@ print('Making plots **************************************************')
 import matplotlib.pyplot as plt 
 fig=plt.figure(1)
 #pylab.ion()
-outputFigure=str(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".figure.png")
+outputFigure=str(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".figure.png")
 dadi.Plotting.plot_1d_comp_multinom(model, fs)
 #pylab.show()
 plt.savefig(outputFigure)
