@@ -91,8 +91,7 @@ angsd -nThreads 16 \
 -doHaploCall 1 -doCounts 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
--minMinor 1 # only print sites with at least one (?) minor allele (make sure it's not >1 but is >=1)
+-out $outdir/angsdOut.mappedTo${spp} 
 # note skipTriallelic doesn't work in angsd here, so I do it with a custom script
 # you have to do doCounts for it to work, but I'm skipping -dumpCounts 2
 # don't really want the counts from this stage, it's not useful
@@ -141,8 +140,7 @@ angsd -nThreads 16 \
 -doHaploCall 1 -doCounts 1 \
 -remove_bads 1 -uniqueOnly 1 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
--out $outdir/angsdOut.mappedTo${spp} \
--minMinor 1
+-out $outdir/angsdOut.mappedTo${spp} 
 # note skipTriallelic doesn't work in angsd here, so I do it with a custom script
 # you have to do doCounts for it to work, but I'm skipping -dumpCounts 2
 # don't really want the counts from this stage, it's not useful

@@ -28,7 +28,7 @@ def LhoodCalcPoisson(model_SFS_count,obs_SNP_counts,numBins):
     return ll
     
 ################# set up dirs #####################
-pop="CA"
+pop="AL" # want to try with two pops
 sfsdir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/20181119/easySFS_projection/neutral/projection-20181221-hetFilter-0.75/dadi-plusMonomorphic/"
 outdir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/"+pop # outdir
 mu=8.64e-09

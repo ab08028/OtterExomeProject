@@ -37,11 +37,11 @@ dadidir=$captures/analyses/dadi_inference/
 sfssuffix=plusMonomorphic.sfs
 ### Make sure this is the correct file #####
 
-#scripts='1D.CA.PSMC.Trim27.dadi.py'
-#scripts="1D.AL.PSMC.Simplified.dadi.py" # this is a simple model of 4500>4000 followed by an inference period 
-scripts="1D.AL.PSMC.Trim20.dadi.py" # this is the trimmed msmc model withall its small ups and downs
-
-for pop in AL # only AL for now
+#scripts='1D.CA.PSMC.Trim27.dadi.py'  # use pop CA
+#scripts="1D.AL.PSMC.Simplified.dadi.py" # use pop AL this is a simple model of 4500>4000 followed by an inference period 
+#scripts="1D.AL.PSMC.Trim20.dadi.py" # use pop AL  this is the trimmed msmc model withall its small ups and downs
+scripts="1D.CA.PSMC.Simplified.py"
+for pop in CA # only AL for now
 do
 # get total sites from total sites file that was written out as part of my easySFS scripts
 L=`grep $pop $sfsdir/$pop-[0-9]*.totalSiteCount.L.withMonomorphic.txt | awk '{print $2}'`
