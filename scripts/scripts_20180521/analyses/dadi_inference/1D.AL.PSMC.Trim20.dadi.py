@@ -15,7 +15,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 
-modelName="1D.AL.PSMC.Simplified"
+modelName="1D.AL.PSMC.Trim20"
 
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
@@ -53,15 +53,35 @@ pts_l = [ns[0]+5,ns[0]+15,ns[0]+25] # this should be slightly larger (+5) than s
 ### going to go from nanc =1 (4500~) to nu = 4000/4500 = 0.89, for 1000 gen (1000/(2*4500)) = 0.1 [4500 is weighted Ne average of MSMC curve ]
 # what if I fix T1 and do inference?
 
-def nso_model_trim_20_simplify((nu1, T1),ns,pts):
-	#nu1,T1=params
+## adding them to end of parameter vector:
+def nso_model_trim_20_plusContraction_forOptimization((nu1,T1),ns,pts):
 	xx = Numerics.default_grid(pts)
 	# intialize phi with ancestral pop: (nu0 = 1)
 	phi = PhiManip.phi_1D(xx,nu=1)
-	phi = Integration.one_pop(phi, xx, 0.1, 0.89)
-     # add inference:
-	phi = Integration.one_pop(phi, xx, T1, nu1)
-     #phi = Integration.one_pop(phi, xx, T2, nu2)
+	# stays at nu0=1 for T0 duration of time:
+	# followed by a number of time steps, with associated pop changes:
+	phi = Integration.one_pop(phi, xx, 0.0855562252000041, 1)
+	phi = Integration.one_pop(phi, xx, 0.0815775310999996, 1)
+	phi = Integration.one_pop(phi, xx, 0.0779488967000003, 1.05963716704008)
+	phi = Integration.one_pop(phi, xx, 0.0746321831999993, 1.05963716704008)
+	phi = Integration.one_pop(phi, xx, 0.0715851654999999, 1.16537332842806)
+	phi = Integration.one_pop(phi, xx, 0.0687765152999997, 1.16537332842806)
+	phi = Integration.one_pop(phi, xx, 0.0661803527000002, 1.31334850354829)
+	phi = Integration.one_pop(phi, xx, 0.0637735219999999, 1.31334850354829)
+	phi = Integration.one_pop(phi, xx, 0.0615355917000003, 1.47126650327662)
+	phi = Integration.one_pop(phi, xx, 0.0594488544999996, 1.47126650327662)
+	phi = Integration.one_pop(phi, xx, 0.0574996894000009, 1.54650880264499)
+	phi = Integration.one_pop(phi, xx, 0.0556744753999996, 1.53009528131691)
+	phi = Integration.one_pop(phi, xx, 0.0539609536000003, 1.43652643457535)
+	phi = Integration.one_pop(phi, xx, 0.052349589299999, 1.259955414543)
+	phi = Integration.one_pop(phi, xx, 0.0508308478, 1.02558503749661)
+	phi = Integration.one_pop(phi, xx, 0.0494006428000006, 0.79005829297294)
+	phi = Integration.one_pop(phi, xx, 0.0480467154000004, 0.619685630445168)
+	phi = Integration.one_pop(phi, xx, 0.0467642982499995, 0.571544862138562)
+	phi = Integration.one_pop(phi, xx, 0.0455501223099999, 0.663969387506398)
+	phi = Integration.one_pop(phi, xx, 0.04439683224, 0.904484906437176)
+	### add contraction:
+	phi = Integration.one_pop(phi, xx,T1,  nu1)
 	# get expected SFS:
 	fs = Spectrum.from_phi(phi,ns,(xx,))
 	return fs
@@ -83,7 +103,7 @@ lower_bound = [1e-4, 1e-5]
 p0 = [0.01,0.001] # initial parameters
 
 
-func=nso_model_trim_20_simplify # set the function
+func=nso_model_trim_20_plusContraction_forOptimization # set the function
 
 ############### Carry out optimization (same for any model) ########################
 # Make extrapolation function:
