@@ -39,11 +39,11 @@ theta=0.00012096
 date=`date +%Y%m%d`
 SEED=$((date+$RANDOM+((j-1)*10)+i))
 # this is a new addition! need to have a different random seed for each simulation; if they start within a second of each other, they will have the same seed. not an issue for big simulations of 30Mb because those are slow, but 100kb can start within a second of each other!
-./macs 2 30000000 -t 0.00012096 -r 0.00014 -s $SEED -eN 0.0 0.06 -eN 0.0025 1  > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt
+./macs 2 30000000 -t 0.00012096 -r 0.00014 -s $SEED -eN 0.0 0.06 -eN 0.0025 1  > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile...txt
 #convert to ms format
-./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt
+./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile...txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile...txt
 #convert to msmc input format
-python ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt
+python ./ms2multihetsep.py $i 30000000 < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile...txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile...txt
 done
 cd $wd
 done

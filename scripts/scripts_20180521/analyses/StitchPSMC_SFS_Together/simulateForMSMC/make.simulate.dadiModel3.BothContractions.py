@@ -91,12 +91,12 @@ print("# this is a new addition! need to have a different random seed for each s
 print("./macs " +str(ss) +" "+str(Len)+" -t "+str(theta)+" -r "+str(rho)+" -s $SEED"+" -eN 0.0 "+str(nuCur)+" -eN "+str(T_macs1)+" "+str(nuMed)+" -eN "+str(T_macs2)+" 1"),
 #for x, y in zip(times_gen_trimancient_4Na,diploids_trimancient_Na):
 #    print("-eN " + str(x)+" "+str(y)),
-print(" > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt")
+print(" > $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.txt")
 
 print("#convert to ms format")
-print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt")
+print("./msformatter < $outdir/group_${j}_block_${i}.${model}.macsFormat.OutputFile.txt > $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.txt")
 print("#convert to msmc input format")
-print("python ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.${rundate}.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.${rundate}.txt")
+print("python ./ms2multihetsep.py $i "+ str(Len) +" < $outdir/group_${j}_block_${i}.${model}.msFormat.OutputFile.txt > $outdir/group_${j}_block_${i}.${model}.MSMCFormat.OutputFile.txt")
 
 ###################################################
 print("done")

@@ -32,9 +32,9 @@ mkdir -p $INPUTDIR
 OUTDIR=/u/flashscratch/a/ab08028/captures/analyses/runMSMCOnSimulations/$model/rep_$rep/
 mkdir -p $OUTDIR
 ## only once: gather up MSMC files into one dir: 
-cp /u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC/$model/rep_$rep/*/*MSMCFormat* $INPUTDIR ## ONLY COPY THINGS OVER ONCE 
+#cp /u/flashscratch/a/ab08028/captures/analyses/simulateForMSMC/$model/rep_$rep/*/*MSMCFormat* $INPUTDIR ## ONLY COPY THINGS OVER ONCE 
 # unless you redo the simulation
-$msmc -t 16 -o $OUTDIR/msmc.RunOn.${model}.sims.out $INPUTDIR/group_*_block_*.${model}.MSMCFormat.OutputFile.20200114.txt
+$msmc -t 16 -o $OUTDIR/msmc.RunOn.${model}.sims.out $INPUTDIR/group_*_block_*.${model}.MSMCFormat.OutputFile.txt
 
 ########## run msmc on the simulated chunks for each replicate #######
 done
