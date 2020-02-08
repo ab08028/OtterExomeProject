@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=24:00:00,h_data=8G
+#$ -l h_rt=50:00:00,h_data=8G,highp
 #$ -N dadi_inference
 #$ -o /u/flashscratch/a/ab08028/captures/reports/dadi
 #$ -e /u/flashscratch/a/ab08028/captures/reports/dadi
@@ -47,19 +47,21 @@ sfssuffix=plusMonomorphic.sfs
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
-for popPair in CA-AK #CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM CA-KUR # 
+for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM CA-KUR # 
 do
+echo $popPair
 # get total sites from total sites file that was written out as part of my easySFS scripts
 L=`grep -v totalSites $sfsdir/${popPair}.totalSiteCount.L.withMonomorphic.txt | awk '{print $3}'` # get combined total sites
 
 for script in $scripts
 do
+
 model=${script%.dadi.py}
 echo "starting inference for $popPair for model $model"
 outdir=$dadidir/$genotypeDate/$popPair/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..1}
+for i in {1..50}
 do
 echo "carrying out inference $i for model $model for pop $popPair" 
 # [0-9] indicates that it's a number, but not specific about proj value
@@ -69,7 +71,7 @@ done
 
 echo "concatenating results"
 grep rundate -m1 $outdir/${popPair}.dadi.inference.${model}.runNum.1.output > $outdir/${popPair}.dadi.inference.${model}.all.output.concatted.txt
-for i in {1..1}
+for i in {1..50}
 do
 grep rundate -A1 $outdir/${popPair}.dadi.inference.${model}.runNum.${i}.output | tail -n1 >> $outdir/${popPair}.dadi.inference.${model}.all.output.concatted.txt
 done

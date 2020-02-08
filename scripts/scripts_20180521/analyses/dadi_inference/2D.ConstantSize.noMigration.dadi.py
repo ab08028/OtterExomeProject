@@ -116,7 +116,7 @@ scaled_popt=(Nanc,nu1_scaled_dip,nu2_scaled_dip,T_scaled_gen)
 ############### Write out output (same for any model) ########################
 print('Writing out parameters **************************************************')                                   
 
-outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".output","w")
+outputFile=open(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".output","w")
 # get all param names:
 param_names_str='\t'.join(str(x) for x in param_names)
 scaled_param_names_str='\t'.join(str(x) for x in scaled_param_names)
@@ -133,7 +133,7 @@ outputFile.close()
 ############### Output SFS ########################
 print('Writing out SFS **************************************************')                                   
 
-outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".expSFS"
+outputSFS=str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".expSFS"
 
 # 20190117 -- fixed this to output EXPECTED sfs not obs sfs
 model.to_file(outputSFS)
@@ -146,7 +146,7 @@ print('Making plots **************************************************')
 import matplotlib.pyplot as plt 
 fig=plt.figure(1)
 #pylab.ion()
-outputFigure=str(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+"."+str(todaysdate)+".figure.png")
+outputFigure=str(str(outdir)+"/"+str(pop)+".dadi.inference."+str(modelName)+".runNum."+str(runNum)+".figure.png")
 dadi.Plotting.plot_2d_comp_multinom(model, fs)
 #pylab.show()
 plt.savefig(outputFigure)
