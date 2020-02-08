@@ -78,7 +78,7 @@ param_names=("nu1","nu2","T")
 #i'd throw something like 1e-5
 lower_bound = [1e-4, 1e-4, 1e-5]
 upper_bound = [10, 10, 10] # 20 as upper bound on mig rec by dadi
-p0 = [1,1,0.1,0] # initial parameters
+p0 = [1,1,0.1] # initial parameters
 
 
 func=split_nomig # set the function
