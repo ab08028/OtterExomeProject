@@ -20,8 +20,7 @@ modelName="2D.ConstantSize.noMigration"
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
 parser.add_argument("--runNum",required=True,help="iteration number (e.g. 1-50)")
-parser.add_argument("--pop1",required=True,help="population identifier, e.g. 'CA'")
-parser.add_argument("--pop2",required=True,help="population identifier, e.g. 'CA'")
+parser.add_argument("--pop",required=True,help="population identifier, e.g. 'CA'")
 parser.add_argument("--mu",required=True,help="supply mutation rate in mutation/bp/gen")
 parser.add_argument("--L",required=True,help="number of called neutral sites that went into making SFS (monomorphic+polymorphic)")
 parser.add_argument("--sfs",required=True,help="path to FOLDED SFS in dadi format from easySFS (mask optional)")
