@@ -59,17 +59,17 @@ echo "starting inference for $popPair for model $model"
 outdir=$dadidir/$genotypeDate/$popPair/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
-for i in {1..50}
+for i in {1..1}
 do
 echo "carrying out inference $i for model $model for pop $popPair" 
 # [0-9] indicates that it's a number, but not specific about proj value
-python $scriptdir/$script --runNum $i --pop $popPair --mu $mu --L $L --sfs ${sfsdir}/${popPair}-[0-9]*.${sfssuffix} --outdir $outdir
+python $scriptdir/$script --runNum $i --pop $popPair --mu $mu --L $L --sfs ${sfsdir}/${popPair}.${sfssuffix} --outdir $outdir
 done
 
 
 echo "concatenating results"
 grep rundate -m1 $outdir/${popPair}.dadi.inference.${model}.runNum.1.output > $outdir/${popPair}.dadi.inference.${model}.all.output.concatted.txt
-for i in {1..50}
+for i in {1..1}
 do
 grep rundate -A1 $outdir/${popPair}.dadi.inference.${model}.runNum.${i}.output | tail -n1 >> $outdir/${popPair}.dadi.inference.${model}.all.output.concatted.txt
 done
