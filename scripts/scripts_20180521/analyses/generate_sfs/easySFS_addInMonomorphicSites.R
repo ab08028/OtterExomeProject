@@ -126,7 +126,7 @@ print("begining 2d dadi formatting")
 # first entry in sfs is 0,0 bin
 for(pop1 in popOrder){
   for(pop2 in popOrder){
-    input <- list.files(dadi.format.dir,pattern=paste(pop1,"-",pop2,".sfs",sep=""),full.names = T)
+    input <- list.files(dadi.format.dir,pattern=paste("^",pop1,"-",pop2,".sfs",sep=""),full.names = T)
     if(length(input)==1){
       header <- readLines(input,n=1) # get first line of file
       sfs <- read.table(input,skip = 1,header = F) # skip first line: "13 folded "KUR""

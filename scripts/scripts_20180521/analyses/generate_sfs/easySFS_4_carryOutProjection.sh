@@ -83,8 +83,8 @@ $easySFS -i $vcfdir/neutralVCFs/${snpVCF} -p $popFile -a -v --proj $projections 
 
 python $scriptdir/getMonomorphicProjectionCounts.1D.2DSFS.py --vcf $vcfdir/neutralVCFs/${allVCF} --popMap $popFile --proj $projections --popIDs CA,AK,AL,COM,KUR --outdir $outdir
 
-############## adding monomorphic sites to fsc SFSes #####################
- # this script add monomorphic sites to 0 bin of fsc sfses. doesn't add them to dadi SFSes because those sites are masked anyway. 
+############## adding monomorphic sites to fsc and dadi SFSes and writing out totals #####################
+ # this script add monomorphic sites to 0 bin of fsc sfses. (overkill in dadi because it gets masked, but does it for completeness ) 
 Rscript $scriptdir/easySFS_addInMonomorphicSites.R --dataDir $outdir --popFile $popFile --class neutral # will write them out in your data dir in new directories
 # need to modify this R script so that it also adds to 2D sfses.
 ################################################################################
