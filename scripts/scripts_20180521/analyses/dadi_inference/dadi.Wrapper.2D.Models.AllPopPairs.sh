@@ -49,7 +49,7 @@ sfssuffix=plusMonomorphic.sfs
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 #scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
-scripts='2D.ConstantSize.noMigration.dadi.py'
+scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py'
 for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM CA-KUR # 
 do
 echo $popPair
