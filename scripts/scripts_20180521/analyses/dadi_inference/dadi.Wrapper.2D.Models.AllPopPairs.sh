@@ -31,7 +31,7 @@ genotypeDate=20181119 # newer gts
 sfsDate=20181221 # projection with 0.75 het filter and these projection values
 hetFilter=0.75
 
-todaysdate=20200207
+todaysdate=20200210
 
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
@@ -62,7 +62,7 @@ do
 
 model=${script%.dadi.py}
 echo "starting inference for $popPair for model $model"
-outdir=$dadidir/$genotypeDate/$popPair/inference_$todaysdate/$model/
+outdir=$dadidir/$genotypeDate/2D_Models/$popPair/inference_$todaysdate/$model/
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
