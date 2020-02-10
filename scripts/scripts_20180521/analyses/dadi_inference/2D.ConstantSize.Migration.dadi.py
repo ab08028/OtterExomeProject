@@ -79,7 +79,7 @@ param_names=("nu1","nu2","TDiv","m")
 #i'd throw something like 1e-5
 lower_bound = [1e-4, 1e-4, 1e-5, 0]
 upper_bound = [10, 10, 10, 20] # 20 as upper bound on mig rec by dadi
-p0 = [1,1,0.1,0] # initial parameters
+p0 = [1,1,0.1,1e-4] # initial parameters; changing starting mu parameter because won't get permuted 
 
 
 func=split_Wmig # set the function

@@ -15,7 +15,7 @@ import datetime
 todaysdate=datetime.datetime.today().strftime('%Y%m%d')
 
 
-modelName="2D.ConstantSize.Migration.WBottleneck"
+modelName="2D.Bottleneck.Migration"
 
 ############### Parse input arguments ########################
 parser = argparse.ArgumentParser(description='Infer a '+ modelName +' model from a 1D folded SFS in dadi')
@@ -78,9 +78,9 @@ param_names=("nu1","nu2","TDiv","m")
 #2) the times for the lower bounds are supposed to be non-zero
 #IIRC if you give a min of 0 things get weird because of collapsing epochs
 #i'd throw something like 1e-5
-lower_bound = [1e-4, 1e-4, 1e-5, 1e-5]
+lower_bound = [1e-4, 1e-4, 1e-5, 0]
 upper_bound = [10, 10, 10, 20] # 20 as upper bound on mig rec by dadi
-p0 = [1,1,0.1,0] # initial parameters
+p0 = [1,1,0.1,1e-4] # initial parameters
 
 
 func=split_Wmig_wBot # set the function
