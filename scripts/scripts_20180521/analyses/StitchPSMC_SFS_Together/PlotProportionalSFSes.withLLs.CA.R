@@ -14,7 +14,9 @@ data_melt_noMono <- data_melt[data_melt$freq!=0,]
 data_melt_noMono$proportion <- data_melt_noMono$count/sum(data_melt_noMono$count)
 
 ######## models ############
-models=c("sso_model_trim_27","sso_model_trim_27_noDip","sso_model_trim_27_plusContraction","sso_model_trim_27_noDip_plusContraction","sso_model_trim_27_simplify")
+models=c("sso_model_trim_27","sso_model_trim_27_noDip","sso_model_trim_27_plusContraction","sso_model_trim_27_noDip_plusContraction","sso_model_trim_27_simplify","sso_model_trim_22","sso_model_trim_22_noDip","sso_model_trim_22_plusContraction","sso_model_trim_22_noDip_plusContraction","sso_model_trim_22_simplify","sso_model_trim_39")
+#sso_model_trim_39 is untrimmed 
+### trim22 seems like the way to go; trim39 is untrimmed
 # sso_model_trim_27 = msmc model trimmed at pt 27, with recent dip included
 # sso_model_trim_27_noDip = msmc model trimmed at pt 27, with recent dip removed
 # sso_model_trim_27_plusContraction = msmc model trimmed at pt 27, with recent dip included, and with dadi contraction added on
@@ -40,9 +42,9 @@ for(model in models){
     geom_line()+
     theme_bw()+
     ggtitle(paste("Proportional SFS based on ",model,sep=""))+
-    annotate("text",x=4,y=max(combo$proportion)-0.05,label=paste("dadiLL = ",round(LLs$dadiLL),"\nAB Multinomial LL = ",round(LLs$AnnabelLL),"\nNanc-based theta = ",round(LLs$NancTheta),"\nDadi optimal theta = ",round(LLs$dadiOptimalTheta),sep=""),size=4)+
+    annotate("text",x=4,y=max(combo$proportion)-0.03,label=paste("dadiLL = ",round(LLs$dadiLL),"\nAB Multinomial LL = ",round(LLs$AnnabelLL),"\nNanc-based theta = ",round(LLs$NancTheta),"\nDadi optimal theta = ",round(LLs$dadiOptimalTheta),sep=""),size=4)+
     scale_color_manual(values=c("blue","red"))+
-    scale_y_continuous(limits=c(0,0.3))
+    scale_y_continuous(limits=c(0,0.5))
   p1 
   ggsave(paste(data.dir,model,".PROPORTIONAL.FOLDED.exp.sfs.plot.pdf",sep=""),height=5,width=7)
 }

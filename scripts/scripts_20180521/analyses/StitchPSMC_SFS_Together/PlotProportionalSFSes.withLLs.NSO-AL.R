@@ -14,7 +14,8 @@ data_melt_noMono <- data_melt[data_melt$freq!=0,]
 data_melt_noMono$proportion <- data_melt_noMono$count/sum(data_melt_noMono$count)
 
 ######## models ############
-models=c("nso_model_trim_20","nso_model_trim_20_plusContraction","nso_model_trim_20_simplify")
+models=c("nso_model_trim_20","nso_model_trim_20_plusContraction","nso_model_trim_20_simplify","nso_model_trim_39")
+# trim 39 is untrimmed model (fits badly)
 # nso_model_trim_20 = msmc model trimmed at pt 20
 # nso_model_trim_20_plusContraction = msmc model trimmed at pt 20 with dadi contraction added on
 # nso_model_trim_20_simplify = msmc model highly simplified with nu = 0.67 and T = 0.1 (mimicking an approximate model of 4500 long term (weighted avg of msmc curve), followed by 1000 gen at 3000 individuals (0.67 of origianl size))

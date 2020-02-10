@@ -6,9 +6,10 @@ data.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results
 out.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PI_THETA//simulated/",sep="")
 dir.create(out.dir,showWarnings = F)
 # specify the models and the dates it was run that you want to use:
-models=c("1D.1Epoch/20190213/","1D.2Epoch/20190125/","1D.2Epoch.70gen.500dip/20190313/","1D.2Epoch.4gen/20190128/","1D.2Epoch.30gen/20190227/")
+#models=c("1D.1Epoch/20190213/","1D.2Epoch/20190125/","1D.2Epoch.70gen.500dip/20190313/","1D.2Epoch.4gen/20190128/","1D.2Epoch.30gen/20190227/")
+models=c("AK.1D.2Epoch.35Gen.250Inds/20200129/","CA.1D.2Epoch.25Gen.100Inds/20200129/")
 #populations=c("AK","CA","AL","BER","MED","KUR")
-populations="generic"
+populations=""
 numRep=11 # number of replicates
 totalSites=6000000 # 6Mb were simulated 
 ############### REQUIRES SFS in SPECIFIC FORMAT ("R.format" from my scripts)
@@ -97,10 +98,11 @@ wattersons_theta <- function(num_indv,numSNPs,callablesites){
 ########### Processes SFSes ###################
 #df <-data.frame(model=character(),pi=numeric(),stringsAsFactors = F) # overall dataframe
 for(model in models){
+  for(state in states){
   indir=paste(data.dir,model,"/allSFSes/",sep="")
   out.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PI_THETA/simulated/",model,"/",sep="")
   dir.create(out.dir,showWarnings = F,recursive = T)
-  files=list.files(indir,pattern="R.format",full.names = T) # all replicates 
+  files=list.files(indir,pattern=paste(state,".slim.output.R.format",sep=""),full.names = T) # all replicates  ### make sure this is working
   modeldf <- data.frame(model=character(),pi=numeric(),S=numeric(),Wattersons_theta=numeric(),stringsAsFactors = F) # specific to model 
   
   for(i in seq(1,length(files))){
@@ -128,7 +130,6 @@ for(model in models){
   }
   # write out the df in the approrpriate indir
   write.table(modeldf,paste(out.dir,"pi.S.Theta.CalculatedFromSFSes.allreps.txt",sep=""),quote = F,row.names=F)
-  #df <- rbind(df,modeldf)
-  # why is pi so low for 1Epoch model?????!?!? am I calculating it wrong? 
+
 }
 ## write out the dataframes at the appropriate places

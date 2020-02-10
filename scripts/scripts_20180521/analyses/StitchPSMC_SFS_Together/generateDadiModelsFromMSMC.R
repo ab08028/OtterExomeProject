@@ -7,8 +7,8 @@ elut2Col="#C77CFF"
 mu=8.64e-09
 ## approx trim points: (don't perfectly match het but close-ish-- can try others)
 #elutTimeIndex=33 # 
-elutTimeIndices=c(33,27)
-elut2TimeIndex=c(31,27,20) # i like 20 for this. 
+elutTimeIndices=c(39,33,27,22)
+elut2TimeIndex=c(39,31,27,20) # i like 20 for this. 
 # these were chosen to match the pbra curve , so maybe want different ones now. Can make different models in a for loop for any different trim points which is nice. (set up script that way so it's relatively easy.)
 # start with SSO and let's see what happens.
 ################ generate southern sea otter (elut) model #############

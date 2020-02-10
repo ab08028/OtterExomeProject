@@ -21,8 +21,8 @@ mu=8.64e-09
 
 ################# MAIN TEXT FIGURE ::: PLOT Inv Coal Rate and generations (reasonable mu), WITHTRIMMING ##########
 # Trimming information: Chose index 33 for elut, 31 for elut2, 20 for pbra:
-elutTimeIndices=c(33,27)
-elut2TimeIndices=c(31,27,20) # nso
+elutTimeIndices=c(39,33,27,22) # sso; 39 is  untrimmed - just taking off last inf one
+elut2TimeIndices=c(39,31,27,20) # nso; 39 is  untrimmed -- just taking off last inf interval nso
 
 # because you use left generatins and are setting that time index you remove everything before
 # the time index -1 time index. (based on python script)
@@ -45,7 +45,7 @@ plot1 <- ggplot(sso,aes(x=Left_generations.reasonable,y=Ne.reasonable))+
   theme(legend.position= c(0.6,0.85),legend.background = element_rect(fill="transparent"))+
   geom_vline(xintercept = sso[sso$time_index==elutTimeIndex-1,]$Left_generations.reasonable,linetype=2,color="grey20")+
   theme(legend.direction=("vertical"),legend.position=c(0.5,0.8),legend.background = element_rect(fill="transparent"),legend.text=element_text(size=14),legend.key.size = unit(1,"cm"))+
-  annotate("text",label=paste("Nanc=",round(sso[sso$time_index==elutTimeIndex-1,]$Ne.reasonable),"\nOldest gen = ",round(sso[sso$time_index==elutTimeIndex-1,]$Left_generations.reasonable),"\nWeighted (by interval time) Ne =", weightedNeAvg,sep=""),x=5000,y=12000)
+  annotate("text",label=paste("Nanc=",round(sso[sso$time_index==elutTimeIndex-1,]$Ne.reasonable),"\nOldest gen = ",round(sso[sso$time_index==elutTimeIndex-1,]$Left_generations.reasonable),"\nWeighted (by interval time) Ne =", round(weightedNeAvg),sep=""),x=5000,y=12000)
 plot1
 ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/CA/trim.",elutTimeIndex,".msmcPlot.pdf",sep=""),plot1,height=5,width=7)
 }
