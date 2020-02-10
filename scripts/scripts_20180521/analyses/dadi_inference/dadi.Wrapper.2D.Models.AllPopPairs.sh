@@ -31,7 +31,7 @@ genotypeDate=20181119 # newer gts
 sfsDate=20181221 # projection with 0.75 het filter and these projection values
 hetFilter=0.75
 
-todaysdate=20200210
+todaysdate=20200207
 
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
@@ -48,9 +48,10 @@ sfssuffix=plusMonomorphic.sfs
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
-#scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
-scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py'
-for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM CA-KUR # 
+scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
+#scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py'
+#for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM COM-KUR # 
+for popPair in COM-KUR
 do
 echo $popPair
 # get total sites from total sites file that was written out as part of my easySFS scripts
