@@ -1,6 +1,6 @@
 #! /bin/bash
 #$ -cwd
-#$ -l h_rt=50:00:00,h_data=8G,highp
+#$ -l h_rt=24:00:00,h_data=8G
 #$ -N dadi_inference
 #$ -o /u/flashscratch/a/ab08028/captures/reports/dadi
 #$ -e /u/flashscratch/a/ab08028/captures/reports/dadi
@@ -30,7 +30,7 @@ mu=8.64411385098638e-09
 genotypeDate=20181119 # newer gts
 sfsDate=20181221 # projection with 0.75 het filter and these projection values
 hetFilter=0.75
-todaysdate=20200207
+todaysdate=20200210
 captures=$SCRATCH/captures/
 sfsdir=$captures/analyses/SFS/$genotypeDate/easySFS/neutral/projection-${sfsDate}-hetFilter-${hetFilter}/dadi-plusMonomorphic/
 dadidir=$captures/analyses/dadi_inference/
