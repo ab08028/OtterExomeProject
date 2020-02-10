@@ -48,10 +48,11 @@ sfssuffix=plusMonomorphic.sfs
 #scripts='1D.1Epoch.dadi.py' # just this one for now
 #for pop in CA AK AL COM KUR
 #scripts='1D.1Epoch.dadi.py' # just this one for now
-scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
+#scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py 2D.ConstantSize.noMigration.dadi.py'
 #scripts='2D.Bottleneck.Migration.dadi.py 2D.ConstantSize.Migration.dadi.py'
-#for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM COM-KUR # 
-for popPair in COM-KUR
+scripts='2D.Bottleneck.noMigration.dadi.py'
+for popPair in CA-AK CA-KUR AK-KUR AK-AL AL-KUR AK-COM AL-COM CA-AL CA-COM COM-KUR # 
+#for popPair in COM-KUR
 do
 echo $popPair
 # get total sites from total sites file that was written out as part of my easySFS scripts
