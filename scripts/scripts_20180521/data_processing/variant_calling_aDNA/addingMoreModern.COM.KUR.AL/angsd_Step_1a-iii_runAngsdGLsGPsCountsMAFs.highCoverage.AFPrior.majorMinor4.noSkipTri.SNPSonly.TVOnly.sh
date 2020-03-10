@@ -15,7 +15,8 @@ trimValue=7 # set value you want to trim from either end of read (looking at map
 posterior=1 # setting for angsd -doPost : 1 for using allele frequencies as prior, 2 for using a uniform prior 
 snpCutoff=1e-06
 #todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4'
-todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4-plusCOM-KUR-AL'
+#todaysdate=`date +%Y%m%d`'-highcov-AFprior-MajorMinor4-plusCOM-KUR-AL'
+todaysdate="20191212-highcov-AFprior-MajorMinor4-plusCOM-KUR-AL-RedoneToReplaceDeletedFiles"
 #### ANGSD v 0.923 ####
 source /u/local/Modules/default/init/modules.sh
 module load anaconda # load anaconda
@@ -41,7 +42,7 @@ elutRef=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_in
 mfurRef=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.fasta
 
 echo -e "THIS USES HIGH COVERAGE MODERN + ANCIENT ONLY\nBamLists used:\n$elutBamList\n$mfurBamList \ntrimvalue = $trimValue\ndoPost posterior setting = $posterior (1 = use allele freq as prior; 2 = use uniform prior)" > $GLdir/$todaysdate/HIGHCOVERAGEONLY.txt
-
+echo -e "NOTE: lost my original elut runs due to SCRATCH backup failing, so I'm redoing it now for the record. But all the PCA and admixture stuff is done and fine based on 20191212 runs. This is just a redo."
 
 ######### ANGSD settings:##############
 
@@ -84,7 +85,7 @@ angsd -nThreads 16 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp}.${snpCutoff}.snpsOnly.TransvOnly \
 -doGlf 2 \
--doCounts 1 -dumpCounts 2 \
+-doCounts 1 -dumpCounts 2 -doDepth 1 \
 -SNP_pval $snpCutoff \
 -rmTrans 1
 
@@ -106,7 +107,7 @@ angsd -nThreads 16 \
 -C 50 -baq 1 -trim $trimValue -minQ 20 -minMapQ 25 \
 -out $outdir/angsdOut.mappedTo${spp}.${snpCutoff}.snpsOnly.TransvOnly \
 -doGlf 2 \
--doCounts 1 -dumpCounts 2 \
+-doCounts 1 -dumpCounts 2 -doDepth 1 \
 -SNP_pval $snpCutoff \
 -rmTrans 1
 
