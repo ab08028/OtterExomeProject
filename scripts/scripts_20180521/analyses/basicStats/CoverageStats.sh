@@ -8,6 +8,7 @@
 ######## get some depth stats
 # want to do this on all sites (not snps)
 #filtering
+source /u/local/Modules/default/init/modules.sh
 module load vcftools
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/20181119_filtered
 outdir=$vcfdir/depthAndMissingnessStats_20200309 
@@ -25,7 +26,7 @@ zcat $vcfdir/$vcf | grep -v "#" -c > $outdir/$prefix.TOTALSITESINVCF.txt
 ###### all_9: added het 0.75 filter  ; no missingness filter #######
 vcf=all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
 prefix=all_9
-vcftools --gzvcf $vcfdir/$vcf --out $outdir/$prefix.ccftoolsStats --depth --missing-indv
+vcftools --gzvcf $vcfdir/$vcf --out $outdir/$prefix.vcftoolsStats --depth --missing-indv
 mv $outdir/$prefix.vcftoolsStats $outdir/$prefix.vcftoolsStats.imiss $outdir/$prefix.vcftoolsStats.MissingnessPerIndividual.imiss.txt
 mv $outdir/$prefix.vcftoolsStats $outdir/$prefix.vcftoolsStats.idepth $outdir/$prefix.vcftoolsStats.MeanDepthPerIndividual.idepth.txt
 # count up total sites
