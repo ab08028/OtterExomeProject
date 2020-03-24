@@ -37,7 +37,7 @@ seed=$(($todaysdate+$RANDOM+(($RANDOM*$rep*10))+$SGE_TASK_ID)) # uses date, plus
 # so if two tasks with the same task id across different reps start in the same second (get same random), then they will still be different because of 10*rep 
 mu=1e-8 # using a basic mutation rate
 r=1e-8
-ss=20 # sample size in individuals; using larger SS
+ss=10 # sample size in individuals; using larger SS
 nanc=9000 # generic
 nu=1700 # generic
 
