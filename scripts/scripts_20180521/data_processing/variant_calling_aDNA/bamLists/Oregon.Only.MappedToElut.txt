@@ -1,0 +1,3 @@
+/u/flashscratch/a/ab08028/captures/paleomix/testMapping/A4_Elut_OR_A203A/A4_Elut_OR_A203A.sea_otter_23May2016_bS9RH.deduped.99.bam
+/u/flashscratch/a/ab08028/captures/paleomix/testMapping/A11_Elut_OR_T207T/A11_Elut_OR_T207T.sea_otter_23May2016_bS9RH.deduped.99.bam
+

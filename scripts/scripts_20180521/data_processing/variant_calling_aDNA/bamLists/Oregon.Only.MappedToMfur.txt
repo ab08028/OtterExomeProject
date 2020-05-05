@@ -1,0 +1,2 @@
+/u/flashscratch/a/ab08028/captures/paleomix/testMapping/A4_Elut_OR_A203A/A4_Elut_OR_A203A.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.bam
+/u/flashscratch/a/ab08028/captures/paleomix/testMapping/A11_Elut_OR_T207T/A11_Elut_OR_T207T.Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.bam
