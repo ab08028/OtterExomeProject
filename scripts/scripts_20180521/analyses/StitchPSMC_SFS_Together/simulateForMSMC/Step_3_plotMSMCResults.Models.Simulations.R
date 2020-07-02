@@ -17,6 +17,11 @@ data.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results
 # MSMC outputs times and rates scaled by the mutation rate per basepair per generation. First, scaled times are given in units of the per-generation mutation rate. This means that in order to convert scaled times to generations, divide them by the mutation rate. In humans, we used mu=1.25e-8 per basepair per generation.To convert generations into years, multiply by the generation time, for which we used 30 years.
 # 
 # To get population sizes out of coalescence rates, first take the inverse of the coalescence rate, scaledPopSize = 1 / lambda00. Then divide this scaled population size by 2*mu (yes, this factor 2 is different from the time scaling, sorry)."
+# common plotting scale:
+commonScaleMin=100
+commonScaleMax=20000
+
+
 scaleMSMC <- function(input,mu,gen,spp,label,category="main"){
   input$Ne <- (1/input$lambda_00)/(2*mu) # note the factor of 2! (not in time scaling) confirmed correct: https://github.com/stschiff/msmc-tools/blob/master/plot_utils.py
   input$LeftYears <- gen*(input$left_time_boundary/mu)
@@ -55,11 +60,12 @@ p1 <- ggplot(model_allReps)+
   ggtitle(model)+
   xlab("Generations")+
   ylab("IICR") +
-  scale_y_log10()+
-  scale_x_log10() 
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10() +
+  theme(text=element_text(size=14))
 
 p1
-ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.",model,".pdf",sep=""),p1,height=5,width=7)
+ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.CommonScale.",model,".pdf",sep=""),p1,height=5,width=7)
 ############################### model 2 #############################
 model=model2
 modelRect1=data.frame(xmin=0,xmax=35,ymin=0,ymax=195)
@@ -84,11 +90,12 @@ p2 <- ggplot(model_allReps)+
   ggtitle(model)+
   xlab("Generations")+
   ylab("IICR") +
-  scale_y_log10()+
-  scale_x_log10() 
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10() +
+  theme(text=element_text(size=14))
 
 p2
-ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.",model,".pdf",sep=""),p2,height=5,width=7)
+ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.CommonScale.",model,".pdf",sep=""),p2,height=5,width=7)
 
 
 
@@ -119,12 +126,12 @@ p3 <- ggplot(model_allReps)+
   ggtitle(model)+
   xlab("Generations")+
   ylab("IICR") +
-  scale_y_log10()+
-  scale_x_log10() 
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10() +
+  theme(text=element_text(size=14))
 
 p3
-ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.",model,".pdf",sep=""),p3,height=5,width=7)
-
+ggsave(paste(data.dir,model,"/MSMC.RunOnSimulations.CommonScale.",model,".pdf",sep=""),p3,height=5,width=7)
 
 
 

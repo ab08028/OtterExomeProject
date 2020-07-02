@@ -16,7 +16,7 @@ wd="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analy
 ### converted from vcf > ped > oxford Gen , which is the "GP" format in ZooROH
 pops=c("CA","AK","AL","COM","KUR") # alreadydid AK 
 
-########### get scaff sizes and exclude <2Mb ###########
+########### get scaff sizes and exclude <5Mb ###########
 mustelaChrSizes <- (read.table("/Users/annabelbeichman/Documents/UCLA/Otters/RawReadsToGenotypes_Dec2016/mappingGidgetReadsToFerret/genome-stats/SlidingWindowheterozygosity/Mustela_putorius_furo.MusPutFur1.0.dna.toplevel.224.ChrLengths.txt",sep=",",stringsAsFactors = F,strip.white = T))
 mustelaChrSizes <- data.frame(t(mustelaChrSizes))
 colnames(mustelaChrSizes) <- "record"
@@ -37,7 +37,7 @@ for(pop in pops){
   # this has no mono sites
 
   # this will include monomorphic -- want to remove somehow. 
-  input_gt5Mb <- input[input$Chr %in% mustelaChrSizes_gt5Mb$scaff,] # restrict to chr htat are >2Mb
+  input_gt5Mb <- input[input$Chr %in% mustelaChrSizes_gt5Mb$scaff,] # restrict to chr htat are >5Mb
   input_gt5Mb$pop <- pop
   p1 <- ggplot(input_gt5Mb,aes(x=Pos/1e6,y=Chr,color=Chr))+
     geom_point(size=0.01)+

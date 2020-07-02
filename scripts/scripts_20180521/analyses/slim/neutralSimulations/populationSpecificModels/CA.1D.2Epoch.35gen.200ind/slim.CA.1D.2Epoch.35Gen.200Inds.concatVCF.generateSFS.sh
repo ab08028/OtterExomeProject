@@ -1,24 +1,36 @@
 
 ######## concatenate VCF files per replicate, and add a 'chromosome' identifier (that's really a portion identifier)
 ########### set up dir structure ##########
-rundate=2020224 # date of running slim
+rundate=20200224 # date of running slim
 model=CA.1D.2Epoch.35Gen.200Inds
-wd=/u/flashscratch/a/ab08028/captures/analyses/slim/neutralSimulations/populationSpecificModels/$model/$rundate/ # eventually loop over all replicates
+wd=/u/flashscratch/a/ab08028/captures/analyses/slim/neutralSimulations/$model/$rundate/ # eventually loop over all replicates
 sfsdir=$wd/allSFSes
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptdir=$gitdir/scripts/scripts_20180521/analyses/
-pop=AK
+pop=CA
 mkdir -p $sfsdir
 # loop over all replicates
+####### check that file exists of reps that passed:
+passingFile=passingReps.FIRST.${DesiredReps}.usethis.txt 
+# make sure the file exists and is $DesiredReps long 
+if [ ! -f $wd/$popsModelsRundate/$passingFile ]
+then
+break
+fi
+
 for state in preContraction postContraction
 do
-for i in {1..11}
-do
+#for i in {1..11}
+#do
+cat $wd/$popsModelsRundate/$passingFile | while read i # instead of a for loop, going to read through my passing file. i is replicate_x not just a number 
+do 
+echo "$i ${state}Contraction"
+repdir=$wd/$popsModelsRundate/${i}
 
-echo "starting replicate $i"
+#echo "starting replicate $i"
 
-repdir=$wd/replicate_${i}
-concatFile=${model}.rep.${i}.concatted.slim.output.${state}.vcf
+#repdir=$wd/replicate_${i}
+concatFile=${model}.${i}.concatted.slim.output.${state}.vcf
 
 echo "concatenating vcf chunks"
 # get header from first vcf
@@ -50,8 +62,9 @@ python $scriptdir/generate_sfs/make_sfs_without_easySFS/generate1DSFS.py \
 --vcf $repdir/${concatFile}.gz \
 --pop $pop \
 --outdir $sfsdir \
---outPREFIX rep.$i.$model.${state}.slim.output
+--outPREFIX $i.$model.${state}.slim.output
 
+#### note: this is a new naming convention!! replicate_1 vs rep_1! 
 
 # can then fold it when you do dadi inference.
 

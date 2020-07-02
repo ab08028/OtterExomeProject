@@ -31,6 +31,7 @@ Ls["COM"] <- 6424414
 timeChoice=35 # gen
 ############################### read in results and plot #####################
 allMLEResults <- data.frame()
+allSFSes <- data.frame()
 for(pop in populations){
   indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/grid.search/",pop,"/",sep="")
   input <- read.table(paste(indir,"dadi.grid.search.",pop,".",model,".LL.output.txt.gz",sep=""),header=T,sep="\t")
@@ -65,9 +66,18 @@ for(pop in populations){
   MLE_Nanc_min <- min(inputMLE$Nanc_from_theta)
   inputMLE_T$maxNanc <- MLE_Nanc_max
   inputMLE_T$minNanc <- MLE_Nanc_min
-  
-
+  # pull out exp sfs
+  expSFS=unlist(strsplit(as.character(inputMLE_T$expectedSFS_fold_Theta1),", "))
+  obsSFS = unlist(strsplit(as.character(inputMLE_T$observedSFS_folded),", "))
+  # get rid of "None" values so that only folded SFS is left:
+  sfsDF=data.frame(countScaledByTheta1=as.numeric(expSFS[grep("None",expSFS,invert = T)]),obsCounts=as.numeric(obsSFS[grep("None",obsSFS,invert=T)]))
+  sfsDF$theta <- inputMLE_T$theta
+  # expSFS multiply by theta
+  sfsDF$countScaledByThetaFull <- sfsDF$countScaledByTheta1*sfsDF$theta
+  sfsDF$frequency <- row.names(sfsDF)
+  sfsDF$pop <- pop
   allMLEResults <- rbind(inputMLE_T,allMLEResults)
+  allSFSes <- rbind(allSFSes,sfsDF)
 }
 
 ####### p1: Nanc only ######################
@@ -175,6 +185,19 @@ input$nuF_scaledByNanc_from_Theta_dip <- input$nuF * input$Nanc_from_theta
 inputMLE <- input[input$deltaLL<=1,]
 inputMLE_melt <- melt(inputMLE)
 inputMLE_melt$pop <- "COM"
+
+### pull out sfs ###
+# pull out exp sfs
+expSFS=unlist(strsplit(as.character(inputMLE$expectedSFS_fold_Theta1),", "))
+obsSFS = unlist(strsplit(as.character(inputMLE$observedSFS_folded),", "))
+# get rid of "None" values so that only folded SFS is left:
+sfsDF=data.frame(countScaledByTheta1=as.numeric(expSFS[grep("None",expSFS,invert = T)]),obsCounts=as.numeric(obsSFS[grep("None",obsSFS,invert=T)]))
+sfsDF$theta <- inputMLE$theta
+# expSFS multiply by theta
+sfsDF$countScaledByThetaFull <- sfsDF$countScaledByTheta1*sfsDF$theta
+sfsDF$frequency <- row.names(sfsDF)
+sfsDF$pop <- pop
+allSFSes <- rbind(allSFSes,sfsDF)
 # rename varialbes:
 toPlot2 <- inputMLE_melt[inputMLE_melt$variable %in% c("nuB_scaledByNanc_from_Theta_dip","nuF_scaledByNanc_from_Theta_dip","Nanc_from_theta","TF_scaledByNanc_from_Theta_gen","TB_scaledByNanc_from_Theta_gen"),]
 toPlot2$label <- NA
@@ -185,6 +208,7 @@ toPlot2[toPlot2$variable=="TF_scaledByNanc_from_Theta_gen",]$label <- "RecTime"
 toPlot2[toPlot2$variable=="TB_scaledByNanc_from_Theta_gen",]$label <- "BotTime"
 
 toPlot2$pop <- "COM"
+
 # but has long TF....
 p5 <- ggplot(toPlot2[!toPlot2$variable %in% c("TF_scaledByNanc_from_Theta_gen","TB_scaledByNanc_from_Theta_gen"),],aes(x=label,y=value,color=pop))+
   geom_point(size=4)+
@@ -204,8 +228,10 @@ ggsave(paste(plot.dir,"Nanc.To.Ncur.ToNrec.Line.COMOnly.pdf",sep=""),p5,height=4
 
 ################### p6: try to combine COM with others ###############
 allMLEResults_plusCOM <- rbind(allMLEResults_melt,inputMLE_melt)
+write.table(allMLEResults_plusCOM,paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/",genotypeDate,"/grid.search/allMLEREsults_plusCOM.TFixed.",timeChoice,".txt",sep=""),quote=F,sep="\t",row.names=F)
+
 allMLEResults_plusCOM$label <- "DontUse"
-allMLEResults_plusCOM[allMLEResults_plusCOM$variable=="nu_scaledByNanc_from_Theta_dip",]$label <- "Nbot"
+allMLEResults_plusCOM[allMLEResults_plusCOM$variable=="nu_scaledByNanc_from_Theta_dip",]$label <- "Ncur"
 allMLEResults_plusCOM[allMLEResults_plusCOM$variable=="nuB_scaledByNanc_from_Theta_dip",]$label <- "Nbot"
 allMLEResults_plusCOM[allMLEResults_plusCOM$variable=="Nanc_from_theta",]$label <- "Nanc"
 allMLEResults_plusCOM[allMLEResults_plusCOM$variable=="nuF_scaledByNanc_from_Theta_dip",]$label <- "Nrec"
@@ -250,4 +276,8 @@ p6b <- ggplot(ToPlot3,aes(x=label,y=value,color=pop))+
   scale_y_continuous(breaks=c(seq(0,6000,by=750)))
 
 p6b
-ggsave(paste(plot.dir,"Nanc.To.Ncur.IncludesCOM.TFixedAt35.Line.NoText.pdf",sep=""),p6b,height=4,width=7)
+ggsave(paste(plot.dir,"Nanc.To.Ncur.IncludesCOM.TFixedAt35.Line.NoText.pdf",sep=""),p6b,height=4,width=7) # 20200401 redid  Plot with Nbot relabeled as Ncur except for COM 
+
+################### Pull out expected and obs SFSes from each (add 1D as well) ########
+write.table(allSFSes,paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/dadi_inference/20181119/grid.search/BestFit.",timeChoice,".ExpSFS.ObsSFS.AllPops.txt",sep=""),row.names = F,col.names = T,quote=F,sep="\t")
+### plot in another script: plot.EmpiricalObservedSFSesFromGridSearch.T35.AllPops.FORMANUSCRIPT.R

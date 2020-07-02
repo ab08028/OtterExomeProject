@@ -9,7 +9,7 @@ calldate=20181119 # date gt's were called in format YYYYMMDD
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 # file locations:
 pops=c("CA","BAJ","AK","AL","COM","KUR")
-indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/snps_gds/",calldate,"/",sep="") # this is where your snp vcf file is and where you will save your gds file (downloaded from hoffman)
+indir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/snps_gds/",calldate,"/snp7/",sep="") # this is where your snp vcf file is and where you will save your gds file (downloaded from hoffman)
 plotoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/Relatedness/",calldate,sep="")
 fileoutdir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/Relatedness/",calldate,sep="")
 dir.create(plotoutdir,recursive = T)
@@ -133,6 +133,7 @@ for(pop in pops){
 CA.BAJ.ibd.coeff <- snpgdsIBDSelection(CA.BAJ.ibd)
 CA.BAJ.ibd.coeff$pop1 <- sapply(strsplit(CA.BAJ.ibd.coeff$ID1,"_"),"[",3)
 CA.BAJ.ibd.coeff$pop2 <- sapply(strsplit(CA.BAJ.ibd.coeff$ID2,"_"),"[",3)
+CA.BAJ.ibd.coeff$population <- "CA-BAJ"
 CA.BAJ.ibd.coeff$KinshipGreaterThan0.2 <- "no"
 CA.BAJ.ibd.coeff[CA.BAJ.ibd.coeff$kinship > 0.2,]$KinshipGreaterThan0.2 <- "yes"
 
@@ -156,6 +157,13 @@ p1b <- ggplot(CA.BAJ.ibd.coeff,aes(x=ID1,y=ID2,fill=kinship))+
   ggtitle("CA-BAJ Kinship coefficients from Plink")
 p1b
 ggsave(paste(plotoutdir,"/CA.BAJ.kinshipHeatmap.PlinkMoM.CA.Baja.",todaysdate,".pdf",sep=""),p1b,device="pdf",width = 10,height=8)
+
+################ WRITE OUT A TABLE WITH EACH POPULATION and WITH CA+BAJ #############
+allPopsExceptCABAJ <- all.ibd.coeff[!(all.ibd.coeff$population %in% c("CA","BAJ")),]
+# combine with the CA-BAJ combined analysis:
+allPops_CABAJCombo <- rbind(allPopsExceptCABAJ,CA.BAJ.ibd.coeff)
+write.table(allPops_CABAJCombo,paste(fileoutdir,"/AllKinships.EachPopAnalyzedSeparately.CA-BAJCombined.FullTable.txt",sep=""),row.names = F,col.names = T,sep="\t",quote=F)
+write.table(allPops_CABAJCombo[,c("population","ID1","ID2","kinship")],paste(fileoutdir,"/AllKinships.EachPopAnalyzedSeparately.CA-BAJCombined.KinshipOnly.TableForManuscript.txt",sep=""),row.names = F,col.names = T,sep="\t",quote=F)
 ############# California and Baja and Alaska together ###########
 # CA.AK.BAJ.ibd.coeff <- snpgdsIBDSelection(CA.AK.BAJ.ibd)
 # CA.AK.BAJ.ibd.coeff$pop1 <- sapply(strsplit(CA.AK.BAJ.ibd.coeff$ID1,"_"),"[",3)

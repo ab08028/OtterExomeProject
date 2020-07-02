@@ -176,6 +176,19 @@ p3b <- ggplot(tab3,aes(x=EV1,y=EV2,color=pop1,shape=note,label=sample.id))+
 p3b
 ggsave(paste(plotoutdir,"/PCA.excludeCA.LDPruned.withNames.",todaysdate,".pdf",sep=""),p3b,device="pdf",width = 16,height=10)
 
+
+########################### plot N. pops for manuscript #################
+#plot first 2 pc coloring by primary population
+p3c_forManuscript <- ggplot(tab3,aes(x=EV1,y=EV2,color=pop1))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  #ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "none")+
+  scale_color_manual(values=unlist(colors))
+p3c_forManuscript
+ggsave(paste(plotoutdir,"/PCA.excludingCA.NorthernOnly.LDPruned.FORMANUSCRIPT.",todaysdate,".pdf",sep=""),p3c_forManuscript,device="pdf",width = 3,height=2.4)
 ############### Fourth PCA : Just Southern sea otter (CA and Baja) #########
 sub <- tab1b$sample.id[(tab1b$pop1=="California" |tab1b$pop1=="Baja") & tab1b$sequencer!="HiSeq4000" & tab1b$note=="good"]
 #sink(paste(fileoutdir,"/PCA.record.only.CA.Baja.",todaysdate,".txt",sep=""))
@@ -229,6 +242,51 @@ p_final <- ggplot(tab_final,aes(x=EV1,y=EV2,color=pop1,shape=note,label=sample.i
 p_final
 ggsave(paste(plotoutdir,"/FINAL.CLEAN.PCA.sfsQualityIndsOnly.plusBAJ.",todaysdate,".pdf",sep=""),p_final,device="pdf",width = 16,height=10)
 
+
+################### Sixth PCA : just Aleutian Islands ####################
+sub <- tab1b$sample.id[tab1b$pop1=="Aleutian" & tab1b$sequencer!="HiSeq4000" & tab1b$note=="good"]
+#sink(paste(fileoutdir,"/PCA.record.only.CA.Baja.",todaysdate,".txt",sep=""))
+pca <- snpgdsPCA(genofile, snp.id=snpset.id,autosome.only = F, sample.id=sub, maf=0.06)
+#sink()
+# check output! 
+pc.percent <- pca$varprop*100
+pc = head(round(pc.percent, 2))
+pc
+
+tab6 <- data.frame(sample.id = pca$sample.id, pop1 = factor(pop1_code)[match(pca$sample.id, sample.id)], pop2 = factor(pop2_code)[match(pca$sample.id, sample.id)],sequencer=factor(seq_code)[match(pca$sample.id, sample.id)],note=factor(note_code)[match(pca$sample.id,sample.id)],EV1 = pca$eigenvect[,1], EV2 = pca$eigenvect[,2], stringsAsFactors = FALSE)
+#close gds file
+
+p6 <- ggplot(tab6,aes(x=EV1,y=EV2,color=pop2,shape=note,label=sample.id))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
+p6
+ggsave(paste(plotoutdir,"/PCA.AleutianOnly.LDPruned.",todaysdate,".pdf",sep=""),p6,device="pdf",width = 5,height=3)
+
+
+################### Sixth PCA : just Commander Islands ####################
+sub <- tab1b$sample.id[tab1b$pop1=="Commander" & tab1b$sequencer!="HiSeq4000" & tab1b$note=="good"]
+#sink(paste(fileoutdir,"/PCA.record.only.CA.Baja.",todaysdate,".txt",sep=""))
+pca <- snpgdsPCA(genofile, snp.id=snpset.id,autosome.only = F, sample.id=sub, maf=0.06)
+#sink()
+# check output! 
+pc.percent <- pca$varprop*100
+pc = head(round(pc.percent, 2))
+pc
+
+tab7 <- data.frame(sample.id = pca$sample.id, pop1 = factor(pop1_code)[match(pca$sample.id, sample.id)], pop2 = factor(pop2_code)[match(pca$sample.id, sample.id)],sequencer=factor(seq_code)[match(pca$sample.id, sample.id)],note=factor(note_code)[match(pca$sample.id,sample.id)],EV1 = pca$eigenvect[,1], EV2 = pca$eigenvect[,2], stringsAsFactors = FALSE)
+#close gds file
+
+p7<- ggplot(tab7,aes(x=EV1,y=EV2,color=pop2,label=sample.id))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
+p7
+ggsave(paste(plotoutdir,"/PCA.CommandersOnly.LDPruned.",todaysdate,".pdf",sep=""),p7,device="pdf",width = 5,height=3)
 ############################ CLOSE THE GDS FILE ########################
 # if you don't do this, it'll mess things up
 snpgdsClose(genofile)

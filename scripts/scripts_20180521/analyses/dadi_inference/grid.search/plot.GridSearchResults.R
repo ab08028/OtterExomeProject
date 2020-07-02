@@ -96,11 +96,14 @@ for(pop in populations){
     geom_point(aes(x=fscNus[[pop]]/fscNancs[[pop]],y=fscTs[[pop]]/(2*fscNancs[[pop]])),shape=2,size=6,color="red")+
     geom_point(aes(x=MLE_nu,y=MLE_T),shape=8,size=6,color="red")+
     #annotate(geom="text",x=(MLE_nu),y=(MLE_T+0.0004),label=paste("Grid-Search MLE"),color="black")+
-    ggtitle(paste(pop, " grid Search of parameters in dadi\nRed star is grid search MLE\nRed square indicates original dadi inferred MLE params\nRed triangle is fsc2 inferred MLE parameters",sep="")) +
+    #ggtitle(paste(pop, " grid Search of parameters in dadi\nRed star is grid search MLE\nRed square indicates original dadi inferred MLE params\nRed triangle is fsc2 inferred MLE parameters",sep="")) +
+    theme(axis.text=element_text(size=20),axis.title=element_text(size=20),legend.title=element_text(size=16),legend.text = element_text(size=16))+
     labs(fill = element_text("deltaLL\nrelative to MLE")) #+
     #geom_vline(xintercept = dadiNancs[[pop]],linetype="dashed")
   p1
-  ggsave(paste(indir,pop,".nu.Vs.T.dadiUnits.gridSearch.pdf",sep=""),p1,height=5,width=7)
+  ggsave(paste(indir,pop,".nu.Vs.T.dadiUnits.gridSearch.pdf",sep=""),p1,height=4,width=7)
+  ggsave(paste(indir,pop,".nu.Vs.T.dadiUnits.gridSearch.png",sep=""),p1,device="png",height=4,width=7)
+  
   # PLOT nu and T scaled by the inferred Nancs from each dadi model#
   p3 <- ggplot(input,aes(nu_scaledByNanc_from_Theta_dip,T_scaledByNanc_from_Theta_gen,color=deltaLL))+
     geom_point(size=3)+

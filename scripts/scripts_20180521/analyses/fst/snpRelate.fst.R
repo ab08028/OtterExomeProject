@@ -47,7 +47,7 @@ colnames(distances_melt) <- c("pop1","pop2","approxDistance_km")
 
 ############## open gds file #############
 #open the gds file
-genofile <- snpgdsOpen(paste(data.dir,"snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
+genofile <- snpgdsOpen(paste(data.dir,"/snp7/snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.gds",sep=""))
 
 ######################## population information ###########
 ###### *note* this popmap has bad samples in it (labeled as such)

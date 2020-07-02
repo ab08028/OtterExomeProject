@@ -9,12 +9,12 @@ pops=c("CA","AK","AL","COM","KUR")
 todaysdate=format(Sys.Date(),format="%Y%m%d")
 genotypeDate=20181119
 projection.date=20181221
-hetFilter=0.5 # level that hets were filtered
+hetFilter=0.75 # level that hets were filtered
 plot.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/SFS/",genotypeDate,"/easySFS_projection/projection-",projection.date,"/hetFilter-",hetFilter,"/",sep="")
 dir.create(plot.dir,recursive = T)
 syn.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/cds/synonymous/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2/",sep="")
 mis.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/cds/missense/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2/",sep="")
-neut.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/neutral/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2-1D-plusMonomorphic/",sep="")
+neut.data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/datafiles/SFS/",genotypeDate,"/easySFS_projection/neutral/projection-",projection.date,"-hetFilter-",hetFilter,"/fastsimcoal2-plusMonomorphic/",sep="")
 
 # how do we want to plot? fsc format?
 
@@ -90,6 +90,18 @@ for(pop in pops){
   sfsPlot
   ggsave(paste(plot.dir,pop,".cds.neutral.projected.prop.SFS.hetFilter.",hetFilter,".pdf",sep=""),sfsPlot,device = "pdf",height=5,width=7)
   
+  ############## Plot small for manuscript ###########
+  sfsPlotb <- ggplot(all.sfs_noMono_noZero_prop,aes(x=as.numeric(frequency),y=proportion,fill=label))+
+    geom_bar(stat="identity",position = "dodge")+
+    theme_bw()+
+    theme(legend.position="none",text=element_text(size=12))+
+    xlab("frequency")+
+    #ggtitle(paste(pop," folded SFS (projected)\nhet filter: ",hetFilter,sep=""))+
+    ggtitle(pop)+
+    scale_x_continuous(breaks=c(seq(1,max(as.numeric(all.sfs_noMono_noZero_prop$frequency)))))+
+    scale_fill_manual(values=c("gray","dodgerblue","darkred"))
+  sfsPlotb
+  ggsave(paste(plot.dir,pop,".cds.neutral.projected.prop.SFS.hetFilter.",hetFilter,".SMALL.pdf",sep=""),sfsPlotb,device = "pdf",height=2,width=3)
   ########## Plot each individually ############
   sfsPlot2 <- ggplot(all.sfs_noMono_noZero_prop,aes(x=as.numeric(frequency),y=value,fill=label))+
     geom_bar(stat="identity",position = "dodge")+

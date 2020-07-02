@@ -1,3 +1,6 @@
+### 20200209: want to get total sites per individual with 1x coverage, 2x etc.
+# then want to get total Tv SNPS per individual from later runs.
+
 require(ggplot2)
 require(reshape2)
 require(scales)
@@ -39,3 +42,30 @@ for(ref in refs){
     ggsave(paste(data.dir,sampleID,".",ref,"depths.pdf",sep=""),p,height=5,width=5)
   }
 }
+
+########## Get stats for SI:
+# want to know: total reads covered by 1x in elut and mfur
+# original only (not downsampled)
+allDepths_melt[allDepths_melt$downsamp=="Original" & allDepths_melt$sampleID %in% c("A13_Elut_CA_AN_388_SN1_2CAP_screen","A29_Elut_CA_SM_30_SN2_CAP","A30_Elut_CA_SM_35_SN1_CAP"),]
+# only aDNA samples:
+# want 1-10 and then >10
+# make your table:
+tableForSI_1to10 <- allDepths_melt[allDepths_melt$downsamp=="Original" & allDepths_melt$sampleID %in% c("A13_Elut_CA_AN_388_SN1_2CAP_screen","A29_Elut_CA_SM_30_SN2_CAP","A30_Elut_CA_SM_35_SN1_CAP") & allDepths_melt$read_depth<=10 & allDepths_melt$read_depth>0,c("reference","sampleID","variable","value","read_depth")]
+
+
+require(dplyr)    
+tableForSI_greaterThan10 <- allDepths_melt[allDepths_melt$downsamp=="Original" & allDepths_melt$sampleID %in% c("A13_Elut_CA_AN_388_SN1_2CAP_screen","A29_Elut_CA_SM_30_SN2_CAP","A30_Elut_CA_SM_35_SN1_CAP") & 
+allDepths_melt$read_depth>10,] %>%
+  group_by(reference,sampleID)%>%
+  summarise(value=sum(value),variable="SumGreaterThan10",read_depth=">10")
+
+# combine:
+tableForSICombo <- rbind(tableForSI_1to10,data.frame(tableForSI_greaterThan10))
+write.table(tableForSICombo,paste(data.dir,"aDNA.ReadDepthSummaries.TotalAtEachReadDepth.NonInclusive.Upto10Thengt10.USEFORSI.txt",sep=""),quote=F,row.names=F,col.names=T,sep="\t")
+
+## get total reads with >1x
+totalCoveredBases <- tableForSICombo %>%
+  group_by(reference,sampleID)%>%
+  summarise(totalCoveredBases = sum(value))
+write.table(totalCoveredBases,paste(data.dir,"aDNA.TotalCoveredBases.forSI.txt",sep=""),quote=F,row.names=F,col.names=T,sep="\t")
+

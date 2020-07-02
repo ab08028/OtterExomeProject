@@ -3,17 +3,17 @@
 require(ggplot2)
 require(gridExtra)
 ####### sandbox trying to plot dadi results 
-slimmodel="1D.2Epoch.GenericForDemographyWorkshop" # model you simulated under
-slimdate=20200325 # date you ran slim
-pop="generic" # what you named population in slim simulation
+slimmodel="CA.1D.2Epoch.35Gen.200Inds" # model you simulated under
+slimdate=20200224 # date you ran slim
+pop="CA" # what you named population in slim simulation
 totalSitesSimulated=6000000 # 6Mb; so monomorphic will be 6000000 - total SFS sites 
 # need to show a couple things
 # 1) whether 1Epoch or 2Epoch fits better for the same replicate
 # 2) if parameters converge for 2Epoch
 # 3) what the range of those parameter estimates are 
-dadimodel="1D.2Epoch" # model you inferred in dadi
-data.dir="/Users/annabelbeichman/Documents/UCLA/DemographyWorkshop/MakeAndTestActivityScripts/1D.2Epoch.GenericForDemographyWorkshop/"
-#data.dir
+#dadimodel="1D.2Epoch" # model you inferred in dadi
+#data.dir="/Users/annabelbeichman/Documents/UCLA/DemographyWorkshop/MakeAndTestActivityScripts/1D.2Epoch.GenericForDemographyWorkshop/"
+data.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/revisions/neutralSimulationsToShowPowerOfDadi/CA.1D.2Epoch.35Gen.200Inds/20200224/allSFSes/"
 
 ######## fold SFS function ######
 foldSFS <- function(sfs){
@@ -37,8 +37,9 @@ foldSFS <- function(sfs){
 ############ generate all the folded fsc format sfses, with monomorphic sites ##########
 ### need to add in total sites simulated
 # get R format SFSes (need to fold as well)
-for(rep in seq(1,1)){
-  results <- read.table(paste(data.dir,pop,".rep.",rep,".",slimmodel,".slim.output.unfolded.sfs.R.format.txt",sep=""),sep = "\t",header=T)
+### someday could update this to pull correct replicates every time -- this is short cut because rep 10 failed so there is 1-9,11
+for(rep in c(seq(1,9),11)){
+  results <- read.table(paste(data.dir,pop,".replicate_",rep,".",slimmodel,".postContraction.slim.output.unfolded.sfs.R.format.txt",sep=""),sep = "\t",header=T)
   # fold SFS:
   results = foldSFS(results)
   # select best LL

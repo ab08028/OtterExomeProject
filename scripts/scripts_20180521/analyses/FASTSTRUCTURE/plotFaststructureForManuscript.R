@@ -6,6 +6,7 @@ colors=list(CA=colorPal[1],BAJ=colorPal[1],AK=colorPal[2],AL=colorPal[3],COM=col
 calldate="20181119"
 data.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/FASTSTRUCTURE/",calldate,"/downsampCOM/results/snp7/",sep="")
 plot.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/plots/FASTSTRUCTURE/20181119-downsampCOM/snp7/"
+############ Make good plot for main text with k = 5 with good colors. Make the rest below with generic colors ##########
 k=5
 inputQ=read.table(paste(data.dir,"downsampled.COM.rmSergioInds.snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.faststructure_output.",k,".meanQ",sep=""))
 
@@ -19,10 +20,10 @@ dim(inputQ)
 combo <- cbind(inputQ,popAssignment)
 # rename Baja to B* 
 combo$label <- as.character(combo$population)
-combo[combo$population=="BAJ",]$label <- "BJ"
+combo[combo$population=="BAJ",]$label <- "BC"
 combo$population2 <- as.character(combo$population)
 
-combo[combo$population=="BAJ",]$population2 <- "BJ"
+combo[combo$population=="BAJ",]$population2 <- "BC"
 
 # label the aleutian islands:
 combo[grep("AL_AM_",combo$sample),]$label <- "AM"
@@ -34,9 +35,9 @@ combo_melt <- melt(combo,id.vars = c("sample","label","population","population2"
 # arrange individuals in pop order
 combo_melt$pop_sample <- paste(combo_melt$population,"_",combo_melt$sample,sep="")
 combo_melt$population <- factor(combo_melt$population,levels=c("CA","BAJ","AK","AL","COM","KUR")) # order populations
-combo_melt$population2 <- factor(combo_melt$population2,levels=c("CA","BJ","AK","AL","COM","KUR")) # order populations
+combo_melt$population2 <- factor(combo_melt$population2,levels=c("CA","BC","AK","AL","COM","KUR")) # order populations
 
-combo_melt$label <- factor(combo_melt$label,levels=c("CA","BJ","AK","AD","AM","AT","COM","KUR")) # order populations
+combo_melt$label <- factor(combo_melt$label,levels=c("CA","BC","AK","AD","AM","AT","COM","KUR")) # order populations
 
 plotForMs1 <- ggplot(combo_melt,aes(x=pop_sample,y=value,fill=variable))+
   geom_bar(stat="identity")+
@@ -80,7 +81,66 @@ plotForMs2 <- ggplot(combo_melt,aes(x=pop_sample,y=value,fill=variable))+
 plotForMs2
 
 
-ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.pdf",sep=""),plotForMs2,height=4,width=7,dpi=300)
-ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.png",sep=""),plotForMs2,height=4,width=7,device="png",dpi=300)
-ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.pdf",sep=""),plotForMs2,height=4,width=9,device="pdf",dpi=300)
-ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.png",sep=""),plotForMs2,height=4,width=9,device="png",dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.pdf",sep=""),plotForMs2,height=4,width=7.5,dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.png",sep=""),plotForMs2,height=4,width=7.5,device="png",dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.pdf",sep=""),plotForMs2,height=4,width=9.5,device="pdf",dpi=300)
+ggsave(paste(plot.dir,"FaststructurePlot.forManuscript.k.",k,".goodColors.ALNotSplit.ResizeForMS.png",sep=""),plotForMs2,height=4,width=9.5,device="png",dpi=300)
+
+
+############ Make Plots for SI with manually curated colors ##########
+#colorsPerK=list("tomato",c("tomato","dodgerblue"),c("tomato","purple","dodgerblue"),c("deeppink1","dodgerblue","tomato","purple"),"empty",c("dodgerblue","deeppink1","aquamarine","yellow","purple","tomato")) # this is annoying -- want to try to keep colors consistent across Ks so have to set manually (doesn't change the breakdown of Vs)
+colorsPerK=list("empty1",c(colorPal[1],colorPal[2]),c(colorPal[1],colorPal[2],colorPal[3]),c(colorPal[3],colorPal[5],colorPal[1],colorPal[2]),"empty5",c(colorPal[5],colorPal[4],colorPal[3],"yellow",colorPal[2],colorPal[1]))
+for(k in c(2,3,4,6)){
+  inputQ=read.table(paste(data.dir,"downsampled.COM.rmSergioInds.snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.faststructure_output.",k,".meanQ",sep=""))
+  
+  popAssignment=read.table(paste(data.dir,"downsampled.COM.rmSergioInds.snp_7_maxNoCallFrac_0.2_passingBespoke_passingAllFilters_postMerge_raw_variants.manual.popAssignment",sep=""))
+  colnames(popAssignment) <- c("sample","population")
+  dim(popAssignment)
+  dim(inputQ)
+  
+  # these are in same order so you can cbind them
+  
+  combo <- cbind(inputQ,popAssignment)
+  # rename Baja to B* 
+  combo$label <- as.character(combo$population)
+  combo[combo$population=="BAJ",]$label <- "BC"
+  combo$population2 <- as.character(combo$population)
+  
+  combo[combo$population=="BAJ",]$population2 <- "BC"
+  
+  # label the aleutian islands:
+  combo[grep("AL_AM_",combo$sample),]$label <- "AM"
+  combo[grep("AL_AD_",combo$sample),]$label <- "AD"
+  combo[grep("AL_AT_",combo$sample),]$label <- "AT"
+  
+  head(combo)
+  combo_melt <- melt(combo,id.vars = c("sample","label","population","population2"))
+  # arrange individuals in pop order
+  combo_melt$pop_sample <- paste(combo_melt$population,"_",combo_melt$sample,sep="")
+  combo_melt$population <- factor(combo_melt$population,levels=c("CA","BAJ","AK","AL","COM","KUR")) # order populations
+  combo_melt$population2 <- factor(combo_melt$population2,levels=c("CA","BC","AK","AL","COM","KUR")) # order populations
+  
+  combo_melt$label <- factor(combo_melt$label,levels=c("CA","BC","AK","AD","AM","AT","COM","KUR")) # order populations
+  plotForMs3 <- ggplot(combo_melt,aes(x=pop_sample,y=value,fill=variable))+
+    geom_bar(stat="identity")+
+    theme_bw()+
+    #scale_fill_manual(values=c(V1="dodgerblue",V2="tomato",V3="purple",V4="deeppink1",V5="yellow",V6="darkolivegreen1"))+
+    scale_fill_manual(values=unlist(colorsPerK[k]))+
+    facet_grid(~population2,scales = "free_x", space = "free_x")+ # ah! space does what I want, so Baja isn't big! nice
+    theme(panel.border = element_blank(),
+          panel.background = element_blank(),
+          panel.grid = element_blank(),
+          panel.spacing.x = unit(0.1,"line"),
+          axis.text.x=element_blank(),
+          axis.text.y=element_text(size=12),
+          axis.ticks.x=element_blank(),
+          strip.background = element_rect("transparent"),
+          strip.text = element_text(size=6))+
+    ylab("")+
+    xlab("")+
+    theme(legend.position = "none")
+  plotForMs3
+  ggsave(paste(plot.dir,"FaststructurePlot.forSI.k.",k,".goodColors.ALNotSplit.ResizeForMS.pdf",sep=""),plotForMs3,height=2,width=5,device="pdf",dpi=300)
+  ggsave(paste(plot.dir,"FaststructurePlot.forSI.k.",k,".goodColors.ALNotSplit.ResizeForMS.png",sep=""),plotForMs3,height=2,width=5,device="png",dpi=300)
+  
+}

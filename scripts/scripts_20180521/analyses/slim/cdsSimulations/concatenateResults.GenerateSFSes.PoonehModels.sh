@@ -220,7 +220,7 @@ grep "##" $repdir/slim.output.${state}Contraction.1.vcf > $outVCF
 grep "##" $repdir/slim.output.${state}Contraction.1.vcf > $mut1VCF
 grep "##" $repdir/slim.output.${state}Contraction.1.vcf > $mut2VCF
 
-### need to cut off the last column of the final line of the ehader that defines the individuals:
+### need to cut off the last column of the final line of the header that defines the individuals: (JUST FOR CALIFORNIA)
 grep -v "##" $repdir/slim.output.${state}Contraction.1.vcf | grep "#" | awk '{$(NF--)=""; print}' | tr -s '\n' >> $outVCF
 grep -v "##" $repdir/slim.output.${state}Contraction.1.vcf | grep "#" | awk '{$(NF--)=""; print}' | tr -s '\n' >> $mut1VCF
 grep -v "##" $repdir/slim.output.${state}Contraction.1.vcf | grep "#" | awk '{$(NF--)=""; print}' | tr -s '\n' >> $mut2VCF
@@ -249,9 +249,9 @@ echo "Note: these concatted VCFs have the 7th individual removed using awk to ad
 grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' | awk '{$(NF--)=""; print}' | tr -s '\n' >>  $outVCF
 # # separate mutation types
 # mutation type 1: 
-grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=1"  | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' | awk '{$(NF--)=""; print}' | tr -s '\n' >> $mut1VCF
+grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=1"  | awk '{$(NF--)=""; print}' | tr -s '\n' | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' >> $mut1VCF
 # mutation type 2:
-grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=2"  | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}' | awk '{$(NF--)=""; print}' | tr -s '\n' >> $mut2VCF
+grep -v "#" $repdir/slim.output.${state}Contraction.${j}.vcf | grep "MT=2"  | awk '{$(NF--)=""; print}' | tr -s '\n' | awk -v chr=$j '{OFS="\t";$1=""; print chr,$0}'  >> $mut2VCF
 
 done
 # gzip the outputs:

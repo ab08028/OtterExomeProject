@@ -86,20 +86,20 @@ for(pop in pops){
   # sfsPlot
   # ggsave(paste(plot.dir,pop,".cds.neutral.projected.prop.SFS.hetFilter.",hetFilter,".pdf",sep=""),sfsPlot,device = "pdf",height=5,width=7)
   # 
-  # ########## Plot each individually ############
-  # sfsPlot2 <- ggplot(all.sfs_noMono_noZero,aes(x=as.numeric(frequency),y=value,fill=label))+
-  #   geom_bar(stat="identity",position = "dodge")+
-  #   theme_bw()+
-  #   theme(legend.title=element_blank(),legend.background = element_rect(fill = "transparent"),legend.position = "none",legend.direction = "horizontal",legend.spacing.x = unit(.15,"cm"),text=element_text(size=18))+
-  #   xlab("frequency")+
-  #   ylab("count")+
-  #   ggtitle(paste(pop," folded SFS (projected)\nhet filter: ",hetFilter,sep=""))+
-  #   scale_x_continuous(breaks=c(seq(1,max(as.numeric(all.sfs_noMono_noZero$frequency)))))+
-  #   scale_fill_manual(values=c("gray","dodgerblue","darkred"))+
-  #   facet_wrap(~label)
-  # sfsPlot2
-  # ggsave(paste(plot.dir,pop,".cds.neutral.projected.counts.faceted.SFS.hetFilter.",hetFilter,".pdf",sep=""),sfsPlot2,device = "pdf",height=5,width=12)
-  # 
+  ########## Plot each individually ############
+  sfsPlot2 <- ggplot(all.sfs_noMono_noZero,aes(x=as.numeric(frequency),y=value,fill=mutLabel))+
+    geom_bar(stat="identity",position = "dodge")+
+    theme_bw()+
+    #theme(legend.title=element_blank(),legend.background = element_rect(fill = "transparent"),legend.position = "none",legend.direction = "horizontal",legend.spacing.x = unit(.15,"cm"),text=element_text(size=18))+
+    xlab("frequency")+
+    ylab("count")+
+    ggtitle(paste(pop," folded SFS (projected)\nhet filter: ",hetFilter,sep=""))+
+    scale_x_continuous(breaks=c(seq(1,max(as.numeric(all.sfs_noMono_noZero$frequency)))))+
+    scale_fill_manual(values=c("gray","dodgerblue","darkred")) #+
+    #facet_wrap(~state)
+  sfsPlot2
+  ggsave(paste(plot.dir,pop,".cds.neutral.projected.counts.faceted.SFS.hetFilter.",hetFilter,".pdf",sep=""),sfsPlot2,device = "pdf",height=5,width=12)
+
 }
 ####### empirical sfses are now in: all.empirical.sfs.folded.noMono are folded and have no monomorphic counts ###########
 ################################## get simulated ###############################
@@ -107,8 +107,9 @@ sim.dir="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/
 #rundate=20190424 # set of simulations you're interested in (if is across different rundates you can list popsModelsRundates explicitly)
 hs=c("0.5","0") # set of hs you're interested in
 #popMods=c("AL/1D.2Epoch.1.5Mb.cds", "AK/1D.2Epoch.1.5Mb.cds") # population and corresponding models you're interested in
-
-popModsDate=c("AK/1D.3Epoch.LongerRecovery/20191202/","CA/1D.3Epoch.LongerRecovery/20191013/") 
+######## update with Ponoeh's new simulations (CA only)
+#popModsDate=c("AK/1D.3Epoch.LongerRecovery/20191202/","CA/1D.3Epoch.LongerRecovery/20191013/") 
+popModsDate="CA/1D.3Epoch.35GenBottleneck.LongerRecovery.newUseThis/20200310/"
 popmodels=list()
 for(i in popModsDate){
   for(h in hs){
@@ -191,7 +192,7 @@ summarizedSFSes$proportion_SE <- summarizedSFSes$proportion_SD / sqrt(summarized
 ########### Plot Average with +-1 SD ###############
 ################# BE CAREFUL; IF YOU FORGOT TO GROUP BY ONE YOUR VARIABLES THE PLOTS WILL ECLIPES EACH OTHER OR ADD TOGETHER ODDLY ############
 ######### choose the model you want so you don't have to factor over it:
-desiredModelToPlot="1D.3Epoch.LongerRecovery"
+desiredModelToPlot="1D.3Epoch.35GenBottleneck.LongerRecovery.newUseThis"
 #summarizedSFSes$state <- factor(summarizedSFSes$state,levels=c("simulated: Pre-Contraction","simulated: Post-Contraction"))
 summarizedSFSesToPlot <- summarizedSFSes[summarizedSFSes$model==desiredModelToPlot,]
 summarizedSFSesToPlot$state <- factor(summarizedSFSesToPlot$state,levels=c("simulated: Pre-Contraction","simulated: Post-Contraction"))
@@ -206,7 +207,7 @@ countMeanPlot1 <- ggplot(summarizedSFSesToPlot,aes(x=frequency,y=count_MEAN,grou
   scale_x_continuous(breaks=c(seq(1,max(as.numeric(summarizedSFSes$frequency)))))+
   ggtitle("Simulated SFS averaged over simluation replicates\nError Bars denote one standard deviation")
 countMeanPlot1
-ggsave(paste(plot.dir,"AK.CA.SimulatedSFSes.3EpochLongerContraction.forMS.",todaysdate,".pdf",sep=""),countMeanPlot1,device="pdf",width=7,height=5)
+#ggsave(paste(plot.dir,"AK.CA.SimulatedSFSes.3EpochLongerContraction.forMS.",todaysdate,".pdf",sep=""),countMeanPlot1,device="pdf",width=7,height=5)
 
 
 ################## combine empirical and simulated cds #################
@@ -232,9 +233,9 @@ colsIWant <- intersect(names(all.empirical.sfs.folded.noMono),names(summarizedSF
 # and want to exclude some pops:
 #popsIWant <- c("AK","AL") # skip COM for now -- it's weird
 #popsIWant <- c("AK","genericPop.LongerContract")# renamed genericPop to AK
-EMPpopsIWant <- c("AK","CA")
-SIMpopsIWant <- c("AK","CA")
-SIMmodelsIWant <- "1D.3Epoch.LongerRecovery"
+EMPpopsIWant <- c("CA")
+SIMpopsIWant <- c("CA")
+SIMmodelsIWant <- "1D.3Epoch.35GenBottleneck.LongerRecovery.newUseThis"
 # okay since AK and longer contraction don't make a big diff (dadi MLE official (AK) vs. elsewhere on the MLE curve from the grid search, going to use the genericPop.LongerContract only)
 # SEPARATE by h = 0 , h = 0.5:
 # h = 0
@@ -289,8 +290,66 @@ p1b
 #  Removed 14 rows containing missing values (geom_errorbar). 
 # because empirical doesn't have error bars' == that's the expected behavior.
 ggsave(paste(plot.dir,"ComparingSimulatedEmpiricalCDS.SFSes.h_0.5.",todaysdate,".pdf",sep=""),p1b,device="pdf",width=11,height=6)
+###################### PLOT for manuscript, just plotting CA and plotting separately so you can stack them and just show one synonymous #######
+### Kirk request: show empirical next to post contraction
+combo.cds.h_0$state <- factor(combo.cds.h_0$state, levels=c("simulated: Pre-Contraction","simulated: Post-Contraction","empirical"))
+combo.cds.h_0.5$state <- factor(combo.cds.h_0$state, levels=c("simulated: Pre-Contraction","simulated: Post-Contraction","empirical"))
+
+pops=c("CA")
+for(pop in pops){
+  for(mutLabel in c("synonymous","missense")){
+    ##### recessive: #####
+    p2a <- ggplot(combo.cds.h_0[combo.cds.h_0$mutLabel==mutLabel & combo.cds.h_0$population==pop,],aes(x=as.numeric(frequency),y=as.numeric(proportion),fill=state,group=interaction(popModel,state)))+
+      geom_bar(position='dodge',stat="identity",alpha=0.75)+
+      facet_wrap(~mutLabel,scales="free_x")+
+      geom_errorbar(aes(ymin=proportion-proportion_SE, ymax=proportion+proportion_SE), width=.2,
+                    position=position_dodge(0.9)) +
+      theme_bw()+
+      scale_fill_manual(values=c("blue","darkred","darkgray"))+
+      xlab("Frequency")+
+      ylab("Proportion")+
+      scale_x_continuous(breaks=c(seq(1,max(as.numeric(combo.cds.h_0$frequency)))))+
+      ggtitle("simulated mutations are recessive")+
+      #ggtitle(paste("Dominance Coefficient (h): 0\nError Bars denote one standard error",sep=""))+
+      theme(legend.position="none",legend.background = element_rect("transparent"),legend.title=element_blank(),legend.key.size = unit(1,"cm"),legend.text = element_text(size=14))
+    p2a
+    # you'll get this warning:
+    #Warning message:
+    #  Removed 14 rows containing missing values (geom_errorbar). 
+    # because empirical doesn't have error bars' == that's the expected behavior.
+    
+    ggsave(paste(plot.dir,pop,".ComparingSimulatedEmpiricalCDS.35GenContraction.SFSes.h_0.",mutLabel,".",todaysdate,".pdf",sep=""),p2a,device="pdf",width=3.5,height=2.5)
+    
+    ######## plot additive  #############
+    p2b <- ggplot(combo.cds.h_0.5[combo.cds.h_0.5$mutLabel==mutLabel & combo.cds.h_0.5$population==pop,],aes(x=as.numeric(frequency),y=as.numeric(proportion),fill=state,group=interaction(popModel,state)))+
+      geom_bar(position='dodge',stat="identity",alpha=0.75)+
+      facet_wrap(~mutLabel,scales="free_x")+
+      geom_errorbar(aes(ymin=proportion-proportion_SE, ymax=proportion+proportion_SE), width=.2,
+                    position=position_dodge(0.9)) +
+      theme_bw()+
+      scale_fill_manual(values=c("blue","darkred","darkgray"))+
+      xlab("Frequency")+
+      ylab("Proportion")+
+      scale_x_continuous(breaks=c(seq(1,max(as.numeric(combo.cds.h_0$frequency)))))+
+      ggtitle("simulated mutations are additive")+
+      #ggtitle(paste("Dominance Coefficient (h): 0\nError Bars denote one standard error",sep=""))+
+      theme(legend.position="none",legend.background = element_rect("transparent"),legend.title=element_blank(),legend.key.size = unit(1,"cm"),legend.text = element_text(size=14))
+    p2b
+    # you'll get this warning:
+    #Warning message:
+    #  Removed 14 rows containing missing values (geom_errorbar). 
+    # because empirical doesn't have error bars' == that's the expected behavior.
+    ggsave(paste(plot.dir,pop,".ComparingSimulatedEmpiricalCDS.35GenContraction.SFSes.h_0.5.",mutLabel,".",todaysdate,".pdf",sep=""),p2b,device="pdf",width=3.5,height=2.5)
+  }}
+
+
 
 ############################ so clearly post-contraction fits better; focus just on that + missense with both h's ##########################
+
+
+
+
+# don't need: 
 additiveRecessiveMissense <- rbind(combo.cds.h_0.5[!combo.cds.h_0.5$mutLabel %in% c("synonymous","neutral") & (combo.cds.h_0.5$state %in% c("empirical","simulated: Post-Contraction")),],combo.cds.h_0[!combo.cds.h_0$mutLabel %in% c("synonymous","neutral") & (combo.cds.h_0$state %in% c("empirical","simulated: Post-Contraction")),])
 # label empirical h_0 as unknown
 additiveRecessiveMissense[additiveRecessiveMissense$category=="empirical",]$dominance_h <- "empirical"
@@ -312,7 +371,6 @@ p1c
 #  Removed 14 rows containing missing values (geom_errorbar). 
 # because empirical doesn't have error bars' == that's the expected behavior.
 ggsave(paste(plot.dir,"ComparingFitOfAdditive.Recessive.MissenseToEmpirical.",todaysdate,".pdf",sep=""),p1c,device="pdf",width=11,height=5)
-################## YOU ARE HERE ---- THIS MIGHT BE AGGREGATING OVER SOMETHIGN WRONG, MAKE SURE IT'S NOT ###################
 #################### make sure this isn't aggregating over something incorrectly; so far I think t's okay ########
 # plot ratio of NS and S 
 

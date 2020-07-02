@@ -7,10 +7,12 @@ out.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/re
 dir.create(out.dir,showWarnings = F)
 # specify the models and the dates it was run that you want to use:
 #models=c("1D.1Epoch/20190213/","1D.2Epoch/20190125/","1D.2Epoch.70gen.500dip/20190313/","1D.2Epoch.4gen/20190128/","1D.2Epoch.30gen/20190227/")
-models=c("AK.1D.2Epoch.35Gen.250Inds/20200129/","CA.1D.2Epoch.25Gen.100Inds/20200129/")
+#models=c("AK.1D.2Epoch.35Gen.250Inds/20200129/","CA.1D.2Epoch.25Gen.100Inds/20200129/")
+models="CA.1D.2Epoch.35Gen.200Inds/20200224/"
+states=c("preContraction","postContraction")
 #populations=c("AK","CA","AL","BER","MED","KUR")
 populations=""
-numRep=11 # number of replicates
+numRep=10 # number of replicates
 totalSites=6000000 # 6Mb were simulated 
 ############### REQUIRES SFS in SPECIFIC FORMAT ("R.format" from my scripts)
 # which is UNFOLDED, and looks like:
@@ -98,38 +100,50 @@ wattersons_theta <- function(num_indv,numSNPs,callablesites){
 ########### Processes SFSes ###################
 #df <-data.frame(model=character(),pi=numeric(),stringsAsFactors = F) # overall dataframe
 for(model in models){
-  for(state in states){
   indir=paste(data.dir,model,"/allSFSes/",sep="")
   out.dir=paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/PI_THETA/simulated/",model,"/",sep="")
   dir.create(out.dir,showWarnings = F,recursive = T)
-  files=list.files(indir,pattern=paste(state,".slim.output.R.format",sep=""),full.names = T) # all replicates  ### make sure this is working
-  modeldf <- data.frame(model=character(),pi=numeric(),S=numeric(),Wattersons_theta=numeric(),stringsAsFactors = F) # specific to model 
-  
-  for(i in seq(1,length(files))){
-    file=files[i]
-    sfs <- read.table(file,header=T,stringsAsFactors = F) # input in "R format" by my simulations
-    #repNumber=strsplit(file,"\\.")
-    ###### SFS is to in format count and frequency
-    # get rid of monomorphic sites and fold SFS 
-    # fold SFS if it isn't (how to detect if it is/isn't?)
-    sfsFolded <- foldSFS(sfs)
-    nDip=max(sfsFolded$frequency)
-    nHap=2*nDip # get unfolded sample size of total chromosomes from FOLDED SFS
-    # need to exclude monomorphic!
-    sfsFoldedExclMono <- sfsFolded[sfsFolded$frequency!=0,]
-    pi=calculatePiFromSFS_simData(nHap,totalSites,sfsFoldedExclMono) # can include monomorphic or not as prefer
-    # divide n by two to get diploid individuals (for input into function; gets converted to haploid within function) # no
-    S=sum(sfsFoldedExclMono$count) #excludes monomorphic
-    theta= wattersons_theta(nDip,S,totalSites) # note this uses Ndip in the function because the function itself converts nDip to nHap (this is a bit awkward but comes of merging functions across scripts)
-    # add entry to data frame
-    modeldf[i,"model"] <- as.character(lapply(strsplit(model,"/"),"[",1)) # need to include model
-    modeldf[i,"pi"] <- pi # and value of pi
-    modeldf[i,"S"] <- S
-    modeldf[i,"Wattersons_theta"] <- theta
-    
-  }
+  modeldf <- data.frame(model=character(),pi=numeric(),S=numeric(),Wattersons_theta=numeric(),state=character(),stringsAsFactors = F) # specific to model
+  modelname=as.character(lapply(strsplit(model,"/"),"[",1))
+  for(state in states){
+    files=list.files(indir,pattern=paste(state,".slim.output.unfolded.sfs.R.format",sep=""),full.names = T) # all replicates  ### make sure this is working
+    statedf = data.frame(model=character(),pi=numeric(),S=numeric(),Wattersons_theta=numeric(),state=character(),stringsAsFactors = F)
+    if(length(files)!=numRep){
+      print("more or less than 10 replicates! stop what you're doing!")
+      break
+    }
+    for(i in seq(1,length(files))){
+      file=files[i]
+      sfs <- read.table(file,header=T,stringsAsFactors = F) # input in "R format" by my simulations
+      #repNumber=strsplit(file,"\\.")
+      ###### SFS is to in format count and frequency
+      # get rid of monomorphic sites and fold SFS 
+      # fold SFS if it isn't (how to detect if it is/isn't?)
+      sfsFolded <- foldSFS(sfs)
+      nDip=max(sfsFolded$frequency)
+      nHap=2*nDip # get unfolded sample size of total chromosomes from FOLDED SFS
+      # need to exclude monomorphic!
+      sfsFoldedExclMono <- sfsFolded[sfsFolded$frequency!=0,]
+      pi=calculatePiFromSFS_simData(nHap,totalSites,sfsFoldedExclMono) # can include monomorphic or not as prefer
+      # divide n by two to get diploid individuals (for input into function; gets converted to haploid within function) # no
+      S=sum(sfsFoldedExclMono$count) #excludes monomorphic
+      theta= wattersons_theta(nDip,S,totalSites) # note this uses Ndip in the function because the function itself converts nDip to nHap (this is a bit awkward but comes of merging functions across scripts)
+      # add entry to data frame
+      replicate = unlist(lapply(strsplit(file,"\\."),"[",6))
+      statedf[i,"model"] <- as.character(lapply(strsplit(model,"/"),"[",1)) # initialize df
+      #modeldf[i,"model"] <- as.character(lapply(strsplit(model,"/"),"[",1)) # need to include model
+      statedf$pi <- pi
+      statedf$S <- S
+      statedf$Wattersons_theta <- theta
+      statedf$state <- state
+      statedf$rep <- replicate
+      #modeldf[i,"pi"] <- pi # and value of pi
+      #modeldf[i,"S"] <- S
+      #modeldf[i,"Wattersons_theta"] <- theta
+      #modeldf[i,"state"] <- state
+      #modeldf[i,"rep"] <- state
+      modeldf <- rbind(modeldf,statedf)
+    }}
   # write out the df in the approrpriate indir
   write.table(modeldf,paste(out.dir,"pi.S.Theta.CalculatedFromSFSes.allreps.txt",sep=""),quote = F,row.names=F)
-
 }
-## write out the dataframes at the appropriate places

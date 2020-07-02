@@ -72,4 +72,75 @@ for(elutTimeIndex in elut2TimeIndices){
   plot2
   ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/North-AK-AL/trim.",elutTimeIndex,".msmcPlot.pdf",sep=""),plot2,height=5,width=7)
 }
-  
+
+################# Make nice plots for manuscript with common scale, no text #######
+# indices chosen for ms:
+commonScaleMin=100
+commonScaleMax=500000
+# want to set same scale for all plots
+SSO_index=22
+NSO_index=20
+
+sso_plot <- ggplot(sso,aes(x=Left_generations.reasonable,y=Ne.reasonable))+
+  geom_step(stat="identity",size=1)+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Generations Ago")+
+  ylab("IICR (~Ne)")+
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10(labels=comma)+
+  theme(legend.position= c(0.6,0.85),legend.background = element_rect(fill="transparent"))+
+  geom_vline(xintercept = sso[sso$time_index==SSO_index-1,]$Left_generations.reasonable,linetype=2,color="grey20")+
+  theme(legend.direction=("vertical"),legend.position=c(0.5,0.8),legend.background = element_rect(fill="transparent"),legend.text=element_text(size=14),legend.key.size = unit(1,"cm"),text = element_text(size=14))
+sso_plot
+ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/CA/SOUTHERN.trim",SSO_index,".msmcPlot.NOTEXT.COMMONSCALE.pdf",sep=""),sso_plot,height=5,width=7)
+
+nso_plot <- ggplot(nso,aes(x=Left_generations.reasonable,y=Ne.reasonable))+
+  geom_step(stat="identity",size=1)+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Generations Ago")+
+  ylab("IICR (~Ne)")+
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10(labels=comma)+
+  theme(legend.position= c(0.6,0.85),legend.background = element_rect(fill="transparent"))+
+  geom_vline(xintercept = nso[nso$time_index==NSO_index-1,]$Left_generations.reasonable,linetype=2,color="grey20")+
+  theme(legend.direction=("vertical"),legend.position=c(0.5,0.8),legend.background = element_rect(fill="transparent"),legend.text=element_text(size=14),legend.key.size = unit(1,"cm"),text = element_text(size=14))
+nso_plot
+ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/North-AK-AL/NORTHERN.trim.",NSO_index,".msmcPlot.NOTEXT.COMMONSCALE.pdf",sep=""),nso_plot,height=5,width=7)
+
+################# 2 Make nice plots for manuscript cutting off trimmed stuff #######
+# indices chosen for ms:
+commonScaleMin=100
+commonScaleMax=20000
+# want to set same scale for all plots
+SSO_index=22
+NSO_index=20
+
+sso_plot <- ggplot(sso,aes(x=Left_generations.reasonable,y=Ne.reasonable))+
+  geom_step(stat="identity",size=1)+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Generations Ago")+
+  ylab("IICR (~Ne)")+
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10(labels=comma,limits=c(100,round(sso[sso$time_index==SSO_index,]$Left_generations.reasonable)))+
+  theme(legend.position= c(0.6,0.85),legend.background = element_rect(fill="transparent"))+
+  geom_vline(xintercept = sso[sso$time_index==SSO_index-1,]$Left_generations.reasonable,linetype=2,color="grey20")+
+  theme(legend.direction=("vertical"),legend.position=c(0.5,0.8),legend.background = element_rect(fill="transparent"),legend.text=element_text(size=14),legend.key.size = unit(1,"cm"),text = element_text(size=14))
+sso_plot
+ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/CA/SOUTHERN.trim",SSO_index,".msmcPlot.NOTEXT.COMMONSCALE.CUTOFFTRIM.pdf",sep=""),sso_plot,height=5,width=7)
+
+nso_plot <- ggplot(nso,aes(x=Left_generations.reasonable,y=Ne.reasonable))+
+  geom_step(stat="identity",size=1)+
+  theme_bw()+
+  theme(legend.title = element_blank())+
+  xlab("Generations Ago")+
+  ylab("IICR (~Ne)")+
+  scale_y_log10(labels=comma,limits=c(commonScaleMin,commonScaleMax))+
+  scale_x_log10(labels=comma,limits=c(100,round(nso[nso$time_index==NSO_index,]$Left_generations.reasonable)))+
+  theme(legend.position= c(0.6,0.85),legend.background = element_rect(fill="transparent"))+
+  geom_vline(xintercept = nso[nso$time_index==NSO_index-1,]$Left_generations.reasonable,linetype=2,color="grey20")+
+  theme(legend.direction=("vertical"),legend.position=c(0.5,0.8),legend.background = element_rect(fill="transparent"),legend.text=element_text(size=14),legend.key.size = unit(1,"cm"),text = element_text(size=14))
+nso_plot
+ggsave(paste("/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/results/analysisResults/StitchPSMC_SFS_Together/North-AK-AL/NORTHERN.trim.",NSO_index,".msmcPlot.NOTEXT.COMMONSCALE.CUTOFFTRIM.pdf",sep=""),nso_plot,height=5,width=7)

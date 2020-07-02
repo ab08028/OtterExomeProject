@@ -40,14 +40,12 @@ python $pcangsddir/pcangsd.py \
 -admix -admix_auto $alpha 1> $outdir/pcAngsd.${ref}.${state}.minMaf.${minMaf}.autoAlpha.${todaysdate}.log
 1> saves the output so you can see that things converge, etc. useful! 
 # this gives 2-3 groupings (that make sense along a gradient)
-# you're not supposed to set K but I want to try to get more groups; going to adjust "e" (number of eigenvalues) to 5
-# for the 5 pops (CA, AK, AL, COM, KUR)
+
 python $pcangsddir/pcangsd.py \
 -beagle $GLdir/$input \
 -o $outdir/pcAngsd.${ref}.${state}.minMaf.${minMaf}.e5 \
 -minMaf $minMaf -threads 10  \
--e 5 \
--admix -admix_auto $alpha 1> $outdir/pcAngsd.${ref}.${state}.minMaf.${minMaf}.autoAlpha.e5.${todaysdate}.log
+-admix -admix_auto $alpha 1> $outdir/pcAngsd.${ref}.${state}.minMaf.${minMaf}.autoAlpha.${todaysdate}.log
 
 
 done
