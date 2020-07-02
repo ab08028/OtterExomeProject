@@ -67,7 +67,7 @@ for i in {1..50}
 do
 echo "carrying out inference $i for model $model for pop $pop" 
 # [0-9] indicates that it's a number, but not specific about proj value
-python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs $pop.replicate_${rep}.${simulationModel}.slim.output.unfolded.sfs.dadi.format.txt --outdir $outdir
+python $scriptdir/$script --runNum $i --pop $pop --mu $mu --L $L --sfs $sfsdir/$pop.replicate_${rep}.${simulationModel}.slim.output.unfolded.sfs.dadi.format.txt --outdir $outdir
 done
 
 
