@@ -60,7 +60,7 @@ for rep in 1 2 3 4 5 6 7 8 9 11
 do
 model=${script%.dadi.py}
 echo "starting inference for $pop for model $model"
-outdir=$dadidir/runningDadiOnNeutralSimulations/$simulationModel/inference_$todaysdate/$model/
+outdir=$dadidir/runningDadiOnNeutralSimulations/$simulationModel/inference_$todaysdate/$model/$rep
 mkdir -p $outdir
 # carry out inference with 50 replicates that start with different p0 perturbed params:
 for i in {1..50}
