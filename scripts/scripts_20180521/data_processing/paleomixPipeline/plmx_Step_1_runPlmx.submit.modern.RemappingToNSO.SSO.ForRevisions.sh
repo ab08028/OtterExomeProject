@@ -21,7 +21,7 @@ scriptname=plmx_Step_1_runPlmx.sh
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-makefileDir=$scriptDir/makefiles/modernMakefiles
+makefileDir=$scriptDir/makefiles/modernMakefiles-MappingTo-SSO-NSO-ForRevisions # aha, need to change this to proper spot.
 headers=$wd/samples/SamplesPartOf.20181119.JointGenotyping.UsedForMappingInRevision.includesRWAB.txt
 
 # outdirectory:
