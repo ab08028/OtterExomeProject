@@ -21,7 +21,7 @@ scriptname=Step_2_c_HaplotypeCaller.${REFSHORTCODE}.revisions.sh # change this t
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-headers=$wd/samples/capture2.txt # all Elut samples, modern, ancient and blank
+headers=$wd/samples/SamplesPartOf.20181119.JointGenotyping.UsedForMappingInRevision.includesRWAB.txt # note headers
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
 

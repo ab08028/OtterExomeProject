@@ -16,12 +16,12 @@ gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
 scriptDir=$gitDir/scripts/scripts_20180521/data_processing/variant_calling/${REFSHORTCODE}-revisions/
 
 # script to run: 
-scriptname=Step_2_c_HaplotypeCaller.${REFSHORTCODE.revisions.sh # change this to final script name!! 
+scriptname=Step_2_c_HaplotypeCaller.${REFSHORTCODE}.revisions.sh # change this to final script name!! 
 # 
 # file locations:
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures
-headers=$wd/samples/capture2.txt # all Elut samples, modern, ancient and blank
+headers=$wd/samples/SamplesPartOf.20181119.JointGenotyping.UsedForMappingInRevision.includesRWAB.txt # note headers
 reports=/u/flashscratch/a/ab08028/captures/reports/GATK/
 mkdir -p $reports
 
