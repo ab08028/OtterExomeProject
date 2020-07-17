@@ -8,7 +8,9 @@
 #$ -N hapCaller_submit
 user=ab08028 # where emails are sent
 
-QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
+#QSUB=/u/systems/UGE8.0.1vm/bin/lx-amd64/qsub
+QSUB=/u/systems/UGE8.6.4/bin/lx-amd64/qsub # trying updated version here 
+
 REFSHORTCODE=NSO # short code for ref genome
 # location of github:  which may be on remote server or local laptop
 gitDir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/
