@@ -31,6 +31,6 @@ cat $headers | while read header
 do
 errorLocation=${reports}/${header} # report location
 mkdir -p $errorLocation
-$QSUB -e $errorLocation -o $errorLocation -M $user -N hapCaller.${REFSHORTCODE.${header} $scriptDir/$scriptname $header
+$QSUB -e $errorLocation -o $errorLocation -M $user -N hapCaller.${REFSHORTCODE}.${header} $scriptDir/$scriptname $header
 sleep 1m
 done
