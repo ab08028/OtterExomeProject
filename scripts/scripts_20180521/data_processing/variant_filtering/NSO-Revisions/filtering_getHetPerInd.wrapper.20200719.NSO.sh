@@ -9,14 +9,13 @@
 ###### Het per individual wrapper
 source /u/local/Modules/default/init/modules.sh
 module load python/2.7
-REFSHORTCODE=MFUR # mapped to ferret 
-#SCRATCH=/u/flashscratch/a/ab08028
-#wd=$SCRATCH/captures/vcf_filtering
+REFSHORTCODE=NSO # mapped to nso 
+SCRATCH=/u/flashscratch/a/ab08028
+wd=$SCRATCH/captures/vcf_filtering
 scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering
 script=filtering_getHetPerInd.py
-rundate=20181119 # date genotypes were called 
-#vcfdir=$wd/${rundate}_filtered
-vcfdir=/u/home/a/ab08028/klohmueldata/annabel_data/captures/vcf_filtering/${rundate}_filtered
+rundate=20200719_${REFSHORTCODE}
+vcfdir=$wd/${rundate}_filtered
 
 outdir=$vcfdir/hetPerIndividual/$REFSHORTCODE
 mkdir -p $outdir
