@@ -18,7 +18,7 @@ outname= sys.argv[2] # output file
 # these are filepaths for dummy testing:
 #filepath="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/dummyVCF.forSandbox.allSites_5_passingFilters.vcf.gz" # this was my dummy file that I used to test (had some artifically bad sites for testing) <-- NOTE THIS HAS ARTIFICALLY BAD SITES FOR TESTING PURPOSES (!!!) and is NOT representative.
 #outname="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/noCallPerInd.getFromFilteredVCF.txt"
-outfilename="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/hetPerIndsandbox.output.txt"
+#outfilename="/Users/annabelbeichman/Documents/UCLA/Otters/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/sandbox/hetPerIndsandbox.output.txt"
 # do i want that from filtered vcf? then I have to refilter a bunch.
 # What about also getting DP dist at same time
 # outfile
