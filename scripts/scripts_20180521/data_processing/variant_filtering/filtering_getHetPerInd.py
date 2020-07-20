@@ -111,7 +111,7 @@ def getHetPerInd(inputvcfilename,outfilename):
 
 
 #### run the function ##########
-getHetPerInd(filepath,outfilename)
+getHetPerInd(filepath,outname)
 
 
 sys.exit()
