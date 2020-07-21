@@ -26,16 +26,17 @@ noCallFrac=1.0 # maximum fraction of genotypes that can be "no call" (./.) that 
 snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
 perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
 maxHetFilter=0.75 # (maximum heterozygous genotypes per site filter)
-#### file locations
-SCRATCH=/u/flashscratch/a/ab08028
-wd=$SCRATCH/captures/vcf_filtering
-mkdir -p $wd
-infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/northern_sea_otter_genome.fasta
 REFSHORTCODE=NSO # new thing ; a short code for the reference (if no code, it's mfur; otherwise NSO or SSO)
 
 #### parameters:
 rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200719_NSO 
+
+#### file locations
+SCRATCH=/u/flashscratch/a/ab08028
+wd=$SCRATCH/captures/vcf_filtering
+mkdir -p $wd
+infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $vcfdir/populationVCFs

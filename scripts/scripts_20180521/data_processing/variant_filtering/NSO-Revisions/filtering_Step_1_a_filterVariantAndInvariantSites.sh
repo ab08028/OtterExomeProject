@@ -28,6 +28,12 @@ module load python/2.7
 GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/GenomeAnalysisTK.jar
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
+REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/northern_sea_otter_genome.fasta
+REFSHORTCODE=NSO # new thing ; a short code for the reference (if no code, it's mfur; otherwise NSO or SSO)
+
+#### parameters:
+rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200719_NSO 
+
 
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
@@ -35,11 +41,6 @@ wd=$SCRATCH/captures/vcf_filtering
 mkdir -p $wd
 indir=$SCRATCH/captures/vcfs/vcf_${rundate}
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
-REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/northern_sea_otter_genome/northern_sea_otter_genome.fasta
-REFSHORTCODE=NSO # new thing ; a short code for the reference (if no code, it's mfur; otherwise NSO or SSO)
-
-#### parameters:
-rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200719_NSO 
 
 
 scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/

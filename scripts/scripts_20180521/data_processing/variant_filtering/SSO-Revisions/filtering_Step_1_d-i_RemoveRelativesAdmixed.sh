@@ -26,15 +26,17 @@ noCallFrac=1.0 # maximum fraction of genotypes that can be "no call" (./.) that 
 snpNoCallFrac=0.2 # max missingness allowed in snp file (stricter cutoff)
 perPopNoCallFrac=0 # max missingness allowed in final file for each pop for sfs (super strict cutoff)
 maxHetFilter=0.75 # (maximum heterozygous genotypes per site filter)
+
+REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
+REFSHORTCODE=SSO
+#### parameters:
+rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200719_NSO 
+
 #### file locations
 SCRATCH=/u/flashscratch/a/ab08028
 wd=$SCRATCH/captures/vcf_filtering
 mkdir -p $wd
 infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
-REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
-REFSHORTCODE=SSO
-#### parameters:
-rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200719_NSO 
 
 vcfdir=$wd/${rundate}_filtered # date you called genotypes
 mkdir -p $vcfdir/populationVCFs

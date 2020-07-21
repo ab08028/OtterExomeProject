@@ -29,12 +29,6 @@ GATK=/u/home/a/ab08028/klohmueldata/annabel_data/bin/GenomeAnalysisTK-3.7/Genome
 tabix=/u/home/a/ab08028/klohmueldata/annabel_data/bin/tabix-0.2.6/tabix
 
 
-#### file locations
-SCRATCH=/u/flashscratch/a/ab08028
-wd=$SCRATCH/captures/vcf_filtering
-mkdir -p $wd
-indir=$SCRATCH/captures/vcfs/vcf_${rundate}
-infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
 REFERENCE=/u/home/a/ab08028/klohmueldata/annabel_data/sea_otter_genome/dedup_99_indexed_USETHIS/sea_otter_23May2016_bS9RH.deduped.99.fasta
 REFSHORTCODE=SSO
 #### parameters:
@@ -43,6 +37,14 @@ rundate=20200719_${REFSHORTCODE} # date genotypes were called and ref code 20200
 
 scriptdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/data_processing/variant_filtering/
 noCallScript=$scriptdir/filtering_getNoCallPerInd.py
+
+#### file locations
+SCRATCH=/u/flashscratch/a/ab08028
+wd=$SCRATCH/captures/vcf_filtering
+mkdir -p $wd
+indir=$SCRATCH/captures/vcfs/vcf_${rundate}
+infile=raw_variants.vcf.gz ### make sure this doesn't have a path as part of its name! just infile names
+
 
 # location of vcf checking and filtering script
 # incompatible scaffolds: repeatMaskCoords=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome/repeatMaskingCoordinates/masking_coordinates.bed
