@@ -21,7 +21,8 @@ outdir=$vcfdir/hetPerIndividual/$REFSHORTCODE
 mkdir -p $outdir
 
 # there are a two vcfs I want to look at and compare
-vcfs='all_7_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz'
+#vcfs='all_7_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz'
+vcfs='all_9_maxHetFilter_0.75_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz'
 for vcf in $vcfs
 do
 python $scriptdir/$script $vcfdir/$vcf $outdir/${vcf}.perIndHet.${REFSHORTCODE}.txt
