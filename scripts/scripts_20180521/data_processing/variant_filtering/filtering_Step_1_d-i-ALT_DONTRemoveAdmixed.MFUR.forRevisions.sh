@@ -1,3 +1,12 @@
+#! /bin/bash
+#$ -cwd
+#$ -l h_rt=30:00:00,h_data=16G,highp
+#$ -N vcf1d_removeRelatives
+#$ -o /u/flashscratch/a/ab08028/captures/reports/GATK
+#$ -e /u/flashscratch/a/ab08028/captures/reports/GATK
+#$ -m abe
+#$ -M ab08028
+
 ####### Need a version of filter 1di that doesn't remove admixed
 source /u/local/Modules/default/init/modules.sh
 module load java
