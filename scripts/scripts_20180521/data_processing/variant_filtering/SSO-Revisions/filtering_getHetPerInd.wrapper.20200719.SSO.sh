@@ -18,7 +18,7 @@ rundate=20200719_${REFSHORTCODE}
 # for all sites:
 #vcfdir=$wd/${rundate}_filtered
 # for neutral:
-vcfdir=$wd/${rundate}_filtered/neutral/neutral_and_cds_VCFs/neutralVCFs
+vcfdir=$wd/${rundate}_filtered/neutral_and_cds_VCFs/neutralVCFs
 outdir=$vcfdir/hetPerIndividual/$REFSHORTCODE
 mkdir -p $outdir
 

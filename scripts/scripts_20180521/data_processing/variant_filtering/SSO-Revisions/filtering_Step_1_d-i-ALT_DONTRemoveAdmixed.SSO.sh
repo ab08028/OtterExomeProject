@@ -109,7 +109,7 @@ ind19="141_Elut_CA_419" # doesn't appear admixed but is a PCA outlier
 # weird sites.
 #######  this will be file for heterozygosity so want to add in a missingness filter 
 # going straight from all _7 instead of all_8 bc i want the admixed in there
-python $scriptdir/$hetFilterScript --vcf ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile} \
+python $scriptdir/$hetFilterScript --vcf ${vcfdir}/'all_7_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_'${infile} \
 --outfile ${vcfdir}/'all_10_maxHetFilter_'${maxHetFilter}'_ForRevPerIndHet_keepRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_'${noCallFrac}'_rmBadIndividuals_passingFilters_'${infile%.gz} \
 --errorfile ${vcfdir}/'sitesFailingMaxHetFilter_'${maxHetFilter}'.txt' \
 --maxNoCallFrac $noCallFrac \
