@@ -11,9 +11,10 @@ source /u/local/Modules/default/init/modules.sh
 module load python/2.7.13_shared
 source /u/home/a/ab08028/env_python2.7.13/bin/activate # activate virtual environment 
 
-SCRATCH=/u/flashscratch/a/ab08028/
+#SCRATCH=/u/flashscratch/a/ab08028/
+#captures=$SCRATCH/captures
 gitdir=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/ # hoffman
-scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference
+scriptdir=$gitdir/scripts/scripts_20180521/analyses/dadi_inference/grid.search
 
 model=1D.2Epoch
 todaysdate=`date +%Y%m%d`
@@ -22,7 +23,7 @@ script=grid.Search.${model}.dadi.dadiUnits.py # new! 20190911 -- have input be i
 # input directory
 #genotypeDate=20181119
 sfsdir=/u/home/a/ab08028/klohmueldata/annabel_data/captures/analyses/slim/neutralSimulations_containsTarballs/neutralSimsForManuscript_20200511/CA.1D.2Epoch.35Gen.200Inds/20200224/allSFSes
-dadidir=$captures/analyses/dadi_inference/
+dadidir=/u/home/a/ab08028/klohmueldata/annabel_data/captures/analyses/dadi_inference/
 
 simulationModel='CA.1D.2Epoch.35Gen.200Inds.postContraction'
 ################ search same points for all populations #############
