@@ -57,3 +57,14 @@ java -jar $GATK \
 -o $outdir/SitesThatFailedNeutralFilt.${allVCF} \
 -L $RegionsTooCloseToRepeatsCpG
 
+
+# do this for all10 (has admixed and missing data filter) as well, why not. probably don't need but going to do anyway ###############
+allVCF=all_10_maxHetFilter_0.75_ForRevPerIndHet_keepRelatives_keepAdmixed_passingBespoke_maxNoCallFrac_0.2_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
+
+# then all-sfs  (DO output as .gz)
+java -jar $GATK \
+-R $REFERENCE \
+-T SelectVariants \
+--variant ${vcfdir}/${allVCF} \
+-o $outdir/SitesThatFailedNeutralFilt.${allVCF} \
+-L $RegionsTooCloseToRepeatsCpG
