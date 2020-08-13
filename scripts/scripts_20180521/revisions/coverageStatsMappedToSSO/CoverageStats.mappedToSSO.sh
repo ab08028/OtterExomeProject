@@ -12,6 +12,8 @@ source /u/local/Modules/default/init/modules.sh
 module load vcftools
 vcfdir=/u/flashscratch/a/ab08028/captures/vcf_filtering/20200719_SSO_filtered
 outdir=$vcfdir/depthAndMissingnessStats
+mkdir -p $outdir
+
 ############## start with all_7 ##################
 vcf=all_7_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters_raw_variants.vcf.gz
 prefix=all_7
