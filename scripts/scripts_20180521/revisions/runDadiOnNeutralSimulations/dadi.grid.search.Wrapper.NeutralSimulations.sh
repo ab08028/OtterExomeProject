@@ -45,6 +45,7 @@ T_High=0.6
 pop=CA
 for rep in 1 2 3 4 5 6 7 8 9 11
 do
+echo -e "starting rep $rep"
 outdir=$dadidir/runningDadiOnNeutralSimulations/$simulationModel/grid_search_$todaysdate/$model/replicate_${rep}
 mkdir -p $outdir
 sfs=$sfsdir/$pop.replicate_${rep}.${simulationModel}.slim.output.unfolded.sfs.dadi.format.txt # the pop specific SFS, skipping [0-9] sample size so you don't have to specify for each pop

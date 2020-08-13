@@ -51,8 +51,8 @@ for(rep in c(seq(1,9),11)){
   # add fsc ID
   results$fscID <- paste("d0_",as.character(results$frequency),sep="")
   if(sum(results$count) == totalSitesSimulated){
-    #outfile=paste(data.dir,pop,".simulation.rep.",rep,".",slimmodel,"_MAFpop0.obs",sep="")
-    outfile=paste(data.dir,pop,".SFSForDemographyWorkshop_MAFpop0.obs",sep="")
+    outfile=paste(data.dir,pop,".simulation.rep.",rep,".",slimmodel,"_MAFpop0.obs",sep="")
+    #outfile=paste(data.dir,pop,".SFSForDemographyWorkshop_MAFpop0.obs",sep="")
     sink(outfile)
     cat("1 observations\n")
     cat(results$fscID,sep="\t")

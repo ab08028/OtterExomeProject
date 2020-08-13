@@ -1,13 +1,9 @@
-################################# Set up ###########################
+######## neutral regions comparison between elut and mfur
 
+# before I ran this script I blasted the elut netural region fastas against mfur
+# and pulled out regions that had 500bp overlap
+# and they are in this bed file:
 
-
-###### NOTE for the future: bedtools intersect -v will get rid of the entire entry in A that intersects by even 1bp with a region in B
-# for my capture data, this was okay because my regions in A were small and I didn't want them to be adjacent to any repeat or CpG region
-# but for whole genome data this could perhaps be too stringent and result in too much lost data 
-# so many adjust in future studies. But it's okay for the sea otters.
-
-#modules
 source /u/local/Modules/default/init/modules.sh
 module load bedtools
 module load blast
@@ -16,9 +12,9 @@ rundate=20181119
 maxHetFilter=0.75 # het filter used across all samples (per population het filter occurs during easy sfs)
 
 SCRATCH=/u/flashscratch/a/ab08028
-filterDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/
+#filterDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/
 bedDir=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/bedCoords
-wd=$SCRATCH/captures/vcf_filtering/${rundate}_filtered/checkingNeutralSites
+wd=$SCRATCH/captures/revisions/comparingElutMfurNeutralRegions
 mkdir -p $wd
 mfurDir=/u/home/a/ab08028/klohmueldata/annabel_data/ferret_genome
 drerDir=/u/home/a/ab08028/klohmueldata/annabel_data/zebra_fish_genome
@@ -33,24 +29,23 @@ mfurRepeat=$mfurDir/repeatMasker_UCSC/repeatRegions.0based.bed
 
 # script to get gc content
 getGC=/u/home/a/ab08028/klohmueldata/annabel_data/OtterExomeProject/scripts/scripts_20180521/scripts_from_others/GCContent/get_gc_content.pl
-
-######## Filtering steps:
-# 1. >10kb from exons
-# 2. not inside CpG Island
-# 3. not inside repeat region
-# 4. normal GC content
-# 5. doesn't blast to zebra fish
-####### get exonic regions (once) and make sure is sorted: ############### 
-### (do once) grep exon $gff | awk '{OFS="\t";print $1,$4-1,$5,$9}' | sort -k1,1 -k2,2n > $exonicRegions
-# should be ~200,000 lines
-
 ############ HQ site coords ####################
 # results of filtering snps (all populations; all nv and snps)
 noCallFrac=1.0 # no filter at all. no limits on how many individuals must be called. but there is min dp 500 at site level
 #prefix=all_8_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_${noCallFrac}_rmBadIndividuals_passingFilters
 prefix=all_9_maxHetFilter_${maxHetFilter}_rmRelatives_rmAdmixed_passingBespoke_maxNoCallFrac_1.0_rmBadIndividuals_passingFilters
 
-hqSites=$bedDir/${prefix}.sorted.merged.coords.bed # bed coords (sorted, merged) of sites from step 7 of filtering (comes from filtering_Step_2.sh)
+#hqSites=$bedDir/${prefix}.sorted.merged.coords.bed # bed coords (sorted, merged) of sites from step 7 of filtering (comes from filtering_Step_2.sh)
+# instead of hqSites I want to have the bed of elut neutral regions
+# first must sort:
+#bedtools sort -i blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.bed > blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.sorted.bed
+elutNeutRegions=/u/home/a/ab08028/klohmueldata/annabel_data/captures/elutNeutralBlastedToFerretBedFile/blast.seaOtterNeutralCaptureRegions_vs_ferretGenome.min500bp.sorted.bed
+mkdir -p $wd/filteringStats
+> $wd/filteringStats/totalStartingTargetSequenceInMfur.txt
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $elutNeutRegions >> $wd/filteringStats/totalStartingTargetSequenceInMfur.txt
+
+# starting target sequence in these regions:
+
 
 ############# Get distance of every set of sites from exonic regions in ferret genome ################
 mkdir -p $wd/distanceFromExons # this dir will have info on distance of sites from exons
@@ -63,7 +58,7 @@ mkdir -p $wd/passing_sites
 
 
  # this dir will have neutral regions going through 3 checks: CpG Islands, GC content, and blast to fish
-bedtools closest -d -a ${hqSites} -b ${exonicRegions} > $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt
+bedtools closest -d -a ${elutNeutRegions} -b ${exonicRegions} > $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt
 #### NOTE: the output of this will be
 # [Hq site info] [closest exon info] [distance between]; so I want the HQ sites that are >10000bp away from the closest exon.
 # don't want it the other way around (getting info on each exon). want info on hq sites.
@@ -73,18 +68,17 @@ bedtools closest -d -a ${hqSites} -b ${exonicRegions} > $wd/distanceFromExons/${
 # pick the ones with high distance (awk) (get site totals below)
 awk -F'\t' '{OFS="\t";if($8>10000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min10kb.fromExon.0based.sorted.merged.bed
 
-awk -F'\t' '{OFS="\t";if($8>100000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min100kb.fromExon.0based.sorted.merged.bed
+#awk -F'\t' '{OFS="\t";if($8>100000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min100kb.fromExon.0based.sorted.merged.bed
 
-awk -F'\t' '{OFS="\t";if($8>1000000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min1Mb.fromExon.0based.sorted.merged.bed
+#awk -F'\t' '{OFS="\t";if($8>1000000)print $1,$2,$3}' $wd/distanceFromExons/${prefix}.distanceFromExons.0based.txt |  sort -k1,1 -k2,2n | bedtools merge -i stdin > $wd/distanceFromExons/${prefix}.min1Mb.fromExon.0based.sorted.merged.bed
 
 ### Note: 1,2,3 columns are the HQ SITES position, NOT the position of the exon. (If you mess up what is a and b in bedtools closest this would be messed up)
 ######### get total amounts of sequence in each file: ########
-
-> $filterDir/filteringStats/totalSequenceByDistanceFromExons.txt
+> $wd/filteringStats/totalSequenceByDistanceFromExons.txt
 for i in `ls $wd/distanceFromExons/*bed`
 do
-echo $i >> $filterDir/filteringStats/totalSequenceByDistanceFromExons.txt
-awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $i >> $filterDir/filteringStats/totalSequenceByDistanceFromExons.txt
+echo $i >> $wd/filteringStats/totalSequenceByDistanceFromExons.txt
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $i >> $wd/filteringStats/totalSequenceByDistanceFromExons.txt
 done
 
 
@@ -98,7 +92,7 @@ done
 # get regions that DO NOT intersect with CpG islands
 # *** -v **** this will output regions in "A" that ***DO NOT*** intersect with "B" (CpG Islands)
 bedtools intersect -v -a $wd/distanceFromExons/${prefix}.min10kb.fromExon.0based.sorted.merged.bed -b $mfurCpG > $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.0based.sorted.merged.bed
-awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' 
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.0based.sorted.merged.bed
 
 ########## 20181119 value:
 #9,212,233 sites >10kb from genes (no max call frac) w no max no call frac filter
@@ -119,10 +113,13 @@ awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'
 # added .1 to each scaffold name so it matches my reference (see script in mfurDir/repeatMasker_UCSC)
 # trying to intersect 
 # get regions that DO NOT intersect with repeat regions
-
+# adding sorted -sorted
 bedtools intersect -v -a $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.0based.sorted.merged.bed -b $mfurRepeat > $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
 # check amount  of sequence lost:
-# awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
+awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}'  $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed
+
+############# STOPPING HERE --- SEE WHERE IT iS LOST #########################
+
 # 2018119 values: (no max call frac)
 # 6,853,475 (so lost 2,208,812 sites (same as before))
 # 20180806 values:
@@ -134,7 +131,6 @@ bedtools intersect -v -a $wd/CpG_Islands/${prefix}.min10kb.fromExon.noCpGIsland.
 # it becomes its own entry in the fasta, which is going to make BLASTING a pain
 # for now looking at overall region (allowing gaps of up to 10bp), not just called sites.
 bedtools merge -d 10 -i $wd/repeatRegions/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.merged.bed > $wd/get_fasta/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.mergedMaxDistance10.forFasta.notForSFS.bed
-# * you are here *
 
 ###### get fasta sequence
 bedtools getfasta -fi $REFERENCE -bed $wd/get_fasta/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.sorted.mergedMaxDistance10.forFasta.notForSFS.bed -fo $wd/get_fasta/${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.0based.fasta
@@ -171,16 +167,10 @@ finalBedDir=$wd/zebra_fish
 finalBed=${prefix}.min10kb.fromExon.noCpGIsland.noRepeat.noFish.0based.sorted.merged.bed
 cp $finalBedDir/$finalBed $wd/passing_sites/${finalBed%.bed}.useThis.bed
 # also copy it to bedCoords
-cp $finalBedDir/$finalBed $filterDir/bedCoords/${finalBed%.bed}.useThis.bed
+cp $finalBedDir/$finalBed $wd/bedCoords/${finalBed%.bed}.useThis.bed
 
 # get final amount of sequence:
 awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}' $wd/passing_sites/${finalBed%.bed}.useThis.bed > $wd/passing_sites/totalPassingSequence.txt
 # and copy this info to filteringStats as well
 cp $wd/passing_sites/totalPassingSequence.txt $SCRATCH/captures/vcf_filtering/${rundate}_filtered/filteringStats/totalPassingNeutralSequence.txt
-
-# 20181119 value: 6839537 ~6.8 with no max call frac
-# 20180806 valu: 6687614 ~6.7 Mb with 0.9 max no call frac. (up from 5942506 under this is with 0.2 max no call frac) so I gained 745kb of sequence. Not very much.
-# That is okay, shows it doesn't matter much which way you do it. So can keep neutral SFSs as-is, or remake based on these new coords
-# going to remake to be thorough.
- 
 

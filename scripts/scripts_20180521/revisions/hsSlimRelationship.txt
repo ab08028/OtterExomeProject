@@ -1,0 +1,9 @@
+1:60000 fitness(m1) {
+    h = (0.5)/(1 - 7071.07*(mut.selectionCoeff));
+    //h = mut.mutationType.dominanceCoeff;
+    if (homozygous) {
+        return ((1.0 + 0.5*mut.selectionCoeff)*(1.0 + 0.5*mut.selectionCoeff));
+    } else {
+        return (1.0 + mut.selectionCoeff * h);
+    }
+}

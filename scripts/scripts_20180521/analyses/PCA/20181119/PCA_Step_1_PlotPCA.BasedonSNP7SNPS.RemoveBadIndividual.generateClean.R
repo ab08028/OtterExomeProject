@@ -93,6 +93,19 @@ p1a_forManuscript <- ggplot(tab1a,aes(x=EV1,y=EV2,color=pop1))+
   scale_color_manual(values=unlist(colors))
 p1a_forManuscript
 ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.BAJA.FORMANUSCRIPT.",todaysdate,".pdf",sep=""),p1a_forManuscript,device="pdf",width = 3,height=2.4)
+
+#### add a t-distrubtion data ellipse at 95% level (does that mean 95% of data would be within ellipse if t-dist); using t dist because of low sample sizes
+p1b_forManuscript_wEllipses <- ggplot(tab1a,aes(x=EV1,y=EV2,color=pop1))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  stat_ellipse(level=0.95,type="t")+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  #ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "none")+
+  scale_color_manual(values=unlist(colors))
+p1b_forManuscript_wEllipses
+ggsave(paste(plotoutdir,"/PCA.inclCA.LDPruned.BAJA.FORMANUSCRIPT.WELLIPSES.",todaysdate,".pdf",sep=""),p1b_forManuscript_wEllipses,device="pdf",width = 3,height=2.4)
 #################### Look at FASTSTRUCTURE and relatedness and label individuals in the popMap file  with admixed, relative, outlier ... #########
 #plot first 2 pc coloring by primary population with shape colored by note (admixed, outlier, etc.)
 # add that note section to the tab dataframe: 
@@ -189,6 +202,18 @@ p3c_forManuscript <- ggplot(tab3,aes(x=EV1,y=EV2,color=pop1))+
   scale_color_manual(values=unlist(colors))
 p3c_forManuscript
 ggsave(paste(plotoutdir,"/PCA.excludingCA.NorthernOnly.LDPruned.FORMANUSCRIPT.",todaysdate,".pdf",sep=""),p3c_forManuscript,device="pdf",width = 3,height=2.4)
+
+p3c_ii_forManuscript_ELLIPSE <- ggplot(tab3,aes(x=EV1,y=EV2,color=pop1))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  stat_ellipse(type="t",level=0.95)+
+  theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  #ggtitle(paste("PCA based on ",as.character(length(pca$snp.id))," LD Pruned SNPs",sep=""))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "none")+
+  scale_color_manual(values=unlist(colors))
+p3c_ii_forManuscript_ELLIPSE
+ggsave(paste(plotoutdir,"/PCA.excludingCA.NorthernOnly.LDPruned.FORMANUSCRIPT.WELLIPSE.",todaysdate,".pdf",sep=""),p3c_ii_forManuscript_ELLIPSE,device="pdf",width = 3,height=2.4)
 ############### Fourth PCA : Just Southern sea otter (CA and Baja) #########
 sub <- tab1b$sample.id[(tab1b$pop1=="California" |tab1b$pop1=="Baja") & tab1b$sequencer!="HiSeq4000" & tab1b$note=="good"]
 #sink(paste(fileoutdir,"/PCA.record.only.CA.Baja.",todaysdate,".txt",sep=""))
@@ -264,7 +289,16 @@ p6 <- ggplot(tab6,aes(x=EV1,y=EV2,color=pop2,shape=note,label=sample.id))+
   theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
 p6
 ggsave(paste(plotoutdir,"/PCA.AleutianOnly.LDPruned.",todaysdate,".pdf",sep=""),p6,device="pdf",width = 5,height=3)
-
+### adding t-dist data ellipse at 95% level:
+p6_ELLIPSE <- ggplot(tab6,aes(x=EV1,y=EV2,color=pop2,shape=note,label=sample.id))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  stat_ellipse(level=0.95,type="t") +
+    theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
+p6_ELLIPSE
+ggsave(paste(plotoutdir,"/PCA.AleutianOnly.LDPruned.WELLIPSE.",todaysdate,".pdf",sep=""),p6_ELLIPSE,device="pdf",width = 5,height=3)
 
 ################### Sixth PCA : just Commander Islands ####################
 sub <- tab1b$sample.id[tab1b$pop1=="Commander" & tab1b$sequencer!="HiSeq4000" & tab1b$note=="good"]
@@ -287,6 +321,16 @@ p7<- ggplot(tab7,aes(x=EV1,y=EV2,color=pop2,label=sample.id))+
   theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
 p7
 ggsave(paste(plotoutdir,"/PCA.CommandersOnly.LDPruned.",todaysdate,".pdf",sep=""),p7,device="pdf",width = 5,height=3)
+
+p7_Ellipse <- ggplot(tab7,aes(x=EV1,y=EV2,color=pop2,label=sample.id))+
+  geom_point(size=3,shape=16,alpha=0.75)+
+  stat_ellipse(level=0.95,type="t")+
+    theme_bw()+
+  ylab(paste("PC2 (", pc[2],"%)")) +
+  xlab(paste("PC1 (", pc[1],"%)"))+
+  theme(legend.title = element_blank(),axis.text = element_text(size=14),axis.title = element_text(size=14),legend.text = element_text(size=14),legend.position = "right")
+p7_Ellipse
+ggsave(paste(plotoutdir,"/PCA.CommandersOnly.LDPruned.WELLIPSE.",todaysdate,".pdf",sep=""),p7_Ellipse,device="pdf",width = 5,height=3)
 ############################ CLOSE THE GDS FILE ########################
 # if you don't do this, it'll mess things up
 snpgdsClose(genofile)
